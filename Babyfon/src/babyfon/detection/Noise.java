@@ -5,11 +5,17 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
+import babyfon.activities.MainActivity;
+
+import android.app.Activity;
+import android.graphics.Color;
 import android.media.AudioFormat;
 import android.media.AudioRecord;
 import android.media.MediaRecorder;
 import android.os.Environment;
 import android.util.Log;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 
 public class Noise {
 
@@ -27,15 +33,19 @@ public class Noise {
 	int BytesPerElement = 2; // 2 bytes in 16bit format
 	private AudioRecord recorder;
 
-	public Noise() {
+	private int threshold = 9999999;
 
+	private MainActivity activity;
+
+	public Noise(MainActivity activity) {
+		this.activity = activity;
 	}
 
 	public boolean isRecording() {
 		return isRecording;
 	}
 
-	public void startListening() {
+	public void startRecording() {
 
 		recorder = initRecorder();
 
@@ -88,8 +98,8 @@ public class Noise {
 
 		File file = new File(dir, "voice8K16bitmono.pcm");
 
-		// short sData[] = new short[BufferElements2Rec]; // Data as short
-		byte bData[] = new byte[BufferElements2Rec * 2];
+		short sData[] = new short[BufferElements2Rec]; // Data as short
+		// byte[] bData = new byte[BufferElements2Rec * 2];
 
 		FileOutputStream os = null;
 		try {
@@ -105,13 +115,46 @@ public class Noise {
 		while (isRecording) {
 			// gets the voice output from microphone to byte format
 
-			// recorder.read(sData, 0, BufferElements2Rec);
-			recorder.read(bData, 0, BufferElements2Rec*2);
-			Log.i(TAG, "Short wirting to file" + bData.toString());
+			int readSize = recorder.read(sData, 0, BufferElements2Rec);
+			// int readSize = recorder.read(bData, 0, BufferElements2Rec * 2);
+
+			double sum = 0;
+			for (int i = 0; i < readSize; i++) {
+				sum += sData[i] * sData[i];
+			}
+
+			if (readSize > 0) {
+				final double amplitude = sum / readSize;
+
+				final int volume = (int) Math.sqrt(amplitude);
+
+				Log.i(TAG, "Amplitude: " + volume);
+
+				// volumeTV.setText(amplitude + " = " + sum + " / " + readSize);
+				activity.getBar().setProgress(volume);
+				activity.runOnUiThread(new Runnable() {
+
+					@Override
+					public void run() {
+
+						if (volume > threshold)
+							activity.getTextView().setBackgroundColor(Color.RED);
+						else
+							activity.getTextView().setBackgroundColor(Color.GREEN);
+
+						activity.getTextView().setText("Amplitude: " + volume);
+					}
+				});
+
+			}
+
+			// Log.i(TAG, "Byte writing to file" + bData.toString());
+			Log.i(TAG, "Short writing to file" + sData.toString());
 			try {
 				// // writes the data to file from buffer
 				// // stores the voice buffer
-				// byte bData[] = short2byte(sData);
+				byte bData[] = short2byte(sData);
+
 				os.write(bData, 0, BufferElements2Rec * BytesPerElement);
 			} catch (IOException e) {
 				e.printStackTrace();
@@ -148,6 +191,10 @@ public class Noise {
 			recorder = null;
 			recordingThread = null;
 		}
+	}
+
+	public void setThreshold(int threshold) {
+		this.threshold = threshold;
 	}
 
 }
