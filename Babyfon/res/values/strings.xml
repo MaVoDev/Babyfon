@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- A -->
+    <string name="app_name">Babyfon</string>
+
+    <!-- S -->
+    <string name="settings">Einstellungen</string>
+
+    <!-- Navigation Drawer Items -->
+    <string-array name="navigation_drawer_items">
+        <item>Überwachung</item>
+        <item>Anrufe und SMS</item>
+        <item>Einrichtungsassistent</item>
+    </string-array>
+
+    <!-- Navigation Drawer Icons -->
+    <array name="navigation_drawer_icons">
+        <item>@drawable/ic_launcher</item>
+        <item>@drawable/ic_launcher</item>
+        <item>@drawable/ic_launcher</item>
+    </array>
+
+    <!-- Content Description -->
+    <string name="desc_list_item_icon">Item Icon</string>
+
+</resources>
