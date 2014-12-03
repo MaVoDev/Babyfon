@@ -8,16 +8,16 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-public class ObservationFragment extends Fragment {
+public class ConnectionFragment extends Fragment {
 
-	public ObservationFragment() {
+	public ConnectionFragment() {
 
 	}
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-		View view = inflater.inflate(R.layout.fragment_obervation, container, false);
+		View view = inflater.inflate(R.layout.fragment_connection, container, false);
 
 		return view;
 	}

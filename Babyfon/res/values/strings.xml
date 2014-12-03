@@ -4,6 +4,10 @@
     <!-- A -->
     <string name="app_name">Babyfon</string>
 
+    <!-- M -->
+    <string name="button_mode_baby">Modus: Baby</string>
+    <string name="button_mode_parents">Modus: Eltern</string>
+
     <!-- S -->
     <string name="settings">Einstellungen</string>
 
@@ -11,7 +15,7 @@
     <string-array name="navigation_drawer_items">
         <item>Überwachung</item>
         <item>Anrufe und SMS</item>
-        <item>Einrichtungsassistent</item>
+        <item>Einrichten</item>
     </string-array>
 
     <!-- Navigation Drawer Icons -->
