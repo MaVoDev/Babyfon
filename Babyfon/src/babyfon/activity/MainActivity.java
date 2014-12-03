@@ -60,7 +60,7 @@ public class MainActivity extends Activity {
 
 		items = new ArrayList<NavigationDrawerItemModel>();
 
-		// Ãœberwachungsansicht
+		// Überwachungsansicht
 		items.add(new NavigationDrawerItemModel(navMenuTitles[0], navMenuIcons.getResourceId(0, -1)));
 		// Anrufe und Nachrichten in Abwesenheit
 		items.add(new NavigationDrawerItemModel(navMenuTitles[1], navMenuIcons.getResourceId(1, -1), true, "22"));
