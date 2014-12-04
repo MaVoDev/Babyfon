@@ -1,5 +1,6 @@
-package babyfon.activity;
+package babyfon.view.activity;
 
+import babyfon.init.R;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;

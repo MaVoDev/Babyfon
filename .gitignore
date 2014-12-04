@@ -22,6 +22,7 @@ local.properties
 # Folders
 proguard/
 .metadata/
+.recommenders/
 
 # Log Files
 *.log

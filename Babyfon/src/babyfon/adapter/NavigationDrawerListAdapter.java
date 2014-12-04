@@ -1,6 +1,6 @@
 package babyfon.adapter;
 
-import babyfon.activity.R;
+import babyfon.init.R;
 
 import java.util.ArrayList;
 

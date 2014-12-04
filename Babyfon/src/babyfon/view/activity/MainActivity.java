@@ -1,14 +1,14 @@
-package babyfon.activity;
+package babyfon.view.activity;
 
-import babyfon.activity.R;
+import babyfon.init.R;
 
 import java.util.ArrayList;
 
 import babyfon.adapter.NavigationDrawerListAdapter;
-import babyfon.fragment.AbsenceFragment;
-import babyfon.fragment.ObservationFragment;
-import babyfon.fragment.SetupFragment;
 import babyfon.model.NavigationDrawerItemModel;
+import babyfon.view.fragment.AbsenceFragment;
+import babyfon.view.fragment.ObservationFragment;
+import babyfon.view.fragment.SetupFragment;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;

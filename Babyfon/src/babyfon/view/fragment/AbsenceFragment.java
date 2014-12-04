@@ -1,6 +1,6 @@
-package babyfon.fragment;
+package babyfon.view.fragment;
 
-import babyfon.activity.R;
+import babyfon.init.R;
 
 import android.app.Fragment;
 import android.os.Bundle;
@@ -8,16 +8,16 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-public class ConnectionFragment extends Fragment {
+public class AbsenceFragment extends Fragment {
 
-	public ConnectionFragment() {
+	public AbsenceFragment() {
 
 	}
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-		View view = inflater.inflate(R.layout.fragment_connection, container, false);
+		View view = inflater.inflate(R.layout.fragment_absence, container, false);
 
 		return view;
 	}

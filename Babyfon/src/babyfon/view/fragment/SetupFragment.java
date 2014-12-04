@@ -1,34 +1,34 @@
-package babyfon.fragment;
+package babyfon.view.fragment;
 
-import babyfon.activity.R;
+import babyfon.init.R;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.widget.Button;
 
-public class ConnectivityFragment extends Fragment {
+public class SetupFragment extends Fragment {
 
-	public ConnectivityFragment() {
+	public SetupFragment() {
 
 	}
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-		View view = inflater.inflate(R.layout.fragment_connectivity, container, false);
+		View view = inflater.inflate(R.layout.fragment_setup, container, false);
 
 		final FragmentManager fragmentManager = getFragmentManager();
 
-		Button button = (Button) view.findViewById(R.id.button_forward_connectivity);
+		Button button = (Button) view.findViewById(R.id.button_forward_setup);
 		button.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				ConnectionFragment connectionFragment = new ConnectionFragment();
-				fragmentManager.beginTransaction().replace(R.id.frame_container, connectionFragment, null)
+				DeviceModeFragment deviceModeFragment = new DeviceModeFragment();
+				fragmentManager.beginTransaction().replace(R.id.frame_container, deviceModeFragment, null)
 						.addToBackStack(null).commit();
 			}
 		});

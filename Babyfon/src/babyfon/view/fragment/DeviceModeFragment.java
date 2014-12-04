@@ -1,6 +1,6 @@
-package babyfon.fragment;
+package babyfon.view.fragment;
 
-import babyfon.activity.R;
+import babyfon.init.R;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.os.Bundle;
