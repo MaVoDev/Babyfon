@@ -3,6 +3,7 @@ package babyfon.view.fragment;
 import babyfon.init.R;
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,8 +13,10 @@ import android.widget.Button;
 
 public class ConnectivityFragment extends Fragment {
 
-	public ConnectivityFragment() {
+	Context context;
 
+	public ConnectivityFragment(Context context) {
+		this.context = context;
 	}
 
 	@Override
@@ -27,7 +30,7 @@ public class ConnectivityFragment extends Fragment {
 		button.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				ConnectionFragment connectionFragment = new ConnectionFragment();
+				ConnectionFragment connectionFragment = new ConnectionFragment(context);
 				fragmentManager.beginTransaction().replace(R.id.frame_container, connectionFragment, null)
 						.addToBackStack(null).commit();
 			}

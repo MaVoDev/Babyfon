@@ -5,15 +5,21 @@ import babyfon.init.R;
 import java.util.ArrayList;
 
 import babyfon.adapter.NavigationDrawerListAdapter;
+import babyfon.connectivity.wifidirect.WiFiDirectBroadcastReceiver;
 import babyfon.model.NavigationDrawerItemModel;
 import babyfon.view.fragment.AbsenceFragment;
-import babyfon.view.fragment.ObservationFragment;
+import babyfon.view.fragment.OverviewFragment;
+import babyfon.view.fragment.BabymonitorFragment;
 import babyfon.view.fragment.SetupFragment;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.res.Configuration;
 import android.content.res.TypedArray;
+import android.net.wifi.p2p.WifiP2pManager;
+import android.net.wifi.p2p.WifiP2pManager.Channel;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.widget.DrawerLayout;
@@ -25,15 +31,20 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 
 public class MainActivity extends Activity {
+
+	WifiP2pManager wifiDirectManager;
+	Channel wifiDirectChannel;
+	BroadcastReceiver wifiDirectReceiver;
+
 	private DrawerLayout mDrawerLayout;
 	private ListView mDrawerList;
 	private ActionBarDrawerToggle mDrawerToggle;
 
-	// nav drawer title
+	// Navigation Drawer Title
 	private CharSequence drawerTitle;
 
-	// used to store app title
-	private CharSequence mTitle;
+	// App Title/Name
+	private CharSequence appTitle;
 
 	// slide menu items
 	private String[] navMenuTitles;
@@ -47,7 +58,11 @@ public class MainActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 
-		mTitle = drawerTitle = getTitle();
+		wifiDirectManager = (WifiP2pManager) getSystemService(Context.WIFI_P2P_SERVICE);
+		wifiDirectChannel = wifiDirectManager.initialize(this, getMainLooper(), null);
+		wifiDirectReceiver = new WiFiDirectBroadcastReceiver(wifiDirectManager, wifiDirectChannel, this);
+
+		appTitle = drawerTitle = getTitle();
 
 		// load slide menu items
 		navMenuTitles = getResources().getStringArray(R.array.navigation_drawer_items);
@@ -60,12 +75,14 @@ public class MainActivity extends Activity {
 
 		items = new ArrayList<NavigationDrawerItemModel>();
 
-		// Überwachungsansicht
+		// Listenelement: Home
 		items.add(new NavigationDrawerItemModel(navMenuTitles[0], navMenuIcons.getResourceId(0, -1)));
-		// Anrufe und Nachrichten in Abwesenheit
-		items.add(new NavigationDrawerItemModel(navMenuTitles[1], navMenuIcons.getResourceId(1, -1), true, "22"));
-		// Einrichtungsassistent
-		items.add(new NavigationDrawerItemModel(navMenuTitles[2], navMenuIcons.getResourceId(2, -1)));
+		// Listenelement: Babymonitor
+		items.add(new NavigationDrawerItemModel(navMenuTitles[1], navMenuIcons.getResourceId(1, -1)));
+		// Listenelement: Anrufe und Nachrichten in Abwesenheit
+		items.add(new NavigationDrawerItemModel(navMenuTitles[2], navMenuIcons.getResourceId(2, -1), true, "22"));
+		// Listenelement: Einrichtungsassistent
+		items.add(new NavigationDrawerItemModel(navMenuTitles[3], navMenuIcons.getResourceId(3, -1)));
 
 		// Recycle the typed array
 		navMenuIcons.recycle();
@@ -80,17 +97,11 @@ public class MainActivity extends Activity {
 		getActionBar().setDisplayHomeAsUpEnabled(true);
 		getActionBar().setHomeButtonEnabled(true);
 
-		mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, R.drawable.ic_drawer, // nav
-																								// menu
-																								// toggle
-																								// icon
-				R.string.app_name, // nav drawer open - description for
-									// accessibility
-				R.string.app_name // nav drawer close - description for
-									// accessibility
-		) {
+		// Drawer Layout, Drawer Icon, Drawer Name (Drawer open, close)
+		mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, R.drawable.ic_drawer, R.string.app_name,
+				R.string.app_name) {
 			public void onDrawerClosed(View view) {
-				getActionBar().setTitle(mTitle);
+				getActionBar().setTitle(appTitle);
 				// calling onPrepareOptionsMenu() to show action bar icons
 				invalidateOptionsMenu();
 			}
@@ -160,13 +171,16 @@ public class MainActivity extends Activity {
 		Fragment fragment = null;
 		switch (position) {
 		case 0:
-			fragment = new ObservationFragment();
+			fragment = new OverviewFragment();
 			break;
 		case 1:
-			fragment = new AbsenceFragment();
+			fragment = new BabymonitorFragment();
 			break;
 		case 2:
-			fragment = new SetupFragment();
+			fragment = new AbsenceFragment();
+			break;
+		case 3:
+			fragment = new SetupFragment(this);
 			break;
 
 		default:
@@ -184,14 +198,13 @@ public class MainActivity extends Activity {
 			mDrawerLayout.closeDrawer(mDrawerList);
 		} else {
 			// error in creating fragment
-			Log.e("MainActivity", "Error in creating fragment");
 		}
 	}
 
 	@Override
 	public void setTitle(CharSequence title) {
-		mTitle = title;
-		getActionBar().setTitle(mTitle);
+		appTitle = title;
+		getActionBar().setTitle(appTitle);
 	}
 
 	/**
