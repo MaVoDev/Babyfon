@@ -4,22 +4,30 @@
     <!-- A -->
     <string name="app_name">Babyfon</string>
 
+    <!-- B -->
+    <string name="babymonitor">Babymonitor</string>
+
     <!-- M -->
     <string name="button_mode_baby">Modus: Baby</string>
     <string name="button_mode_parents">Modus: Eltern</string>
 
+    <!-- O -->
+    <string name="overview">Übersicht</string>
+    
     <!-- S -->
     <string name="settings">Einstellungen</string>
 
     <!-- Navigation Drawer Items -->
     <string-array name="navigation_drawer_items">
-        <item>Überwachung</item>
+        <item>Übersicht</item>
+        <item>Babymonitor</item>
         <item>Anrufe und SMS</item>
-        <item>Einrichten</item>
+        <item>Babyfon einrichten</item>
     </string-array>
 
     <!-- Navigation Drawer Icons -->
     <array name="navigation_drawer_icons">
+        <item>@drawable/ic_launcher</item>
         <item>@drawable/ic_launcher</item>
         <item>@drawable/ic_launcher</item>
         <item>@drawable/ic_launcher</item>

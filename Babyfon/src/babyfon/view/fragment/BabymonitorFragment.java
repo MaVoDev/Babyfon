@@ -8,16 +8,16 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-public class ObservationFragment extends Fragment {
+public class BabymonitorFragment extends Fragment {
 
-	public ObservationFragment() {
+	public BabymonitorFragment() {
 
 	}
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-		View view = inflater.inflate(R.layout.fragment_obervation, container, false);
+		View view = inflater.inflate(R.layout.fragment_babymonitor, container, false);
 
 		return view;
 	}
