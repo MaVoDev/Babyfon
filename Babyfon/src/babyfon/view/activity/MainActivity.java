@@ -5,7 +5,6 @@ import babyfon.init.R;
 import java.util.ArrayList;
 
 import babyfon.adapter.NavigationDrawerListAdapter;
-import babyfon.connectivity.wifidirect.WiFiDirectBroadcastReceiver;
 import babyfon.model.NavigationDrawerItemModel;
 import babyfon.view.fragment.AbsenceFragment;
 import babyfon.view.fragment.OverviewFragment;
@@ -14,16 +13,12 @@ import babyfon.view.fragment.SetupFragment;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.res.Configuration;
 import android.content.res.TypedArray;
-import android.net.wifi.p2p.WifiP2pManager;
-import android.net.wifi.p2p.WifiP2pManager.Channel;
 import android.os.Bundle;
+import android.os.StrictMode;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.widget.DrawerLayout;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -31,10 +26,6 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 
 public class MainActivity extends Activity {
-
-	WifiP2pManager wifiDirectManager;
-	Channel wifiDirectChannel;
-	BroadcastReceiver wifiDirectReceiver;
 
 	private DrawerLayout mDrawerLayout;
 	private ListView mDrawerList;
@@ -58,9 +49,10 @@ public class MainActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 
-		wifiDirectManager = (WifiP2pManager) getSystemService(Context.WIFI_P2P_SERVICE);
-		wifiDirectChannel = wifiDirectManager.initialize(this, getMainLooper(), null);
-		wifiDirectReceiver = new WiFiDirectBroadcastReceiver(wifiDirectManager, wifiDirectChannel, this);
+		if (android.os.Build.VERSION.SDK_INT > 9) {
+			StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+			StrictMode.setThreadPolicy(policy);
+		}
 
 		appTitle = drawerTitle = getTitle();
 
@@ -113,11 +105,6 @@ public class MainActivity extends Activity {
 			}
 		};
 		mDrawerLayout.setDrawerListener(mDrawerToggle);
-
-		if (savedInstanceState == null) {
-			// on first time display view for first nav item
-			displayView(0);
-		}
 	}
 
 	/**

@@ -13,9 +13,18 @@
 
     <!-- O -->
     <string name="overview">Übersicht</string>
-    
+
     <!-- S -->
     <string name="settings">Einstellungen</string>
+
+    <!-- Error Types -->
+    <string name="WIFI_STATE_ERROR">WIFI_STATE_ERROR</string>
+    <string name="WIFI_CONNECTION_ERROR">WIFI_CONNECTION_ERROR</string>
+
+    <!-- Error Messages -->
+    <string name="ERRMSG_UNKNOWN_ERROR">Es ist ein unbekannter Fehler aufgetreten.</string>
+    <string name="ERRMSG_WIFI_STATE_ERROR">Wi-Fi ist nicht eingeschaltet.</string>
+    <string name="ERRMSG_WIFI_CONNECTION_ERROR">Keine Netzwerkverbindung gefunden.</string>
 
     <!-- Navigation Drawer Items -->
     <string-array name="navigation_drawer_items">
