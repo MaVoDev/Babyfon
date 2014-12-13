@@ -11,8 +11,10 @@ import babyfon.view.fragment.OverviewFragment;
 import babyfon.view.fragment.BabymonitorFragment;
 import babyfon.view.fragment.SetupFragment;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.content.DialogInterface;
 import android.content.res.Configuration;
 import android.content.res.TypedArray;
 import android.os.Bundle;
@@ -105,6 +107,23 @@ public class MainActivity extends Activity {
 			}
 		};
 		mDrawerLayout.setDrawerListener(mDrawerToggle);
+	}
+
+	/**
+	 * Aktion bei Betätiung der BackPressed-Taste bei aktiver MainActivity.
+	 */
+	@Override
+	public void onBackPressed() {
+		// Dialogfenster zur Abfrage, ob die App wirklich beendet werden soll.
+		new AlertDialog.Builder(this).setIcon(null).setTitle(getString(R.string.dialog_exit_app_title))
+				.setMessage(getString(R.string.dialog_exit_app_message))
+				.setPositiveButton(getString(R.string.yes), new DialogInterface.OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						finish();
+					}
+
+				}).setNegativeButton(getString(R.string.no), null).show();
 	}
 
 	/**
