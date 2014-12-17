@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    
+    <!-- Navigation Drawer Items -->
+    <string-array name="navigation_drawer_items">
+        <item>Übersicht</item>
+        <item>Babymonitor</item>
+        <item>Anrufe und SMS</item>
+        <item>Babyfon einrichten</item>
+    </string-array>
+
+    <!-- Navigation Drawer Icons -->
+    <array name="navigation_drawer_icons">
+        <item>@drawable/ic_launcher</item>
+        <item>@drawable/ic_launcher</item>
+        <item>@drawable/ic_launcher</item>
+        <item>@drawable/ic_launcher</item>
+    </array>
+
+</resources>

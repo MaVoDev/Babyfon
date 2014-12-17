@@ -5,28 +5,21 @@ import babyfon.init.R;
 import java.util.ArrayList;
 
 import babyfon.adapter.NavigationDrawerListAdapter;
-import babyfon.connectivity.wifi.WifiReceiver;
-import babyfon.connectivity.wifi.WifiSender;
 import babyfon.model.NavigationDrawerItemModel;
 import babyfon.view.fragment.AbsenceFragment;
 import babyfon.view.fragment.OverviewFragment;
 import babyfon.view.fragment.BabymonitorFragment;
 import babyfon.view.fragment.SetupFragment;
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Fragment;
 import android.app.FragmentManager;
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.res.Configuration;
 import android.content.res.TypedArray;
-import android.os.BatteryManager;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.support.v4.app.ActionBarDrawerToggle;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.widget.DrawerLayout;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -34,16 +27,8 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
-public class MainActivity extends Activity {
-
-	private BroadcastReceiver mBatInfoReceiver = new BroadcastReceiver() {
-		@Override
-		public void onReceive(Context ctxt, Intent intent) {
-			int level = intent.getIntExtra(BatteryManager.EXTRA_LEVEL, 0);
-			System.out.println(String.valueOf(level) + "%");
-		}
-	};
-
+public class MainActivity extends FragmentActivity {
+	
 	private DrawerLayout mDrawerLayout;
 	private ListView mDrawerList;
 	private ActionBarDrawerToggle mDrawerToggle;
@@ -70,11 +55,6 @@ public class MainActivity extends Activity {
 			StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
 			StrictMode.setThreadPolicy(policy);
 		}
-
-		// Startet einen neuen Wi-Fi Receiver.
-		new WifiReceiver(12789);
-
-		this.registerReceiver(this.mBatInfoReceiver, new IntentFilter(Intent.ACTION_BATTERY_CHANGED));
 
 		appTitle = drawerTitle = getTitle();
 
