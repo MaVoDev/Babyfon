@@ -6,27 +6,30 @@ import java.net.SocketException;
 import java.net.UnknownHostException;
 import java.util.Enumeration;
 
+import babyfon.init.R;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 
 public class WiFiHandler {
 
 	Context context;
+	WifiManager wifiManager;
 
 	public WiFiHandler(Context context) {
 		this.context = context;
+		this.wifiManager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
 	}
 
 	/**
 	 * Überprüft, ob Wi-Fi unterstützt wird und ob das Wi-Fi ein- oder
 	 * ausgeschaltet ist.
 	 * 
-	 * @return Wi-Fi Status
+	 * @return int: Wi-Fi Status
 	 */
-	public int wifiState() {
-		WifiManager wifiManager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
+	public int getWifiState() {
 		if (wifiManager == null) {
 			// Wi-Fi wird nicht unterstützt.
 			return -1;
@@ -39,6 +42,16 @@ public class WiFiHandler {
 			// Wi-Fi ist aktiv.
 			return 1;
 		}
+	}
+
+	/**
+	 * Gibt die SSID des verbundenen Netzwerks zurück.
+	 * 
+	 * @return String: SSID
+	 */
+	public String getSSID() {
+		WifiInfo wifiInfo = wifiManager.getConnectionInfo();
+		return wifiInfo.getSSID();
 	}
 
 	/**
@@ -60,26 +73,26 @@ public class WiFiHandler {
 	}
 
 	/**
-	 * Ermittelt die lokale IPv4 Adresse des mobilen Gerätes
+	 * Ermittelt die lokale IPv4 Adresse des mobilen Gerätes.
 	 * 
 	 * @return String: Lokale IPv4 Adresse des Mobilgerätes, wenn erkannt, sonst
-	 *         null
+	 *         null.
 	 * @throws SocketException
 	 * @throws UnknownHostException
 	 */
 	public String getLocalIPv4Address() throws SocketException, UnknownHostException {
 
-		if (wifiState() == 0) {
+		if (getWifiState() == 0) {
 			// Wi-Fi ist inaktiv.
-			return "WIFI_STATE_ERROR";
+			return context.getString(R.string.WIFI_STATE_ERROR);
 		} else if (!isWifiConnected()) {
 			// Wi-Fi ist mir keinem Netzwerk verbunden
-			return "WIFI_CONNECTION_ERROR";
+			return context.getString(R.string.WIFI_CONNECTION_ERROR);
 		} else {
 
 			InetAddress localIPv4Address;
 			localIPv4Address = InetAddress.getLocalHost();
-			if (localIPv4Address.getHostAddress().equals("127.0.0.1")) {
+			if (localIPv4Address.getHostAddress().equals(context.getString(R.string.ip_localhost))) {
 				Enumeration<NetworkInterface> ifaces = NetworkInterface.getNetworkInterfaces();
 				while (ifaces.hasMoreElements()) {
 					NetworkInterface iface = ifaces.nextElement();
@@ -100,9 +113,9 @@ public class WiFiHandler {
 
 	/**
 	 * Ermittelt mit Hilfe der lokalen IPv4 des mobilen Gerätes die Class C
-	 * Netzwerkadresse
+	 * Netzwerkadresse.
 	 * 
-	 * @return Lokale IPv4 Class C Netzwerkadresse
+	 * @return String: Lokale IPv4 Class C Netzwerkadresse
 	 */
 	public String getNetworkAddressClassC() {
 		String[] localIPv4Address = null;
@@ -121,10 +134,11 @@ public class WiFiHandler {
 	}
 
 	/**
-	 * Überprüft die Korrektheit von IPv4-Adressen
+	 * Überprüft die Korrektheit von IPv4-Adressen.
 	 * 
 	 * @param hostIP
-	 * @return True, wenn die zu testende IPv4-Adresse korrekt ist, sonst false
+	 * @return True: IPv4-Adresse ist korrekt. False: IPv4-Adresse ist
+	 *         inkorrekt.
 	 */
 	public boolean isIPv4Adress(String addressIPv4) {
 		String[] addressIPv4Tokens = addressIPv4.split("\\.");
