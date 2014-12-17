@@ -1,11 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    
+    <!-- # -->
+    <string name="ip_localhost">127.0.0.1</string>
 
     <!-- A -->
     <string name="app_name">Babyfon</string>
 
     <!-- B -->
     <string name="babymonitor">Babymonitor</string>
+    <string name="bluetooth">Bluetooth</string>
+    
+    <!-- F -->
+    <string name="forward">Weiter</string>
 
     <!-- M -->
     <string name="button_mode_baby">Modus: Baby</string>
@@ -19,6 +26,10 @@
 
     <!-- S -->
     <string name="settings">Einstellungen</string>
+    
+    <!-- W -->
+    <string name="wifi">Wi-Fi</string>
+    <string name="wifip2p">Wi-Fi Direct</string>
 
     <!-- Y -->
     <string name="yes">Ja</string>
@@ -34,23 +45,7 @@
 
     <!-- Memos -->
     <string name="dialog_exit_app_title">Babyfon beenden?</string>
-    <string name="dialog_exit_app_message">Die Verbindung zu anderen Babyfon-Geräten wird getrennt.</string>
-
-    <!-- Navigation Drawer Items -->
-    <string-array name="navigation_drawer_items">
-        <item>Übersicht</item>
-        <item>Babymonitor</item>
-        <item>Anrufe und SMS</item>
-        <item>Babyfon einrichten</item>
-    </string-array>
-
-    <!-- Navigation Drawer Icons -->
-    <array name="navigation_drawer_icons">
-        <item>@drawable/ic_launcher</item>
-        <item>@drawable/ic_launcher</item>
-        <item>@drawable/ic_launcher</item>
-        <item>@drawable/ic_launcher</item>
-    </array>
+    <string name="dialog_exit_app_message">Die Verbindungen zu anderen Babyfon-Geräten wird getrennt.</string>
 
     <!-- Content Description -->
     <string name="desc_list_item_icon">Item Icon</string>
