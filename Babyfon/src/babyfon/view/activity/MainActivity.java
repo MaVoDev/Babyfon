@@ -52,6 +52,7 @@ public class MainActivity extends FragmentActivity {
 
 	private ArrayList<NavigationDrawerItemModel> items;
 	private NavigationDrawerListAdapter adapter;
+	private Battery mBattery;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -63,7 +64,7 @@ public class MainActivity extends FragmentActivity {
 			StrictMode.setThreadPolicy(policy);
 		}
 		
-		new Battery(this);
+		mBattery = new Battery(this);
 		new WifiReceiver(this, 12789);
 		
 		appTitle = drawerTitle = getTitle();
@@ -119,6 +120,14 @@ public class MainActivity extends FragmentActivity {
 		mDrawerLayout.setDrawerListener(mDrawerToggle);
 	}
 
+	@Override
+	protected void onDestroy() {
+		mBattery.unregister();
+		
+		super.onDestroy();
+	}
+	
+	
 	/**
 	 * Aktion bei Betätiung der BackPressed-Taste bei aktiver MainActivity.
 	 */

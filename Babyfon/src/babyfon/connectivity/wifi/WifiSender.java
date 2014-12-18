@@ -27,7 +27,9 @@ public class WifiSender {
 				outSingle = new PrintWriter(socket.getOutputStream(), true);
 			}
 		} catch (IOException e) {
-
+			// TODO: Fehler auf dem Gerät anzeigen, wenn Senden fehlschlägt
+			System.out.println("sendMessage failed!!!");
+			System.out.println("Error: " + e.getMessage());
 		}
 		if (outSingle != null) {
 			outSingle.println(msg);

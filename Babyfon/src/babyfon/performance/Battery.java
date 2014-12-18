@@ -42,4 +42,8 @@ public class Battery {
 			}
 		}
 	};
+
+	public void unregister() {
+		context.unregisterReceiver(this.mBatInfoReceiver);
+	}
 }

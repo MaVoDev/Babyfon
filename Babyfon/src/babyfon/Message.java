@@ -31,7 +31,7 @@ public class Message {
 	}
 
 	public void send(String str) {
-		new WifiSender(12789).sendMessage("localhost", str);
+		new WifiSender(12789).sendMessage("192.168.178.204", str);
 	}
 
 	public void splitString(String str) {
