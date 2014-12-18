@@ -1,5 +1,6 @@
 package babyfon.view.fragment;
 
+import babyfon.Message;
 import babyfon.init.R;
 import android.app.Fragment;
 import android.app.FragmentManager;
@@ -35,7 +36,7 @@ public class SetupFragment extends Fragment {
 						.addToBackStack(null).commit();
 			}
 		});
-
+		
 		return view;
 	}
 }

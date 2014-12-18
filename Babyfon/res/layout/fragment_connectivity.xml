@@ -24,36 +24,30 @@
         android:textAppearance="?android:attr/textAppearanceSmall" />
 
     <RadioGroup
-        android:id="@+id/radioGroup1"
+        android:id="@+id/radioConnectivity"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true" >
 
         <RadioButton
-            android:id="@+id/radio0"
+            android:id="@+id/radioConnectivityBluetooth"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:checked="true"
-            android:text="WiFi" />
+            android:text="@string/bluetooth" />
 
         <RadioButton
-            android:id="@+id/radio1"
+            android:id="@+id/radioConnectivityWifi"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="WiFi-Direct" />
+            android:text="@string/wifi" />
 
         <RadioButton
-            android:id="@+id/radio2"
+            android:id="@+id/radioConnectivityWifiDirect"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Bluetooth" />
-
-        <RadioButton
-            android:id="@+id/radio3"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Automatisch" />
+            android:text="@string/wifip2p" />
     </RadioGroup>
 
     <Button
@@ -63,6 +57,6 @@
         android:layout_above="@+id/textView2"
         android:layout_alignLeft="@+id/textView2"
         android:layout_marginBottom="14dp"
-        android:text="Weiter" />
+        android:text="@string/forward" />
 
 </RelativeLayout>

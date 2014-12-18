@@ -3,12 +3,22 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
 
+    <ImageView
+        android:id="@+id/imageView1"
+        android:layout_width="180px"
+        android:layout_height="180px"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginRight="27dp"
+        android:src="@drawable/battery" />
+
     <TextView
-        android:id="@+id/txtLabel"
+        android:id="@+id/textBatteryLevel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:text="@string/babymonitor"
-        android:textSize="16dp" />
+        android:layout_alignBottom="@+id/imageView1"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="50dp"
+        android:text="100%" />
 
 </RelativeLayout>

@@ -29,7 +29,7 @@ public class WifiSender {
 		} catch (IOException e) {
 
 		}
-		if (!outSingle.equals(null)) {
+		if (outSingle != null) {
 			outSingle.println(msg);
 		}
 	}

@@ -1,5 +1,6 @@
 package babyfon.view.activity;
 
+import babyfon.Message;
 import babyfon.init.R;
 
 import java.util.ArrayList;
@@ -7,7 +8,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 import babyfon.adapter.NavigationDrawerListAdapter;
+import babyfon.connectivity.wifi.WifiReceiver;
 import babyfon.model.NavigationDrawerItemModel;
+import babyfon.performance.Battery;
 import babyfon.view.fragment.AbsenceFragment;
 import babyfon.view.fragment.OverviewFragment;
 import babyfon.view.fragment.BabymonitorFragment;
@@ -15,7 +18,6 @@ import babyfon.view.fragment.SetupFragment;
 import android.app.AlertDialog;
 import android.app.Fragment;
 import android.app.FragmentManager;
-import android.app.ApplicationErrorReport.CrashInfo;
 import android.content.DialogInterface;
 import android.content.res.Configuration;
 import android.content.res.TypedArray;
@@ -57,20 +59,20 @@ public class MainActivity extends FragmentActivity {
 		setContentView(R.layout.activity_main);
 
 		if (android.os.Build.VERSION.SDK_INT > 9) {
-			StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder()
-					.permitAll().build();
+			StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
 			StrictMode.setThreadPolicy(policy);
 		}
-
+		
+		new Battery(this);
+		new WifiReceiver(this, 12789);
+		
 		appTitle = drawerTitle = getTitle();
 
 		// load slide menu items
-		navMenuTitles = getResources().getStringArray(
-				R.array.navigation_drawer_items);
+		navMenuTitles = getResources().getStringArray(R.array.navigation_drawer_items);
 
 		// nav drawer icons from resources
-		navMenuIcons = getResources().obtainTypedArray(
-				R.array.navigation_drawer_icons);
+		navMenuIcons = getResources().obtainTypedArray(R.array.navigation_drawer_icons);
 
 		mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
 		mDrawerList = (ListView) findViewById(R.id.list_slidermenu);
@@ -78,17 +80,13 @@ public class MainActivity extends FragmentActivity {
 		items = new ArrayList<NavigationDrawerItemModel>();
 
 		// Listenelement: Home
-		items.add(new NavigationDrawerItemModel(navMenuTitles[0], navMenuIcons
-				.getResourceId(0, -1)));
+		items.add(new NavigationDrawerItemModel(navMenuTitles[0], navMenuIcons.getResourceId(0, -1)));
 		// Listenelement: Babymonitor
-		items.add(new NavigationDrawerItemModel(navMenuTitles[1], navMenuIcons
-				.getResourceId(1, -1)));
+		items.add(new NavigationDrawerItemModel(navMenuTitles[1], navMenuIcons.getResourceId(1, -1)));
 		// Listenelement: Anrufe und Nachrichten in Abwesenheit
-		items.add(new NavigationDrawerItemModel(navMenuTitles[2], navMenuIcons
-				.getResourceId(2, -1), true, "22"));
+		items.add(new NavigationDrawerItemModel(navMenuTitles[2], navMenuIcons.getResourceId(2, -1), true, "22"));
 		// Listenelement: Einrichtungsassistent
-		items.add(new NavigationDrawerItemModel(navMenuTitles[3], navMenuIcons
-				.getResourceId(3, -1)));
+		items.add(new NavigationDrawerItemModel(navMenuTitles[3], navMenuIcons.getResourceId(3, -1)));
 
 		// Recycle the typed array
 		navMenuIcons.recycle();
@@ -96,8 +94,7 @@ public class MainActivity extends FragmentActivity {
 		mDrawerList.setOnItemClickListener(new SlideMenuClickListener());
 
 		// setting the nav drawer list adapter
-		adapter = new NavigationDrawerListAdapter(getApplicationContext(),
-				items);
+		adapter = new NavigationDrawerListAdapter(getApplicationContext(), items);
 		mDrawerList.setAdapter(adapter);
 
 		// enabling action bar app icon and behaving it as toggle button
@@ -105,8 +102,8 @@ public class MainActivity extends FragmentActivity {
 		getActionBar().setHomeButtonEnabled(true);
 
 		// Drawer Layout, Drawer Icon, Drawer Name (Drawer open, close)
-		mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout,
-				R.drawable.ic_drawer, R.string.app_name, R.string.app_name) {
+		mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, R.drawable.ic_drawer, R.string.app_name,
+				R.string.app_name) {
 			public void onDrawerClosed(View view) {
 				getActionBar().setTitle(appTitle);
 				// calling onPrepareOptionsMenu() to show action bar icons
@@ -128,30 +125,23 @@ public class MainActivity extends FragmentActivity {
 	@Override
 	public void onBackPressed() {
 		// Dialogfenster zur Abfrage, ob die App wirklich beendet werden soll.
-		new AlertDialog.Builder(this)
-				.setIcon(null)
-				.setTitle(getString(R.string.dialog_exit_app_title))
+		new AlertDialog.Builder(this).setIcon(null).setTitle(getString(R.string.dialog_exit_app_title))
 				.setMessage(getString(R.string.dialog_exit_app_message))
-				.setPositiveButton(getString(R.string.yes),
-						new DialogInterface.OnClickListener() {
-							@Override
-							public void onClick(DialogInterface dialog,
-									int which) {
-								finish();
-							}
+				.setPositiveButton(getString(R.string.yes), new DialogInterface.OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						finish();
+					}
 
-						}).setNegativeButton(getString(R.string.no), null)
-				.show();
+				}).setNegativeButton(getString(R.string.no), null).show();
 	}
 
 	/**
 	 * Slide menu item click listener
 	 * */
-	private class SlideMenuClickListener implements
-			ListView.OnItemClickListener {
+	private class SlideMenuClickListener implements ListView.OnItemClickListener {
 		@Override
-		public void onItemClick(AdapterView<?> parent, View view, int position,
-				long id) {
+		public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 			// display view for selected nav drawer item
 			displayView(position);
 		}
@@ -248,8 +238,7 @@ public class MainActivity extends FragmentActivity {
 
 		if (fragment != null) {
 			FragmentManager fragmentManager = getFragmentManager();
-			fragmentManager.beginTransaction()
-					.replace(R.id.frame_container, fragment).commit();
+			fragmentManager.beginTransaction().replace(R.id.frame_container, fragment).commit();
 
 			// update selected item and title, then close the drawer
 			mDrawerList.setItemChecked(position, true);

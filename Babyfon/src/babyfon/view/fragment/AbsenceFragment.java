@@ -1,7 +1,7 @@
 package babyfon.view.fragment;
 
+import babyfon.Message;
 import babyfon.init.R;
-
 import android.app.Fragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -18,7 +18,7 @@ public class AbsenceFragment extends Fragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
 		View view = inflater.inflate(R.layout.fragment_absence, container, false);
-
+		
 		return view;
 	}
 }

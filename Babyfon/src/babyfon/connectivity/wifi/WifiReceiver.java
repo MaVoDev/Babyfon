@@ -7,16 +7,23 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketTimeoutException;
 
+import babyfon.Message;
+import babyfon.view.activity.MainActivity;
+
 /**
  * Zuständig für den Empfang eines Strings über Wi-Fi.
  */
 public class WifiReceiver {
 
+	private MainActivity mainActivity;
 	private ServerSocket serverSocket;
 
 	private int port; // Port über den kommuniziert wird.
 
-	public WifiReceiver(int port) {
+	public WifiReceiver(MainActivity activity, int port) {
+		this.mainActivity = activity;
+		this.port = port;
+		
 		Receive receive = new Receive();
 		receive.start();
 	}
@@ -37,7 +44,7 @@ public class WifiReceiver {
 					final BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 					if (serverSocket.isBound()) {
 						// Eingehende Nachricht lesen und weiterleiten.
-						System.out.println(in.readLine());
+						new Message(mainActivity).splitString(in.readLine());
 					}
 					serverSocket.close();
 				} catch (SocketTimeoutException e) {

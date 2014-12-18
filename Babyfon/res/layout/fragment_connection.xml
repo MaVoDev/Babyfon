@@ -4,11 +4,19 @@
     android:layout_height="match_parent" >
 
     <TextView
-        android:id="@+id/txtLabel"
+        android:id="@+id/titleConnectivity"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:text="Verbindung aufbauen/testen"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="31dp"
         android:textSize="16dp" />
+
+    <ImageView
+        android:id="@+id/iconConnectivity"
+        android:layout_width="256px"
+        android:layout_height="256px"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true" />
 
 </RelativeLayout>
