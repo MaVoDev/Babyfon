@@ -7,6 +7,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketTimeoutException;
 
+import android.util.Log;
 import babyfon.Message;
 import babyfon.view.activity.MainActivity;
 
@@ -15,24 +16,30 @@ import babyfon.view.activity.MainActivity;
  */
 public class WifiReceiver {
 
+	private static final String TAG = WifiReceiver.class.getCanonicalName();
 	private MainActivity mainActivity;
 	private ServerSocket serverSocket;
+
+	private boolean isRunning = false;
 
 	private int port; // Port über den kommuniziert wird.
 
 	public WifiReceiver(MainActivity activity, int port) {
 		this.mainActivity = activity;
 		this.port = port;
-		
+
 		Receive receive = new Receive();
 		receive.start();
 	}
 
 	private class Receive extends Thread {
 
-		private boolean isRunning = true;
-
 		public void run() {
+			Log.i(TAG, "New WifiReceiver started!");
+			Log.i(TAG, "Thread ID: " + this.getId());
+
+			isRunning = true;
+
 			while (isRunning) {
 				try {
 					serverSocket = new ServerSocket(port);
@@ -41,11 +48,13 @@ public class WifiReceiver {
 					// die Verbindung besteht.
 					Socket socket = serverSocket.accept();
 
-					final BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+					final BufferedReader in = new BufferedReader(
+							new InputStreamReader(socket.getInputStream()));
 					if (serverSocket.isBound()) {
 						// Eingehende Nachricht lesen und weiterleiten.
 						new Message(mainActivity).splitString(in.readLine());
 					}
+
 					serverSocket.close();
 				} catch (SocketTimeoutException e) {
 
@@ -53,6 +62,15 @@ public class WifiReceiver {
 
 				}
 			}
+		}
+	}
+
+	public void stop() {
+		isRunning = false;
+		try {
+			serverSocket.close();
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
 	}
 }

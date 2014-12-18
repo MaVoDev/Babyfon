@@ -17,22 +17,35 @@ public class WifiSender {
 		this.port = port;
 	}
 
-	public void sendMessage(String target, String msg) {
-		SocketAddress sAddress = new InetSocketAddress(target, port);
-		Socket socket = new Socket();
-		PrintWriter outSingle = null;
-		try {
-			socket.connect(sAddress);
-			if (socket.isBound()) {
-				outSingle = new PrintWriter(socket.getOutputStream(), true);
+	public void sendMessage(final String target, final String msg) {
+
+		new Thread(new Runnable() {
+			@Override
+			public void run() {
+				System.out.println("try to send message...");
+
+				SocketAddress sAddress = new InetSocketAddress(target, port);
+				Socket socket = new Socket();
+				PrintWriter outSingle = null;
+				try {
+					socket.connect(sAddress);
+					if (socket.isBound()) {
+						outSingle = new PrintWriter(socket.getOutputStream(),
+								true);
+					}
+				} catch (IOException e) {
+					// TODO: Fehler auf dem Gerät anzeigen, wenn Senden
+					// fehlschlägt
+					System.out.println("sendMessage failed!!!");
+					System.out.println("Error: " + e.getMessage());
+				}
+				
+				if (outSingle != null) {
+					outSingle.println(msg);
+					System.out.println("Send message successfully!");
+				}
 			}
-		} catch (IOException e) {
-			// TODO: Fehler auf dem Gerät anzeigen, wenn Senden fehlschlägt
-			System.out.println("sendMessage failed!!!");
-			System.out.println("Error: " + e.getMessage());
-		}
-		if (outSingle != null) {
-			outSingle.println(msg);
-		}
+		}).start();
+
 	}
 }
