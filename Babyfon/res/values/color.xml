@@ -8,5 +8,8 @@
     <color name="list_divider">#272727</color>
     <color name="counter_text_bg">#626262</color>
     <color name="counter_text_color">#c5c4c4</color>
+    
+    <!-- Hintergründe -->
+    <color name="background_welcomesreen">#303030</color>
 
 </resources>

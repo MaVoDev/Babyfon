@@ -12,9 +12,22 @@ public class WelcomeScreen extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.layout_welcome_screen);
 
-		Intent intent = new Intent(this, MainActivity.class);
-		startActivity(intent);
+		Thread background = new Thread() {
+			public void run() {
 
-		finish();
+				try {
+					sleep(5000);
+
+					Intent intent = new Intent(getBaseContext(), MainActivity.class);
+					startActivity(intent);
+
+					finish();
+
+				} catch (Exception e) {
+
+				}
+			}
+		};
+		background.start();
 	}
 }
