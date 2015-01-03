@@ -11,14 +11,14 @@ import babyfon.view.fragment.ConnectionFragment;
 public class Message {
 
 	protected static final String TAG = Message.class.getCanonicalName();
-	MainActivity mainActivity;
+	MainActivity mMainActivity;
 
 	public Message(MainActivity activity) {
-		this.mainActivity = activity;
+		this.mMainActivity = activity;
 	}
 
 	public void send(String str) {
-		new WifiSender(12789).sendMessage("192.168.178.92", str);
+		new WifiSender(mMainActivity).sendMessage("192.168.178.92", str);
 	}
 
 	public void handleIncomingMessage(String str) {
@@ -26,28 +26,28 @@ public class Message {
 
 		System.out.println("Split: " + strArray[0]);
 
-		if (strArray[0].equals(mainActivity.getString(R.string.MESSAGE_BATTERY))) {
+		if (strArray[0].equals(mMainActivity.getString(R.string.MESSAGE_BATTERY))) {
 			// Batterie
-			mainActivity.runOnUiThread(new Runnable() {
+			mMainActivity.runOnUiThread(new Runnable() {
 				@Override
 				public void run() {
-					Fragment fragment = mainActivity.getFragmentById("BabymonitorFragment");
+					Fragment fragment = mMainActivity.getFragmentById("BabymonitorFragment");
 					((BabymonitorFragment) fragment).setBatteryLevel(strArray[1]);
 				}
 			});
 		}
 
-		if (strArray[0].equals(mainActivity.getString(R.string.MESSAGE_SMS_DETAILS))) {
+		if (strArray[0].equals(mMainActivity.getString(R.string.MESSAGE_SMS_DETAILS))) {
 			// SMS
 			System.out.println("From: " + strArray[1] + "  Message: " + strArray[2]);
 		}
 
-		if (strArray[0].equals(mainActivity.getString(R.string.MESSAGE_CONFIRM_CONNECTION))) {
+		if (strArray[0].equals(mMainActivity.getString(R.string.MESSAGE_CONFIRM_CONNECTION))) {
 			// Verbindung
-			mainActivity.runOnUiThread(new Runnable() {
+			mMainActivity.runOnUiThread(new Runnable() {
 				@Override
 				public void run() {
-					Fragment fragment = mainActivity.getFragmentById("ConnectionFragment");
+					Fragment fragment = mMainActivity.getFragmentById("ConnectionFragment");
 					((ConnectionFragment) fragment).addIP(strArray[1]);
 				}
 			});
@@ -56,16 +56,16 @@ public class Message {
 	
 	public void getError(String errMsg) {
 		String errorMessage;
-		if (errMsg.equals(mainActivity.getString(R.string.WIFI_STATE_ERROR))) {
+		if (errMsg.equals(mMainActivity.getString(R.string.WIFI_STATE_ERROR))) {
 			// Wi-Fi ist inaktiv
-			errorMessage = mainActivity.getString(R.string.ERRMSG_WIFI_STATE_ERROR);
-		} else if (errMsg.equals(mainActivity.getString(R.string.WIFI_CONNECTION_ERROR))) {
+			errorMessage = mMainActivity.getString(R.string.ERRMSG_WIFI_STATE_ERROR);
+		} else if (errMsg.equals(mMainActivity.getString(R.string.WIFI_CONNECTION_ERROR))) {
 			// Wi-Fi ist mit keinem Netzwerk verbunden
-			errorMessage = mainActivity.getString(R.string.ERRMSG_WIFI_CONNECTION_ERROR);
+			errorMessage = mMainActivity.getString(R.string.ERRMSG_WIFI_CONNECTION_ERROR);
 		} else {
 			// Unbekannter Fehler
-			errorMessage = mainActivity.getString(R.string.ERRMSG_UNKNOWN_ERROR);
+			errorMessage = mMainActivity.getString(R.string.ERRMSG_UNKNOWN_ERROR);
 		}
-		Toast.makeText(mainActivity, errorMessage, Toast.LENGTH_SHORT).show();
+		Toast.makeText(mMainActivity, errorMessage, Toast.LENGTH_SHORT).show();
 	}
 }

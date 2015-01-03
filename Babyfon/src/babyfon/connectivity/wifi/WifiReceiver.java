@@ -9,6 +9,7 @@ import java.net.SocketTimeoutException;
 
 import android.util.Log;
 import babyfon.Message;
+import babyfon.SharedPrefs;
 import babyfon.view.activity.MainActivity;
 
 /**
@@ -17,16 +18,16 @@ import babyfon.view.activity.MainActivity;
 public class WifiReceiver {
 
 	private static final String TAG = WifiReceiver.class.getCanonicalName();
-	private MainActivity mainActivity;
-	private ServerSocket serverSocket;
+	private MainActivity mMainActivity;
+	private ServerSocket mServerSocket;
 
 	private boolean isRunning = false;
 
-	private int port; // Port über den kommuniziert wird.
+	private int tcpPort; // TCP Port über den kommuniziert wird.
 
-	public WifiReceiver(MainActivity activity, int port) {
-		this.mainActivity = activity;
-		this.port = port;
+	public WifiReceiver(MainActivity activity) {
+		this.mMainActivity = activity;
+		this.tcpPort = new SharedPrefs(activity).getTCPPort();
 
 		Receive receive = new Receive();
 		receive.start();
@@ -42,19 +43,19 @@ public class WifiReceiver {
 
 			while (isRunning) {
 				try {
-					serverSocket = new ServerSocket(port);
+					mServerSocket = new ServerSocket(tcpPort);
 
 					// Wartet auf eine eingehende Anfrage und blockiert solange
 					// die Verbindung besteht.
-					Socket socket = serverSocket.accept();
+					Socket socket = mServerSocket.accept();
 
 					final BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-					if (serverSocket.isBound()) {
+					if (mServerSocket.isBound()) {
 						// Eingehende Nachricht lesen und weiterleiten.
-						new Message(mainActivity).handleIncomingMessage(in.readLine());
+						new Message(mMainActivity).handleIncomingMessage(in.readLine());
 					}
 
-					serverSocket.close();
+					mServerSocket.close();
 				} catch (SocketTimeoutException e) {
 
 				} catch (IOException e) {
@@ -67,7 +68,7 @@ public class WifiReceiver {
 	public void stop() {
 		isRunning = false;
 		try {
-			serverSocket.close();
+			mServerSocket.close();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

@@ -1,5 +1,6 @@
 package babyfon.view.fragment;
 
+import babyfon.SharedPrefs;
 import babyfon.init.R;
 import android.app.Fragment;
 import android.app.FragmentManager;
@@ -15,12 +16,13 @@ import android.widget.RadioGroup.OnCheckedChangeListener;
 
 public class ConnectivityFragment extends Fragment {
 
-	private Context context;
+	private Context mContext;
 
 	int connectivityType;
 
-	public ConnectivityFragment(Context context) {
-		this.context = context;
+	public ConnectivityFragment(Context mContext) {
+		this.mContext = mContext;
+		System.out.println("Modus: " + new SharedPrefs(mContext).getDeviceMode());
 	}
 
 	/**
@@ -69,7 +71,7 @@ public class ConnectivityFragment extends Fragment {
 			public void onClick(View v) {
 				Bundle bundle = new Bundle();
 				bundle.putInt("connectivityType", connectivityType);
-				ConnectionFragment connectionFragment = new ConnectionFragment(context);
+				ConnectionFragment connectionFragment = new ConnectionFragment(mContext);
 				connectionFragment.setArguments(bundle);
 				fragmentManager.beginTransaction().replace(R.id.frame_container, connectionFragment, null)
 						.addToBackStack(null).commit();

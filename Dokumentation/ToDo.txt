@@ -3,7 +3,6 @@ ToDo:
 - Design
 - Service
 - Wenn eine Connectivity nicht verfügbar ist, dann ausgrauen (beim Setup, Schritt 2)
-- SharedPreference
 - Verpasste Anrufe auslesen
 - Anrufe Anzahl und ausgeben
 - SMS Anzahl und Anzeigen

@@ -71,7 +71,7 @@ public class MainActivity extends FragmentActivity {
 		new SMSReceiver(this);
 
 		if (mWifiReceiver == null) {
-			mWifiReceiver = new WifiReceiver(this, 12789);
+			mWifiReceiver = new WifiReceiver(this);
 		}
 
 		appTitle = drawerTitle = getTitle();

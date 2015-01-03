@@ -15,7 +15,8 @@ public class BluetoothHandler {
 	 * Überprüft, ob Bluetooth unterstützt wird und ob Bluetooth ein- oder
 	 * ausgeschaltet ist.
 	 * 
-	 * @return Bluetooth Status
+	 * @return int Bluetooth Status: -1 = not available, 0 = not enabled, 1 =
+	 *         enabled
 	 */
 	public int bluetoothState() {
 		BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();

@@ -89,7 +89,7 @@ public class SharedPrefs {
 	 * @return int: tcp port
 	 */
 	public int getTCPPort() {
-		return mSharedPreferences.getInt("port_tcp", mResources.getInteger(R.integer.port_tcp));
+		return mSharedPreferences.getInt("port_tcp", mResources.getInteger(R.integer.sharedprefs_default_port_tcp));
 	}
 
 	// == Port UDP ====================================
@@ -100,6 +100,6 @@ public class SharedPrefs {
 	 * @return int: udp port
 	 */
 	public int getUDPPort() {
-		return mSharedPreferences.getInt("port_tcp", mResources.getInteger(R.integer.port_udp));
+		return mSharedPreferences.getInt("port_tcp", mResources.getInteger(R.integer.sharedprefs_default_port_udp));
 	}
 }
