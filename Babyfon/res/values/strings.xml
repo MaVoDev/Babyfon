@@ -33,12 +33,6 @@
 
     <!-- Y -->
     <string name="yes">Ja</string>
-    
-    <!-- Message Types -->
-    <string name="MESSAGE_BATTERY">BABYFON_MSG_BATTERY</string>
-    <string name="MESSAGE_CONFIRM_CONNECTION">BABYFON_MSG_CONFIRM_CONNECTION</string>
-    <string name="MESSAGE_CONNECTION_REQUEST">BABYFON_MSG_CONNECTION_REQUEST</string>
-    <string name="MESSAGE_SMS_DETAILS">BABYFON_MSG_SMS_DETAILS</string>
 
     <!-- Error Types -->
     <string name="WIFI_STATE_ERROR">WIFI_STATE_ERROR</string>

@@ -1,7 +1,6 @@
 package babyfon.performance;
 
 import babyfon.Message;
-import babyfon.init.R;
 import babyfon.view.activity.MainActivity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -13,11 +12,10 @@ import android.util.Log;
 public class Battery {
 
 	private static final String TAG = Battery.class.getCanonicalName();
+	MainActivity context;
 
-	private MainActivity mMainActivity;
-
-	public Battery(MainActivity mMainActivity) {
-		this.mMainActivity = mMainActivity;
+	public Battery(MainActivity context) {
+		this.context = context;
 
 		register();
 	}
@@ -34,7 +32,7 @@ public class Battery {
 
 				Log.i(TAG, "Send battery message. Level: " + level);
 
-				new Message(mMainActivity).send(mMainActivity.getString(R.string.MESSAGE_BATTERY) + ";" + level + "%");
+				new Message(context).send("BATTERY;" + level + "%");
 			}
 
 			if (Intent.ACTION_BATTERY_LOW.equals(action)) {
@@ -45,7 +43,7 @@ public class Battery {
 
 	public void unregister() {
 		Log.i(TAG, "Unregistering Battery-Receiver...");
-		mMainActivity.unregisterReceiver(this.mBatInfoReceiver);
+		context.unregisterReceiver(this.mBatInfoReceiver);
 	}
 
 	public void register() {
@@ -53,13 +51,16 @@ public class Battery {
 		Log.i(TAG, "Registering Battery-Receiver...");
 
 		// Änderung des Akkulevels
-		mMainActivity.registerReceiver(this.mBatInfoReceiver, new IntentFilter(Intent.ACTION_BATTERY_CHANGED));
+		context.registerReceiver(this.mBatInfoReceiver, new IntentFilter(
+				Intent.ACTION_BATTERY_CHANGED));
 
 		// Schwacher Akkustand
-		mMainActivity.registerReceiver(this.mBatInfoReceiver, new IntentFilter(Intent.ACTION_BATTERY_LOW));
+		context.registerReceiver(this.mBatInfoReceiver, new IntentFilter(
+				Intent.ACTION_BATTERY_LOW));
 
 		// Akku wechselt vom schwachen in den normalen Levelbereich
-		mMainActivity.registerReceiver(this.mBatInfoReceiver, new IntentFilter(Intent.ACTION_BATTERY_OKAY));
+		context.registerReceiver(this.mBatInfoReceiver, new IntentFilter(
+				Intent.ACTION_BATTERY_OKAY));
 
 	}
 }

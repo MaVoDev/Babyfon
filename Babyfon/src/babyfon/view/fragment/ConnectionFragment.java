@@ -20,14 +20,6 @@ public class ConnectionFragment extends Fragment {
 	public ConnectionFragment(Context context) {
 		// this.context = context;
 	}
-	
-	public void addIP(String ip) {
-		updateUI();
-	}
-	
-	public void updateUI() {
-
-	}
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -36,8 +28,6 @@ public class ConnectionFragment extends Fragment {
 
 		iconConnectivity = (ImageView) view.findViewById(R.id.iconConnectivity);
 		titleConnectivity = (TextView) view.findViewById(R.id.titleConnectivity);
-		
-		updateUI();
 		
 		Bundle bundle = this.getArguments();
 		if (bundle != null) {

@@ -48,10 +48,11 @@ public class WifiReceiver {
 					// die Verbindung besteht.
 					Socket socket = serverSocket.accept();
 
-					final BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+					final BufferedReader in = new BufferedReader(
+							new InputStreamReader(socket.getInputStream()));
 					if (serverSocket.isBound()) {
 						// Eingehende Nachricht lesen und weiterleiten.
-						new Message(mainActivity).handleIncomingMessage(in.readLine());
+						new Message(mainActivity).splitString(in.readLine());
 					}
 
 					serverSocket.close();
