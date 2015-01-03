@@ -53,7 +53,6 @@ public class MainActivity extends FragmentActivity {
 	private ArrayList<NavigationDrawerItemModel> items;
 	private NavigationDrawerListAdapter adapter;
 	private Battery mBattery;
-	private SMSReceiver mSMS;
 	private WifiReceiver mWifiReceiver;
 
 	@Override
@@ -61,18 +60,15 @@ public class MainActivity extends FragmentActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 
-		int mode = 0;
-		
 		if (android.os.Build.VERSION.SDK_INT > 9) {
 			StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
 			StrictMode.setThreadPolicy(policy);
 		}
-		
-		if(mode == 0) {
-			// Wenn Babymodus aktiv
-			mBattery = new Battery(this);
-			mSMS = new SMSReceiver(this);			
-		}
+
+		// TODO Wenn Babymodus aktiv
+		mBattery = new Battery(this);
+		// TODO Wenn Babymodus aktiv
+		new SMSReceiver(this);
 
 		if (mWifiReceiver == null) {
 			mWifiReceiver = new WifiReceiver(this, 12789);

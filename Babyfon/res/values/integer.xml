@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- P -->
+    <integer name="port_tcp">13141</integer>
+    <integer name="port_udp">13142</integer>
+
+</resources>
