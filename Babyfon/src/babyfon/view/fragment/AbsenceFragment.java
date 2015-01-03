@@ -1,6 +1,5 @@
 package babyfon.view.fragment;
 
-import babyfon.Message;
 import babyfon.init.R;
 import android.app.Fragment;
 import android.os.Bundle;

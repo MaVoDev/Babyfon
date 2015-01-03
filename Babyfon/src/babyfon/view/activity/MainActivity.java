@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import babyfon.adapter.NavigationDrawerListAdapter;
+import babyfon.connectivity.sms.SMSReceiver;
 import babyfon.connectivity.wifi.WifiReceiver;
 import babyfon.model.NavigationDrawerItemModel;
 import babyfon.performance.Battery;
@@ -52,6 +53,7 @@ public class MainActivity extends FragmentActivity {
 	private ArrayList<NavigationDrawerItemModel> items;
 	private NavigationDrawerListAdapter adapter;
 	private Battery mBattery;
+	private SMSReceiver mSMS;
 	private WifiReceiver mWifiReceiver;
 
 	@Override
@@ -59,12 +61,18 @@ public class MainActivity extends FragmentActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 
+		int mode = 0;
+		
 		if (android.os.Build.VERSION.SDK_INT > 9) {
 			StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
 			StrictMode.setThreadPolicy(policy);
 		}
-
-		mBattery = new Battery(this);
+		
+		if(mode == 0) {
+			// Wenn Babymodus aktiv
+			mBattery = new Battery(this);
+			mSMS = new SMSReceiver(this);			
+		}
 
 		if (mWifiReceiver == null) {
 			mWifiReceiver = new WifiReceiver(this, 12789);
@@ -88,7 +96,7 @@ public class MainActivity extends FragmentActivity {
 		// Listenelement: Babymonitor
 		items.add(new NavigationDrawerItemModel(navMenuTitles[1], navMenuIcons.getResourceId(1, -1)));
 		// Listenelement: Anrufe und Nachrichten in Abwesenheit
-		items.add(new NavigationDrawerItemModel(navMenuTitles[2], navMenuIcons.getResourceId(2, -1), true, "22"));
+		items.add(new NavigationDrawerItemModel(navMenuTitles[2], navMenuIcons.getResourceId(2, -1), true, "3"));
 		// Listenelement: Einrichtungsassistent
 		items.add(new NavigationDrawerItemModel(navMenuTitles[3], navMenuIcons.getResourceId(3, -1)));
 
@@ -182,6 +190,9 @@ public class MainActivity extends FragmentActivity {
 		// Handle action bar actions click
 		switch (item.getItemId()) {
 		case R.id.action_settings:
+			// Intent intent = new Intent(getBaseContext(),
+			// SettingsActivity.class);
+			// startActivity(intent);
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);
