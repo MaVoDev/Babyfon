@@ -1,0 +1,30 @@
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <CheckBoxPreference
+        android:defaultValue="true"
+        android:key="enable_sound_notification"
+        android:summaryOff="@string/summary_sound_off"
+        android:summaryOn="@string/summary_sound_on"
+        android:title="@string/pref_title_enable_sound" />
+
+    <RingtonePreference
+        android:defaultValue="content://settings/system/notification_sound"
+        android:dependency="enable_sound_notification"
+        android:key="choose_ringtone"
+        android:ringtoneType="notification"
+        android:title="@string/pref_title_ringtone" />
+
+    <CheckBoxPreference
+        android:defaultValue="true"
+        android:key="enable_display_notification"
+        android:summaryOff="@string/summary_display_off"
+        android:summaryOn="@string/summary_display_on"
+        android:title="@string/pref_title_display" />
+    <CheckBoxPreference
+        android:defaultValue="true"
+        android:key="enable_vibrate_notification"
+        android:summaryOff="@string/summary_vibrate_off"
+        android:summaryOn="@string/summary_vibrate_on"
+        android:title="@string/pref_title_vibrate" />
+
+</PreferenceScreen>

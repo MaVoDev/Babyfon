@@ -1,0 +1,41 @@
+<resources>
+
+    <!-- Strings related to Shared Preferences -->
+    <!-- Default values -->
+    <string name="pref_default_baby_name">Mein Baby</string>
+
+    <!-- Summaries -->
+    <string name="summary_display_off">Displayalarm ist deaktiviert</string>
+    <string name="summary_display_on">Displayalarm ist aktiviert</string>
+    <string name="summary_sound_off">Soundalarm ist deaktiviert</string>
+    <string name="summary_sound_on">Soundalarm ist aktiviert</string>
+    <string name="summary_vibrate_off">Vibrationsalarm ist deaktiviert</string>
+    <string name="summary_vibrate_on">Vibrationsalarm ist aktiviert</string>
+
+    <!-- Strings related to Settings -->
+
+    <string name="title_activity_settings">Einstellungen</string>
+
+    <!-- Baby settings -->
+    <string name="pref_header_baby">Mein Baby</string>
+    <string name="pref_title_name">Name des Babys</string>
+    <string name="pref_title_gender">Geschlecht des Babys</string>
+
+    <string-array name="pref_gender_list_titles">
+        <item>Junge</item>
+        <item>Mädchen</item>
+    </string-array>
+    <string-array name="pref_gender_list_values">
+        <item>boy</item>
+        <item>girl</item>
+    </string-array>
+
+    <!-- Notifications settings -->
+    <string name="pref_header_notifications">Benachrichtigungen</string>
+    <string name="pref_title_enable_sound">Soundalarm</string>
+    <string name="pref_title_ringtone">Klingelton</string>
+    <string name="pref_ringtone_silent">Lautlos</string>
+    <string name="pref_title_display">Displayalarm</string>
+    <string name="pref_title_vibrate">Vibrationsalarm</string>
+
+</resources>

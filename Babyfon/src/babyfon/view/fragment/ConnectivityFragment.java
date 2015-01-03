@@ -1,7 +1,7 @@
 package babyfon.view.fragment;
 
-import babyfon.SharedPrefs;
 import babyfon.init.R;
+import babyfon.settings.SharedPrefs;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.Context;

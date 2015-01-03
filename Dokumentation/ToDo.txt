@@ -15,9 +15,9 @@ ToDo:
 - Mikrofonsensibilität
 - Bluetooth Verbindung
 - Navigation beim Einrichten (1,2,3)
-- Einstellungen
 - Einrichtungsass. mal die Mototroller Hilfe/Einrichtung anschauen
 - Funktionen einbauen, die checken, welcher Modus aktiv ist, damit nicht alle Methoden laufen, nur diese, die auch gebraucht werden
+- Wenn Babymode an, dann die anderen Menüs (Bis aufs Setup und Übersicht) deaktivieren.
 
 Optional:
 ==========================================================================

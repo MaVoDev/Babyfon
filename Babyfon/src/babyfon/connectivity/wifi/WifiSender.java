@@ -6,7 +6,7 @@ import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.net.SocketAddress;
 
-import babyfon.SharedPrefs;
+import babyfon.settings.SharedPrefs;
 import babyfon.view.activity.MainActivity;
 
 /**

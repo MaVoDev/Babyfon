@@ -9,7 +9,7 @@ import java.net.SocketTimeoutException;
 
 import android.util.Log;
 import babyfon.Message;
-import babyfon.SharedPrefs;
+import babyfon.settings.SharedPrefs;
 import babyfon.view.activity.MainActivity;
 
 /**
