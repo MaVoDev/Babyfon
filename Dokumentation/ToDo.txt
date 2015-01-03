@@ -1,0 +1,33 @@
+ToDo:
+==========================================================================
+- Design
+- Service
+- Wenn eine Connectivity nicht verfügbar ist, dann ausgrauen (beim Setup, Schritt 2)
+- SharedPreference
+- Verpasste Anrufe auslesen
+- Anrufe Anzahl und ausgeben
+- SMS Anzahl und Anzeigen
+- Audiostreaming
+- Wenn BabyMode dann lautlos
+- WiFi: Geräte in mit der App anzeigen lassen (Eigene IP nicht durchsuchen, Namen mitsenden bei der Wifi suche zum Anzeigen)
+- WiFi Direct Verbindung
+- Modi einstellen können
+- WiFi Direct State
+- Mikrofonsensibilität
+- Bluetooth Verbindung
+- Navigation beim Einrichten (1,2,3)
+- Einstellungen
+- Einrichtungsass. mal die Mototroller Hilfe/Einrichtung anschauen
+- Funktionen einbauen, die checken, welcher Modus aktiv ist, damit nicht alle Methoden laufen, nur diese, die auch gebraucht werden
+
+Optional:
+==========================================================================
+- Schlaflieder
+- Sicherheit für die Verbindung
+- Check, ob Flugmodus an/aus ist
+- Wenn Callfunction, dann Baby kann Mutter "anrufen", Lautsprecher an
+
+Für spätere Version:
+==========================================================================
+- Automatische Verbindungen
+- Mehrere Geräte einbinden
