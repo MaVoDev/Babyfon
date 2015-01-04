@@ -158,14 +158,14 @@ public class MainActivity extends FragmentActivity {
 	@Override
 	protected void onResume() {
 		super.onResume();
-		
+
 		FrameLayout layout = (FrameLayout) findViewById(R.id.frame_container);
 
 		// Layout related to the gender of the baby
-		if (mSharedPrefs.getGender().equals("boy")) { // It's a boy
+		if (mSharedPrefs.getGender().equals("boy")) {
 			// Set background color
 			layout.setBackgroundResource(R.drawable.bg_male);
-		} else { // It's a girl
+		} else {
 			// Set background color
 			layout.setBackgroundResource(R.drawable.bg_female);
 		}
@@ -248,7 +248,7 @@ public class MainActivity extends FragmentActivity {
 		Fragment fragment = null;
 
 		if (id.equals("OverviewFragment")) {
-			fragment = new OverviewFragment();
+			fragment = new OverviewFragment(this);
 		} else if (id.equals("BabymonitorFragment")) {
 			fragment = new BabymonitorFragment();
 		} else if (id.equals("AbsenceFragment")) {

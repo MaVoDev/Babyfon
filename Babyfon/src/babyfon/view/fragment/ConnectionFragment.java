@@ -11,7 +11,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.View.OnClickListener;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 public class ConnectionFragment extends Fragment {
@@ -40,7 +39,7 @@ public class ConnectionFragment extends Fragment {
 	private void initUiElements(View view) {
 
 		// Initialize Buttons
-		btnCompleteSetup = (Button) view.findViewById(R.id.btn_complete_setup);
+		btnCompleteSetup = (Button) view.findViewById(R.id.btn_completeSetup);
 
 		// Initialize TextViews
 		titleConnectivity = (TextView) view.findViewById(R.id.titleConnectivity);
@@ -50,6 +49,8 @@ public class ConnectionFragment extends Fragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
 		View view = inflater.inflate(R.layout.fragment_connection, container, false);
+
+//		final FragmentManager fragmentManager = getFragmentManager();
 
 		initUiElements(view);
 
@@ -74,6 +75,11 @@ public class ConnectionFragment extends Fragment {
 		btnCompleteSetup.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
+
+				// Store values in SharedPreferences
+				mSharedPrefs.setDeviceMode(deviceMode);
+				mSharedPrefs.setConnectivityType(connectivityType);
+
 				if (deviceMode == 0) {
 					// Start the baby mode for that device
 					startBabyMode();
@@ -82,9 +88,12 @@ public class ConnectionFragment extends Fragment {
 					startParentMode();
 				}
 
-				// Store values in SharedPreferences
-				mSharedPrefs.setDeviceMode(deviceMode);
-				mSharedPrefs.setConnectivityType(connectivityType);
+				// TODO Funktioniert noch nicht. Beim erneuten Ausfhren des
+				// Setups, wird zweite Fragment als noch aktiv markiert.
+				
+				// fragmentManager.beginTransaction().replace(R.id.frame_container,
+				// new OverviewFragment(), null)
+				// .addToBackStack(null).commit();
 			}
 		});
 		return view;
@@ -101,14 +110,14 @@ public class ConnectionFragment extends Fragment {
 	}
 
 	public void initViewBluetooth() {
-		titleConnectivity.setText(getString(R.string.bluetooth));
+		titleConnectivity.setText(getString(R.string.connect_bluetooth));
 	}
 
 	public void initViewBWifi() {
-		titleConnectivity.setText(getString(R.string.wifi));
+		titleConnectivity.setText(getString(R.string.connect_wifi));
 	}
 
 	public void initViewBWifiDirect() {
-		titleConnectivity.setText(getString(R.string.wifip2p));
+		titleConnectivity.setText(getString(R.string.connect_wifip2p));
 	}
 }

@@ -32,8 +32,8 @@ public class DeviceModeFragment extends Fragment {
 	private void initUiElements(View view) {
 
 		// Initialize Buttons
-		buttonBabyMode = (Button) view.findViewById(R.id.button_baby_mode);
-		buttonParentMode = (Button) view.findViewById(R.id.button_parent_mode);
+		buttonBabyMode = (Button) view.findViewById(R.id.btn_babyMode);
+		buttonParentMode = (Button) view.findViewById(R.id.btn_parentMode);
 	}
 
 	@Override

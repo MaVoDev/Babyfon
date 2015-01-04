@@ -1,6 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    
+
+    <!-- Strings related to navigation drawer -->
+    <string name="nav_babymonitor">Babymonitor</string>
+    <string name="nav_overview">Übersicht</string>
+    <string name="nav_absence">Anrufe und SMS</string>
+    <string name="nav_setup">Babyfon einrichten</string>
+
     <!-- # -->
     <string name="ip_localhost">127.0.0.1</string>
 
@@ -8,32 +14,31 @@
     <string name="app_name">Babyfon</string>
 
     <!-- B -->
-    <string name="babymonitor">Babymonitor</string>
-    <string name="bluetooth">Bluetooth</string>
-    
+
+    <string name="connect_bluetooth">Bluetooth</string>
+    <string name="connect_wifi">Wi-Fi</string>
+    <string name="connect_wifip2p">Wi-Fi Direct</string>
+    <string name="connect_null">-</string>
+
     <!-- F -->
     <string name="forward">Weiter</string>
 
     <!-- M -->
-    <string name="button_mode_baby">Modus: Baby</string>
-    <string name="button_mode_parents">Modus: Eltern</string>
+    <string name="mode_baby">Babymodus</string>
+    <string name="mode_parents">Elternmodus</string>
+    <string name="mode_null">-</string>
 
     <!-- N -->
     <string name="no">Nein</string>
 
-    <!-- O -->
-    <string name="overview">Übersicht</string>
-
     <!-- S -->
     <string name="settings">Einstellungen</string>
-    
-    <!-- W -->
-    <string name="wifi">Wi-Fi</string>
-    <string name="wifip2p">Wi-Fi Direct</string>
+
+   
 
     <!-- Y -->
     <string name="yes">Ja</string>
-    
+
     <!-- Message Types -->
     <string name="MESSAGE_BATTERY">BABYFON_MSG_BATTERY</string>
     <string name="MESSAGE_CONFIRM_CONNECTION">BABYFON_MSG_CONFIRM_CONNECTION</string>
@@ -54,6 +59,7 @@
     <string name="dialog_exit_app_message">Die Verbindungen zu anderen Babyfon-Geräten wird getrennt.</string>
 
     <!-- Content Description -->
+    <string name="desc_img_default">Image default description</string>
     <string name="desc_list_item_icon">Item Icon</string>
 
 </resources>

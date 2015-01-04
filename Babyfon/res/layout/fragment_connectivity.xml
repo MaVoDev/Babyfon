@@ -35,23 +35,23 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:checked="true"
-            android:text="@string/bluetooth" />
+            android:text="@string/connect_bluetooth" />
 
         <RadioButton
             android:id="@+id/radioConnectivityWifi"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/wifi" />
+            android:text="@string/connect_wifi" />
 
         <RadioButton
             android:id="@+id/radioConnectivityWifiDirect"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/wifip2p" />
+            android:text="@string/connect_wifip2p" />
     </RadioGroup>
 
     <Button
-        android:id="@+id/button_forward_connectivity"
+        android:id="@+id/btn_forwardConnectivity"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_above="@+id/textView2"

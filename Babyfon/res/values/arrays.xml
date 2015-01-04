@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    
-    <!-- Navigation Drawer Items -->
+    <!-- Navigation Drawer Items -->
     <string-array name="navigation_drawer_items">
-        <item>Übersicht</item>
-        <item>Babymonitor</item>
-        <item>Anrufe und SMS</item>
-        <item>Babyfon einrichten</item>
+        <item>@string/nav_overview</item>
+        <item>@string/nav_babymonitor</item>
+        <item>@string/nav_absence</item>
+        <item>@string/nav_setup</item>
     </string-array>
 
     <!-- Navigation Drawer Icons -->

@@ -1,7 +1,7 @@
 ToDo:
 ==========================================================================
 - WiFi Direct State
-
+- Fragment nach dem Schließen beenden, sowas wie finish()
 - Service
 - Verpasste Anrufe auslesen
 - Anrufe Anzahl und ausgeben
@@ -33,3 +33,7 @@ Für spätere Version:
 ==========================================================================
 - Automatische Verbindungen
 - Mehrere Geräte einbinden
+
+Überlegungen:
+==========================================================================
+- Modus und Verbindungen vll unabhängig voneinander anbieten

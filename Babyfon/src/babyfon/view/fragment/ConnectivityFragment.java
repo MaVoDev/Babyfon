@@ -108,11 +108,8 @@ public class ConnectivityFragment extends Fragment {
 		if (bundle != null) {
 			deviceMode = bundle.getInt("deviceMode", -1);
 		}
-
 		
 		getConnectivityType(rgConnectivity.getCheckedRadioButtonId());
-
-		
 
 		// Set Bluetooth availability
 		rbBluetooth.setEnabled(isBluetoothAvailable);
@@ -141,7 +138,7 @@ public class ConnectivityFragment extends Fragment {
 			}
 		});
 
-		Button button = (Button) view.findViewById(R.id.button_forward_connectivity);
+		Button button = (Button) view.findViewById(R.id.btn_forwardConnectivity);
 		button.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {

@@ -100,7 +100,7 @@ public class SharedPrefs {
 	 * @return String: null, boy, girl
 	 */
 	public String getGender() {
-		return mSharedPreferences.getString("gender", null);
+		return mSharedPreferences.getString("gender", "boy");
 	}
 
 	/**

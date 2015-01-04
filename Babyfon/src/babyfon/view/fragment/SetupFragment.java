@@ -13,10 +13,11 @@ import android.widget.Button;
 
 public class SetupFragment extends Fragment {
 
-	Context context;
+	private DeviceModeFragment mDeviceModeFragment;
 
-	public SetupFragment(Context context) {
-		this.context = context;
+	// Constructor
+	public SetupFragment(Context mContext) {
+		mDeviceModeFragment = new DeviceModeFragment(mContext);
 	}
 
 	@Override
@@ -25,17 +26,18 @@ public class SetupFragment extends Fragment {
 		View view = inflater.inflate(R.layout.fragment_setup, container, false);
 
 		final FragmentManager fragmentManager = getFragmentManager();
-
+		
 		Button button = (Button) view.findViewById(R.id.button_forward_setup);
 		button.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				DeviceModeFragment deviceModeFragment = new DeviceModeFragment(context);
-				fragmentManager.beginTransaction().replace(R.id.frame_container, deviceModeFragment, null)
+				fragmentManager.beginTransaction().replace(R.id.frame_container, mDeviceModeFragment, null)
 						.addToBackStack(null).commit();
 			}
 		});
 		
+		
+
 		return view;
 	}
 }

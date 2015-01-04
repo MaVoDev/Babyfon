@@ -12,14 +12,6 @@
         android:layout_marginBottom="88dp"
         android:text="Schritt 1 von 3" />
 
-    <Button
-        android:id="@+id/button_parent_mode"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/button_baby_mode"
-        android:layout_below="@+id/button_baby_mode"
-        android:text="@string/button_mode_parents" />
-
     <TextView
         android:id="@+id/textView2"
         android:layout_width="200dp"
@@ -31,12 +23,19 @@
         android:textAppearance="?android:attr/textAppearanceSmall" />
 
     <Button
-        android:id="@+id/button_baby_mode"
+        android:id="@+id/btn_parentMode"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/textView2"
+        android:layout_alignLeft="@+id/btn_babyMode"
+        android:layout_centerVertical="true"
+        android:text="@string/mode_parents" />
+
+    <Button
+        android:id="@+id/btn_babyMode"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/btn_parentMode"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="50dp"
-        android:text="@string/button_mode_baby" />
+        android:text="@string/mode_baby" />
 
 </RelativeLayout>
