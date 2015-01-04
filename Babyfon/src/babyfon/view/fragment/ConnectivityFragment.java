@@ -1,5 +1,7 @@
 package babyfon.view.fragment;
 
+import babyfon.connectivity.bluetooth.BluetoothHandler;
+import babyfon.connectivity.wifi.WiFiHandler;
 import babyfon.init.R;
 import babyfon.settings.SharedPrefs;
 import android.app.Fragment;
@@ -11,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RadioGroup.OnCheckedChangeListener;
 
@@ -18,11 +21,29 @@ public class ConnectivityFragment extends Fragment {
 
 	private Context mContext;
 
+	boolean isBluetoothAvailable = false;
+	boolean isWiFiAvailable = false;
+	boolean isWiFiDirectAvailable = false;
+
 	int connectivityType;
 
 	public ConnectivityFragment(Context mContext) {
 		this.mContext = mContext;
 		System.out.println("Modus: " + new SharedPrefs(mContext).getDeviceMode());
+	}
+
+	public void getAvailability() {
+		BluetoothHandler mBluetoothHandler = new BluetoothHandler(mContext);
+		WiFiHandler mWifiHandler = new WiFiHandler(mContext);
+
+		if (mBluetoothHandler.getBluetoothState() != -1) {
+			isBluetoothAvailable = true;
+		}
+
+		if (mWifiHandler.getWifiState() != -1) {
+			isWiFiAvailable = true;
+			isWiFiDirectAvailable = true;
+		}
 	}
 
 	/**
@@ -55,10 +76,36 @@ public class ConnectivityFragment extends Fragment {
 
 		final FragmentManager fragmentManager = getFragmentManager();
 
-		RadioGroup radioConnectivity = (RadioGroup) view.findViewById(R.id.radioConnectivity);
-		getConnectivityType(radioConnectivity.getCheckedRadioButtonId());
+		getAvailability();
 
-		radioConnectivity.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+		RadioGroup rgConnectivity = (RadioGroup) view.findViewById(R.id.radioConnectivity);
+		getConnectivityType(rgConnectivity.getCheckedRadioButtonId());
+
+		RadioButton rbBluetooth = (RadioButton) view.findViewById(R.id.radioConnectivityBluetooth);
+		RadioButton rbWiFi = (RadioButton) view.findViewById(R.id.radioConnectivityWifi);
+		RadioButton rbWiFiDirect = (RadioButton) view.findViewById(R.id.radioConnectivityWifiDirect);
+
+		// Set Bluetooth availability
+		rbBluetooth.setEnabled(isBluetoothAvailable);
+
+		// Set Wi-Fi availability
+		rbWiFi.setEnabled(isWiFiAvailable);
+
+		// Set Wi-Fi Direct availability
+		rbWiFiDirect.setEnabled(isWiFiDirectAvailable);
+
+		// Check the next available connectivity
+		if (!isBluetoothAvailable) {
+			if (!isWiFiAvailable) {
+				if (!isWiFiDirectAvailable) {
+					rgConnectivity.clearCheck();
+				}
+			} else {
+				rbWiFi.setChecked(true);
+			}
+		}
+
+		rgConnectivity.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 			public void onCheckedChanged(RadioGroup group, int checkedId) {
 				// checkedId repräsentiert die ausgewählte Option.
 				getConnectivityType(checkedId);
@@ -81,3 +128,5 @@ public class ConnectivityFragment extends Fragment {
 		return view;
 	}
 }
+
+// TODO Den Weiter Button erst aktivieren, wenn eine Option gewählt wurde
