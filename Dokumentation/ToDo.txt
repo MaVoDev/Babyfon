@@ -1,6 +1,7 @@
 ToDo:
 ==========================================================================
-- Wenn BabyMode dann lautlos
+- WiFi Direct State
+
 - Service
 - Verpasste Anrufe auslesen
 - Anrufe Anzahl und ausgeben
@@ -8,15 +9,16 @@ ToDo:
 - Audiostreaming
 - WiFi: Geräte in mit der App anzeigen lassen (Eigene IP nicht durchsuchen, Namen mitsenden bei der Wifi suche zum Anzeigen)
 - WiFi Direct Verbindung
-- WiFi Direct State
 - Mikrofonsensibilität
 - Bluetooth Verbindung
-- Navigation beim Einrichten (1,2,3)
-- Einrichtungsass. mal die Mototroller Hilfe/Einrichtung anschauen
-- Funktionen einbauen, die checken, welcher Modus aktiv ist, damit nicht alle Methoden laufen, nur diese, die auch gebraucht werden
+- Babymode nach Abschluss des Assistenten in den Ruhemodus versetzen
 
-- Wenn Babymode an, dann die anderen Menüs (Bis aufs Setup und Übersicht) deaktivieren.
-- Design (Actionbarfarbe, Buttons, ...)
+- Methoden dem Modus anpassen (nur diese, die auch gebraucht werden, NavigationDrawer: nur Setup und Übersicht einblenden)
+- Navigation beim Einrichten (1,2,3)// siehe auch Mototroller Hilfe/Einrichtung, als Idee
+- Design (Actionbarfarbe, Buttons, Navigation Drawer, ...)
+
+- Wenn im Einrichtungsass. die Backpressed gedrückt wird, nachfragen, ob der Assi beendet werden soll, wenn ja, zurück zur Übersicht
+- Wenn im Setup ein Schritt zurück gemacht wird, Werte zurück übergeben
 
 Optional:
 ==========================================================================
