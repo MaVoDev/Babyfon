@@ -4,6 +4,7 @@ import babyfon.init.R;
 import babyfon.performance.Sound;
 import babyfon.settings.SharedPrefs;
 import android.app.Fragment;
+import android.app.FragmentManager;
 import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -25,10 +26,16 @@ public class ConnectionFragment extends Fragment {
 	private SharedPrefs mSharedPrefs;
 	private Sound mSound;
 
+	private Context mContext;
+
 	// Constructor
 	public ConnectionFragment(Context mContext) {
-		mSharedPrefs = new SharedPrefs(mContext);
-		mSound = new Sound(mContext);
+
+		setArguments(new Bundle());
+
+		this.mSharedPrefs = new SharedPrefs(mContext);
+		this.mSound = new Sound(mContext);
+		this.mContext = mContext;
 	}
 
 	/**
@@ -42,15 +49,18 @@ public class ConnectionFragment extends Fragment {
 		btnCompleteSetup = (Button) view.findViewById(R.id.btn_completeSetup);
 
 		// Initialize TextViews
-		titleConnectivity = (TextView) view.findViewById(R.id.titleConnectivity);
+		titleConnectivity = (TextView) view
+				.findViewById(R.id.titleConnectivity);
 	}
 
 	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+	public View onCreateView(LayoutInflater inflater, ViewGroup container,
+			Bundle savedInstanceState) {
 
-		View view = inflater.inflate(R.layout.fragment_connection, container, false);
+		View view = inflater.inflate(R.layout.fragment_connection, container,
+				false);
 
-//		final FragmentManager fragmentManager = getFragmentManager();
+		final FragmentManager fragmentManager = getFragmentManager();
 
 		initUiElements(view);
 
@@ -90,10 +100,12 @@ public class ConnectionFragment extends Fragment {
 
 				// TODO Funktioniert noch nicht. Beim erneuten Ausfhren des
 				// Setups, wird zweite Fragment als noch aktiv markiert.
-				
-				// fragmentManager.beginTransaction().replace(R.id.frame_container,
-				// new OverviewFragment(), null)
-				// .addToBackStack(null).commit();
+
+				fragmentManager
+						.beginTransaction()
+						.replace(R.id.frame_container,
+								new OverviewFragment(mContext), null)
+						.addToBackStack(null).commit();
 			}
 		});
 		return view;

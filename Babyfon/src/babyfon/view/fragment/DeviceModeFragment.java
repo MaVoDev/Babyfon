@@ -21,6 +21,8 @@ public class DeviceModeFragment extends Fragment {
 
 	// Constructor
 	public DeviceModeFragment(Context mContext) {
+//		setArguments(new Bundle());
+
 		connectivityFragment = new ConnectivityFragment(mContext);
 	}
 
@@ -37,9 +39,11 @@ public class DeviceModeFragment extends Fragment {
 	}
 
 	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+	public View onCreateView(LayoutInflater inflater, ViewGroup container,
+			Bundle savedInstanceState) {
 
-		View view = inflater.inflate(R.layout.fragment_device_mode, container, false);
+		View view = inflater.inflate(R.layout.fragment_device_mode, container,
+				false);
 
 		initUiElements(view);
 
@@ -64,8 +68,18 @@ public class DeviceModeFragment extends Fragment {
 
 		Bundle bundle = new Bundle();
 		bundle.putInt("deviceMode", deviceMode);
-		connectivityFragment.setArguments(bundle);
-		fragmentManager.beginTransaction().replace(R.id.frame_container, connectivityFragment, null)
+
+		if (connectivityFragment.getArguments() != null)
+			// connectivityFragment.setArguments(bundle);
+			connectivityFragment.getArguments().putAll(bundle);
+		// else
+		// connectivityFragment.setArguments(bundle);
+
+		// else
+		// connectivityFragment.getArguments().putAll(bundle);
+
+		fragmentManager.beginTransaction()
+				.replace(R.id.frame_container, connectivityFragment, null)
 				.addToBackStack(null).commit();
 	}
 }

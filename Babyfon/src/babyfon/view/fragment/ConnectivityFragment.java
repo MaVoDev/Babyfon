@@ -23,7 +23,7 @@ public class ConnectivityFragment extends Fragment {
 	private RadioButton rbBluetooth;
 	private RadioButton rbWifi;
 	private RadioButton rbWifiDirect;
-	
+
 	private BluetoothHandler mBluetoothHandler;
 	private WiFiHandler mWifiHandler;
 
@@ -38,6 +38,9 @@ public class ConnectivityFragment extends Fragment {
 
 	// Constructor
 	public ConnectivityFragment(Context mContext) {
+
+		setArguments(new Bundle());
+
 		mConnectionFragment = new ConnectionFragment(mContext);
 		mBluetoothHandler = new BluetoothHandler(mContext);
 		mWifiHandler = new WiFiHandler(mContext);
@@ -83,24 +86,27 @@ public class ConnectivityFragment extends Fragment {
 	 * @param view
 	 */
 	private void initUiElements(View view) {
-		
+
 		// Initialize RadioGroups
 		rgConnectivity = (RadioGroup) view.findViewById(R.id.radioConnectivity);
-		
-		// Initialize RadioButtons
-		rbBluetooth = (RadioButton) view.findViewById(R.id.radioConnectivityBluetooth);
-		rbWifi = (RadioButton) view.findViewById(R.id.radioConnectivityWifi);
-		rbWifiDirect = (RadioButton) view.findViewById(R.id.radioConnectivityWifiDirect);
-	}
-	
-	
-	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-		View view = inflater.inflate(R.layout.fragment_connectivity, container, false);
+		// Initialize RadioButtons
+		rbBluetooth = (RadioButton) view
+				.findViewById(R.id.radioConnectivityBluetooth);
+		rbWifi = (RadioButton) view.findViewById(R.id.radioConnectivityWifi);
+		rbWifiDirect = (RadioButton) view
+				.findViewById(R.id.radioConnectivityWifiDirect);
+	}
+
+	@Override
+	public View onCreateView(LayoutInflater inflater, ViewGroup container,
+			Bundle savedInstanceState) {
+
+		View view = inflater.inflate(R.layout.fragment_connectivity, container,
+				false);
 
 		final FragmentManager fragmentManager = getFragmentManager();
-		
+
 		initUiElements(view);
 		getAvailability();
 
@@ -108,7 +114,7 @@ public class ConnectivityFragment extends Fragment {
 		if (bundle != null) {
 			deviceMode = bundle.getInt("deviceMode", -1);
 		}
-		
+
 		getConnectivityType(rgConnectivity.getCheckedRadioButtonId());
 
 		// Set Bluetooth availability
@@ -131,23 +137,33 @@ public class ConnectivityFragment extends Fragment {
 			}
 		}
 
-		rgConnectivity.setOnCheckedChangeListener(new OnCheckedChangeListener() {
-			public void onCheckedChanged(RadioGroup group, int checkedId) {
-				// checkedId repräsentiert die ausgewählte Option.
-				getConnectivityType(checkedId);
-			}
-		});
+		rgConnectivity
+				.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+					public void onCheckedChanged(RadioGroup group, int checkedId) {
+						// checkedId repräsentiert die ausgewählte Option.
+						getConnectivityType(checkedId);
+					}
+				});
 
-		Button button = (Button) view.findViewById(R.id.btn_forwardConnectivity);
+		Button button = (Button) view
+				.findViewById(R.id.btn_forwardConnectivity);
 		button.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				Bundle bundle = new Bundle();
 				bundle.putInt("deviceMode", deviceMode);
 				bundle.putInt("connectivityType", connectivityType);
-				mConnectionFragment.setArguments(bundle);
-				fragmentManager.beginTransaction().replace(R.id.frame_container, mConnectionFragment, null)
-						.addToBackStack(null).commit();
+
+				if (mConnectionFragment.getArguments() != null)
+					// mConnectionFragment.setArguments(bundle);
+					mConnectionFragment.getArguments().putAll(bundle);
+				// else
+				// mConnectionFragment.getArguments().putAll(bundle);
+
+				fragmentManager
+						.beginTransaction()
+						.replace(R.id.frame_container, mConnectionFragment,
+								null).addToBackStack(null).commit();
 			}
 		});
 
