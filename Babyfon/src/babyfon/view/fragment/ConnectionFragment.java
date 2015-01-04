@@ -1,5 +1,8 @@
 package babyfon.view.fragment;
 
+import babyfon.connectivity.ConnectionInterface;
+import babyfon.connectivity.bluetooth.BluetoothConnection;
+import babyfon.connectivity.bluetooth.BluetoothListAdapter;
 import babyfon.init.R;
 import babyfon.performance.Sound;
 import babyfon.settings.SharedPrefs;
@@ -12,12 +15,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.ListView;
 import android.widget.TextView;
 
 public class ConnectionFragment extends Fragment {
 
 	// Define UI elements
+	private ListView listViewDevices;
 	private Button btnCompleteSetup;
+	private Button btnSearchDevices;
 	private TextView titleConnectivity;
 
 	private int connectivityType;
@@ -27,6 +33,8 @@ public class ConnectionFragment extends Fragment {
 	private Sound mSound;
 
 	private Context mContext;
+
+	private ConnectionInterface mConnection;
 
 	// Constructor
 	public ConnectionFragment(Context mContext) {
@@ -45,17 +53,24 @@ public class ConnectionFragment extends Fragment {
 	 */
 	private void initUiElements(View view) {
 
+		// Initialize ListView
+		listViewDevices = (ListView) view.findViewById(R.id.listView_devices);
+
 		// Initialize Buttons
 		btnCompleteSetup = (Button) view.findViewById(R.id.btn_completeSetup);
+		btnSearchDevices = (Button) view.findViewById(R.id.btn_searchDevices);
 
 		// Initialize TextViews
-		titleConnectivity = (TextView) view.findViewById(R.id.titleConnectivity);
+		titleConnectivity = (TextView) view
+				.findViewById(R.id.titleConnectivity);
 	}
 
 	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+	public View onCreateView(LayoutInflater inflater, ViewGroup container,
+			Bundle savedInstanceState) {
 
-		View view = inflater.inflate(R.layout.fragment_connection, container, false);
+		View view = inflater.inflate(R.layout.fragment_connection, container,
+				false);
 
 		final FragmentManager fragmentManager = getFragmentManager();
 
@@ -75,6 +90,14 @@ public class ConnectionFragment extends Fragment {
 				initViewBWifiDirect();
 				break;
 			}
+
+			btnSearchDevices.setOnClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					mConnection.searchDevices();
+				}
+			});
+
 			deviceMode = bundle.getInt("deviceMode", -1);
 		}
 
@@ -95,7 +118,10 @@ public class ConnectionFragment extends Fragment {
 					startParentMode();
 				}
 
-				fragmentManager.beginTransaction().replace(R.id.frame_container, new OverviewFragment(mContext), null)
+				fragmentManager
+						.beginTransaction()
+						.replace(R.id.frame_container,
+								new OverviewFragment(mContext), null)
 						.addToBackStack(null).commit();
 			}
 		});
@@ -114,6 +140,11 @@ public class ConnectionFragment extends Fragment {
 
 	public void initViewBluetooth() {
 		titleConnectivity.setText(getString(R.string.connect_bluetooth));
+
+		mConnection = new BluetoothConnection(mContext);
+		
+		// Setup ListView Adapter
+		listViewDevices.setAdapter(mConnection.getListAdapter());
 	}
 
 	public void initViewBWifi() {

@@ -13,6 +13,29 @@
         android:textSize="16dp" />
 
     <Button
+        android:id="@+id/btn_searchDevices"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/titleConnectivity"
+        android:text="Search..." />
+
+    <ProgressBar
+        android:id="@+id/progressBar_searching"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/listView_devices"
+        android:layout_alignParentRight="true" />
+
+    <ListView
+        android:id="@+id/listView_devices"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/btn_completeSetup"
+        android:layout_below="@+id/btn_searchDevices"
+        android:divider="@android:drawable/divider_horizontal_dark" >
+    </ListView>
+
+    <Button
         android:id="@+id/btn_completeSetup"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
