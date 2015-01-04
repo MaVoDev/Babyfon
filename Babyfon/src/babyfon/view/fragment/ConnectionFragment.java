@@ -18,7 +18,6 @@ public class ConnectionFragment extends Fragment {
 
 	// Define UI elements
 	private Button btnCompleteSetup;
-	private ImageView iconConnectivity;
 	private TextView titleConnectivity;
 
 	private int connectivityType;
@@ -27,18 +26,21 @@ public class ConnectionFragment extends Fragment {
 	private SharedPrefs mSharedPrefs;
 	private Sound mSound;
 
+	// Constructor
 	public ConnectionFragment(Context mContext) {
 		mSharedPrefs = new SharedPrefs(mContext);
 		mSound = new Sound(mContext);
 	}
 
+	/**
+	 * Initialize the UI elements
+	 * 
+	 * @param view
+	 */
 	private void initUiElements(View view) {
 
 		// Initialize Buttons
 		btnCompleteSetup = (Button) view.findViewById(R.id.btn_complete_setup);
-
-		// Initialize ImageViews
-		iconConnectivity = (ImageView) view.findViewById(R.id.iconConnectivity);
 
 		// Initialize TextViews
 		titleConnectivity = (TextView) view.findViewById(R.id.titleConnectivity);
@@ -69,7 +71,6 @@ public class ConnectionFragment extends Fragment {
 		}
 
 		// OnClickListener for the Button btnCompleteSetup
-		btnCompleteSetup = (Button) view.findViewById(R.id.btn_complete_setup);
 		btnCompleteSetup.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -100,17 +101,14 @@ public class ConnectionFragment extends Fragment {
 	}
 
 	public void initViewBluetooth() {
-		iconConnectivity.setImageResource(R.drawable.ic_bluetooth);
 		titleConnectivity.setText(getString(R.string.bluetooth));
 	}
 
 	public void initViewBWifi() {
-		iconConnectivity.setImageResource(R.drawable.ic_wifi);
 		titleConnectivity.setText(getString(R.string.wifi));
 	}
 
 	public void initViewBWifiDirect() {
-		iconConnectivity.setImageResource(R.drawable.ic_wifidirect);
 		titleConnectivity.setText(getString(R.string.wifip2p));
 	}
 }

@@ -12,13 +12,6 @@
         android:layout_marginTop="31dp"
         android:textSize="16dp" />
 
-    <ImageView
-        android:id="@+id/iconConnectivity"
-        android:layout_width="256px"
-        android:layout_height="256px"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true" />
-
     <Button
         android:id="@+id/btn_complete_setup"
         android:layout_width="wrap_content"

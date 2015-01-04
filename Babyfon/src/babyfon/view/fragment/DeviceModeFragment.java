@@ -13,10 +13,27 @@ import android.widget.Button;
 
 public class DeviceModeFragment extends Fragment {
 
+	// Define UI elements
+	private Button buttonBabyMode;
+	private Button buttonParentMode;
+
 	private ConnectivityFragment connectivityFragment;
-	
+
+	// Constructor
 	public DeviceModeFragment(Context mContext) {
 		connectivityFragment = new ConnectivityFragment(mContext);
+	}
+
+	/**
+	 * Initialize the UI elements
+	 * 
+	 * @param view
+	 */
+	private void initUiElements(View view) {
+
+		// Initialize Buttons
+		buttonBabyMode = (Button) view.findViewById(R.id.button_baby_mode);
+		buttonParentMode = (Button) view.findViewById(R.id.button_parent_mode);
 	}
 
 	@Override
@@ -24,7 +41,8 @@ public class DeviceModeFragment extends Fragment {
 
 		View view = inflater.inflate(R.layout.fragment_device_mode, container, false);
 
-		Button buttonBabyMode = (Button) view.findViewById(R.id.button_baby_mode);
+		initUiElements(view);
+
 		buttonBabyMode.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -32,7 +50,6 @@ public class DeviceModeFragment extends Fragment {
 			}
 		});
 
-		Button buttonParentMode = (Button) view.findViewById(R.id.button_parent_mode);
 		buttonParentMode.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {

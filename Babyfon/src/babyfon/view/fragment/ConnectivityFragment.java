@@ -18,18 +18,25 @@ import android.widget.RadioGroup.OnCheckedChangeListener;
 
 public class ConnectivityFragment extends Fragment {
 
+	// Define UI elements
+	private RadioGroup rgConnectivity;
+	private RadioButton rbBluetooth;
+	private RadioButton rbWifi;
+	private RadioButton rbWifiDirect;
+	
 	private BluetoothHandler mBluetoothHandler;
 	private WiFiHandler mWifiHandler;
 
 	private ConnectionFragment mConnectionFragment;
 
 	private boolean isBluetoothAvailable = false;
-	private boolean isWiFiAvailable = false;
-	private boolean isWiFiDirectAvailable = false;
+	private boolean isWifiAvailable = false;
+	private boolean isWifiDirectAvailable = false;
 
 	private int connectivityType;
 	private int deviceMode;
 
+	// Constructor
 	public ConnectivityFragment(Context mContext) {
 		mConnectionFragment = new ConnectionFragment(mContext);
 		mBluetoothHandler = new BluetoothHandler(mContext);
@@ -42,8 +49,8 @@ public class ConnectivityFragment extends Fragment {
 		}
 
 		if (mWifiHandler.getWifiState() != -1) {
-			isWiFiAvailable = true;
-			isWiFiDirectAvailable = true;
+			isWifiAvailable = true;
+			isWifiDirectAvailable = true;
 		}
 	}
 
@@ -70,13 +77,31 @@ public class ConnectivityFragment extends Fragment {
 		}
 	}
 
+	/**
+	 * Initialize the UI elements
+	 * 
+	 * @param view
+	 */
+	private void initUiElements(View view) {
+		
+		// Initialize RadioGroups
+		rgConnectivity = (RadioGroup) view.findViewById(R.id.radioConnectivity);
+		
+		// Initialize RadioButtons
+		rbBluetooth = (RadioButton) view.findViewById(R.id.radioConnectivityBluetooth);
+		rbWifi = (RadioButton) view.findViewById(R.id.radioConnectivityWifi);
+		rbWifiDirect = (RadioButton) view.findViewById(R.id.radioConnectivityWifiDirect);
+	}
+	
+	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
 		View view = inflater.inflate(R.layout.fragment_connectivity, container, false);
 
 		final FragmentManager fragmentManager = getFragmentManager();
-
+		
+		initUiElements(view);
 		getAvailability();
 
 		Bundle bundle = this.getArguments();
@@ -84,30 +109,28 @@ public class ConnectivityFragment extends Fragment {
 			deviceMode = bundle.getInt("deviceMode", -1);
 		}
 
-		RadioGroup rgConnectivity = (RadioGroup) view.findViewById(R.id.radioConnectivity);
+		
 		getConnectivityType(rgConnectivity.getCheckedRadioButtonId());
 
-		RadioButton rbBluetooth = (RadioButton) view.findViewById(R.id.radioConnectivityBluetooth);
-		RadioButton rbWiFi = (RadioButton) view.findViewById(R.id.radioConnectivityWifi);
-		RadioButton rbWiFiDirect = (RadioButton) view.findViewById(R.id.radioConnectivityWifiDirect);
+		
 
 		// Set Bluetooth availability
 		rbBluetooth.setEnabled(isBluetoothAvailable);
 
 		// Set Wi-Fi availability
-		rbWiFi.setEnabled(isWiFiAvailable);
+		rbWifi.setEnabled(isWifiAvailable);
 
 		// Set Wi-Fi Direct availability
-		rbWiFiDirect.setEnabled(isWiFiDirectAvailable);
+		rbWifiDirect.setEnabled(isWifiDirectAvailable);
 
 		// Check the next available connectivity
 		if (!isBluetoothAvailable) {
-			if (!isWiFiAvailable) {
-				if (!isWiFiDirectAvailable) {
+			if (!isWifiAvailable) {
+				if (!isWifiDirectAvailable) {
 					rgConnectivity.clearCheck();
 				}
 			} else {
-				rbWiFi.setChecked(true);
+				rbWifi.setChecked(true);
 			}
 		}
 
