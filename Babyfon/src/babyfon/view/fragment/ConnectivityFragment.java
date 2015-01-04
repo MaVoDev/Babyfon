@@ -2,6 +2,7 @@ package babyfon.view.fragment;
 
 import babyfon.connectivity.bluetooth.BluetoothHandler;
 import babyfon.connectivity.wifi.WiFiHandler;
+import babyfon.connectivity.wifi.WiFiHandler;
 import babyfon.init.R;
 import android.app.Fragment;
 import android.app.FragmentManager;
