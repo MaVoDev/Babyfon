@@ -49,16 +49,13 @@ public class ConnectionFragment extends Fragment {
 		btnCompleteSetup = (Button) view.findViewById(R.id.btn_completeSetup);
 
 		// Initialize TextViews
-		titleConnectivity = (TextView) view
-				.findViewById(R.id.titleConnectivity);
+		titleConnectivity = (TextView) view.findViewById(R.id.titleConnectivity);
 	}
 
 	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-			Bundle savedInstanceState) {
+	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-		View view = inflater.inflate(R.layout.fragment_connection, container,
-				false);
+		View view = inflater.inflate(R.layout.fragment_connection, container, false);
 
 		final FragmentManager fragmentManager = getFragmentManager();
 
@@ -98,13 +95,7 @@ public class ConnectionFragment extends Fragment {
 					startParentMode();
 				}
 
-				// TODO Funktioniert noch nicht. Beim erneuten Ausfhren des
-				// Setups, wird zweite Fragment als noch aktiv markiert.
-
-				fragmentManager
-						.beginTransaction()
-						.replace(R.id.frame_container,
-								new OverviewFragment(mContext), null)
+				fragmentManager.beginTransaction().replace(R.id.frame_container, new OverviewFragment(mContext), null)
 						.addToBackStack(null).commit();
 			}
 		});

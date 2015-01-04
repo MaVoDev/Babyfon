@@ -19,10 +19,15 @@ import babyfon.view.fragment.SetupFragment;
 import android.app.AlertDialog;
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.res.Configuration;
 import android.content.res.TypedArray;
+import android.net.wifi.p2p.WifiP2pManager;
+import android.net.wifi.p2p.WifiP2pManager.Channel;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.support.v4.app.ActionBarDrawerToggle;
@@ -65,12 +70,12 @@ public class MainActivity extends FragmentActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 
-		mSharedPrefs = new SharedPrefs(this);
-
 		if (android.os.Build.VERSION.SDK_INT > 9) {
 			StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
 			StrictMode.setThreadPolicy(policy);
 		}
+
+		mSharedPrefs = new SharedPrefs(this);
 
 		// Customize device mode
 		if (mSharedPrefs.getDeviceMode() == 0) { // Baby mode
@@ -153,6 +158,12 @@ public class MainActivity extends FragmentActivity {
 		}
 
 		super.onDestroy();
+	}
+
+	@Override
+	protected void onPause() {
+		super.onPause();
+
 	}
 
 	@Override

@@ -36,8 +36,7 @@ public class WifiReceiver {
 	private class Receive extends Thread {
 
 		public void run() {
-			Log.i(TAG, "New WifiReceiver started!");
-			Log.i(TAG, "Thread ID: " + this.getId());
+			Log.i(TAG, "WifiReceiver started...");
 
 			isRunning = true;
 
