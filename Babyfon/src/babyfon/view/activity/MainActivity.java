@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import babyfon.adapter.NavigationDrawerListAdapter;
+import babyfon.connectivity.call.CallLog;
 import babyfon.connectivity.sms.SMSReceiver;
 import babyfon.connectivity.wifi.WifiReceiver;
 import babyfon.model.NavigationDrawerItemModel;
@@ -74,6 +75,8 @@ public class MainActivity extends FragmentActivity {
 			StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
 			StrictMode.setThreadPolicy(policy);
 		}
+		
+		new CallLog(this).test();
 
 		mSharedPrefs = new SharedPrefs(this);
 
