@@ -11,10 +11,12 @@ import babyfon.connectivity.sms.SMSReceiver;
 import babyfon.connectivity.wifi.WifiReceiver;
 import babyfon.model.NavigationDrawerItemModel;
 import babyfon.performance.Battery;
+import babyfon.settings.SharedPrefs;
 import babyfon.view.fragment.AbsenceFragment;
 import babyfon.view.fragment.OverviewFragment;
 import babyfon.view.fragment.BabymonitorFragment;
 import babyfon.view.fragment.SetupFragment;
+import android.app.ActionBar;
 import android.app.AlertDialog;
 import android.app.Fragment;
 import android.app.FragmentManager;
@@ -22,6 +24,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.content.res.TypedArray;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.support.v4.app.ActionBarDrawerToggle;
@@ -31,6 +35,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.FrameLayout;
 import android.widget.ListView;
 
 public class MainActivity extends FragmentActivity {
@@ -47,7 +52,7 @@ public class MainActivity extends FragmentActivity {
 	// App Title/Name
 	private CharSequence appTitle;
 
-	// slide menu items
+	// Slide menu items
 	private String[] navMenuTitles;
 	private TypedArray navMenuIcons;
 
@@ -56,19 +61,28 @@ public class MainActivity extends FragmentActivity {
 	private Battery mBattery;
 	private WifiReceiver mWifiReceiver;
 
+	private SharedPrefs mSharedPrefs;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+
+		mSharedPrefs = new SharedPrefs(this);
 
 		if (android.os.Build.VERSION.SDK_INT > 9) {
 			StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
 			StrictMode.setThreadPolicy(policy);
 		}
 
-		// TODO Wenn Babymodus aktiv
+		// Customize device mode
+		if (mSharedPrefs.getDeviceMode() == 0) { // Baby mode
+
+		} else { // Parent mode
+
+		}
+
 		mBattery = new Battery(this);
-		// TODO Wenn Babymodus aktiv
 		new SMSReceiver(this);
 
 		if (mWifiReceiver == null) {
@@ -127,7 +141,7 @@ public class MainActivity extends FragmentActivity {
 		};
 		mDrawerLayout.setDrawerListener(mDrawerToggle);
 
-		// Die MainActivity startet mit dem ersten Fragment.
+		// Open the first fragment (OverviewFragment) on start
 		displayView(0);
 	}
 
@@ -142,6 +156,22 @@ public class MainActivity extends FragmentActivity {
 		}
 
 		super.onDestroy();
+	}
+
+	@Override
+	protected void onResume() {
+		super.onResume();
+		
+		FrameLayout layout = (FrameLayout) findViewById(R.id.frame_container);
+
+		// Layout related to the gender of the baby
+		if (mSharedPrefs.getGender().equals("boy")) { // It's a boy
+			// Set background color
+			layout.setBackgroundResource(R.drawable.bg_male);
+		} else { // It's a girl
+			// Set background color
+			layout.setBackgroundResource(R.drawable.bg_female);
+		}
 	}
 
 	/**
