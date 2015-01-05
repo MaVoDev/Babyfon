@@ -1,8 +1,8 @@
 package babyfon.view.fragment;
 
 import babyfon.connectivity.bluetooth.BluetoothHandler;
-import babyfon.connectivity.wifi.WiFiHandler;
-import babyfon.connectivity.wifi.WiFiHandler;
+import babyfon.connectivity.wifi.WifiHandler;
+import babyfon.connectivity.wifi.WifiHandler;
 import babyfon.init.R;
 import android.app.Fragment;
 import android.app.FragmentManager;
@@ -26,7 +26,7 @@ public class ConnectivityFragment extends Fragment {
 	private RadioButton rbWifiDirect;
 
 	private BluetoothHandler mBluetoothHandler;
-	private WiFiHandler mWifiHandler;
+	private WifiHandler mWifiHandler;
 
 	private ConnectionFragment mConnectionFragment;
 
@@ -44,7 +44,7 @@ public class ConnectivityFragment extends Fragment {
 
 		mConnectionFragment = new ConnectionFragment(mContext);
 		mBluetoothHandler = new BluetoothHandler(mContext);
-		mWifiHandler = new WiFiHandler(mContext);
+		mWifiHandler = new WifiHandler(mContext);
 	}
 
 	public void getAvailability() {

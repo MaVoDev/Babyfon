@@ -12,11 +12,11 @@ import babyfon.view.activity.MainActivity;
 /**
  * Zuständig für das Senden eines Srings über Wi-Fi.
  */
-public class WifiSender {
+public class TCPSender {
 
 	private int tcpPort; // TCP Port über den kommuniziert wird.
 
-	public WifiSender(MainActivity activity) {
+	public TCPSender(MainActivity activity) {
 		this.tcpPort = new SharedPrefs(activity).getTCPPort();
 	}
 

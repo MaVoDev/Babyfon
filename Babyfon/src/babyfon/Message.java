@@ -2,7 +2,7 @@ package babyfon;
 
 import android.app.Fragment;
 import android.widget.Toast;
-import babyfon.connectivity.wifi.WifiSender;
+import babyfon.connectivity.wifi.TCPSender;
 import babyfon.init.R;
 import babyfon.view.activity.MainActivity;
 import babyfon.view.fragment.BabymonitorFragment;
@@ -17,7 +17,7 @@ public class Message {
 	}
 
 	public void send(String str) {
-		new WifiSender(mMainActivity).sendMessage("192.168.178.92", str);
+		new TCPSender(mMainActivity).sendMessage("192.168.178.92", str);
 	}
 
 	public void handleIncomingMessage(String str) {

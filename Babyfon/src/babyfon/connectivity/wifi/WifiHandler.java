@@ -13,12 +13,12 @@ import android.net.NetworkInfo;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 
-public class WiFiHandler {
+public class WifiHandler {
 
 	Context context;
 	WifiManager wifiManager;
 
-	public WiFiHandler(Context context) {
+	public WifiHandler(Context context) {
 		this.context = context;
 		this.wifiManager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
 	}

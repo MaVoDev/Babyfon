@@ -7,9 +7,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 import babyfon.adapter.NavigationDrawerListAdapter;
-import babyfon.connectivity.call.CallLog;
+import babyfon.connectivity.call.CallReceiver;
 import babyfon.connectivity.sms.SMSReceiver;
-import babyfon.connectivity.wifi.WifiReceiver;
+import babyfon.connectivity.wifi.TCPReceiver;
+import babyfon.connectivity.wifi.UDPBroadcastSender;
+import babyfon.connectivity.wifi.WifiHandler;
 import babyfon.model.NavigationDrawerItemModel;
 import babyfon.performance.Battery;
 import babyfon.settings.SharedPrefs;
@@ -62,7 +64,7 @@ public class MainActivity extends FragmentActivity {
 	private ArrayList<NavigationDrawerItemModel> items;
 	private NavigationDrawerListAdapter adapter;
 	private Battery mBattery;
-	private WifiReceiver mWifiReceiver;
+	private TCPReceiver mWifiReceiver;
 
 	private SharedPrefs mSharedPrefs;
 
@@ -76,7 +78,7 @@ public class MainActivity extends FragmentActivity {
 			StrictMode.setThreadPolicy(policy);
 		}
 		
-		new CallLog(this).test();
+		new CallReceiver(this).missedCalls();
 
 		mSharedPrefs = new SharedPrefs(this);
 
@@ -91,7 +93,7 @@ public class MainActivity extends FragmentActivity {
 		new SMSReceiver(this);
 
 		if (mWifiReceiver == null) {
-			mWifiReceiver = new WifiReceiver(this);
+			mWifiReceiver = new TCPReceiver(this);
 		}
 
 		appTitle = drawerTitle = getTitle();

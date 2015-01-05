@@ -43,7 +43,7 @@ public class SMSReceiver extends BroadcastReceiver {
 					System.out.println(message);
 								
 					//TODO Diese Zeile will er nicht ausführen, zumindest wird nichts gesendet.
-					new Message(mMainActivity).send(mMainActivity.getString(R.string.MESSAGE_SMS_DETAILS) + ";"
+					new Message(mMainActivity).send(mMainActivity.getString(R.string.MESSAGE_SMS) + ";"
 							+ phoneNumber + ";" + message);
 				}
 			}

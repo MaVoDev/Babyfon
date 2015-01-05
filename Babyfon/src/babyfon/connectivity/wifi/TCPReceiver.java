@@ -15,9 +15,9 @@ import babyfon.view.activity.MainActivity;
 /**
  * Zuständig für den Empfang eines Strings über Wi-Fi.
  */
-public class WifiReceiver {
+public class TCPReceiver {
 
-	private static final String TAG = WifiReceiver.class.getCanonicalName();
+	private static final String TAG = TCPReceiver.class.getCanonicalName();
 	private MainActivity mMainActivity;
 	private ServerSocket mServerSocket;
 
@@ -25,7 +25,7 @@ public class WifiReceiver {
 
 	private int tcpPort; // TCP Port über den kommuniziert wird.
 
-	public WifiReceiver(MainActivity activity) {
+	public TCPReceiver(MainActivity activity) {
 		this.mMainActivity = activity;
 		this.tcpPort = new SharedPrefs(activity).getTCPPort();
 
