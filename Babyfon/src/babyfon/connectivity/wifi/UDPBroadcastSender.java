@@ -3,8 +3,11 @@ package babyfon.connectivity.wifi;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
+import java.net.SocketException;
+import java.net.UnknownHostException;
 
 import android.content.Context;
+import android.util.Log;
 import babyfon.init.R;
 import babyfon.settings.SharedPrefs;
 
@@ -12,6 +15,8 @@ public class UDPBroadcastSender {
 
 	private Context mContext;
 	private SharedPrefs mSharedPrefs;
+	
+	private static final String TAG = TCPReceiver.class.getCanonicalName();
 
 	public UDPBroadcastSender(Context mContext) {
 		this.mContext = mContext;
@@ -19,25 +24,38 @@ public class UDPBroadcastSender {
 	}
 
 	public void sendUDPMessage(String ipRange) {
-		String localIP = null; // TODO lokale IP übergeben
-
+		String localIP;
 		try {
-			byte[] message = mContext.getString(R.string.MESSAGE_CONNECTION_REQUEST).getBytes();
+			localIP = new WifiHandler(mContext).getLocalIPv4Address();
+		} catch (SocketException e1) {
+			localIP = null;
+			e1.printStackTrace();
+		} catch (UnknownHostException e1) {
+			localIP = null;
+			e1.printStackTrace();
+		}
 
-			for (int i = 1; i < 255; i++) {
-				InetAddress address = InetAddress.getByName(ipRange + i);
-				if (!localIP.equals(address)) {
-					// filter own address
-					DatagramPacket packet = new DatagramPacket(message, message.length, address,
-							mSharedPrefs.getUDPPort());
-					DatagramSocket dsocket = new DatagramSocket();
-					dsocket.send(packet);
-					dsocket.close();
+		if (localIP != null) {
+			try {
+				byte[] message = mContext.getString(R.string.MESSAGE_CONNECTION_REQUEST).getBytes();
+
+				for (int i = 1; i < 255; i++) {
+					InetAddress address = InetAddress.getByName(ipRange + i);
+					if (!localIP.equals(ipRange + i)) {
+						// filter own address
+						DatagramPacket packet = new DatagramPacket(message, message.length, address,
+								mSharedPrefs.getUDPPort());
+						DatagramSocket dsocket = new DatagramSocket();
+						dsocket.send(packet);
+						dsocket.close();
+					}
 				}
+
+			} catch (Exception e) {
+				Log.e(TAG, "Error");
 			}
-
-		} catch (Exception e) {
-
+		} else {
+			Log.e(TAG, "The local ip is null!");
 		}
 	}
 }

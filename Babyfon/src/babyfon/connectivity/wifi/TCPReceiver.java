@@ -6,9 +6,11 @@ import java.io.InputStreamReader;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketTimeoutException;
+import java.util.ArrayList;
 
 import android.util.Log;
 import babyfon.Message;
+import babyfon.init.R;
 import babyfon.settings.SharedPrefs;
 import babyfon.view.activity.MainActivity;
 
@@ -23,7 +25,7 @@ public class TCPReceiver {
 	private boolean isRunning = false;
 
 	private int tcpPort; // TCP Port über den kommuniziert wird.
-	
+
 	private static final String TAG = TCPReceiver.class.getCanonicalName();
 
 	public TCPReceiver(MainActivity activity) {
@@ -37,8 +39,9 @@ public class TCPReceiver {
 	private class TCPReceiverThread extends Thread {
 
 		public void run() {
-			Log.i(TAG, "TCP receiver is running...");
+			Log.i(TAG, "TCP receiver is running.");
 
+			String incomingTCPmessage;
 			isRunning = true;
 
 			while (isRunning) {
@@ -52,7 +55,9 @@ public class TCPReceiver {
 					final BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 					if (mServerSocket.isBound()) {
 						// Eingehende Nachricht lesen und weiterleiten.
-						new Message(mMainActivity).handleIncomingMessage(in.readLine());
+						incomingTCPmessage = in.readLine();
+						Log.i(TAG, "Incoming TCP message: " + incomingTCPmessage);
+						new Message(mMainActivity).handleIncomingMessage(incomingTCPmessage);
 					}
 
 					mServerSocket.close();
@@ -69,9 +74,9 @@ public class TCPReceiver {
 		isRunning = false;
 		try {
 			mServerSocket.close();
+			Log.i(TAG, "TCP receiver closed.");
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			Log.e(TAG, "Can't close TCP receiver.");
 		}
 	}
 }

@@ -3,6 +3,8 @@ package babyfon.view.fragment;
 import babyfon.connectivity.ConnectionInterface;
 import babyfon.connectivity.bluetooth.BluetoothConnection;
 import babyfon.connectivity.bluetooth.BluetoothListAdapter;
+import babyfon.connectivity.wifi.UDPBroadcastSender;
+import babyfon.connectivity.wifi.WifiHandler;
 import babyfon.init.R;
 import babyfon.performance.Sound;
 import babyfon.settings.SharedPrefs;
@@ -63,16 +65,13 @@ public class ConnectionFragment extends Fragment {
 		btnSearchDevices = (Button) view.findViewById(R.id.btn_searchDevices);
 
 		// Initialize TextViews
-		titleConnectivity = (TextView) view
-				.findViewById(R.id.titleConnectivity);
+		titleConnectivity = (TextView) view.findViewById(R.id.titleConnectivity);
 	}
 
 	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-			Bundle savedInstanceState) {
+	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-		View view = inflater.inflate(R.layout.fragment_connection, container,
-				false);
+		View view = inflater.inflate(R.layout.fragment_connection, container, false);
 
 		final FragmentManager fragmentManager = getFragmentManager();
 
@@ -105,8 +104,7 @@ public class ConnectionFragment extends Fragment {
 			listViewDevices.setOnItemClickListener(new OnItemClickListener() {
 
 				@Override
-				public void onItemClick(AdapterView<?> parent, View view,
-						int position, long id) {
+				public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 					mConnection.connectToDeviceFromList(position);
 				}
 			});
@@ -131,10 +129,7 @@ public class ConnectionFragment extends Fragment {
 					startParentMode();
 				}
 
-				fragmentManager
-						.beginTransaction()
-						.replace(R.id.frame_container,
-								new OverviewFragment(mContext), null)
+				fragmentManager.beginTransaction().replace(R.id.frame_container, new OverviewFragment(mContext), null)
 						.addToBackStack(null).commit();
 			}
 		});
@@ -154,8 +149,7 @@ public class ConnectionFragment extends Fragment {
 	public void initViewBluetooth() {
 		titleConnectivity.setText(getString(R.string.connect_bluetooth));
 
-		BluetoothListAdapter deviceListAdapter = new BluetoothListAdapter(
-				mContext, R.layout.bluetooth_row_element);
+		BluetoothListAdapter deviceListAdapter = new BluetoothListAdapter(mContext, R.layout.bluetooth_row_element);
 		mConnection = new BluetoothConnection(mContext, deviceListAdapter);
 
 		// Setup ListView Adapter
@@ -166,6 +160,7 @@ public class ConnectionFragment extends Fragment {
 
 	public void initViewBWifi() {
 		titleConnectivity.setText(getString(R.string.connect_wifi));
+		new UDPBroadcastSender(mContext).sendUDPMessage(new WifiHandler(mContext).getNetworkAddressClassC());
 	}
 
 	public void initViewBWifiDirect() {

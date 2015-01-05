@@ -33,10 +33,10 @@ public class UDPReceiver {
 			isRunning = true;
 
 			try {
-				Log.i(TAG, "UDP receiver is running...");
+				Log.i(TAG, "UDP receiver is running.");
 
 				udpServerSocket = new DatagramSocket(mSharedPrefs.getUDPPort());
-				byte[] buffer = new byte[11];
+				byte[] buffer = new byte[mMainActivity.getString(R.string.MESSAGE_CONNECTION_REQUEST).length()];
 
 				DatagramPacket receivePacket = new DatagramPacket(buffer, buffer.length);
 
@@ -45,11 +45,15 @@ public class UDPReceiver {
 					String incomingUDPMessage = new String(buffer, 0, buffer.length);
 					System.out.println("Incoming UDP Message: " + incomingUDPMessage);
 					String targetIP = receivePacket.getAddress() + "";
+
+					// Cut the "/" from the InetAddress value
 					targetIP = targetIP.substring(1);
 
 					if (incomingUDPMessage.equals(mMainActivity.getString(R.string.MESSAGE_CONNECTION_REQUEST))) {
+						System.out.println("Es ist die richtige Nachricht.");
 						new TCPSender(mMainActivity).sendMessage(targetIP,
-								mMainActivity.getString(R.string.MESSAGE_CONNECTION_CONFIRM) + ";" + targetIP + ";"
+								mMainActivity.getString(R.string.MESSAGE_CONNECTION_CONFIRM) + ";"
+										+ new WifiHandler(mMainActivity).getLocalIPv4Address() + ";"
 										+ android.os.Build.MODEL);
 					}
 				}
@@ -61,6 +65,11 @@ public class UDPReceiver {
 
 	public void stop() {
 		isRunning = false;
-		udpServerSocket.close();
+		try {
+			udpServerSocket.close();
+			Log.i(TAG, "UDP receiver closed.");
+		} catch (Exception e) {
+			Log.e(TAG, "Can't close UDP receiver.");
+		}
 	}
 }

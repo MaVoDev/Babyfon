@@ -10,9 +10,7 @@ import babyfon.adapter.NavigationDrawerListAdapter;
 import babyfon.connectivity.call.CallReceiver;
 import babyfon.connectivity.sms.SMSReceiver;
 import babyfon.connectivity.wifi.TCPReceiver;
-import babyfon.connectivity.wifi.UDPBroadcastSender;
 import babyfon.connectivity.wifi.UDPReceiver;
-import babyfon.connectivity.wifi.WifiHandler;
 import babyfon.model.NavigationDrawerItemModel;
 import babyfon.performance.Battery;
 import babyfon.settings.SharedPrefs;
@@ -23,15 +21,10 @@ import babyfon.view.fragment.SetupFragment;
 import android.app.AlertDialog;
 import android.app.Fragment;
 import android.app.FragmentManager;
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.res.Configuration;
 import android.content.res.TypedArray;
-import android.net.wifi.p2p.WifiP2pManager;
-import android.net.wifi.p2p.WifiP2pManager.Channel;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.support.v4.app.ActionBarDrawerToggle;
@@ -72,7 +65,7 @@ public class MainActivity extends FragmentActivity {
 	private UDPReceiver mUDPReceiver;
 
 	private SharedPrefs mSharedPrefs;
-	
+
 	private static final String TAG = TCPReceiver.class.getCanonicalName();
 
 	@Override
@@ -96,8 +89,8 @@ public class MainActivity extends FragmentActivity {
 
 		}
 
-		mBattery = new Battery(this);
-		new SMSReceiver(this);
+		mBattery = new Battery(this); // TODO Only baby mode
+		new SMSReceiver(this); // TODO Only baby mode
 
 		if (mTCPReceiver == null) {
 			Log.i(TAG, "Try to start TCP receiver...");
@@ -108,7 +101,7 @@ public class MainActivity extends FragmentActivity {
 			Log.i(TAG, "Try to start UDP receiver...");
 			mUDPReceiver = new UDPReceiver(this);
 		}
-
+		
 		appTitle = drawerTitle = getTitle();
 
 		// load slide menu items
@@ -173,6 +166,10 @@ public class MainActivity extends FragmentActivity {
 
 		if (mTCPReceiver != null) {
 			mTCPReceiver.stop();
+		}
+		
+		if (mUDPReceiver != null) {
+			mUDPReceiver.stop();
 		}
 
 		super.onDestroy();

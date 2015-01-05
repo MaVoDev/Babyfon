@@ -32,8 +32,7 @@ public class Battery {
 				// Akkuladestand hat sich geändert
 				int level = intent.getIntExtra(BatteryManager.EXTRA_LEVEL, 0);
 
-				Log.i(TAG, "Send battery message. Level: " + level);
-
+				Log.i(TAG, "Try to send battery level (" + level + "%)...");
 				new Message(mMainActivity).send(mMainActivity.getString(R.string.MESSAGE_BATTERY) + ";" + level + "%");
 			}
 
@@ -44,13 +43,13 @@ public class Battery {
 	};
 
 	public void unregister() {
-		Log.i(TAG, "Unregistering Battery-Receiver...");
 		mMainActivity.unregisterReceiver(this.mBatInfoReceiver);
+		Log.i(TAG, "Battery receiver unregistered.");
 	}
 
 	public void register() {
 
-		Log.i(TAG, "Registering Battery-Receiver...");
+		Log.i(TAG, "Try to register battery receiver...");
 
 		// Änderung des Akkulevels
 		mMainActivity.registerReceiver(this.mBatInfoReceiver, new IntentFilter(Intent.ACTION_BATTERY_CHANGED));
@@ -61,5 +60,6 @@ public class Battery {
 		// Akku wechselt vom schwachen in den normalen Levelbereich
 		mMainActivity.registerReceiver(this.mBatInfoReceiver, new IntentFilter(Intent.ACTION_BATTERY_OKAY));
 
+		Log.i(TAG, "Battery receiver is registered.");
 	}
 }

@@ -23,8 +23,6 @@ public class Message {
 	public void handleIncomingMessage(String str) {
 		final String[] strArray = str.split(";");
 
-		System.out.println("Split: " + strArray[0]);
-
 		if (strArray[0].equals(mMainActivity.getString(R.string.MESSAGE_BATTERY))) {
 			// Batterie
 			mMainActivity.runOnUiThread(new Runnable() {
