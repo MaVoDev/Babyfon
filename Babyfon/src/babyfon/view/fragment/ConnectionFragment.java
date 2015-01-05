@@ -14,6 +14,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.View.OnClickListener;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -91,10 +93,21 @@ public class ConnectionFragment extends Fragment {
 				break;
 			}
 
+			// Setup Search-Button
 			btnSearchDevices.setOnClickListener(new OnClickListener() {
 				@Override
 				public void onClick(View v) {
 					mConnection.searchDevices();
+				}
+			});
+
+			// Setup List-View
+			listViewDevices.setOnItemClickListener(new OnItemClickListener() {
+
+				@Override
+				public void onItemClick(AdapterView<?> parent, View view,
+						int position, long id) {
+					mConnection.connectToDeviceFromList(position);
 				}
 			});
 
@@ -141,10 +154,14 @@ public class ConnectionFragment extends Fragment {
 	public void initViewBluetooth() {
 		titleConnectivity.setText(getString(R.string.connect_bluetooth));
 
-		mConnection = new BluetoothConnection(mContext);
-		
+		BluetoothListAdapter deviceListAdapter = new BluetoothListAdapter(
+				mContext, R.layout.bluetooth_row_element);
+		mConnection = new BluetoothConnection(mContext, deviceListAdapter);
+
 		// Setup ListView Adapter
-		listViewDevices.setAdapter(mConnection.getListAdapter());
+		// listViewDevices.setAdapter(mConnection.getListAdapter()); // TODO
+		// gucken ob es funzt
+		listViewDevices.setAdapter(deviceListAdapter);
 	}
 
 	public void initViewBWifi() {

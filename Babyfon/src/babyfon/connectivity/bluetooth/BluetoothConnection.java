@@ -7,7 +7,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.util.Log;
-import android.widget.ListAdapter;
 import android.widget.Toast;
 import babyfon.connectivity.ConnectionInterface;
 import babyfon.init.R;
@@ -17,18 +16,12 @@ public class BluetoothConnection implements ConnectionInterface {
 	private static final String TAG = BluetoothConnection.class
 			.getCanonicalName();
 
-	private static int REQUEST_ENABLE_BT = 1;
+	// private static int REQUEST_ENABLE_BT = 1;
 
 	private Context mContext;
-	private boolean mBtDiscovering;
+	private boolean mBtDiscovering = false;
 	private BluetoothAdapter mBluetoothAdapter;
 	private BluetoothListAdapter mArrayAdapter;
-
-	// Intent Filters
-	private IntentFilter bluetoothFoundFilter = new IntentFilter(
-			BluetoothDevice.ACTION_FOUND);
-	private IntentFilter bluetoothScanFinishedFilter = new IntentFilter(
-			BluetoothAdapter.ACTION_DISCOVERY_FINISHED);
 
 	// Receiver
 	private final BroadcastReceiver mReceiver = new BroadcastReceiver() {
@@ -40,29 +33,53 @@ public class BluetoothConnection implements ConnectionInterface {
 				// Get the BluetoothDevice object from the Intent
 				BluetoothDevice device = intent
 						.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
-				// mArrayAdapter.add(device);
+
+				Log.i(TAG, "ADD DEVICE: " + device.getName());
+
+				mArrayAdapter.add(device);
 			} else if (BluetoothAdapter.ACTION_DISCOVERY_FINISHED
 					.equals(action)) {
 				Toast.makeText(context, "DISCOVERY FINISHED", Toast.LENGTH_LONG)
 						.show();
-				// mBtDiscovering = false;
+				mBtDiscovering = false;
 			}
 		}
 	};
 
-	public BluetoothConnection(Context context) {
+	// Konstruktor
+	public BluetoothConnection(Context context, BluetoothListAdapter adapter) {
 		this.mContext = context;
 
-		mArrayAdapter = new BluetoothListAdapter(context,
-				R.layout.bluetooth_row_element);
+		initBluetooth();
+
+		// mArrayAdapter = new BluetoothListAdapter(context,
+		// R.layout.bluetooth_row_element);
+		this.mArrayAdapter = adapter;
 
 	}
 
-	public BroadcastReceiver getReceiver() {
-		return mReceiver;
+	private void initBluetooth() {
+		mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+
+		// WENN ELTERN-MODE REICHT ES, DASS BT-ENABLED IST
+
+		// WENN BABY-MODE MUSS DEVICE SICHTBAR SEIN
+
+		// Register the BroadcastReceiver
+		IntentFilter bluetoothFoundFilter = new IntentFilter(
+				BluetoothDevice.ACTION_FOUND);
+		IntentFilter bluetoothScanFinishedFilter = new IntentFilter(
+				BluetoothAdapter.ACTION_DISCOVERY_FINISHED);
+
+		mContext.registerReceiver(mReceiver, bluetoothFoundFilter);
+		mContext.registerReceiver(mReceiver, bluetoothScanFinishedFilter);
 	}
 
-	private boolean initBluetooth() {
+	// public BroadcastReceiver getReceiver() {
+	// return mReceiver;
+	// }
+
+	private boolean initBluetooth_ALT() {
 		mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 
 		boolean btEnabled = false;
@@ -120,7 +137,11 @@ public class BluetoothConnection implements ConnectionInterface {
 		discoverableIntent.putExtra(
 				BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, 0);
 		// startActivity(discoverableIntent);
-//		mContext.startActivityForResult(discoverableIntent, REQUEST_ENABLE_BT);
+
+		// TODO: AUSLAGERN ODER ACTIVITY REINHOLEN!
+		// mContext.startActivityForResult(discoverableIntent,
+		// REQUEST_ENABLE_BT);
+
 	}
 
 	@Override
@@ -135,20 +156,20 @@ public class BluetoothConnection implements ConnectionInterface {
 			mArrayAdapter.clear();
 
 			Log.i(TAG, "STARTING BLUETOOTH DISCOVERY...");
-			// mBluetoothAdapter.startDiscovery();
+			mBluetoothAdapter.startDiscovery();
 		}
 	}
 
 	@Override
 	public void connectToDeviceFromList(int position) {
 		BluetoothDevice device = mArrayAdapter.getItem(position);
-		// new BluetoothClientThread(device, mBluetoothAdapter,
-		// MainActivity.this).start();
+		Log.i(TAG, "Try to connect to device: " + device.getName());
+		new BluetoothClientThread(device, mBluetoothAdapter).start();
 	}
 
-	@Override
-	public ListAdapter getListAdapter() {
-		return mArrayAdapter;
-	}
+	// @Override
+	// public ListAdapter getListAdapter() {
+	// return mArrayAdapter;
+	// }
 
 }

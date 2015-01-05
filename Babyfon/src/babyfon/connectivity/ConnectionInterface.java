@@ -8,6 +8,6 @@ public interface ConnectionInterface {
 
 	public void connectToDeviceFromList(int position);
 
-	public ListAdapter getListAdapter();
+//	public ListAdapter getListAdapter();
 
 }
