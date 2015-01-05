@@ -11,6 +11,7 @@ import babyfon.connectivity.call.CallReceiver;
 import babyfon.connectivity.sms.SMSReceiver;
 import babyfon.connectivity.wifi.TCPReceiver;
 import babyfon.connectivity.wifi.UDPBroadcastSender;
+import babyfon.connectivity.wifi.UDPReceiver;
 import babyfon.connectivity.wifi.WifiHandler;
 import babyfon.model.NavigationDrawerItemModel;
 import babyfon.performance.Battery;
@@ -36,6 +37,7 @@ import android.os.StrictMode;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.widget.DrawerLayout;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -64,9 +66,14 @@ public class MainActivity extends FragmentActivity {
 	private ArrayList<NavigationDrawerItemModel> items;
 	private NavigationDrawerListAdapter adapter;
 	private Battery mBattery;
-	private TCPReceiver mWifiReceiver;
+
+	// Receiver
+	private TCPReceiver mTCPReceiver;
+	private UDPReceiver mUDPReceiver;
 
 	private SharedPrefs mSharedPrefs;
+	
+	private static final String TAG = TCPReceiver.class.getCanonicalName();
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -77,7 +84,7 @@ public class MainActivity extends FragmentActivity {
 			StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
 			StrictMode.setThreadPolicy(policy);
 		}
-		
+
 		new CallReceiver(this).missedCalls();
 
 		mSharedPrefs = new SharedPrefs(this);
@@ -92,8 +99,14 @@ public class MainActivity extends FragmentActivity {
 		mBattery = new Battery(this);
 		new SMSReceiver(this);
 
-		if (mWifiReceiver == null) {
-			mWifiReceiver = new TCPReceiver(this);
+		if (mTCPReceiver == null) {
+			Log.i(TAG, "Try to start TCP receiver...");
+			mTCPReceiver = new TCPReceiver(this);
+		}
+
+		if (mUDPReceiver == null) {
+			Log.i(TAG, "Try to start UDP receiver...");
+			mUDPReceiver = new UDPReceiver(this);
 		}
 
 		appTitle = drawerTitle = getTitle();
@@ -158,8 +171,8 @@ public class MainActivity extends FragmentActivity {
 			mBattery.unregister();
 		}
 
-		if (mWifiReceiver != null) {
-			mWifiReceiver.stop();
+		if (mTCPReceiver != null) {
+			mTCPReceiver.stop();
 		}
 
 		super.onDestroy();

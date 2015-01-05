@@ -17,26 +17,27 @@ import babyfon.view.activity.MainActivity;
  */
 public class TCPReceiver {
 
-	private static final String TAG = TCPReceiver.class.getCanonicalName();
 	private MainActivity mMainActivity;
 	private ServerSocket mServerSocket;
 
 	private boolean isRunning = false;
 
 	private int tcpPort; // TCP Port über den kommuniziert wird.
+	
+	private static final String TAG = TCPReceiver.class.getCanonicalName();
 
 	public TCPReceiver(MainActivity activity) {
 		this.mMainActivity = activity;
 		this.tcpPort = new SharedPrefs(activity).getTCPPort();
 
-		Receive receive = new Receive();
-		receive.start();
+		TCPReceiverThread tcpReceiverThread = new TCPReceiverThread();
+		tcpReceiverThread.start();
 	}
 
-	private class Receive extends Thread {
+	private class TCPReceiverThread extends Thread {
 
 		public void run() {
-			Log.i(TAG, "WifiReceiver started...");
+			Log.i(TAG, "TCP receiver is running...");
 
 			isRunning = true;
 
@@ -69,6 +70,7 @@ public class TCPReceiver {
 		try {
 			mServerSocket.close();
 		} catch (IOException e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}

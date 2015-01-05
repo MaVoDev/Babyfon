@@ -6,6 +6,7 @@ import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.net.SocketAddress;
 
+import android.util.Log;
 import babyfon.settings.SharedPrefs;
 import babyfon.view.activity.MainActivity;
 
@@ -16,6 +17,8 @@ public class TCPSender {
 
 	private int tcpPort; // TCP Port über den kommuniziert wird.
 
+	private static final String TAG = TCPReceiver.class.getCanonicalName();
+
 	public TCPSender(MainActivity activity) {
 		this.tcpPort = new SharedPrefs(activity).getTCPPort();
 	}
@@ -25,7 +28,7 @@ public class TCPSender {
 		new Thread(new Runnable() {
 			@Override
 			public void run() {
-				System.out.println("Try to send message...");
+				Log.i(TAG, "Try to send message...");
 
 				SocketAddress sAddress = new InetSocketAddress(target, tcpPort);
 				Socket socket = new Socket();
@@ -38,15 +41,14 @@ public class TCPSender {
 				} catch (IOException e) {
 					// TODO: Fehler auf dem Gerät anzeigen, wenn Senden
 					// fehlschlägt
-					System.out.println("Send Message failed!");
+					Log.i(TAG, "Send Message failed!");
 				}
 
 				if (outSingle != null) {
 					outSingle.println(msg);
-					System.out.println("Send message successfully!");
+					Log.i(TAG, "Send message successfully!");
 				}
 			}
 		}).start();
-
 	}
 }
