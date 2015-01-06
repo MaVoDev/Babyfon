@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <!-- Dialog texts -->
+    <string name="DIALOG_MESSAGE_BABYMODE">Legen Sie das Gerät in die Nähe des Babys. Der Sound und das Display werden jetzt ausgeschaltet.</string>
+    <string name="DIALOG_TITLE_BABYMODE">Der Babymodus wird aktiviert&#8230;</string>
+
     <!-- Message types -->
     <string name="MESSAGE_BATTERY">BABYFON_MSG_BATTERY</string>
     <string name="MESSAGE_CONNECTION_CONFIRM">BABYFON_MSG_CONNECTION_CONFIRM</string>
@@ -34,6 +38,9 @@
     <string name="mode_baby">Babymodus</string>
     <string name="mode_parents">Elternmodus</string>
     <string name="mode_null">-</string>
+
+    <!-- O -->
+    <string name="ok">OK</string>
 
     <!-- N -->
     <string name="no">Nein</string>

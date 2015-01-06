@@ -17,15 +17,15 @@ Connectivity:
 - WiFi Direct State
 - WiFi Direct Verbindung
 - Bluetooth Verbindung
-- WiFi: Geräte in mit der App anzeigen lassen 
 
 Setup:
 - Nach Abschluss relevante Methoden starten (Battery, SMS, Call, ...)
-- Babymode nach Abschluss -> Info Fenster (Gerät wird jetzt in den baby mode versetzt) und Display automatisch aus.
+- Weiteres Fragment: Zum Setup abschließen, Connection bekommt nen weiter button, im neuen wird das setup beendet, da den Dialogtext einbauen
+
 - Navigation beim Einrichten (1,2,3)// siehe auch Mototroller Hilfe/Einrichtung, als Idee
 - Wenn im Einrichtungsass. die Backpressed gedrückt wird, nachfragen, ob der Assi beendet werden soll, wenn ja, zurück zur Übersicht
 - Wenn im Setup ein Schritt zurück gemacht wird, Werte zurück übergeben
-- Wifi-Mode: IP und Name der gefundenen Geräte anzeigen (Suche funktioniert schon)
+- Wifi-Mode: IP und Name der gefundenen Geräte anzeigen (Suche funktioniert sc- Babymode nach Abschluss -> Info Fenster (Gerät wird jetzt in den baby mode versetzt) und Display automatisch aus.hon)
 
 Optional:
 ==========================================================================
@@ -35,6 +35,7 @@ Optional:
 - Anruf bei Geräuschen
 - SMS bei Geräuschen
 - Wenn Callfunction, dann Baby kann Mutter "anrufen", Lautsprecher an
+- Display automatisch ausschalten
 
 Für spätere Version:
 ==========================================================================
@@ -44,3 +45,4 @@ Für spätere Version:
 Überlegungen:
 ==========================================================================
 - Modus und Verbindungen vll unabhängig voneinander anbieten
+- Wie am besten authorisieren, wenn einer anfragt?

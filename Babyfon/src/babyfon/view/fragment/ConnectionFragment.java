@@ -8,14 +8,19 @@ import babyfon.connectivity.wifi.WifiHandler;
 import babyfon.init.R;
 import babyfon.performance.Sound;
 import babyfon.settings.SharedPrefs;
+import babyfon.view.activity.MainActivity;
+import android.app.AlertDialog;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.View.OnClickListener;
+import android.view.Window;
+import android.view.WindowManager.LayoutParams;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
@@ -122,15 +127,27 @@ public class ConnectionFragment extends Fragment {
 				mSharedPrefs.setConnectivityType(connectivityType);
 
 				if (deviceMode == 0) {
-					// Start the baby mode for that device
-					startBabyMode();
+					AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+					builder.setTitle(mContext.getString(R.string.DIALOG_TITLE_BABYMODE))
+							.setMessage(mContext.getString(R.string.DIALOG_MESSAGE_BABYMODE)).setCancelable(false)
+							.setPositiveButton(mContext.getString(R.string.ok), new DialogInterface.OnClickListener() {
+								public void onClick(DialogInterface dialog, int id) {
+									// Start the baby mode
+									startBabyMode();
+									fragmentManager.beginTransaction()
+											.replace(R.id.frame_container, new OverviewFragment(mContext), null)
+											.addToBackStack(null).commit();
+								}
+							});
+					AlertDialog alert = builder.create();
+					alert.show();
 				} else {
 					// Start the parent mode for that device
 					startParentMode();
+					fragmentManager.beginTransaction()
+							.replace(R.id.frame_container, new OverviewFragment(mContext), null).addToBackStack(null)
+							.commit();
 				}
-
-				fragmentManager.beginTransaction().replace(R.id.frame_container, new OverviewFragment(mContext), null)
-						.addToBackStack(null).commit();
 			}
 		});
 		return view;
@@ -138,12 +155,14 @@ public class ConnectionFragment extends Fragment {
 
 	public void startBabyMode() {
 		System.out.println("Start baby mode...");
+		
 		mSound.mute();
 	}
 
 	public void startParentMode() {
 		System.out.println("Start parent mode...");
 		mSound.soundOn();
+
 	}
 
 	public void initViewBluetooth() {
