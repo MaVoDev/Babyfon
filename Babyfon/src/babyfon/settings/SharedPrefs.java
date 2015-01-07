@@ -66,6 +66,26 @@ public class SharedPrefs {
 		editor.putInt("device_mode", mode).commit();
 	}
 
+	// == Password =================================
+
+	/**
+	 * Get the password for the connection.
+	 * 
+	 * @return int: -1 = no password
+	 */
+	public int getPassword() {
+		return mSharedPreferences.getInt("password", -1);
+	}
+
+	/**
+	 * Set the password for the connection.
+	 * 
+	 * @param int password: -1 = no password
+	 */
+	public void setPassword(int password) {
+		editor.putInt("password", password).commit();
+	}
+
 	// == Port TCP ====================================
 
 	/**

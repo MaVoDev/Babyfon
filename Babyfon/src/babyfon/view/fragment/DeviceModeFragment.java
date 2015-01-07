@@ -1,6 +1,7 @@
 package babyfon.view.fragment;
 
 import babyfon.init.R;
+import babyfon.settings.SharedPrefs;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.Context;
@@ -17,13 +18,16 @@ public class DeviceModeFragment extends Fragment {
 	private Button buttonBabyMode;
 	private Button buttonParentMode;
 
-	private ConnectivityFragment connectivityFragment;
+	private SharedPrefs mSharedPrefs;
+
+	private ConnectionBabyFragment connectionBabyFragment;
+	private ConnectionParentsFragment connectionParentsFragment;
 
 	// Constructor
 	public DeviceModeFragment(Context mContext) {
-//		setArguments(new Bundle());
-
-		connectivityFragment = new ConnectivityFragment(mContext);
+		mSharedPrefs = new SharedPrefs(mContext);
+		connectionBabyFragment = new ConnectionBabyFragment(mContext);
+		connectionParentsFragment = new ConnectionParentsFragment(mContext);
 	}
 
 	/**
@@ -39,47 +43,31 @@ public class DeviceModeFragment extends Fragment {
 	}
 
 	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-			Bundle savedInstanceState) {
+	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-		View view = inflater.inflate(R.layout.fragment_device_mode, container,
-				false);
+		View view = inflater.inflate(R.layout.fragment_device_mode, container, false);
+
+		final FragmentManager fragmentManager = getFragmentManager();
 
 		initUiElements(view);
 
 		buttonBabyMode.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				setDeviceMode(0);
+				mSharedPrefs.setDeviceMode(0);
+				fragmentManager.beginTransaction().replace(R.id.frame_container, connectionBabyFragment, null)
+						.addToBackStack(null).commit();
 			}
 		});
 
 		buttonParentMode.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				setDeviceMode(1);
+				mSharedPrefs.setDeviceMode(1);
+				fragmentManager.beginTransaction().replace(R.id.frame_container, connectionParentsFragment, null)
+						.addToBackStack(null).commit();
 			}
 		});
 		return view;
-	}
-
-	public void setDeviceMode(int deviceMode) {
-		FragmentManager fragmentManager = getFragmentManager();
-
-		Bundle bundle = new Bundle();
-		bundle.putInt("deviceMode", deviceMode);
-
-		if (connectivityFragment.getArguments() != null)
-			// connectivityFragment.setArguments(bundle);
-			connectivityFragment.getArguments().putAll(bundle);
-		// else
-		// connectivityFragment.setArguments(bundle);
-
-		// else
-		// connectivityFragment.getArguments().putAll(bundle);
-
-		fragmentManager.beginTransaction()
-				.replace(R.id.frame_container, connectivityFragment, null)
-				.addToBackStack(null).commit();
 	}
 }

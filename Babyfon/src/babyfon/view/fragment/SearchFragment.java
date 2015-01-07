@@ -27,7 +27,7 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
-public class ConnectionFragment extends Fragment {
+public class SearchFragment extends Fragment {
 
 	// Define UI elements
 	private ListView listViewDevices;
@@ -46,7 +46,7 @@ public class ConnectionFragment extends Fragment {
 	private ConnectionInterface mConnection;
 
 	// Constructor
-	public ConnectionFragment(Context mContext) {
+	public SearchFragment(Context mContext) {
 
 		setArguments(new Bundle());
 
@@ -76,46 +76,41 @@ public class ConnectionFragment extends Fragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-		View view = inflater.inflate(R.layout.fragment_connection, container, false);
+		View view = inflater.inflate(R.layout.fragment_serach, container, false);
 
 		final FragmentManager fragmentManager = getFragmentManager();
 
 		initUiElements(view);
 
-		Bundle bundle = this.getArguments();
-		if (bundle != null) {
-			connectivityType = bundle.getInt("connectivityType", -1);
-			switch (connectivityType) {
-			case 1:
-				initViewBluetooth();
-				break;
-			case 2:
-				initViewBWifi();
-				break;
-			case 3:
-				initViewBWifiDirect();
-				break;
-			}
-
-			// Setup Search-Button
-			btnSearchDevices.setOnClickListener(new OnClickListener() {
-				@Override
-				public void onClick(View v) {
-					mConnection.searchDevices();
-				}
-			});
-
-			// Setup List-View
-			listViewDevices.setOnItemClickListener(new OnItemClickListener() {
-
-				@Override
-				public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-					mConnection.connectToDeviceFromList(position);
-				}
-			});
-
-			deviceMode = bundle.getInt("deviceMode", -1);
+		connectivityType = mSharedPrefs.getConnectivityType();
+		switch (connectivityType) {
+		case 1:
+			initViewBluetooth();
+			break;
+		case 2:
+			initViewBWifi();
+			break;
+		case 3:
+			initViewBWifiDirect();
+			break;
 		}
+
+		// Setup Search-Button
+		btnSearchDevices.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				mConnection.searchDevices();
+			}
+		});
+
+		// Setup List-View
+		listViewDevices.setOnItemClickListener(new OnItemClickListener() {
+
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+				mConnection.connectToDeviceFromList(position);
+			}
+		});
 
 		// OnClickListener for the Button btnCompleteSetup
 		btnCompleteSetup.setOnClickListener(new OnClickListener() {
@@ -126,28 +121,9 @@ public class ConnectionFragment extends Fragment {
 				mSharedPrefs.setDeviceMode(deviceMode);
 				mSharedPrefs.setConnectivityType(connectivityType);
 
-				if (deviceMode == 0) {
-					AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
-					builder.setTitle(mContext.getString(R.string.DIALOG_TITLE_BABYMODE))
-							.setMessage(mContext.getString(R.string.DIALOG_MESSAGE_BABYMODE)).setCancelable(false)
-							.setPositiveButton(mContext.getString(R.string.ok), new DialogInterface.OnClickListener() {
-								public void onClick(DialogInterface dialog, int id) {
-									// Start the baby mode
-									startBabyMode();
-									fragmentManager.beginTransaction()
-											.replace(R.id.frame_container, new OverviewFragment(mContext), null)
-											.addToBackStack(null).commit();
-								}
-							});
-					AlertDialog alert = builder.create();
-					alert.show();
-				} else {
-					// Start the parent mode for that device
-					startParentMode();
-					fragmentManager.beginTransaction()
-							.replace(R.id.frame_container, new OverviewFragment(mContext), null).addToBackStack(null)
-							.commit();
-				}
+				startParentMode();
+				fragmentManager.beginTransaction().replace(R.id.frame_container, new OverviewFragment(mContext), null)
+						.addToBackStack(null).commit();
 			}
 		});
 		return view;
@@ -155,7 +131,7 @@ public class ConnectionFragment extends Fragment {
 
 	public void startBabyMode() {
 		System.out.println("Start baby mode...");
-		
+
 		mSound.mute();
 	}
 

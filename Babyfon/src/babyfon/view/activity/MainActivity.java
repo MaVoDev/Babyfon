@@ -15,6 +15,7 @@ import babyfon.model.NavigationDrawerItemModel;
 import babyfon.performance.Battery;
 import babyfon.settings.SharedPrefs;
 import babyfon.view.fragment.AbsenceFragment;
+import babyfon.view.fragment.SearchFragment;
 import babyfon.view.fragment.OverviewFragment;
 import babyfon.view.fragment.BabymonitorFragment;
 import babyfon.view.fragment.SetupFragment;
@@ -106,7 +107,7 @@ public class MainActivity extends FragmentActivity {
 			Log.i(TAG, "Try to start UDP receiver...");
 			mUDPReceiver = new UDPReceiver(this);
 		}
-		
+
 		appTitle = drawerTitle = getTitle();
 
 		// load slide menu items
@@ -172,7 +173,7 @@ public class MainActivity extends FragmentActivity {
 		if (mTCPReceiver != null) {
 			mTCPReceiver.stop();
 		}
-		
+
 		if (mUDPReceiver != null) {
 			mUDPReceiver.stop();
 		}
@@ -286,6 +287,8 @@ public class MainActivity extends FragmentActivity {
 			fragment = new AbsenceFragment();
 		} else if (id.equals("SetupFragment")) {
 			fragment = new SetupFragment(this);
+		} else if (id.equals("ConnectionFragment")) {
+			fragment = new SearchFragment(this);
 		}
 
 		mFragmentMap.put(id, fragment);
