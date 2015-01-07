@@ -1,33 +1,31 @@
-package babyfon.view.fragment;
+package babyfon.view.fragment.setup;
 
 import babyfon.connectivity.ConnectionInterface;
 import babyfon.connectivity.bluetooth.BluetoothConnection;
 import babyfon.connectivity.bluetooth.BluetoothListAdapter;
+import babyfon.connectivity.wifi.TCPReceiver;
 import babyfon.connectivity.wifi.UDPBroadcastSender;
 import babyfon.connectivity.wifi.WifiHandler;
 import babyfon.init.R;
 import babyfon.performance.Sound;
 import babyfon.settings.SharedPrefs;
-import babyfon.view.activity.MainActivity;
-import android.app.AlertDialog;
+import babyfon.view.fragment.overview.OverviewParentsFragment;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.View.OnClickListener;
-import android.view.Window;
-import android.view.WindowManager.LayoutParams;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
-public class SearchFragment extends Fragment {
+public class SetupSearchDevicesFragment extends Fragment {
 
 	// Define UI elements
 	private ListView listViewDevices;
@@ -36,7 +34,6 @@ public class SearchFragment extends Fragment {
 	private TextView titleConnectivity;
 
 	private int connectivityType;
-	private int deviceMode;
 
 	private SharedPrefs mSharedPrefs;
 	private Sound mSound;
@@ -45,13 +42,13 @@ public class SearchFragment extends Fragment {
 
 	private ConnectionInterface mConnection;
 
+	private static final String TAG = TCPReceiver.class.getCanonicalName();
+
 	// Constructor
-	public SearchFragment(Context mContext) {
-
-		setArguments(new Bundle());
-
-		this.mSharedPrefs = new SharedPrefs(mContext);
-		this.mSound = new Sound(mContext);
+	public SetupSearchDevicesFragment(Context mContext) {
+		mSharedPrefs = new SharedPrefs(mContext);
+		mSound = new Sound(mContext);
+		
 		this.mContext = mContext;
 	}
 
@@ -116,29 +113,14 @@ public class SearchFragment extends Fragment {
 		btnCompleteSetup.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-
-				// Store values in SharedPreferences
-				mSharedPrefs.setDeviceMode(deviceMode);
-				mSharedPrefs.setConnectivityType(connectivityType);
-
-				startParentMode();
-				fragmentManager.beginTransaction().replace(R.id.frame_container, new OverviewFragment(mContext), null)
+				Log.i(TAG, "Start parents mode...");
+				mSound.soundOn();
+				fragmentManager.beginTransaction()
+						.replace(R.id.frame_container, new OverviewParentsFragment(mContext), null)
 						.addToBackStack(null).commit();
 			}
 		});
 		return view;
-	}
-
-	public void startBabyMode() {
-		System.out.println("Start baby mode...");
-
-		mSound.mute();
-	}
-
-	public void startParentMode() {
-		System.out.println("Start parent mode...");
-		mSound.soundOn();
-
 	}
 
 	public void initViewBluetooth() {

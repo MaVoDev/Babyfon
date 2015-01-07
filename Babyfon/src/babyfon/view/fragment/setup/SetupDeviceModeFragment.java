@@ -1,4 +1,4 @@
-package babyfon.view.fragment;
+package babyfon.view.fragment.setup;
 
 import babyfon.init.R;
 import babyfon.settings.SharedPrefs;
@@ -12,7 +12,7 @@ import android.view.ViewGroup;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 
-public class DeviceModeFragment extends Fragment {
+public class SetupDeviceModeFragment extends Fragment {
 
 	// Define UI elements
 	private Button buttonBabyMode;
@@ -20,14 +20,14 @@ public class DeviceModeFragment extends Fragment {
 
 	private SharedPrefs mSharedPrefs;
 
-	private ConnectionBabyFragment connectionBabyFragment;
-	private ConnectionParentsFragment connectionParentsFragment;
+	private SetupConnectionBabyFragment connectionBabyFragment;
+	private SetupConnectionParentsFragment connectionParentsFragment;
 
 	// Constructor
-	public DeviceModeFragment(Context mContext) {
+	public SetupDeviceModeFragment(Context mContext) {
 		mSharedPrefs = new SharedPrefs(mContext);
-		connectionBabyFragment = new ConnectionBabyFragment(mContext);
-		connectionParentsFragment = new ConnectionParentsFragment(mContext);
+		connectionBabyFragment = new SetupConnectionBabyFragment(mContext);
+		connectionParentsFragment = new SetupConnectionParentsFragment(mContext);
 	}
 
 	/**

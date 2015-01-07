@@ -41,7 +41,7 @@ public class TCPSender {
 				} catch (IOException e) {
 					// TODO: Fehler auf dem Gerät anzeigen, wenn Senden
 					// fehlschlägt
-					Log.i(TAG, "Send message failed!");
+					Log.e(TAG, "Send message failed!");
 				}
 
 				if (outSingle != null) {

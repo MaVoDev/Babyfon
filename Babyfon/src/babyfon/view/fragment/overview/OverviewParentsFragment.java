@@ -1,4 +1,4 @@
-package babyfon.view.fragment;
+package babyfon.view.fragment.overview;
 
 import babyfon.init.R;
 import babyfon.settings.SharedPrefs;
@@ -10,7 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-public class OverviewFragment extends Fragment {
+public class OverviewParentsFragment extends Fragment {
 
 	// Define UI elements
 	private TextView tvConnectivityType;
@@ -18,7 +18,7 @@ public class OverviewFragment extends Fragment {
 
 	private SharedPrefs mSharedPrefs;
 
-	public OverviewFragment(Context mContext) {
+	public OverviewParentsFragment(Context mContext) {
 		mSharedPrefs = new SharedPrefs(mContext);
 	}
 
@@ -31,9 +31,6 @@ public class OverviewFragment extends Fragment {
 
 		// Initialize TextViews
 		tvConnectivityType = (TextView) view.findViewById(R.id.tv_connectivityType);
-		tvDeviceMode = (TextView) view.findViewById(R.id.tv_deviceMode);
-
-		// Set values (tvConnectivityType)
 		if (mSharedPrefs.getConnectivityType() == 1) {
 			tvConnectivityType.setText(R.string.connect_bluetooth);
 		} else if (mSharedPrefs.getConnectivityType() == 2) {
@@ -43,21 +40,15 @@ public class OverviewFragment extends Fragment {
 		} else {
 			tvConnectivityType.setText(R.string.connect_null);
 		}
-
-		// Set values (tvDeviceMode)
-		if (mSharedPrefs.getDeviceMode() == 0) {
-			tvDeviceMode.setText(R.string.mode_baby);
-		} else if (mSharedPrefs.getDeviceMode() == 1) {
-			tvDeviceMode.setText(R.string.mode_parents);
-		} else {
-			tvDeviceMode.setText(R.string.mode_null);
-		}
+		
+		tvDeviceMode = (TextView) view.findViewById(R.id.tv_deviceMode);
+		tvDeviceMode.setText(R.string.mode_parents);
 	}
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-		View view = inflater.inflate(R.layout.fragment_overview, container, false);
+		View view = inflater.inflate(R.layout.fragment_overview_parents, container, false);
 
 		initUiElements(view);
 

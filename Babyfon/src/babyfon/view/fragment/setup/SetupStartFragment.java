@@ -1,4 +1,4 @@
-package babyfon.view.fragment;
+package babyfon.view.fragment.setup;
 
 import babyfon.init.R;
 import android.app.Fragment;
@@ -11,13 +11,13 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
 
-public class SetupFragment extends Fragment {
+public class SetupStartFragment extends Fragment {
 
-	private DeviceModeFragment mDeviceModeFragment;
+	private SetupDeviceModeFragment mDeviceModeFragment;
 
 	// Constructor
-	public SetupFragment(Context mContext) {
-		mDeviceModeFragment = new DeviceModeFragment(mContext);
+	public SetupStartFragment(Context mContext) {
+		mDeviceModeFragment = new SetupDeviceModeFragment(mContext);
 	}
 
 	@Override

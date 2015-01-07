@@ -1,10 +1,8 @@
-package babyfon.view.fragment;
+package babyfon.view.fragment.setup;
 
 import babyfon.connectivity.bluetooth.BluetoothHandler;
 import babyfon.connectivity.wifi.WifiHandler;
-import babyfon.connectivity.wifi.WifiHandler;
 import babyfon.init.R;
-import babyfon.settings.SharedPrefs;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.Context;
@@ -15,13 +13,9 @@ import android.view.ViewGroup;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
-import android.widget.RadioGroup.OnCheckedChangeListener;
 import android.widget.Toast;
 
-public class ConnectionBabyFragment extends Fragment {
+public class SetupConnectionBabyFragment extends Fragment {
 
 	// Define UI elements
 	Button btnForwardConnectionBaby;
@@ -32,7 +26,7 @@ public class ConnectionBabyFragment extends Fragment {
 	private BluetoothHandler mBluetoothHandler;
 	private WifiHandler mWifiHandler;
 
-	private CompleteSetupFragment mCompleteSetupFragment;
+	private SetupCompleteBabyModeFragment mCompleteSetupFragment;
 
 	private Context mContext;
 
@@ -40,8 +34,8 @@ public class ConnectionBabyFragment extends Fragment {
 	private boolean isWifiAvailable = false;
 
 	// Constructor
-	public ConnectionBabyFragment(Context mContext) {
-		mCompleteSetupFragment = new CompleteSetupFragment(mContext);
+	public SetupConnectionBabyFragment(Context mContext) {
+		mCompleteSetupFragment = new SetupCompleteBabyModeFragment(mContext);
 		mBluetoothHandler = new BluetoothHandler(mContext);
 		mWifiHandler = new WifiHandler(mContext);
 

@@ -15,10 +15,12 @@ import babyfon.model.NavigationDrawerItemModel;
 import babyfon.performance.Battery;
 import babyfon.settings.SharedPrefs;
 import babyfon.view.fragment.AbsenceFragment;
-import babyfon.view.fragment.SearchFragment;
-import babyfon.view.fragment.OverviewFragment;
 import babyfon.view.fragment.BabymonitorFragment;
-import babyfon.view.fragment.SetupFragment;
+import babyfon.view.fragment.overview.OverviewBabyFragment;
+import babyfon.view.fragment.overview.OverviewParentsFragment;
+import babyfon.view.fragment.setup.SetupDeviceModeFragment;
+import babyfon.view.fragment.setup.SetupSearchDevicesFragment;
+import babyfon.view.fragment.setup.SetupStartFragment;
 import android.app.AlertDialog;
 import android.app.Fragment;
 import android.app.FragmentManager;
@@ -27,8 +29,6 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.content.res.TypedArray;
 import android.os.Bundle;
-import android.os.PowerManager;
-import android.os.PowerManager.WakeLock;
 import android.os.StrictMode;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.FragmentActivity;
@@ -37,9 +37,6 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
-import android.view.WindowManager.LayoutParams;
 import android.widget.AdapterView;
 import android.widget.FrameLayout;
 import android.widget.ListView;
@@ -84,9 +81,9 @@ public class MainActivity extends FragmentActivity {
 			StrictMode.setThreadPolicy(policy);
 		}
 
-		new CallReceiver(this).missedCalls();
-
 		mSharedPrefs = new SharedPrefs(this);
+
+		new CallReceiver(this).missedCalls();
 
 		// Customize device mode
 		if (mSharedPrefs.getDeviceMode() == 0) { // Baby mode
@@ -121,7 +118,7 @@ public class MainActivity extends FragmentActivity {
 
 		items = new ArrayList<NavigationDrawerItemModel>();
 
-		// Listenelement: Home
+		// Listenelement: Übersicht
 		items.add(new NavigationDrawerItemModel(navMenuTitles[0], navMenuIcons.getResourceId(0, -1)));
 		// Listenelement: Babymonitor
 		items.add(new NavigationDrawerItemModel(navMenuTitles[1], navMenuIcons.getResourceId(1, -1)));
@@ -160,8 +157,13 @@ public class MainActivity extends FragmentActivity {
 		};
 		mDrawerLayout.setDrawerListener(mDrawerToggle);
 
-		// Open the first fragment (OverviewFragment) on start
-		displayView(0);
+		if (mSharedPrefs.getDeviceMode() != -1) {
+			// Show first fragment view: OverviewFragment
+			displayView(0);
+		} else {
+			// Show first fragment view: SetupFragment
+			displayView(3);
+		}
 	}
 
 	@Override
@@ -280,15 +282,32 @@ public class MainActivity extends FragmentActivity {
 		Fragment fragment = null;
 
 		if (id.equals("OverviewFragment")) {
-			fragment = new OverviewFragment(this);
+			// Open overview
+			if (mSharedPrefs.getDeviceMode() == 0) {
+				// Baby mode
+				fragment = new OverviewBabyFragment(this);
+			} else {
+				// Parents mode
+				fragment = new OverviewParentsFragment(this);
+			}
 		} else if (id.equals("BabymonitorFragment")) {
+			// Open babymonitor
 			fragment = new BabymonitorFragment();
 		} else if (id.equals("AbsenceFragment")) {
+			// Open absence
 			fragment = new AbsenceFragment();
 		} else if (id.equals("SetupFragment")) {
-			fragment = new SetupFragment(this);
+			// Open setup
+			if (mSharedPrefs.getDeviceMode() != -1) {
+				// Baby or parents mode is aktive
+				fragment = new SetupDeviceModeFragment(this);
+			} else {
+				// No mode
+				fragment = new SetupStartFragment(this);
+			}
 		} else if (id.equals("ConnectionFragment")) {
-			fragment = new SearchFragment(this);
+			// Open connection
+			fragment = new SetupSearchDevicesFragment(this);
 		}
 
 		mFragmentMap.put(id, fragment);

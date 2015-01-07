@@ -1,7 +1,6 @@
-package babyfon.view.fragment;
+package babyfon.view.fragment.setup;
 
 import babyfon.connectivity.bluetooth.BluetoothHandler;
-import babyfon.connectivity.wifi.WifiHandler;
 import babyfon.connectivity.wifi.WifiHandler;
 import babyfon.init.R;
 import babyfon.settings.SharedPrefs;
@@ -18,7 +17,7 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RadioGroup.OnCheckedChangeListener;
 
-public class ConnectionParentsFragment extends Fragment {
+public class SetupConnectionParentsFragment extends Fragment {
 
 	// Define UI elements
 	private RadioGroup rgConnectivity;
@@ -29,7 +28,7 @@ public class ConnectionParentsFragment extends Fragment {
 	private BluetoothHandler mBluetoothHandler;
 	private WifiHandler mWifiHandler;
 
-	private SearchFragment mSearchFragment;
+	private SetupSearchDevicesFragment mSearchFragment;
 
 	private boolean isBluetoothAvailable = false;
 	private boolean isWifiAvailable = false;
@@ -40,9 +39,9 @@ public class ConnectionParentsFragment extends Fragment {
 	private SharedPrefs mSharedPrefs;
 
 	// Constructor
-	public ConnectionParentsFragment(Context mContext) {
+	public SetupConnectionParentsFragment(Context mContext) {
 		this.mSharedPrefs = new SharedPrefs(mContext);
-		this.mSearchFragment = new SearchFragment(mContext);
+		this.mSearchFragment = new SetupSearchDevicesFragment(mContext);
 		this.mBluetoothHandler = new BluetoothHandler(mContext);
 		this.mWifiHandler = new WifiHandler(mContext);
 	}
@@ -140,7 +139,7 @@ public class ConnectionParentsFragment extends Fragment {
 		button.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				mSharedPrefs.setDeviceMode(connectivityType);
+				mSharedPrefs.setConnectivityType(connectivityType);
 				fragmentManager.beginTransaction().replace(R.id.frame_container, mSearchFragment, null)
 						.addToBackStack(null).commit();
 			}

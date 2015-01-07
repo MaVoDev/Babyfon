@@ -6,11 +6,9 @@ import java.io.InputStreamReader;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketTimeoutException;
-import java.util.ArrayList;
 
 import android.util.Log;
 import babyfon.Message;
-import babyfon.init.R;
 import babyfon.settings.SharedPrefs;
 import babyfon.view.activity.MainActivity;
 
