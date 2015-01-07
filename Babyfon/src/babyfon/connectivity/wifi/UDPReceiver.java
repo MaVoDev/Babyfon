@@ -50,7 +50,6 @@ public class UDPReceiver {
 					targetIP = targetIP.substring(1);
 
 					if (incomingUDPMessage.equals(mMainActivity.getString(R.string.MESSAGE_CONNECTION_REQUEST))) {
-						System.out.println("Es ist die richtige Nachricht.");
 						new TCPSender(mMainActivity).sendMessage(targetIP,
 								mMainActivity.getString(R.string.MESSAGE_CONNECTION_CONFIRM) + ";"
 										+ new WifiHandler(mMainActivity).getLocalIPv4Address() + ";"

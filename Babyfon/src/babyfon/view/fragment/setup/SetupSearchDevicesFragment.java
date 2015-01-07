@@ -1,14 +1,18 @@
 package babyfon.view.fragment.setup;
 
+import java.util.ArrayList;
+
 import babyfon.connectivity.ConnectionInterface;
 import babyfon.connectivity.bluetooth.BluetoothConnection;
 import babyfon.connectivity.bluetooth.BluetoothListAdapter;
 import babyfon.connectivity.wifi.TCPReceiver;
 import babyfon.connectivity.wifi.UDPBroadcastSender;
+import babyfon.connectivity.wifi.UDPReceiver;
 import babyfon.connectivity.wifi.WifiHandler;
 import babyfon.init.R;
 import babyfon.performance.Sound;
 import babyfon.settings.SharedPrefs;
+import babyfon.view.activity.MainActivity;
 import babyfon.view.fragment.overview.OverviewParentsFragment;
 import android.app.Fragment;
 import android.app.FragmentManager;
@@ -33,6 +37,8 @@ public class SetupSearchDevicesFragment extends Fragment {
 	private Button btnSearchDevices;
 	private TextView titleConnectivity;
 
+	private ArrayList<BabyfonDevice> device;
+
 	private int connectivityType;
 
 	private SharedPrefs mSharedPrefs;
@@ -49,6 +55,8 @@ public class SetupSearchDevicesFragment extends Fragment {
 		mSharedPrefs = new SharedPrefs(mContext);
 		mSound = new Sound(mContext);
 		
+		device = new ArrayList<BabyfonDevice>();
+
 		this.mContext = mContext;
 	}
 
@@ -142,5 +150,23 @@ public class SetupSearchDevicesFragment extends Fragment {
 
 	public void initViewBWifiDirect() {
 		titleConnectivity.setText(getString(R.string.connect_wifip2p));
+	}
+
+	public void setNewDevice(String ip, String name) {
+		// TODO Liste wird nach jeder neuen IP zurückgesetzt. Das darf nicht
+		// sein.
+		device.add(new BabyfonDevice(ip, name));
+		Log.i(TAG, "Device found: " + ip + " | " + name);
+		Log.i(TAG, "Number of devices found: " + device.size());
+	}
+
+	class BabyfonDevice {
+		private String ip;
+		private String name;
+
+		public BabyfonDevice(String ip, String name) {
+			this.ip = ip;
+			this.name = name;
+		}
 	}
 }

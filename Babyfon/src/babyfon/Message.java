@@ -6,6 +6,7 @@ import babyfon.connectivity.wifi.TCPSender;
 import babyfon.init.R;
 import babyfon.view.activity.MainActivity;
 import babyfon.view.fragment.BabymonitorFragment;
+import babyfon.view.fragment.setup.SetupSearchDevicesFragment;
 
 public class Message {
 
@@ -30,6 +31,19 @@ public class Message {
 				public void run() {
 					Fragment fragment = mMainActivity.getFragmentById("BabymonitorFragment");
 					((BabymonitorFragment) fragment).setBatteryLevel(strArray[1]);
+				}
+			});
+		}
+		
+		if (strArray[0].equals(mMainActivity.getString(R.string.MESSAGE_CONNECTION_CONFIRM))) {
+			final String ip = strArray[1];
+			final String name = strArray[2];
+
+			mMainActivity.runOnUiThread(new Runnable() {
+				@Override
+				public void run() {
+					Fragment fragment = mMainActivity.getFragmentById("SetupSearchDevicesFragment");
+					((SetupSearchDevicesFragment) fragment).setNewDevice(ip, name);
 				}
 			});
 		}

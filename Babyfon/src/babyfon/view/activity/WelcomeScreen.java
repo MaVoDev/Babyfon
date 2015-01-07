@@ -1,6 +1,9 @@
 package babyfon.view.activity;
 
+import babyfon.connectivity.wifi.TCPReceiver;
+import babyfon.connectivity.wifi.UDPReceiver;
 import babyfon.init.R;
+import babyfon.performance.Battery;
 import babyfon.settings.SharedPrefs;
 import android.app.Activity;
 import android.content.Intent;
@@ -8,6 +11,13 @@ import android.os.Bundle;
 import android.widget.RelativeLayout;
 
 public class WelcomeScreen extends Activity {
+
+	// Modules
+	private Battery mBattery;
+
+	// Receiver
+	private TCPReceiver mTCPReceiver;
+	private UDPReceiver mUDPReceiver;
 
 	private SharedPrefs mSharedPrefs;
 
@@ -27,6 +37,25 @@ public class WelcomeScreen extends Activity {
 			// Set background color
 			layout.setBackgroundResource(R.drawable.bg_female);
 		}
+
+		// Load default modules
+		// TCP Receiver
+		if (mSharedPrefs.getDeviceMode() != -1) {
+			// Load mode modules
+			if (mSharedPrefs.getDeviceMode() == 0) {
+				// Load baby modules
+				// Battery
+				// Call
+				// SMS
+				// UDP Receiver
+			} else {
+				// Load parents modules
+				// Battery (off)
+				// Call (off)
+				// SMS (off)
+				// UDP Receiver (off)
+			}
+		}
 	}
 
 	@Override
@@ -38,7 +67,7 @@ public class WelcomeScreen extends Activity {
 			public void run() {
 
 				try {
-					sleep(0);
+					sleep(1000);
 
 					Intent intent = new Intent(getBaseContext(), MainActivity.class);
 					startActivity(intent);

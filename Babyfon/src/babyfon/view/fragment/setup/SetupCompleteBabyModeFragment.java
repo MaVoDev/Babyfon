@@ -1,9 +1,11 @@
 package babyfon.view.fragment.setup;
 
 import babyfon.connectivity.wifi.TCPReceiver;
+import babyfon.connectivity.wifi.UDPReceiver;
 import babyfon.init.R;
 import babyfon.performance.Sound;
 import babyfon.settings.SharedPrefs;
+import babyfon.view.activity.MainActivity;
 import babyfon.view.fragment.overview.OverviewBabyFragment;
 import android.app.Fragment;
 import android.app.FragmentManager;
@@ -29,7 +31,7 @@ public class SetupCompleteBabyModeFragment extends Fragment {
 	private Context mContext;
 
 	private static final String TAG = TCPReceiver.class.getCanonicalName();
-	
+
 	// Constructor
 	public SetupCompleteBabyModeFragment(Context mContext) {
 		mSharedPrefs = new SharedPrefs(mContext);
@@ -53,7 +55,7 @@ public class SetupCompleteBabyModeFragment extends Fragment {
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		
+
 		Log.i(TAG, "Start baby mode...");
 
 		View view = inflater.inflate(R.layout.fragment_complete_setup, container, false);
@@ -63,15 +65,16 @@ public class SetupCompleteBabyModeFragment extends Fragment {
 		initUiElements(view);
 
 		tvPassword.setText(getRandomPassword() + "");
-		
+
 		mSound.mute();
 
 		// OnClickListener for the Button btnCompleteSetup
 		btnCompleteSetup.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				fragmentManager.beginTransaction().replace(R.id.frame_container, new OverviewBabyFragment(mContext), null)
-						.addToBackStack(null).commit();
+				fragmentManager.beginTransaction()
+						.replace(R.id.frame_container, new OverviewBabyFragment(mContext), null).addToBackStack(null)
+						.commit();
 			}
 		});
 

@@ -35,8 +35,6 @@ public class SetupStartFragment extends Fragment {
 						.addToBackStack(null).commit();
 			}
 		});
-		
-		
 
 		return view;
 	}

@@ -1,9 +1,5 @@
 ToDo:
 ==========================================================================
-- Wenn im Einrichtungsass. die Backpressed gedrückt wird, nachfragen, ob der Assi beendet werden soll, wenn ja, zurück zur Übersicht
-- Nur nach BabyfonModis suchen
-- Broadcastsuche ausgeben
-
 Allgemein:
 - Service
 - Design (Actionbarfarbe, Buttons, Navigation Drawer, ...)
@@ -24,9 +20,7 @@ Connectivity:
 
 Setup:
 - Nach Abschluss relevante Methoden starten (Battery, SMS, Call, ...)
-- Navigation beim Einrichten (1,2,3)// siehe auch Mototroller Hilfe/Einrichtung, als Idee
-- Wenn im Setup ein Schritt zurück gemacht wird, Werte zurück übergeben
-- Wifi-Mode: IP und Name der gefundenen Geräte anzeigen (Suche funktioniert sc- Babymode nach Abschluss -> Info Fenster (Gerät wird jetzt in den baby mode versetzt) und Display automatisch aus.hon)
+- Wifi-Mode: IP und Name der gefundenen Geräte anzeigen
 
 Optional:
 ==========================================================================

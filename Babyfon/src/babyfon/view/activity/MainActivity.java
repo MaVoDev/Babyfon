@@ -46,6 +46,9 @@ public class MainActivity extends FragmentActivity {
 	private DrawerLayout mDrawerLayout;
 	private ListView mDrawerList;
 	private ActionBarDrawerToggle mDrawerToggle;
+	
+	// Modules
+	private Battery mBattery;
 
 	Map<String, Fragment> mFragmentMap = new HashMap<String, Fragment>();
 
@@ -61,11 +64,10 @@ public class MainActivity extends FragmentActivity {
 
 	private ArrayList<NavigationDrawerItemModel> items;
 	private NavigationDrawerListAdapter adapter;
-	private Battery mBattery;
 
 	// Receiver
 	private TCPReceiver mTCPReceiver;
-	private UDPReceiver mUDPReceiver;
+	public static UDPReceiver mUDPReceiver;
 
 	private SharedPrefs mSharedPrefs;
 
@@ -85,13 +87,6 @@ public class MainActivity extends FragmentActivity {
 
 		new CallReceiver(this).missedCalls();
 
-		// Customize device mode
-		if (mSharedPrefs.getDeviceMode() == 0) { // Baby mode
-
-		} else { // Parent mode
-
-		}
-
 		mBattery = new Battery(this); // TODO Only baby mode
 		new SMSReceiver(this); // TODO Only baby mode
 
@@ -99,7 +94,7 @@ public class MainActivity extends FragmentActivity {
 			Log.i(TAG, "Try to start TCP receiver...");
 			mTCPReceiver = new TCPReceiver(this);
 		}
-
+		
 		if (mUDPReceiver == null) {
 			Log.i(TAG, "Try to start UDP receiver...");
 			mUDPReceiver = new UDPReceiver(this);
@@ -157,6 +152,7 @@ public class MainActivity extends FragmentActivity {
 		};
 		mDrawerLayout.setDrawerListener(mDrawerToggle);
 
+		// Checke the mode
 		if (mSharedPrefs.getDeviceMode() != -1) {
 			// Show first fragment view: OverviewFragment
 			displayView(0);
@@ -299,14 +295,14 @@ public class MainActivity extends FragmentActivity {
 		} else if (id.equals("SetupFragment")) {
 			// Open setup
 			if (mSharedPrefs.getDeviceMode() != -1) {
-				// Baby or parents mode is aktive
+				// Baby or parents mode is active
 				fragment = new SetupDeviceModeFragment(this);
 			} else {
 				// No mode
 				fragment = new SetupStartFragment(this);
 			}
-		} else if (id.equals("ConnectionFragment")) {
-			// Open connection
+		} else if (id.equals("SetupSearchDevicesFragment")) {
+			// Open SetupSearchDevicesFragment
 			fragment = new SetupSearchDevicesFragment(this);
 		}
 
