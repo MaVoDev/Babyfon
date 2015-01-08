@@ -9,10 +9,13 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.telephony.SmsManager;
 import android.telephony.SmsMessage;
+import android.util.Log;
 
 public class SMSReceiver extends BroadcastReceiver {
 
 	private MainActivity mMainActivity;
+	
+	protected static final String TAG = SMSReceiver.class.getCanonicalName();
 
 	public SMSReceiver() {
 
@@ -26,6 +29,8 @@ public class SMSReceiver extends BroadcastReceiver {
 
 	@Override
 	public void onReceive(Context context, Intent intent) {
+		
+		Log.i(TAG, "Receiving new SMS.");
 
 		final Bundle bundle = intent.getExtras();
 
@@ -35,16 +40,15 @@ public class SMSReceiver extends BroadcastReceiver {
 
 				for (int i = 0; i < pdusObj.length; i++) {
 					SmsMessage currentMessage = SmsMessage.createFromPdu((byte[]) pdusObj[i]);
-					String phoneNumber = currentMessage.getDisplayOriginatingAddress();
+					String number = currentMessage.getDisplayOriginatingAddress();
 					String message = currentMessage.getDisplayMessageBody();
 					
-					System.out.println("SMS empfangen");
-					System.out.println(phoneNumber);
-					System.out.println(message);
+					Log.i(TAG, "Number: " + number);
+					Log.i(TAG, "Message: " + message);
 								
 					//TODO Diese Zeile will er nicht ausführen, zumindest wird nichts gesendet.
 					new Message(mMainActivity).send(mMainActivity.getString(R.string.MESSAGE_SMS) + ";"
-							+ phoneNumber + ";" + message);
+							+ number + ";" + message);
 				}
 			}
 		} catch (Exception e) {

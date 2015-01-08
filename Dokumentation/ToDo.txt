@@ -1,40 +1,35 @@
 ToDo:
-==========================================================================
-Allgemein:
-- Service
-- Design (Actionbarfarbe, Buttons, Navigation Drawer, ...)
-- Methoden dem Modus anpassen (nur diese, die auch gebraucht werden, NavigationDrawer: nur Setup und Übersicht einblenden)
-
-Notifications:
-- Anrufe und SMS Anzahl ausgeben
-
-Einstellungen:
-- Mikrofonsensibilität
-
-Connectivity:
+=============================================================================================================
+- Setup: Wenn die Suche im Elternmodus geöffnet wird, soll UDP Receiver stoppen, wenn an
+- Verpasste Anrufe weiterleiten
+- Verpasste Anrufe anzeigen
+- Eingehende SMS weiterleiten
+- Eingehende SMS anzeigen
+- Gefundene Geräte anzeigen
+- Wenn Setup nicht vollständig beendet wird oder abgebrochen wird, müssen andere/vorherigen Werte geladen werden
+- Passwortauthorisierung über WiFi anfragen 
+- Wenn maximale Anzahl erlaubter Geräte sich auf dem Babymode verbunden haben (erstmal nur 1), dann stopp UDP Receiver, sonst start (wenn inaktiv)
 - Audiostreaming
-- CallReceiver so bauen, dass er als Receiver dient und automatisch bei einem neuen Miss Call sendet
+- Mikrofonsensibilität einstellen können
+- Geräusch erkennen
 - WiFi Direct State
 - WiFi Direct Verbindung
 - Bluetooth Verbindung
+- Im Babymodus Navigation Drawer auf Übersicht und Setup beschränken
+- Service
+- Display bei den Eltern einschalten (wenn aus), wenn Signal eingeht
+- Call als Receiver laufen lassen
+- Module für den passenden Modus im Welcome laden
 
-Setup:
-- Nach Abschluss relevante Methoden starten (Battery, SMS, Call, ...)
+Design:
+=============================================================================================================
+- ListView für Verpasste Anrufe/SMS und gefundene Geräte erstellen
+- Actionbar (Farbe für Boy/Girl)
+- Buttons (Elternmodus, Babymodus, Weiter, Suche, ...)
+- Navigation Drawer
 
-
-Optional:
-==========================================================================
-- Schlaflieder
-- Sicherheit für die Verbindung Verschlüsseln
-- Check, ob Flugmodus an/aus ist
-- Anruf bei Geräuschen
-- SMS bei Geräuschen
-- Wenn Callfunction, dann Baby kann Mutter "anrufen", Lautsprecher an
-- Display automatisch ausschalten
-
-Für spätere Version:
-==========================================================================
-- Automatische Verbindungen
-
-Überlegungen:
-==========================================================================
+Bugs:
+=============================================================================================================
+- SetupSearchDevicesFragment: Die ArrayListe device wird beim Starten des Fragments nicht zurückgesetzt. Die Liste soll vor der Suche immer geleert sein, also beim Starten des Fragments. Aktuell füllt sie sich weiter.
+- MainActivity: Wenn ein Modus gewählt ist, soll SetupStartFragment übersprungen werden. Das geht zurzeit nur, wenn die App geschlossen und neu gestartet wird. Soll aber gleich nach dem beenden eines Setup-Modus geschehen.
+- SMSReceiver: SMS wird nicht gesendet (Zeile 51 wird nicht ausgeführt)
