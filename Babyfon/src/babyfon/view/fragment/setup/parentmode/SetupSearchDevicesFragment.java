@@ -1,4 +1,4 @@
-package babyfon.view.fragment.setup;
+package babyfon.view.fragment.setup.parentmode;
 
 import java.util.ArrayList;
 
@@ -81,7 +81,7 @@ public class SetupSearchDevicesFragment extends Fragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-		View view = inflater.inflate(R.layout.fragment_serach, container, false);
+		View view = inflater.inflate(R.layout.layout_setup_search, container, false);
 
 		final FragmentManager fragmentManager = getFragmentManager();
 

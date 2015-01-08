@@ -6,7 +6,7 @@ import babyfon.connectivity.wifi.TCPSender;
 import babyfon.init.R;
 import babyfon.view.activity.MainActivity;
 import babyfon.view.fragment.BabymonitorFragment;
-import babyfon.view.fragment.setup.SetupSearchDevicesFragment;
+import babyfon.view.fragment.setup.parentmode.SetupSearchDevicesFragment;
 
 public class Message {
 

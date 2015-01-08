@@ -1,4 +1,4 @@
-package babyfon.view.fragment.setup;
+package babyfon.view.fragment.setup.babymode;
 
 import babyfon.connectivity.wifi.TCPReceiver;
 import babyfon.connectivity.wifi.UDPReceiver;
@@ -58,7 +58,7 @@ public class SetupCompleteBabyModeFragment extends Fragment {
 
 		Log.i(TAG, "Start baby mode...");
 
-		View view = inflater.inflate(R.layout.fragment_complete_setup, container, false);
+		View view = inflater.inflate(R.layout.layout_setup_completebabymode, container, false);
 
 		final FragmentManager fragmentManager = getFragmentManager();
 

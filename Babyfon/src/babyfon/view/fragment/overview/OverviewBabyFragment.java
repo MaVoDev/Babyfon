@@ -13,8 +13,9 @@ import android.widget.TextView;
 public class OverviewBabyFragment extends Fragment {
 
 	// Define UI elements
-	private TextView tvConnectivityType;
 	private TextView tvDeviceMode;
+	private TextView tvPrivacyCall;
+	private TextView tvPrivacySMS;
 
 	private SharedPrefs mSharedPrefs;
 
@@ -30,25 +31,29 @@ public class OverviewBabyFragment extends Fragment {
 	private void initUiElements(View view) {
 
 		// Initialize TextViews
-		tvConnectivityType = (TextView) view.findViewById(R.id.tv_connectivityType);
-		if (mSharedPrefs.getConnectivityType() == 1) {
-			tvConnectivityType.setText(R.string.connect_bluetooth);
-		} else if (mSharedPrefs.getConnectivityType() == 2) {
-			tvConnectivityType.setText(R.string.connect_wifi);
-		} else if (mSharedPrefs.getConnectivityType() == 3) {
-			tvConnectivityType.setText(R.string.connect_wifip2p);
-		} else {
-			tvConnectivityType.setText(R.string.connect_null);
-		}
-		
-		tvDeviceMode = (TextView) view.findViewById(R.id.tv_deviceMode);
+		tvDeviceMode = (TextView) view.findViewById(R.id.tv_overviewBabyModeDeviceMode);
 		tvDeviceMode.setText(R.string.mode_baby);
+
+		tvPrivacyCall = (TextView) view.findViewById(R.id.tv_overviewBabyModePrivacyCall);
+		if (mSharedPrefs.getPrivacyCall()) {
+			tvPrivacyCall.setText(R.string.privacy_call_no);
+		} else {
+			tvPrivacyCall.setText(R.string.privacy_call_yes);
+		}
+
+		tvPrivacySMS = (TextView) view.findViewById(R.id.tv_overviewBabyModePrivacySMS);
+		if (mSharedPrefs.getPrivacySMS()) {
+			tvPrivacySMS.setText(R.string.privacy_sms_no);
+		} else {
+			tvPrivacySMS.setText(R.string.privacy_sms_yes);
+		}
+
 	}
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-		View view = inflater.inflate(R.layout.fragment_overview_baby, container, false);
+		View view = inflater.inflate(R.layout.layout_overview_babymode, container, false);
 
 		initUiElements(view);
 

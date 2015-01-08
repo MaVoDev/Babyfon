@@ -1,4 +1,4 @@
-package babyfon.view.fragment.setup;
+package babyfon.view.fragment.setup.babymode;
 
 import babyfon.connectivity.bluetooth.BluetoothHandler;
 import babyfon.connectivity.wifi.WifiHandler;
@@ -6,6 +6,7 @@ import babyfon.init.R;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.Context;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,12 +14,13 @@ import android.view.ViewGroup;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.TextView;
 import android.widget.Toast;
 
 public class SetupConnectionBabyFragment extends Fragment {
 
 	// Define UI elements
-	Button btnForwardConnectionBaby;
+	private Button btnForwardConnectionBaby;
 	private CheckBox chkBoxBluetooth;
 	private CheckBox chkBoxWifi;
 	private CheckBox chkBoxWifiDirect;
@@ -26,7 +28,7 @@ public class SetupConnectionBabyFragment extends Fragment {
 	private BluetoothHandler mBluetoothHandler;
 	private WifiHandler mWifiHandler;
 
-	private SetupCompleteBabyModeFragment mCompleteSetupFragment;
+	private SetupPrivacyFragment mSetupPrivacyFragment;
 
 	private Context mContext;
 
@@ -35,7 +37,7 @@ public class SetupConnectionBabyFragment extends Fragment {
 
 	// Constructor
 	public SetupConnectionBabyFragment(Context mContext) {
-		mCompleteSetupFragment = new SetupCompleteBabyModeFragment(mContext);
+		mSetupPrivacyFragment = new SetupPrivacyFragment(mContext);
 		mBluetoothHandler = new BluetoothHandler(mContext);
 		mWifiHandler = new WifiHandler(mContext);
 
@@ -70,12 +72,17 @@ public class SetupConnectionBabyFragment extends Fragment {
 		chkBoxWifi.setEnabled(true);
 		chkBoxWifiDirect = (CheckBox) view.findViewById(R.id.chkBoxConnectionWifiDirect);
 		chkBoxWifiDirect.setEnabled(true);
+
+		// Initialize TextViews
+		Typeface myTypeface = Typeface.createFromAsset(mContext.getAssets(), "fonts/mtsc.ttf");
+		TextView myTextView = (TextView) view.findViewById(R.id.tv_titleConnectionBaby);
+		myTextView.setTypeface(myTypeface);
 	}
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-		View view = inflater.inflate(R.layout.fragment_connection_baby, container, false);
+		View view = inflater.inflate(R.layout.layout_connection_babymode, container, false);
 
 		final FragmentManager fragmentManager = getFragmentManager();
 
@@ -95,7 +102,7 @@ public class SetupConnectionBabyFragment extends Fragment {
 			public void onClick(View v) {
 				if (chkBoxBluetooth.isChecked() || chkBoxWifi.isChecked() || chkBoxWifiDirect.isChecked()) {
 					// TODO gewählte Verbindungen freischalten/starten
-					fragmentManager.beginTransaction().replace(R.id.frame_container, mCompleteSetupFragment, null)
+					fragmentManager.beginTransaction().replace(R.id.frame_container, mSetupPrivacyFragment, null)
 							.addToBackStack(null).commit();
 				} else {
 					Toast toast = Toast.makeText(mContext, "Wählen Sie eine Verbindung.", Toast.LENGTH_SHORT);
@@ -107,5 +114,3 @@ public class SetupConnectionBabyFragment extends Fragment {
 		return view;
 	}
 }
-
-// TODO Den Weiter Button erst aktivieren, wenn eine Option gewählt wurde

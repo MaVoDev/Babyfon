@@ -2,6 +2,8 @@ package babyfon.view.fragment.setup;
 
 import babyfon.init.R;
 import babyfon.settings.SharedPrefs;
+import babyfon.view.fragment.setup.babymode.SetupConnectionBabyFragment;
+import babyfon.view.fragment.setup.parentmode.SetupConnectionParentsFragment;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.Context;
@@ -45,7 +47,7 @@ public class SetupDeviceModeFragment extends Fragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-		View view = inflater.inflate(R.layout.fragment_device_mode, container, false);
+		View view = inflater.inflate(R.layout.layout_setup_devicemode, container, false);
 
 		final FragmentManager fragmentManager = getFragmentManager();
 

@@ -32,7 +32,7 @@ public class BabymonitorFragment extends Fragment {
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		view = inflater.inflate(R.layout.fragment_babymonitor, container, false);
+		view = inflater.inflate(R.layout.layout_babymonitor, container, false);
 		textBatteryLevel = (TextView) view.findViewById(R.id.textBatteryLevel);
 		updateUI();
 		return view;

@@ -168,7 +168,7 @@ public class SharedPrefs {
 	/**
 	 * Set the state of display notification.
 	 * 
-	 * @param boolean state: state of display notification
+	 * @param boolean isEnabled: state of display notification
 	 */
 	public void setDisplayNotificationState(boolean isEnabled) {
 		editor.putBoolean("notification_display_state", isEnabled).commit();
@@ -188,7 +188,7 @@ public class SharedPrefs {
 	/**
 	 * Set the state of sound notification.
 	 * 
-	 * @param boolean state: state of sound notification
+	 * @param boolean isEnabled: state of sound notification
 	 */
 	public void setSoundNotificationState(boolean isEnabled) {
 		editor.putBoolean("notification_sound_state", isEnabled).commit();
@@ -208,9 +208,53 @@ public class SharedPrefs {
 	/**
 	 * Set the state of vibrate notification.
 	 * 
-	 * @param boolean state: state of vibrate notification
+	 * @param boolean isEnabled: state of vibrate notification
 	 */
 	public void setVibrateNotificationState(boolean isEnabled) {
 		editor.putBoolean("notification_vibrate_state", isEnabled).commit();
+	}
+
+	/*
+	 * == Setup =====================================
+	 */
+
+	// == Privacy: Call =================================
+
+	/**
+	 * Get the state of call privacy.
+	 * 
+	 * @return boolean: true = send forward, false = don't send forward
+	 */
+	public boolean getPrivacyCall() {
+		return mSharedPreferences.getBoolean("privacy_call", false);
+	}
+
+	/**
+	 * Set the state of call privacy.
+	 * 
+	 * @param boolean state: state of call privacy
+	 */
+	public void setPrivacyCall(boolean state) {
+		editor.putBoolean("privacy_call", state).commit();
+	}
+
+	// == Privacy: sms =================================
+
+	/**
+	 * Get the state of sms privacy.
+	 * 
+	 * @return boolean: true = send forward, false = don't send forward
+	 */
+	public boolean getPrivacySMS() {
+		return mSharedPreferences.getBoolean("privacy_sms", false);
+	}
+
+	/**
+	 * Set the state of sms privacy.
+	 * 
+	 * @param boolean state: state of call privacy
+	 */
+	public void setPrivacySMS(boolean state) {
+		editor.putBoolean("privacy_sms", state).commit();
 	}
 }

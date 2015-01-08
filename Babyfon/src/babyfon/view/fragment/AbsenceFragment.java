@@ -16,7 +16,7 @@ public class AbsenceFragment extends Fragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-		View view = inflater.inflate(R.layout.fragment_absence, container, false);
+		View view = inflater.inflate(R.layout.layout_absence, container, false);
 		
 		return view;
 	}

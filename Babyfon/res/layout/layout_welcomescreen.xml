@@ -12,6 +12,6 @@
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
         android:contentDescription="@string/desc_img_default"
-        android:src="@drawable/banner_babyfon" />
+        android:src="@drawable/logo_welcome_screen" />
 
 </RelativeLayout>

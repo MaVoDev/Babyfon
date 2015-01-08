@@ -19,8 +19,8 @@ import babyfon.view.fragment.BabymonitorFragment;
 import babyfon.view.fragment.overview.OverviewBabyFragment;
 import babyfon.view.fragment.overview.OverviewParentsFragment;
 import babyfon.view.fragment.setup.SetupDeviceModeFragment;
-import babyfon.view.fragment.setup.SetupSearchDevicesFragment;
 import babyfon.view.fragment.setup.SetupStartFragment;
+import babyfon.view.fragment.setup.parentmode.SetupSearchDevicesFragment;
 import android.app.AlertDialog;
 import android.app.Fragment;
 import android.app.FragmentManager;
@@ -76,7 +76,7 @@ public class MainActivity extends FragmentActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_main);
+		setContentView(R.layout.layout_activitymain);
 
 		if (android.os.Build.VERSION.SDK_INT > 9) {
 			StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();

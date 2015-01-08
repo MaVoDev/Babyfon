@@ -3,16 +3,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
 
-    <TextView
-        android:id="@+id/textView1"
-        android:layout_width="200dp"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="39dp"
-        android:text="Welche Verbindungen wollen Sie freigeben?"
-        android:textAppearance="?android:attr/textAppearanceSmall" />
-
     <Button
         android:id="@+id/btn_forwardConnectionBaby"
         android:layout_width="wrap_content"
@@ -21,23 +11,24 @@
         android:layout_centerHorizontal="true"
         android:text="@string/forward" />
 
-    <CheckBox
-        android:id="@+id/chkBoxConnectionBluetooth"
+    <TextView
+        android:id="@+id/tv_titleConnectionBaby"
+        style="@style/fragmentTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/textView1"
-        android:layout_below="@+id/textView1"
-        android:layout_marginTop="16dp"
-        android:checked="true"
-        android:text="Bluetooth" />
+        android:layout_alignParentTop="true"
+        android:layout_marginLeft="24dp"
+        android:layout_marginRight="24dp"
+        android:layout_marginTop="24dp"
+        android:text="Verbindungsart" />
 
     <CheckBox
         android:id="@+id/chkBoxConnectionWifi"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/chkBoxConnectionBluetooth"
-        android:layout_below="@+id/chkBoxConnectionBluetooth"
-        android:layout_marginTop="16dp"
+        android:layout_alignLeft="@+id/chkBoxConnectionWifiDirect"
+        android:layout_below="@+id/chkBoxConnectionWifiDirect"
+        android:layout_marginTop="32dp"
         android:checked="true"
         android:text="Wi-Fi" />
 
@@ -45,10 +36,19 @@
         android:id="@+id/chkBoxConnectionWifiDirect"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/chkBoxConnectionWifi"
-        android:layout_below="@+id/chkBoxConnectionWifi"
-        android:layout_marginTop="16dp"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
         android:checked="true"
         android:text="Wi-Fi Direct" />
+
+    <CheckBox
+        android:id="@+id/chkBoxConnectionBluetooth"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/chkBoxConnectionWifiDirect"
+        android:layout_alignLeft="@+id/chkBoxConnectionWifiDirect"
+        android:layout_marginBottom="31dp"
+        android:checked="true"
+        android:text="Bluetooth" />
 
 </RelativeLayout>

@@ -14,4 +14,11 @@
         <item name="android:windowTitleSize">0dp</item>
     </style>
 
+    <!-- Font styles -->
+
+    <style name="fragmentTitle">
+        <item name="android:textSize">38sp</item>
+        <item name="android:gravity">center</item>
+    </style>
+
 </resources>

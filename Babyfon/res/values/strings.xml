@@ -65,6 +65,10 @@
     <!-- Memos -->
     <string name="dialog_exit_app_title">Babyfon beenden?</string>
     <string name="dialog_exit_app_message">Die Verbindungen zu anderen Babyfon-Geräten wird getrennt.</string>
+    <string name="privacy_call_yes">Anrufe werden nicht weitergeleitet</string>
+    <string name="privacy_call_no">Anrufe werden weitergeleitet</string>
+    <string name="privacy_sms_yes">SMS werden nicht weitergeleitet</string>
+    <string name="privacy_sms_no">SMS werden weitergeleitet</string>
 
     <!-- Content Description -->
     <string name="desc_img_default">Image default description</string>
