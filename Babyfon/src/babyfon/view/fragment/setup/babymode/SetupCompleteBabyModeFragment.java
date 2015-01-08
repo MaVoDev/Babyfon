@@ -72,6 +72,10 @@ public class SetupCompleteBabyModeFragment extends Fragment {
 		btnCompleteSetup.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
+				
+				// START UDPReceiver
+				MainActivity.mUDPReceiver.startUDPReceiver();
+				
 				fragmentManager.beginTransaction()
 						.replace(R.id.frame_container, new OverviewBabyFragment(mContext), null).addToBackStack(null)
 						.commit();

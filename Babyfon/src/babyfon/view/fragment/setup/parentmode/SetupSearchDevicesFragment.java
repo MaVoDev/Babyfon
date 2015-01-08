@@ -54,8 +54,6 @@ public class SetupSearchDevicesFragment extends Fragment {
 	public SetupSearchDevicesFragment(Context mContext) {
 		mSharedPrefs = new SharedPrefs(mContext);
 		mSound = new Sound(mContext);
-		
-		device = new ArrayList<BabyfonDevice>();
 
 		this.mContext = mContext;
 	}
@@ -76,6 +74,15 @@ public class SetupSearchDevicesFragment extends Fragment {
 
 		// Initialize TextViews
 		titleConnectivity = (TextView) view.findViewById(R.id.titleConnectivity);
+	}
+
+	@Override
+	public void onResume() {
+		device = new ArrayList<BabyfonDevice>();
+
+		Log.i(TAG, "onResume -> LISTE GELEERT!");
+
+		super.onResume();
 	}
 
 	@Override
@@ -123,8 +130,7 @@ public class SetupSearchDevicesFragment extends Fragment {
 			public void onClick(View v) {
 				Log.i(TAG, "Start parents mode...");
 				mSound.soundOn();
-				fragmentManager.beginTransaction()
-						.replace(R.id.frame_container, new OverviewParentsFragment(mContext), null)
+				fragmentManager.beginTransaction().replace(R.id.frame_container, new OverviewParentsFragment(mContext), null)
 						.addToBackStack(null).commit();
 			}
 		});

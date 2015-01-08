@@ -22,7 +22,9 @@ public class UDPReceiver {
 	public UDPReceiver(MainActivity mMainActivity) {
 		this.mMainActivity = mMainActivity;
 		this.mSharedPrefs = new SharedPrefs(mMainActivity);
+	}
 
+	public void startUDPReceiver() {
 		UDPReceiverThread udpReceiverThread = new UDPReceiverThread();
 		udpReceiverThread.start();
 	}
@@ -50,10 +52,8 @@ public class UDPReceiver {
 					targetIP = targetIP.substring(1);
 
 					if (incomingUDPMessage.equals(mMainActivity.getString(R.string.MESSAGE_CONNECTION_REQUEST))) {
-						new TCPSender(mMainActivity).sendMessage(targetIP,
-								mMainActivity.getString(R.string.MESSAGE_CONNECTION_CONFIRM) + ";"
-										+ new WifiHandler(mMainActivity).getLocalIPv4Address() + ";"
-										+ android.os.Build.MODEL);
+						new TCPSender(mMainActivity).sendMessage(targetIP, mMainActivity.getString(R.string.MESSAGE_CONNECTION_CONFIRM)
+								+ ";" + new WifiHandler(mMainActivity).getLocalIPv4Address() + ";" + android.os.Build.MODEL);
 					}
 				}
 			} catch (IOException e) {
