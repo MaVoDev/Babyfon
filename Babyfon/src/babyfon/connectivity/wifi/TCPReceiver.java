@@ -29,9 +29,6 @@ public class TCPReceiver {
 	public TCPReceiver(MainActivity activity) {
 		this.mMainActivity = activity;
 		this.tcpPort = new SharedPrefs(activity).getTCPPort();
-
-		TCPReceiverThread tcpReceiverThread = new TCPReceiverThread();
-		tcpReceiverThread.start();
 	}
 
 	private class TCPReceiverThread extends Thread {
@@ -66,6 +63,11 @@ public class TCPReceiver {
 				}
 			}
 		}
+	}
+	
+	public void start() {
+		TCPReceiverThread tcpReceiverThread = new TCPReceiverThread();
+		tcpReceiverThread.start();
 	}
 
 	public void stop() {

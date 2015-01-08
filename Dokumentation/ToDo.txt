@@ -6,7 +6,7 @@ Allgemein:
 - Methoden dem Modus anpassen (nur diese, die auch gebraucht werden, NavigationDrawer: nur Setup und Übersicht einblenden)
 
 Notifications:
-- Anrufe und SMS Anzahl ausgeben (Liste im Receiver definieren?)
+- Anrufe und SMS Anzahl ausgeben
 
 Einstellungen:
 - Mikrofonsensibilität
@@ -20,7 +20,7 @@ Connectivity:
 
 Setup:
 - Nach Abschluss relevante Methoden starten (Battery, SMS, Call, ...)
-- Wifi-Mode: IP und Name der gefundenen Geräte anzeigen
+
 
 Optional:
 ==========================================================================
@@ -35,7 +35,6 @@ Optional:
 Für spätere Version:
 ==========================================================================
 - Automatische Verbindungen
-- Mehrere Geräte einbinden
 
 Überlegungen:
 ==========================================================================

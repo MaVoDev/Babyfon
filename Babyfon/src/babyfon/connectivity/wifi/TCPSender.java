@@ -6,6 +6,7 @@ import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.net.SocketAddress;
 
+import android.content.Context;
 import android.util.Log;
 import babyfon.settings.SharedPrefs;
 import babyfon.view.activity.MainActivity;
@@ -19,8 +20,8 @@ public class TCPSender {
 
 	private static final String TAG = TCPReceiver.class.getCanonicalName();
 
-	public TCPSender(MainActivity activity) {
-		this.tcpPort = new SharedPrefs(activity).getTCPPort();
+	public TCPSender(Context mContext) {
+		this.tcpPort = new SharedPrefs(mContext).getTCPPort();
 	}
 
 	public void sendMessage(final String target, final String msg) {

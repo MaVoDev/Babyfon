@@ -58,6 +58,13 @@ public class SetupCompleteBabyModeFragment extends Fragment {
 
 		Log.i(TAG, "Start baby mode...");
 
+		// Start UDP receiver
+		if (MainActivity.mUDPReceiver == null) {
+			Log.i(TAG, "Try to start UDP receiver...");
+			MainActivity.mUDPReceiver = new UDPReceiver(mContext);
+			MainActivity.mUDPReceiver.start();
+		}
+
 		View view = inflater.inflate(R.layout.layout_setup_completebabymode, container, false);
 
 		final FragmentManager fragmentManager = getFragmentManager();
@@ -72,10 +79,7 @@ public class SetupCompleteBabyModeFragment extends Fragment {
 		btnCompleteSetup.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				
-				// START UDPReceiver
-				MainActivity.mUDPReceiver.startUDPReceiver();
-				
+
 				fragmentManager.beginTransaction()
 						.replace(R.id.frame_container, new OverviewBabyFragment(mContext), null).addToBackStack(null)
 						.commit();

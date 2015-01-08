@@ -93,13 +93,9 @@ public class MainActivity extends FragmentActivity {
 		if (mTCPReceiver == null) {
 			Log.i(TAG, "Try to start TCP receiver...");
 			mTCPReceiver = new TCPReceiver(this);
+			mTCPReceiver.start();
 		}
 		
-		if (mUDPReceiver == null) {
-			Log.i(TAG, "Try to start UDP receiver...");
-			mUDPReceiver = new UDPReceiver(this);
-		}
-
 		appTitle = drawerTitle = getTitle();
 
 		// load slide menu items
