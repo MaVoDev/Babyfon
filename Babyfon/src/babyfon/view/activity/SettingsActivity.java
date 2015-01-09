@@ -133,7 +133,7 @@ public class SettingsActivity extends PreferenceActivity {
 				// Update the summary of the gender in the ui.
 				sBindPreferenceSummaryToValueListener.onPreferenceChange(preference, state);
 
-				String gender = state.toString();
+				int gender = Integer.parseInt(state.toString());
 				Log.d("Babyfon", "Pref " + preference.getKey() + " changed to " + gender);
 
 				// Store value in SharedPreferences

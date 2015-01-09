@@ -1,0 +1,65 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/layout_body" >
+
+    <LinearLayout style="@style/layout_header" >
+
+        <TextView
+            android:id="@+id/text_titleConnectionBaby"
+            style="@style/fragmentTitle"
+            android:text="Verbindung" />
+    </LinearLayout>
+
+    <LinearLayout style="@style/layout_content" >
+
+        <CheckBox
+            android:id="@+id/chkBoxConnectionWifi"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="32dp"
+            android:checked="true"
+            android:text="Wi-Fi" />
+
+        <CheckBox
+            android:id="@+id/chkBoxConnectionWifiDirect"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:checked="true"
+            android:text="Wi-Fi Direct" />
+
+        <CheckBox
+            android:id="@+id/chkBoxConnectionBluetooth"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="32dp"
+            android:checked="true"
+            android:text="Bluetooth" />
+    </LinearLayout>
+
+    <LinearLayout style="@style/layout_footer" >
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:layout_weight="1" >
+
+            <Button
+                android:id="@+id/btn_backwardConnectionBaby"
+                style="@style/button_backward"
+                android:text="@string/backward" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:layout_weight="1" >
+
+            <Button
+                android:id="@+id/btn_forwardConnectionBaby"
+                style="@style/button_forward"
+                android:text="@string/forward" />
+        </LinearLayout>
+    </LinearLayout>
+
+</LinearLayout>

@@ -117,20 +117,19 @@ public class SharedPrefs {
 	/**
 	 * Get the gender of the baby.
 	 * 
-	 * @return String: null, boy, girl
+	 * @return int: 0 = boy, 1 = girl
 	 */
-	public String getGender() {
-		return mSharedPreferences.getString("gender", "boy");
+	public int getGender() {
+		return mSharedPreferences.getInt("gender", 0);
 	}
 
 	/**
 	 * Set the gender of the baby.
 	 * 
-	 * @param String
-	 *            gender: null, boy, girl
+	 * @param int gender: 0 = boy, 1 = girl
 	 */
-	public void setGender(String gender) {
-		editor.putString("gender", gender).commit();
+	public void setGender(int gender) {
+		editor.putInt("gender", gender).commit();
 	}
 
 	// == Name of the baby ===========================

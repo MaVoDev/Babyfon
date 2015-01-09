@@ -190,7 +190,7 @@ public class MainActivity extends FragmentActivity {
 		FrameLayout layout = (FrameLayout) findViewById(R.id.frame_container);
 
 		// Layout related to the gender of the baby
-		if (mSharedPrefs.getGender().equals("boy")) {
+		if (mSharedPrefs.getGender() == 0) {
 			// Set action bar color
 			actionBar.setBackgroundDrawable(getResources().getDrawable(R.drawable.bg_actionbar_male));
 			// Set layout background color

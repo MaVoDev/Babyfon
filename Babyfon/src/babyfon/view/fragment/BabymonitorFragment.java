@@ -18,7 +18,7 @@ public class BabymonitorFragment extends Fragment {
 	public String batteryLevel = "n/a";
 
 	private TextView textBatteryLevel;
-	
+
 	private Context mContext;
 
 	// Constructor
@@ -32,10 +32,11 @@ public class BabymonitorFragment extends Fragment {
 	}
 
 	public void updateUI() {
-		if (textBatteryLevel != null)
+		if (textBatteryLevel != null) {
 			textBatteryLevel.setText(batteryLevel);
+		}
 	}
-	
+
 	/**
 	 * Initialize the UI elements
 	 * 
@@ -48,18 +49,18 @@ public class BabymonitorFragment extends Fragment {
 		// Initialize TextViews
 		textTitleBabymonitor = (TextView) view.findViewById(R.id.text_titleBabymonitor);
 		textTitleBabymonitor.setTypeface(mTypeface);
-		
+
 		textBatteryLevel = (TextView) view.findViewById(R.id.textBatteryLevel);
 	}
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		
+
 		View view = inflater.inflate(R.layout.layout_babymonitor, container, false);
 
 		initUiElements(view);
 		updateUI();
-		
+
 		return view;
 	}
 }

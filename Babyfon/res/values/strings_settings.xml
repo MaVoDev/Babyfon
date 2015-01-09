@@ -26,8 +26,8 @@
         <item>Mädchen</item>
     </string-array>
     <string-array name="pref_gender_list_values">
-        <item>boy</item>
-        <item>girl</item>
+        <item>0</item>
+        <item>1</item>
     </string-array>
 
     <!-- Notifications settings -->

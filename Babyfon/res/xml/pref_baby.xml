@@ -11,7 +11,7 @@
         android:title="@string/pref_title_name" />
 
     <ListPreference
-        android:defaultValue="boy"
+        android:defaultValue="0"
         android:entries="@array/pref_gender_list_titles"
         android:entryValues="@array/pref_gender_list_values"
         android:key="gender_list"

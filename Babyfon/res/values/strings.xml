@@ -33,6 +33,7 @@
 
     <!-- F -->
     <string name="forward">Weiter</string>
+    <string name="backward">Zurück</string>
 
     <!-- M -->
     <string name="mode_baby">Babymodus</string>

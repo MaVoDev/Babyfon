@@ -30,7 +30,7 @@ public class WelcomeScreen extends Activity {
 		RelativeLayout layout = (RelativeLayout) findViewById(R.id.layout_welcome);
 
 		// Layout related to the gender of the baby
-		if (mSharedPrefs.getGender().equals("boy")) {
+		if (mSharedPrefs.getGender() == 0) {
 			// Set background color
 			layout.setBackgroundResource(R.drawable.bg_male);
 		} else {

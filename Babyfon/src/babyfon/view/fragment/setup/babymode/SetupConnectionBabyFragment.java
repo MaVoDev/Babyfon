@@ -3,23 +3,29 @@ package babyfon.view.fragment.setup.babymode;
 import babyfon.connectivity.bluetooth.BluetoothHandler;
 import babyfon.connectivity.wifi.WifiHandler;
 import babyfon.init.R;
+import babyfon.settings.SharedPrefs;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.LinearLayout;
+import android.widget.LinearLayout.LayoutParams;
 import android.widget.TextView;
 import android.widget.Toast;
 
 public class SetupConnectionBabyFragment extends Fragment {
 
 	// Define UI elements
+	private Button btnBackwardConnectionBaby;
 	private Button btnForwardConnectionBaby;
 	private CheckBox chkBoxBluetooth;
 	private CheckBox chkBoxWifi;
@@ -30,6 +36,7 @@ public class SetupConnectionBabyFragment extends Fragment {
 	private WifiHandler mWifiHandler;
 
 	private SetupPrivacyFragment mSetupPrivacyFragment;
+	private SharedPrefs mSharedPrefs;
 
 	private Context mContext;
 
@@ -41,6 +48,8 @@ public class SetupConnectionBabyFragment extends Fragment {
 		mSetupPrivacyFragment = new SetupPrivacyFragment(mContext);
 		mBluetoothHandler = new BluetoothHandler(mContext);
 		mWifiHandler = new WifiHandler(mContext);
+
+		mSharedPrefs = new SharedPrefs(mContext);
 
 		this.mContext = mContext;
 
@@ -57,6 +66,17 @@ public class SetupConnectionBabyFragment extends Fragment {
 		}
 	}
 
+	public void updateUI() {
+		// Update buttons
+		if (mSharedPrefs.getGender() == 0) {
+			btnBackwardConnectionBaby.setBackgroundResource(R.drawable.bg_male);
+			btnForwardConnectionBaby.setBackgroundResource(R.drawable.bg_male);
+		} else {
+			btnBackwardConnectionBaby.setBackgroundResource(R.drawable.bg_female);
+			btnForwardConnectionBaby.setBackgroundResource(R.drawable.bg_female);
+		}
+	}
+
 	/**
 	 * Initialize the UI elements
 	 * 
@@ -64,10 +84,14 @@ public class SetupConnectionBabyFragment extends Fragment {
 	 */
 	private void initUiElements(View view) {
 		// Set Typeface
-		Typeface mTypeface = Typeface.createFromAsset(mContext.getAssets(), "fonts/BOOKOSBI.TTF");
+		Typeface mTypeface_bi = Typeface.createFromAsset(mContext.getAssets(), "fonts/BOOKOSBI.TTF");
+		Typeface mTypeface_i = Typeface.createFromAsset(mContext.getAssets(), "fonts/BOOKOSI.TTF");
 
 		// Initialize Buttons
 		btnForwardConnectionBaby = (Button) view.findViewById(R.id.btn_forwardConnectionBaby);
+		btnForwardConnectionBaby.setTypeface(mTypeface_i);
+		btnBackwardConnectionBaby = (Button) view.findViewById(R.id.btn_backwardConnectionBaby);
+		btnBackwardConnectionBaby.setTypeface(mTypeface_i);
 
 		// Initialize Checkboxes
 		chkBoxBluetooth = (CheckBox) view.findViewById(R.id.chkBoxConnectionBluetooth);
@@ -79,13 +103,15 @@ public class SetupConnectionBabyFragment extends Fragment {
 
 		// Initialize TextViews
 		textTitleConnection = (TextView) view.findViewById(R.id.text_titleConnectionBaby);
-		textTitleConnection.setTypeface(mTypeface);
+		textTitleConnection.setTypeface(mTypeface_bi);
+
+		updateUI();
 	}
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-		View view = inflater.inflate(R.layout.layout_setup_connection_babymode, container, false);
+		View view = inflater.inflate(R.layout.setup_connection_babymode, container, false);
 
 		final FragmentManager fragmentManager = getFragmentManager();
 
@@ -115,5 +141,13 @@ public class SetupConnectionBabyFragment extends Fragment {
 		});
 
 		return view;
+	}
+
+	@Override
+	public void onResume() {
+		super.onResume();
+		if (btnBackwardConnectionBaby != null && btnForwardConnectionBaby != null) {
+			updateUI();
+		}
 	}
 }
