@@ -21,6 +21,7 @@ import babyfon.view.fragment.overview.OverviewParentsFragment;
 import babyfon.view.fragment.setup.SetupDeviceModeFragment;
 import babyfon.view.fragment.setup.SetupStartFragment;
 import babyfon.view.fragment.setup.parentmode.SetupSearchDevicesFragment;
+import android.app.ActionBar;
 import android.app.AlertDialog;
 import android.app.Fragment;
 import android.app.FragmentManager;
@@ -46,7 +47,7 @@ public class MainActivity extends FragmentActivity {
 	private DrawerLayout mDrawerLayout;
 	private ListView mDrawerList;
 	private ActionBarDrawerToggle mDrawerToggle;
-	
+
 	// Modules
 	private Battery mBattery;
 
@@ -95,7 +96,7 @@ public class MainActivity extends FragmentActivity {
 			mTCPReceiver = new TCPReceiver(this);
 			mTCPReceiver.start();
 		}
-		
+
 		appTitle = drawerTitle = getTitle();
 
 		// load slide menu items
@@ -185,14 +186,19 @@ public class MainActivity extends FragmentActivity {
 	protected void onResume() {
 		super.onResume();
 
+		ActionBar actionBar = getActionBar();
 		FrameLayout layout = (FrameLayout) findViewById(R.id.frame_container);
 
 		// Layout related to the gender of the baby
 		if (mSharedPrefs.getGender().equals("boy")) {
-			// Set background color
+			// Set action bar color
+			actionBar.setBackgroundDrawable(getResources().getDrawable(R.drawable.bg_actionbar_male));
+			// Set layout background color
 			layout.setBackgroundResource(R.drawable.bg_male);
 		} else {
-			// Set background color
+			// Set action bar color
+			actionBar.setBackgroundDrawable(getResources().getDrawable(R.drawable.bg_actionbar_female));
+			// Set layout background color
 			layout.setBackgroundResource(R.drawable.bg_female);
 		}
 	}
@@ -284,10 +290,10 @@ public class MainActivity extends FragmentActivity {
 			}
 		} else if (id.equals("BabymonitorFragment")) {
 			// Open babymonitor
-			fragment = new BabymonitorFragment();
+			fragment = new BabymonitorFragment(this);
 		} else if (id.equals("AbsenceFragment")) {
 			// Open absence
-			fragment = new AbsenceFragment();
+			fragment = new AbsenceFragment(this);
 		} else if (id.equals("SetupFragment")) {
 			// Open setup
 			if (mSharedPrefs.getDeviceMode() != -1) {

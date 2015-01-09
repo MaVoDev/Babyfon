@@ -16,7 +16,7 @@
     <string name="nav_babymonitor">Babymonitor</string>
     <string name="nav_overview">Übersicht</string>
     <string name="nav_absence">Anrufe und SMS</string>
-    <string name="nav_setup">Babyfon einrichten</string>
+    <string name="nav_setup">Einrichtungsassisitent</string>
 
     <!-- # -->
     <string name="ip_localhost">127.0.0.1</string>

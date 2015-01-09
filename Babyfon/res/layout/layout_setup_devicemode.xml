@@ -1,41 +1,37 @@
-<?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent" >
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical" >
 
     <TextView
-        android:id="@+id/textView1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="88dp"
-        android:text="Schritt 1 von 3" />
+        android:id="@+id/text_titleDeviceMode"
+        style="@style/fragmentTitle"
+        android:text="Gerätemodus" />
 
-    <TextView
-        android:id="@+id/textView2"
-        android:layout_width="200dp"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="52dp"
-        android:text="Wähle aus, welchen Modus du für dieses Gerät nutzen möchtest."
-        android:textAppearance="?android:attr/textAppearanceSmall" />
+    <ImageView
+        android:id="@+id/imgbtn_baby"
+        android:layout_width="250dp"
+        android:layout_height="125dp"
+        android:layout_gravity="center"
+        android:scaleType="fitXY"
+        android:src="@drawable/btn_baby" />
 
-    <Button
-        android:id="@+id/btn_parentMode"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/btn_babyMode"
-        android:layout_centerVertical="true"
-        android:text="@string/mode_parents" />
+    <ImageView
+        android:id="@+id/text_deviceMode"
+        android:layout_width="250dp"
+        android:layout_height="125dp"
+        android:layout_gravity="center"
+        android:layout_marginTop="12dp"
+        android:scaleType="fitXY"
+        android:src="@drawable/text_devicemode" />
 
-    <Button
-        android:id="@+id/btn_babyMode"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/btn_parentMode"
-        android:layout_centerHorizontal="true"
-        android:text="@string/mode_baby" />
+    <ImageView
+        android:id="@+id/imgbtn_parents"
+        android:layout_width="250dp"
+        android:layout_height="125dp"
+        android:layout_gravity="center"
+        android:layout_marginTop="12dp"
+        android:scaleType="fitXY"
+        android:src="@drawable/btn_parents" />
 
-</RelativeLayout>
+</LinearLayout>

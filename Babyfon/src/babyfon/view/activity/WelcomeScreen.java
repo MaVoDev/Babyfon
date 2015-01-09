@@ -67,7 +67,7 @@ public class WelcomeScreen extends Activity {
 			public void run() {
 
 				try {
-					sleep(1000);
+					sleep(3000);
 
 					Intent intent = new Intent(getBaseContext(), MainActivity.class);
 					startActivity(intent);

@@ -4,7 +4,7 @@
 
     <!-- Application theme -->
     <style name="AppTheme" parent="AppBaseTheme">
-        <item name="android:actionBarSize">56dp</item>
+        <!-- <item name="android:actionBarSize">56dp</item> -->
         <item name="android:icon">@android:color/transparent</item>
     </style>
 
@@ -14,11 +14,21 @@
         <item name="android:windowTitleSize">0dp</item>
     </style>
 
+    <!-- ActionBar styles -->
+    <style name="ActionBar" parent="AppBaseTheme"></style>
+
     <!-- Font styles -->
 
     <style name="fragmentTitle">
-        <item name="android:textSize">38sp</item>
+        <item name="android:textSize">32sp</item>
         <item name="android:gravity">center</item>
+        <item name="android:layout_gravity">center</item>
+        <item name="android:layout_marginLeft">24dp</item>
+        <item name="android:layout_marginRight">24dp</item>
+        <item name="android:layout_marginTop">12dp</item>
+        <item name="android:layout_marginBottom">24dp</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
     </style>
 
 </resources>

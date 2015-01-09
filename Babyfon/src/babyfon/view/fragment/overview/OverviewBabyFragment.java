@@ -4,6 +4,7 @@ import babyfon.init.R;
 import babyfon.settings.SharedPrefs;
 import android.app.Fragment;
 import android.content.Context;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,14 +14,17 @@ import android.widget.TextView;
 public class OverviewBabyFragment extends Fragment {
 
 	// Define UI elements
-	private TextView tvDeviceMode;
-	private TextView tvPrivacyCall;
-	private TextView tvPrivacySMS;
+	private TextView textTitleOverviewParents;
 
 	private SharedPrefs mSharedPrefs;
 
+	private Context mContext;
+
+	// Constructor
 	public OverviewBabyFragment(Context mContext) {
 		mSharedPrefs = new SharedPrefs(mContext);
+
+		this.mContext = mContext;
 	}
 
 	/**
@@ -29,25 +33,12 @@ public class OverviewBabyFragment extends Fragment {
 	 * @param view
 	 */
 	private void initUiElements(View view) {
+		// Set Typeface
+		Typeface mTypeface = Typeface.createFromAsset(mContext.getAssets(), "fonts/BOOKOSBI.TTF");
 
 		// Initialize TextViews
-		tvDeviceMode = (TextView) view.findViewById(R.id.tv_overviewBabyModeDeviceMode);
-		tvDeviceMode.setText(R.string.mode_baby);
-
-		tvPrivacyCall = (TextView) view.findViewById(R.id.tv_overviewBabyModePrivacyCall);
-		if (mSharedPrefs.getPrivacyCall()) {
-			tvPrivacyCall.setText(R.string.privacy_call_no);
-		} else {
-			tvPrivacyCall.setText(R.string.privacy_call_yes);
-		}
-
-		tvPrivacySMS = (TextView) view.findViewById(R.id.tv_overviewBabyModePrivacySMS);
-		if (mSharedPrefs.getPrivacySMS()) {
-			tvPrivacySMS.setText(R.string.privacy_sms_no);
-		} else {
-			tvPrivacySMS.setText(R.string.privacy_sms_yes);
-		}
-
+		textTitleOverviewParents = (TextView) view.findViewById(R.id.text_titleOverviewBaby);
+		textTitleOverviewParents.setTypeface(mTypeface);
 	}
 
 	@Override

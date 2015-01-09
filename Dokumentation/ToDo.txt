@@ -33,3 +33,41 @@ Bugs:
 - SetupSearchDevicesFragment: Die ArrayListe device wird beim Starten des Fragments nicht zurückgesetzt. Die Liste soll vor der Suche immer geleert sein, also beim Starten des Fragments. Aktuell füllt sie sich weiter.
 - MainActivity: Wenn ein Modus gewählt ist, soll SetupStartFragment übersprungen werden. Das geht zurzeit nur, wenn die App geschlossen und neu gestartet wird. Soll aber gleich nach dem beenden eines Setup-Modus geschehen.
 - SMSReceiver: SMS wird nicht gesendet (Zeile 51 wird nicht ausgeführt)
+
+
+
+
+
+
+      <TextView
+        android:id="@+id/text_titlePrivacy"
+        style="@style/fragmentTitle"
+        android:text="Privatspshäre" />
+
+    <Button
+        android:id="@+id/btn_forwardSetupPrivacy"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="24dp"
+        android:text="Weiter" />
+
+    <CheckBox
+        android:id="@+id/chkbox_privacyCall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/tv_titleSetupPrivacy"
+        android:layout_below="@+id/tv_titleSetupPrivacy"
+        android:layout_marginTop="55dp"
+        android:checked="false"
+        android:text="Verpasste Anrufe weiterleiten" />
+
+    <CheckBox
+        android:id="@+id/chkbox_privacySMS"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/chkbox_privacyCall"
+        android:layout_below="@+id/chkbox_privacyCall"
+        android:checked="false"
+        android:text="SMS weiterleiten" />

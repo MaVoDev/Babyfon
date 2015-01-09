@@ -24,6 +24,7 @@ public class SetupConnectionBabyFragment extends Fragment {
 	private CheckBox chkBoxBluetooth;
 	private CheckBox chkBoxWifi;
 	private CheckBox chkBoxWifiDirect;
+	private TextView textTitleConnection;
 
 	private BluetoothHandler mBluetoothHandler;
 	private WifiHandler mWifiHandler;
@@ -62,6 +63,9 @@ public class SetupConnectionBabyFragment extends Fragment {
 	 * @param view
 	 */
 	private void initUiElements(View view) {
+		// Set Typeface
+		Typeface mTypeface = Typeface.createFromAsset(mContext.getAssets(), "fonts/BOOKOSBI.TTF");
+
 		// Initialize Buttons
 		btnForwardConnectionBaby = (Button) view.findViewById(R.id.btn_forwardConnectionBaby);
 
@@ -74,15 +78,14 @@ public class SetupConnectionBabyFragment extends Fragment {
 		chkBoxWifiDirect.setEnabled(true);
 
 		// Initialize TextViews
-		Typeface myTypeface = Typeface.createFromAsset(mContext.getAssets(), "fonts/mtsc.ttf");
-		TextView myTextView = (TextView) view.findViewById(R.id.tv_titleConnectionBaby);
-		myTextView.setTypeface(myTypeface);
+		textTitleConnection = (TextView) view.findViewById(R.id.text_titleConnectionBaby);
+		textTitleConnection.setTypeface(mTypeface);
 	}
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-		View view = inflater.inflate(R.layout.layout_connection_babymode, container, false);
+		View view = inflater.inflate(R.layout.layout_setup_connection_babymode, container, false);
 
 		final FragmentManager fragmentManager = getFragmentManager();
 
@@ -105,7 +108,7 @@ public class SetupConnectionBabyFragment extends Fragment {
 					fragmentManager.beginTransaction().replace(R.id.frame_container, mSetupPrivacyFragment, null)
 							.addToBackStack(null).commit();
 				} else {
-					Toast toast = Toast.makeText(mContext, "Wählen Sie eine Verbindung.", Toast.LENGTH_SHORT);
+					Toast toast = Toast.makeText(mContext, "Wähle mindestens eine Verbindung aus.", Toast.LENGTH_SHORT);
 					toast.show();
 				}
 			}
