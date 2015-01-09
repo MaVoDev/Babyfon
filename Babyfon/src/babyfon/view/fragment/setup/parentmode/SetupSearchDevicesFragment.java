@@ -3,6 +3,7 @@ package babyfon.view.fragment.setup.parentmode;
 import java.util.ArrayList;
 
 import babyfon.connectivity.ConnectionInterface;
+import babyfon.connectivity.ConnectionInterface.OnSearchStatusChangedListener;
 import babyfon.connectivity.bluetooth.BluetoothConnection;
 import babyfon.connectivity.bluetooth.BluetoothListAdapter;
 import babyfon.connectivity.wifi.TCPReceiver;
@@ -27,6 +28,7 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 public class SetupSearchDevicesFragment extends Fragment {
@@ -36,6 +38,7 @@ public class SetupSearchDevicesFragment extends Fragment {
 	private Button btnCompleteSetup;
 	private Button btnSearchDevices;
 	private TextView titleConnectivity;
+	private ProgressBar progressBarSearchDevices;
 
 	private ArrayList<BabyfonDevice> device;
 
@@ -72,6 +75,9 @@ public class SetupSearchDevicesFragment extends Fragment {
 		btnCompleteSetup = (Button) view.findViewById(R.id.btn_completeSetup);
 		btnSearchDevices = (Button) view.findViewById(R.id.btn_searchDevices);
 
+		// Initialize Progressbar
+		progressBarSearchDevices = (ProgressBar) view.findViewById(R.id.progressBar_searching);
+
 		// Initialize TextViews
 		titleConnectivity = (TextView) view.findViewById(R.id.titleConnectivity);
 	}
@@ -94,7 +100,9 @@ public class SetupSearchDevicesFragment extends Fragment {
 
 		initUiElements(view);
 
-		connectivityType = mSharedPrefs.getConnectivityType();
+		// TODO TEST VS
+		connectivityType = 1;
+		// connectivityType = mSharedPrefs.getConnectivityType();
 		switch (connectivityType) {
 		case 1:
 			initViewBluetooth();
@@ -143,6 +151,20 @@ public class SetupSearchDevicesFragment extends Fragment {
 		BluetoothListAdapter deviceListAdapter = new BluetoothListAdapter(mContext, R.layout.bluetooth_row_element);
 		mConnection = new BluetoothConnection(mContext, deviceListAdapter);
 
+		mConnection.setOnSearchStatusChangedListener(new OnSearchStatusChangedListener() {
+
+			@Override
+			public void onSearchStatusChanged(boolean isSearching) {
+
+				// ProgressBar zeigen, wenn gesucht wird
+				if (isSearching)
+					progressBarSearchDevices.setVisibility(View.VISIBLE);
+				// ...ansonsten verstecken
+				else
+					progressBarSearchDevices.setVisibility(View.INVISIBLE);
+
+			}
+		});
 		// Setup ListView Adapter
 		// listViewDevices.setAdapter(mConnection.getListAdapter()); // TODO
 		// gucken ob es funzt

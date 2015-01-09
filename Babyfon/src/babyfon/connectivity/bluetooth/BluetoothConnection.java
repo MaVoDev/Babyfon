@@ -13,8 +13,7 @@ import babyfon.init.R;
 
 public class BluetoothConnection implements ConnectionInterface {
 
-	private static final String TAG = BluetoothConnection.class
-			.getCanonicalName();
+	private static final String TAG = BluetoothConnection.class.getCanonicalName();
 
 	// private static int REQUEST_ENABLE_BT = 1;
 
@@ -22,6 +21,8 @@ public class BluetoothConnection implements ConnectionInterface {
 	private boolean mBtDiscovering = false;
 	private BluetoothAdapter mBluetoothAdapter;
 	private BluetoothListAdapter mArrayAdapter;
+
+	OnSearchStatusChangedListener mOnSearchStatusChangedListener;
 
 	// Receiver
 	private final BroadcastReceiver mReceiver = new BroadcastReceiver() {
@@ -31,17 +32,16 @@ public class BluetoothConnection implements ConnectionInterface {
 			// When discovery finds a device
 			if (BluetoothDevice.ACTION_FOUND.equals(action)) {
 				// Get the BluetoothDevice object from the Intent
-				BluetoothDevice device = intent
-						.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
+				BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
 
 				Log.i(TAG, "ADD DEVICE: " + device.getName());
 
 				mArrayAdapter.add(device);
-			} else if (BluetoothAdapter.ACTION_DISCOVERY_FINISHED
-					.equals(action)) {
-				Toast.makeText(context, "DISCOVERY FINISHED", Toast.LENGTH_LONG)
-						.show();
+			} else if (BluetoothAdapter.ACTION_DISCOVERY_FINISHED.equals(action)) {
+				Toast.makeText(context, "DISCOVERY FINISHED", Toast.LENGTH_LONG).show();
 				mBtDiscovering = false;
+
+				mOnSearchStatusChangedListener.onSearchStatusChanged(false);
 			}
 		}
 	};
@@ -66,10 +66,8 @@ public class BluetoothConnection implements ConnectionInterface {
 		// WENN BABY-MODE MUSS DEVICE SICHTBAR SEIN
 
 		// Register the BroadcastReceiver
-		IntentFilter bluetoothFoundFilter = new IntentFilter(
-				BluetoothDevice.ACTION_FOUND);
-		IntentFilter bluetoothScanFinishedFilter = new IntentFilter(
-				BluetoothAdapter.ACTION_DISCOVERY_FINISHED);
+		IntentFilter bluetoothFoundFilter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
+		IntentFilter bluetoothScanFinishedFilter = new IntentFilter(BluetoothAdapter.ACTION_DISCOVERY_FINISHED);
 
 		mContext.registerReceiver(mReceiver, bluetoothFoundFilter);
 		mContext.registerReceiver(mReceiver, bluetoothScanFinishedFilter);
@@ -112,10 +110,8 @@ public class BluetoothConnection implements ConnectionInterface {
 		}
 
 		// Register the BroadcastReceiver
-		IntentFilter bluetoothFoundFilter = new IntentFilter(
-				BluetoothDevice.ACTION_FOUND);
-		IntentFilter bluetoothScanFinishedFilter = new IntentFilter(
-				BluetoothAdapter.ACTION_DISCOVERY_FINISHED);
+		IntentFilter bluetoothFoundFilter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
+		IntentFilter bluetoothScanFinishedFilter = new IntentFilter(BluetoothAdapter.ACTION_DISCOVERY_FINISHED);
 
 		mContext.registerReceiver(mReceiver, bluetoothFoundFilter); // Don't
 																	// forget to
@@ -132,10 +128,8 @@ public class BluetoothConnection implements ConnectionInterface {
 	}
 
 	private void enableDiscoverability() {
-		Intent discoverableIntent = new Intent(
-				BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE);
-		discoverableIntent.putExtra(
-				BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, 0);
+		Intent discoverableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE);
+		discoverableIntent.putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, 0);
 		// startActivity(discoverableIntent);
 
 		// TODO: AUSLAGERN ODER ACTIVITY REINHOLEN!
@@ -156,7 +150,11 @@ public class BluetoothConnection implements ConnectionInterface {
 			mArrayAdapter.clear();
 
 			Log.i(TAG, "STARTING BLUETOOTH DISCOVERY...");
-			mBluetoothAdapter.startDiscovery();
+			boolean searching = mBluetoothAdapter.startDiscovery();
+			
+			mOnSearchStatusChangedListener.onSearchStatusChanged(searching);
+			
+			
 		}
 	}
 
@@ -165,6 +163,11 @@ public class BluetoothConnection implements ConnectionInterface {
 		BluetoothDevice device = mArrayAdapter.getItem(position);
 		Log.i(TAG, "Try to connect to device: " + device.getName());
 		new BluetoothClientThread(device, mBluetoothAdapter).start();
+	}
+
+	@Override
+	public void setOnSearchStatusChangedListener(OnSearchStatusChangedListener l) {
+		this.mOnSearchStatusChangedListener = l;
 	}
 
 	// @Override
