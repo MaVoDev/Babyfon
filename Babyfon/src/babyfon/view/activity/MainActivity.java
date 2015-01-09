@@ -133,8 +133,7 @@ public class MainActivity extends FragmentActivity {
 		getActionBar().setHomeButtonEnabled(true);
 
 		// Drawer Layout, Drawer Icon, Drawer Name (Drawer open, close)
-		mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, R.drawable.ic_drawer, R.string.app_name,
-				R.string.app_name) {
+		mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, R.drawable.ic_drawer, R.string.app_name, R.string.app_name) {
 			public void onDrawerClosed(View view) {
 				getActionBar().setTitle(appTitle);
 				// calling onPrepareOptionsMenu() to show action bar icons
@@ -157,6 +156,9 @@ public class MainActivity extends FragmentActivity {
 			// Show first fragment view: SetupFragment
 			displayView(3);
 		}
+
+		// TODO: Zu Testzwecken wird direkt Searchdevices activity geöffnet VS
+		displayView(3);
 	}
 
 	@Override
@@ -331,7 +333,9 @@ public class MainActivity extends FragmentActivity {
 			id = "AbsenceFragment";
 			break;
 		case 3:
-			id = "SetupFragment";
+			// TODO NACH TEST WIEDER EINKOMMENTIEREN! VS
+			// id = "SetupFragment";
+			id = "SetupSearchDevicesFragment";
 			break;
 
 		default:
@@ -364,8 +368,7 @@ public class MainActivity extends FragmentActivity {
 	}
 
 	/**
-	 * When using the ActionBarDrawerToggle, you must call it during
-	 * onPostCreate() and onConfigurationChanged()...
+	 * When using the ActionBarDrawerToggle, you must call it during onPostCreate() and onConfigurationChanged()...
 	 */
 
 	@Override
