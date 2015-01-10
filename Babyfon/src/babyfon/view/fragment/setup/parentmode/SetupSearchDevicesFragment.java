@@ -40,7 +40,7 @@ public class SetupSearchDevicesFragment extends Fragment {
 	private Button btnSearchDevices;
 	private TextView title;
 
-	private ArrayList<BabyfonDevice> device;
+	private static ArrayList<BabyfonDevice> device;
 
 	private SetupCompleteParentsModeFragment nextFragment;
 
@@ -102,24 +102,13 @@ public class SetupSearchDevicesFragment extends Fragment {
 	}
 
 	@Override
-	public void onResume() {
-		super.onResume();
-
-		device = new ArrayList<BabyfonDevice>();
-
-		Log.i(TAG, "onResume -> LISTE GELEERT!");
-
-		if (btnForward != null) {
-			updateUI();
-		}
-	}
-
-	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
 		View view = inflater.inflate(R.layout.setup_search, container, false);
 
 		final FragmentManager mFragmentManager = getFragmentManager();
+
+		device = new ArrayList<BabyfonDevice>();
 
 		initUiElements(view);
 
@@ -223,9 +212,6 @@ public class SetupSearchDevicesFragment extends Fragment {
 		BluetoothListAdapter deviceListAdapter = new BluetoothListAdapter(mContext, R.layout.bluetooth_row_element);
 		mConnection = new BluetoothConnection(mContext, deviceListAdapter);
 
-		// Setup ListView Adapter
-		// listViewDevices.setAdapter(mConnection.getListAdapter()); // TODO
-		// gucken ob es funzt
 		listViewDevices.setAdapter(deviceListAdapter);
 	}
 
@@ -237,21 +223,36 @@ public class SetupSearchDevicesFragment extends Fragment {
 
 	}
 
-	public void setNewDevice(String ip, String name) {
-		// TODO Liste wird nach jeder neuen IP zurückgesetzt. Das darf nicht
-		// sein.
+	public static void setNewDevice(String ip, String name) {
+		if (device == null) {
+			device = new ArrayList<BabyfonDevice>();
+		}
+
 		device.add(new BabyfonDevice(ip, name));
 		Log.i(TAG, "Device found: " + ip + " | " + name);
 		Log.i(TAG, "Number of devices found: " + device.size());
 	}
 
-	class BabyfonDevice {
+	static class BabyfonDevice {
 		private String ip;
 		private String name;
 
 		public BabyfonDevice(String ip, String name) {
 			this.ip = ip;
 			this.name = name;
+		}
+	}
+
+	@Override
+	public void onResume() {
+		super.onResume();
+
+		if (device == null) {
+			device = new ArrayList<BabyfonDevice>();
+		}
+
+		if (btnForward != null) {
+			updateUI();
 		}
 	}
 }

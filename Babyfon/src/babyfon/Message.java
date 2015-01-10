@@ -42,8 +42,7 @@ public class Message {
 			mMainActivity.runOnUiThread(new Runnable() {
 				@Override
 				public void run() {
-					Fragment fragment = mMainActivity.getFragmentById("SetupSearchDevicesFragment");
-					((SetupSearchDevicesFragment) fragment).setNewDevice(ip, name);
+					SetupSearchDevicesFragment.setNewDevice(ip, name);
 				}
 			});
 		}

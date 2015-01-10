@@ -1,38 +1,34 @@
 ToDo:
 =============================================================================================================
+# Module für den passenden Modus laden
 - Babymodus: Verbindungen aktivieren (wenn aus), die gewählt wurden (auch überprüfen, ob an)
 - Elternmodus: Verbindung aktivieren (wenn aus), die gewählt wurde (auch überprüfen, ob an)
-
-- Setup: Wenn die Suche im Elternmodus geöffnet wird, soll UDP Receiver stoppen, wenn an
 - Verpasste Anrufe weiterleiten
-- Verpasste Anrufe anzeigen
-- Eingehende SMS weiterleiten
-- Eingehende SMS anzeigen
-- Gefundene Geräte anzeigen
-- Passwortauthorisierung über WiFi anfragen (Kann man das auch fürsBluetooth verwenden?)
-- Wenn maximale Anzahl erlaubter Geräte sich auf dem Babymode verbunden haben (erstmal nur 1), dann stopp UDP Receiver, sonst start (wenn inaktiv)
+3 Eingehende SMS weiterleiten
+3 Passwortauthorisierung über WiFi anfragen (Kann man das auch fürsBluetooth verwenden?)
+3 Wenn maximale Anzahl erlaubter Geräte sich auf dem Babymode verbunden haben (erstmal nur 1), dann stopp UDP Receiver, sonst start (wenn inaktiv)
 - Audiostreaming
 - Mikrofonsensibilität einstellen können
 - Geräusch erkennen
 - WiFi Direct State
 - WiFi Direct Verbindung
 - Bluetooth Verbindung
-- Im Babymodus Navigation Drawer auf Übersicht und Setup beschränken
 - Service
-- Display bei den Eltern einschalten (wenn aus), wenn Signal eingeht
 - Call als Receiver laufen lassen
-- Module für den passenden Modus im Welcome laden
-- Übersichtsseite Baby: Babymodus on/off (Wenn off, dann nachricht an Elternmode), Passwort anzeigen, Freigegebene Verbindungen, Verbundene Geräte
-- Babymonitor: eingehenden Audiostream (Button On/Off), batterie vom Babygerät, Geräuschpegel, Signalisierungsalarm
 
 Design:
 =============================================================================================================
-- ListView für Verpasste Anrufe/SMS und gefundene Geräte erstellen
+# ListView für Verpasste Anrufe/SMS und gefundene Geräte erstellen
+- Verpasste Anrufe anzeigen
+- Übersichtsseite Baby: Babymodus on/off (Wenn off, dann nachricht an Elternmode), Passwort anzeigen, Freigegebene Verbindungen, Verbundene Geräte
+- Eingehende SMS anzeigen
+- Gefundene Geräte anzeigen
+- Babymonitor: eingehenden Audiostream (Button On/Off), batterie vom Babygerät, Geräuschpegel, Signalisierungsalarm
 - Navigation Drawer
+- Im Babymodus Navigation Drawer auf Übersicht und Setup beschränken
 
 Bugs:
 =============================================================================================================
-- SetupSearchDevicesFragment: Die ArrayListe device wird beim Starten des Fragments nicht zurückgesetzt. Die Liste soll vor der Suche immer geleert sein, also beim Starten des Fragments. Aktuell füllt sie sich weiter.
 - MainActivity: Wenn ein Modus gewählt ist, soll SetupStartFragment übersprungen werden. Das geht zurzeit nur, wenn die App geschlossen und neu gestartet wird. Soll aber gleich nach dem beenden eines Setup-Modus geschehen.
 - SMSReceiver: SMS wird nicht gesendet (Zeile 51 wird nicht ausgeführt)      
 - Wenn man das Setup beendet, aktualisiert sich der NavigationDrawer nicht. Der Einrichtungsassistent bleibt selected.

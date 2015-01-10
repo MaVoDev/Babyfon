@@ -1,14 +1,13 @@
 package babyfon.connectivity.bluetooth;
 
 import android.bluetooth.BluetoothAdapter;
-import android.content.Context;
 
 public class BluetoothHandler {
 
-	Context context;
+	private BluetoothAdapter mBluetoothAdapter;
 
-	public BluetoothHandler(Context context) {
-		this.context = context;
+	public BluetoothHandler() {
+
 	}
 
 	/**
@@ -19,18 +18,22 @@ public class BluetoothHandler {
 	 *         enabled
 	 */
 	public int getBluetoothState() {
-		BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-		if (bluetoothAdapter == null) {
+		mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+		if (mBluetoothAdapter == null) {
 			// Bluetooth wird nicht unterstützt.
 			return -1;
 		} else {
 			// Bluetooth wird unterstützt.
-			if (!bluetoothAdapter.isEnabled()) {
+			if (!mBluetoothAdapter.isEnabled()) {
 				// Bluetooth ist inaktiv.
 				return 0;
 			}
 			// Bluetooth ist aktiv.
 			return 1;
 		}
+	}
+	
+	public void startBluetooth() {
+		mBluetoothAdapter.startDiscovery();
 	}
 }

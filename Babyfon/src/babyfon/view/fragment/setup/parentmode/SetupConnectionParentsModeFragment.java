@@ -56,7 +56,7 @@ public class SetupConnectionParentsModeFragment extends Fragment {
 	public SetupConnectionParentsModeFragment(Context mContext) {
 		mSharedPrefs = new SharedPrefs(mContext);
 		nextFragment = new SetupSearchDevicesFragment(mContext);
-		mBluetoothHandler = new BluetoothHandler(mContext);
+		mBluetoothHandler = new BluetoothHandler();
 		mWifiHandler = new WifiHandler(mContext);
 
 		this.mContext = mContext;

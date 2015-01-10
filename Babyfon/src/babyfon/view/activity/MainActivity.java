@@ -84,7 +84,7 @@ public class MainActivity extends FragmentActivity {
 			StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
 			StrictMode.setThreadPolicy(policy);
 		}
-		
+
 		new StreamSender(this);
 
 		mSharedPrefs = new SharedPrefs(this);
@@ -134,8 +134,6 @@ public class MainActivity extends FragmentActivity {
 		// enabling action bar app icon and behaving it as toggle button
 		getActionBar().setDisplayHomeAsUpEnabled(true);
 		getActionBar().setHomeButtonEnabled(true);
-		
-		
 
 		// Drawer Layout, Drawer Icon, Drawer Name (Drawer open, close)
 		mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, R.drawable.ic_drawer, R.string.app_name,
@@ -193,7 +191,7 @@ public class MainActivity extends FragmentActivity {
 
 		ActionBar actionBar = getActionBar();
 		FrameLayout frameLayout = (FrameLayout) findViewById(R.id.frame_container);
-		
+
 		// Layout related to the gender of the baby
 		if (mSharedPrefs.getGender() == 0) {
 			// Set action bar color
@@ -308,9 +306,6 @@ public class MainActivity extends FragmentActivity {
 				// No mode
 				fragment = new SetupStartFragment(this);
 			}
-		} else if (id.equals("SetupSearchDevicesFragment")) {
-			// Open SetupSearchDevicesFragment
-			fragment = new SetupSearchDevicesFragment(this);
 		}
 
 		mFragmentMap.put(id, fragment);

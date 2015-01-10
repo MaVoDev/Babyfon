@@ -1,6 +1,7 @@
 package babyfon.view.fragment.setup.babymode;
 
 import babyfon.connectivity.wifi.UDPReceiver;
+import babyfon.connectivity.wifi.WifiHandler;
 import babyfon.init.R;
 import babyfon.performance.Sound;
 import babyfon.settings.SharedPrefs;
@@ -76,13 +77,6 @@ public class SetupCompleteBabyModeFragment extends Fragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
 		Log.i(TAG, "Start baby mode...");
-
-		// Start UDP receiver
-		if (MainActivity.mUDPReceiver == null) {
-			Log.i(TAG, "Try to start UDP receiver...");
-			MainActivity.mUDPReceiver = new UDPReceiver(mContext);
-			MainActivity.mUDPReceiver.start();
-		}
 
 		View view = inflater.inflate(R.layout.setup_complete_baby_mode, container, false);
 
