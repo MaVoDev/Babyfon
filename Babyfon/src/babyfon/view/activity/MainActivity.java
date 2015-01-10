@@ -9,13 +9,14 @@ import java.util.Map;
 import babyfon.adapter.NavigationDrawerListAdapter;
 import babyfon.connectivity.call.CallReceiver;
 import babyfon.connectivity.sms.SMSReceiver;
+import babyfon.connectivity.wifi.StreamSender;
 import babyfon.connectivity.wifi.TCPReceiver;
 import babyfon.connectivity.wifi.UDPReceiver;
 import babyfon.model.NavigationDrawerItemModel;
 import babyfon.performance.Battery;
 import babyfon.settings.SharedPrefs;
 import babyfon.view.fragment.AbsenceFragment;
-import babyfon.view.fragment.BabymonitorFragment;
+import babyfon.view.fragment.BabyMonitorFragment;
 import babyfon.view.fragment.overview.OverviewBabyFragment;
 import babyfon.view.fragment.overview.OverviewParentsFragment;
 import babyfon.view.fragment.setup.SetupDeviceModeFragment;
@@ -29,22 +30,17 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.content.res.TypedArray;
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.widget.DrawerLayout;
-import android.text.Spannable;
-import android.text.SpannableString;
-import android.text.style.TypefaceSpan;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.FrameLayout;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 
 public class MainActivity extends FragmentActivity {
@@ -82,12 +78,14 @@ public class MainActivity extends FragmentActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.layout_activitymain);
+		setContentView(R.layout.layout_activity_main);
 
 		if (android.os.Build.VERSION.SDK_INT > 9) {
 			StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
 			StrictMode.setThreadPolicy(policy);
 		}
+		
+		new StreamSender(this);
 
 		mSharedPrefs = new SharedPrefs(this);
 
@@ -216,15 +214,15 @@ public class MainActivity extends FragmentActivity {
 	@Override
 	public void onBackPressed() {
 		// Dialogfenster zur Abfrage, ob die App wirklich beendet werden soll.
-		new AlertDialog.Builder(this).setIcon(null).setTitle(getString(R.string.dialog_exit_app_title))
-				.setMessage(getString(R.string.dialog_exit_app_message))
-				.setPositiveButton(getString(R.string.yes), new DialogInterface.OnClickListener() {
+		new AlertDialog.Builder(this).setIcon(null).setTitle(getString(R.string.dialog_title_exit))
+				.setMessage(getString(R.string.dialog_message_exit))
+				.setPositiveButton(getString(R.string.dialog_button_yes), new DialogInterface.OnClickListener() {
 					@Override
 					public void onClick(DialogInterface dialog, int which) {
 						finish();
 					}
 
-				}).setNegativeButton(getString(R.string.no), null).show();
+				}).setNegativeButton(getString(R.string.dialog_button_no), null).show();
 	}
 
 	/**
@@ -297,7 +295,7 @@ public class MainActivity extends FragmentActivity {
 			}
 		} else if (id.equals("BabymonitorFragment")) {
 			// Open babymonitor
-			fragment = new BabymonitorFragment(this);
+			fragment = new BabyMonitorFragment(this);
 		} else if (id.equals("AbsenceFragment")) {
 			// Open absence
 			fragment = new AbsenceFragment(this);

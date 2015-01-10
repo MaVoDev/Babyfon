@@ -1,11 +1,11 @@
-package babyfon.view.fragment.setup.babymode;
+package babyfon.view.fragment.setup.parentmode;
 
 import babyfon.connectivity.wifi.UDPReceiver;
 import babyfon.init.R;
 import babyfon.performance.Sound;
 import babyfon.settings.SharedPrefs;
 import babyfon.view.activity.MainActivity;
-import babyfon.view.fragment.overview.OverviewBabyFragment;
+import babyfon.view.fragment.BabyMonitorFragment;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.Context;
@@ -19,11 +19,10 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.TextView;
 
-public class SetupCompleteBabyModeFragment extends Fragment {
+public class SetupCompleteParentsModeFragment extends Fragment {
 
 	// Define UI elements
 	private Button btnForward;
-	private TextView tvPassword;
 	private TextView title;
 
 	private SharedPrefs mSharedPrefs;
@@ -31,10 +30,10 @@ public class SetupCompleteBabyModeFragment extends Fragment {
 
 	private Context mContext;
 
-	private static final String TAG = SetupCompleteBabyModeFragment.class.getCanonicalName();
+	private static final String TAG = SetupCompleteParentsModeFragment.class.getCanonicalName();
 
 	// Constructor
-	public SetupCompleteBabyModeFragment(Context mContext) {
+	public SetupCompleteParentsModeFragment(Context mContext) {
 		mSharedPrefs = new SharedPrefs(mContext);
 		mSound = new Sound(mContext);
 
@@ -61,13 +60,12 @@ public class SetupCompleteBabyModeFragment extends Fragment {
 		Typeface mTypeface_i = Typeface.createFromAsset(mContext.getAssets(), "fonts/BOOKOSI.TTF");
 
 		// Initialize Button
-		btnForward = (Button) view.findViewById(R.id.btn_forward_complete_baby_mode);
+		btnForward = (Button) view.findViewById(R.id.btn_forward_complete_parents_mode);
 		btnForward.setTypeface(mTypeface_i);
 
 		// Initialize TextViews
-		title = (TextView) view.findViewById(R.id.title_setup_complete_baby_mode);
+		title = (TextView) view.findViewById(R.id.title_setup_complete_parents_mode);
 		title.setTypeface(mTypeface_bi);
-		tvPassword = (TextView) view.findViewById(R.id.tv_password);
 
 		updateUI();
 	}
@@ -75,7 +73,7 @@ public class SetupCompleteBabyModeFragment extends Fragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-		Log.i(TAG, "Start baby mode...");
+		Log.i(TAG, "Start parents mode...");
 
 		// Start UDP receiver
 		if (MainActivity.mUDPReceiver == null) {
@@ -84,25 +82,17 @@ public class SetupCompleteBabyModeFragment extends Fragment {
 			MainActivity.mUDPReceiver.start();
 		}
 
-		View view = inflater.inflate(R.layout.setup_complete_baby_mode, container, false);
+		View view = inflater.inflate(R.layout.setup_complete_parents_mode, container, false);
 
 		final FragmentManager mFragmentManager = getFragmentManager();
 
 		initUiElements(view);
 
-		String password = getRandomPassword();
-		tvPassword.setText(password);
-
 		// Store values in the shared preferences
 		mSharedPrefs.setDeviceMode(mSharedPrefs.getDeviceModeTemp());
-		mSharedPrefs.setBluetoothSharedState(mSharedPrefs.getBluetoothSharedStateTemp());
-		mSharedPrefs.setWiFiSharedState(mSharedPrefs.getWiFiSharedStateTemp());
-		mSharedPrefs.setWiFiDirectSharedState(mSharedPrefs.getWiFiDirectSharedStateTemp());
-		mSharedPrefs.setPrivacyCall(mSharedPrefs.getPrivacyCallTemp());
-		mSharedPrefs.setPrivacySMS(mSharedPrefs.getPrivacySMSTemp());
-		mSharedPrefs.setPassword(password);
+		mSharedPrefs.setConnectivityType(mSharedPrefs.getConnectivityTypeTemp());
 
-		mSound.mute();
+		mSound.soundOn();
 
 		// OnClickListener for the Button btnCompleteSetup
 		btnForward.setOnClickListener(new OnClickListener() {
@@ -110,19 +100,12 @@ public class SetupCompleteBabyModeFragment extends Fragment {
 			public void onClick(View v) {
 
 				mFragmentManager.beginTransaction()
-						.replace(R.id.frame_container, new OverviewBabyFragment(mContext), null).addToBackStack(null)
+						.replace(R.id.frame_container, new BabyMonitorFragment(mContext), null).addToBackStack(null)
 						.commit();
 			}
 		});
 
 		return view;
-	}
-
-	public String getRandomPassword() {
-		// Generating a password between 1000 and 10000
-		int password = (int) Math.floor(Math.random() * 9000 + 1000);
-
-		return password + "";
 	}
 
 	@Override

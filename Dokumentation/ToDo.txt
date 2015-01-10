@@ -1,7 +1,7 @@
 ToDo:
 =============================================================================================================
-- Babymodus: Verbindungen aktivieren (wenn aus), die gewählt wurden
-- Elternmodus: Verbindung aktivieren (wenn aus), die gewählt wurde
+- Babymodus: Verbindungen aktivieren (wenn aus), die gewählt wurden (auch überprüfen, ob an)
+- Elternmodus: Verbindung aktivieren (wenn aus), die gewählt wurde (auch überprüfen, ob an)
 
 - Setup: Wenn die Suche im Elternmodus geöffnet wird, soll UDP Receiver stoppen, wenn an
 - Verpasste Anrufe weiterleiten
@@ -9,7 +9,6 @@ ToDo:
 - Eingehende SMS weiterleiten
 - Eingehende SMS anzeigen
 - Gefundene Geräte anzeigen
-- Wenn Setup nicht vollständig beendet wird oder abgebrochen wird, müssen andere/vorherigen Werte geladen werden
 - Passwortauthorisierung über WiFi anfragen (Kann man das auch fürsBluetooth verwenden?)
 - Wenn maximale Anzahl erlaubter Geräte sich auf dem Babymode verbunden haben (erstmal nur 1), dann stopp UDP Receiver, sonst start (wenn inaktiv)
 - Audiostreaming
@@ -26,11 +25,9 @@ ToDo:
 - Übersichtsseite Baby: Babymodus on/off (Wenn off, dann nachricht an Elternmode), Passwort anzeigen, Freigegebene Verbindungen, Verbundene Geräte
 - Babymonitor: eingehenden Audiostream (Button On/Off), batterie vom Babygerät, Geräuschpegel, Signalisierungsalarm
 
-
 Design:
 =============================================================================================================
 - ListView für Verpasste Anrufe/SMS und gefundene Geräte erstellen
-- Buttons (Elternmodus, Babymodus, Weiter, Suche, ...)
 - Navigation Drawer
 
 Bugs:
@@ -38,3 +35,4 @@ Bugs:
 - SetupSearchDevicesFragment: Die ArrayListe device wird beim Starten des Fragments nicht zurückgesetzt. Die Liste soll vor der Suche immer geleert sein, also beim Starten des Fragments. Aktuell füllt sie sich weiter.
 - MainActivity: Wenn ein Modus gewählt ist, soll SetupStartFragment übersprungen werden. Das geht zurzeit nur, wenn die App geschlossen und neu gestartet wird. Soll aber gleich nach dem beenden eines Setup-Modus geschehen.
 - SMSReceiver: SMS wird nicht gesendet (Zeile 51 wird nicht ausgeführt)      
+- Wenn man das Setup beendet, aktualisiert sich der NavigationDrawer nicht. Der Einrichtungsassistent bleibt selected.

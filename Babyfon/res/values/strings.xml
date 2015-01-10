@@ -1,10 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <!-- Dialog texts -->
-    <string name="DIALOG_MESSAGE_BABYMODE">Legen Sie das Gerät in die Nähe des Babys. Der Sound und das Display werden jetzt ausgeschaltet.</string>
-    <string name="DIALOG_TITLE_BABYMODE">Der Babymodus wird aktiviert&#8230;</string>
-
     <!-- Message types -->
     <string name="MESSAGE_BATTERY">BABYFON_MSG_BATTERY</string>
     <string name="MESSAGE_CONNECTION_CONFIRM">BABYFON_MSG_CONNECTION_CONFIRM</string>
@@ -18,8 +14,24 @@
     <string name="title_absence">Anrufe / SMS</string>
     <string name="title_setup">Einrichtungsassisitent</string>
     <string name="title_connection">Verbindung</string>
-    <string name="title_device_mode">Verbindung</string>
+    <string name="title_device_mode">Gerätemodus</string>
+    <string name="title_search">Geräte suchen</string>
+    <string name="title_setup_complete_baby_mode">Abschluss</string>
+    <string name="title_setup_complete_parents_mode">Abschluss</string>
 
+    <!-- Dialogs -->
+    <string name="dialog_button_yes">Ja</string>
+    <string name="dialog_button_no">Nein</string>
+    <string name="dialog_message_cancel_setup">Soll die Einrichtung wirklich abgebrochen werden? Alle durchgeführten Änderungen werden verworfen.</string>
+    <string name="dialog_title_cancel_setup">Einrichtung abbrechen</string>
+    <string name="dialog_message_exit">Soll die App wirklich beendet werden? Alle bestehenden Verbindungen werden getrennt.</string>
+    <string name="dialog_title_exit">Babyfon beenden?</string>
+
+    <!-- Buttons -->
+    <string name="btn_forward">Weiter</string>
+    <string name="btn_backward">Zurück</string>
+    
+    
     <!-- # -->
     <string name="ip_localhost">127.0.0.1</string>
     <string name="btn_complete_setup">Einrichtung abschließen</string>
@@ -36,8 +48,7 @@
     <string name="connect_null">-</string>
 
     <!-- F -->
-    <string name="forward">Weiter</string>
-    <string name="backward">Zurück</string>
+    
 
     <!-- M -->
     <string name="mode_baby">Babymodus</string>
@@ -68,8 +79,6 @@
     <string name="ERRMSG_WIFI_CONNECTION_ERROR">Keine Netzwerkverbindung gefunden.</string>
 
     <!-- Memos -->
-    <string name="dialog_exit_app_title">Babyfon beenden?</string>
-    <string name="dialog_exit_app_message">Die Verbindungen zu anderen Babyfon-Geräten wird getrennt.</string>
     <string name="privacy_call_yes">Anrufe werden nicht weitergeleitet</string>
     <string name="privacy_call_no">Anrufe werden weitergeleitet</string>
     <string name="privacy_sms_yes">SMS werden nicht weitergeleitet</string>

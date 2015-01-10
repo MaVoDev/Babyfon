@@ -62,7 +62,7 @@ public class OverviewParentsFragment extends Fragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-		View view = inflater.inflate(R.layout.main_overview_parentsmode, container, false);
+		View view = inflater.inflate(R.layout.main_overview_parents_mode, container, false);
 
 		initUiElements(view);
 

@@ -31,29 +31,10 @@
 
     <LinearLayout style="@style/layout_footer" >
 
-        <LinearLayout
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom"
-            android:layout_weight="1" >
-
-            <Button
-                android:id="@+id/btn_backwardSetupDeviceMode"
-                style="@style/button_footer_left"
-                android:text="@string/backward" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom"
-            android:layout_weight="1" >
-
-            <Button
-                android:id="@+id/btn_forwardSetupDeviceMode"
-                style="@style/button_footer_right"
-                android:text="@string/forward" />
-        </LinearLayout>
+        <Button
+            android:id="@+id/btn_forwardSetupDeviceMode"
+            style="@style/button_footer_single"
+            android:text="@string/btn_forward" />
     </LinearLayout>
 
 </LinearLayout>

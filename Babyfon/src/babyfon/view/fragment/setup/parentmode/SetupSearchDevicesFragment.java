@@ -7,18 +7,20 @@ import babyfon.connectivity.bluetooth.BluetoothConnection;
 import babyfon.connectivity.bluetooth.BluetoothListAdapter;
 import babyfon.connectivity.wifi.TCPReceiver;
 import babyfon.connectivity.wifi.UDPBroadcastSender;
-import babyfon.connectivity.wifi.UDPReceiver;
 import babyfon.connectivity.wifi.WifiHandler;
 import babyfon.init.R;
-import babyfon.performance.Sound;
 import babyfon.settings.SharedPrefs;
-import babyfon.view.activity.MainActivity;
+import babyfon.view.fragment.overview.OverviewBabyFragment;
 import babyfon.view.fragment.overview.OverviewParentsFragment;
+import android.app.AlertDialog;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,18 +33,20 @@ import android.widget.TextView;
 
 public class SetupSearchDevicesFragment extends Fragment {
 
-	// Define UI elements
+	// Define ui elements
+	private Button btnBackward;
+	private Button btnForward;
 	private ListView listViewDevices;
-	private Button btnCompleteSetup;
 	private Button btnSearchDevices;
-	private TextView titleConnectivity;
+	private TextView title;
 
 	private ArrayList<BabyfonDevice> device;
+
+	private SetupCompleteParentsModeFragment nextFragment;
 
 	private int connectivityType;
 
 	private SharedPrefs mSharedPrefs;
-	private Sound mSound;
 
 	private Context mContext;
 
@@ -52,10 +56,22 @@ public class SetupSearchDevicesFragment extends Fragment {
 
 	// Constructor
 	public SetupSearchDevicesFragment(Context mContext) {
+		nextFragment = new SetupCompleteParentsModeFragment(mContext);
+
 		mSharedPrefs = new SharedPrefs(mContext);
-		mSound = new Sound(mContext);
 
 		this.mContext = mContext;
+	}
+
+	public void updateUI() {
+		// Update buttons
+		if (mSharedPrefs.getGender() == 0) {
+			btnBackward.setBackgroundResource(R.drawable.btn_selector_male);
+			btnForward.setBackgroundResource(R.drawable.btn_selector_male);
+		} else {
+			btnBackward.setBackgroundResource(R.drawable.btn_selector_female);
+			btnForward.setBackgroundResource(R.drawable.btn_selector_female);
+		}
 	}
 
 	/**
@@ -64,25 +80,38 @@ public class SetupSearchDevicesFragment extends Fragment {
 	 * @param view
 	 */
 	private void initUiElements(View view) {
+		// Set Typeface
+		Typeface mTypeface_bi = Typeface.createFromAsset(mContext.getAssets(), "fonts/BOOKOSBI.TTF");
+		Typeface mTypeface_i = Typeface.createFromAsset(mContext.getAssets(), "fonts/BOOKOSI.TTF");
 
 		// Initialize ListView
 		listViewDevices = (ListView) view.findViewById(R.id.listView_devices);
 
 		// Initialize Buttons
-		btnCompleteSetup = (Button) view.findViewById(R.id.btn_completeSetup);
+		btnBackward = (Button) view.findViewById(R.id.btn_backward_search);
+		btnBackward.setTypeface(mTypeface_i);
+		btnForward = (Button) view.findViewById(R.id.btn_forward_search);
+		btnForward.setTypeface(mTypeface_i);
 		btnSearchDevices = (Button) view.findViewById(R.id.btn_searchDevices);
 
 		// Initialize TextViews
-		titleConnectivity = (TextView) view.findViewById(R.id.titleConnectivity);
+		title = (TextView) view.findViewById(R.id.title_search);
+		title.setTypeface(mTypeface_bi);
+
+		updateUI();
 	}
 
 	@Override
 	public void onResume() {
+		super.onResume();
+
 		device = new ArrayList<BabyfonDevice>();
 
 		Log.i(TAG, "onResume -> LISTE GELEERT!");
 
-		super.onResume();
+		if (btnForward != null) {
+			updateUI();
+		}
 	}
 
 	@Override
@@ -90,11 +119,11 @@ public class SetupSearchDevicesFragment extends Fragment {
 
 		View view = inflater.inflate(R.layout.setup_search, container, false);
 
-		final FragmentManager fragmentManager = getFragmentManager();
+		final FragmentManager mFragmentManager = getFragmentManager();
 
 		initUiElements(view);
 
-		connectivityType = mSharedPrefs.getConnectivityType();
+		connectivityType = mSharedPrefs.getConnectivityTypeTemp();
 		switch (connectivityType) {
 		case 1:
 			initViewBluetooth();
@@ -124,22 +153,73 @@ public class SetupSearchDevicesFragment extends Fragment {
 			}
 		});
 
-		// OnClickListener for the Button btnCompleteSetup
-		btnCompleteSetup.setOnClickListener(new OnClickListener() {
+		btnBackward.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				Log.i(TAG, "Start parents mode...");
-				mSound.soundOn();
-				fragmentManager.beginTransaction().replace(R.id.frame_container, new OverviewParentsFragment(mContext), null)
+
+				mFragmentManager.beginTransaction()
+						.replace(R.id.frame_container, new SetupConnectionParentsModeFragment(mContext), null)
 						.addToBackStack(null).commit();
 			}
 		});
+
+		// OnClickListener for the Button btnCompleteSetup
+		btnForward.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				mFragmentManager.beginTransaction().replace(R.id.frame_container, nextFragment, null)
+						.addToBackStack(null).commit();
+			}
+		});
+
+		onBackPressed(view, mFragmentManager);
+
 		return view;
 	}
 
-	public void initViewBluetooth() {
-		titleConnectivity.setText(getString(R.string.bluetooth));
+	public void onBackPressed(View view, final FragmentManager mFragmentManager) {
+		view.setFocusableInTouchMode(true);
+		view.requestFocus();
+		view.setOnKeyListener(new View.OnKeyListener() {
+			@Override
+			public boolean onKey(View v, int keyCode, KeyEvent event) {
 
+				if (event.getAction() != KeyEvent.ACTION_DOWN)
+					return true;
+
+				switch (keyCode) {
+				case KeyEvent.KEYCODE_BACK:
+					new AlertDialog.Builder(getActivity())
+							.setTitle(mContext.getString(R.string.dialog_title_cancel_setup))
+							.setMessage(mContext.getString(R.string.dialog_message_cancel_setup))
+							.setNegativeButton(mContext.getString(R.string.dialog_button_no), null)
+							.setPositiveButton(mContext.getString(R.string.dialog_button_yes),
+									new DialogInterface.OnClickListener() {
+										@Override
+										public void onClick(DialogInterface dialog, int id) {
+											if (mSharedPrefs.getDeviceMode() == 0) {
+												mFragmentManager
+														.beginTransaction()
+														.replace(R.id.frame_container,
+																new OverviewBabyFragment(mContext), null)
+														.addToBackStack(null).commit();
+											} else {
+												mFragmentManager
+														.beginTransaction()
+														.replace(R.id.frame_container,
+																new OverviewParentsFragment(mContext), null)
+														.addToBackStack(null).commit();
+											}
+										}
+									}).create().show();
+					break;
+				}
+				return true;
+			}
+		});
+	}
+
+	public void initViewBluetooth() {
 		BluetoothListAdapter deviceListAdapter = new BluetoothListAdapter(mContext, R.layout.bluetooth_row_element);
 		mConnection = new BluetoothConnection(mContext, deviceListAdapter);
 
@@ -150,12 +230,11 @@ public class SetupSearchDevicesFragment extends Fragment {
 	}
 
 	public void initViewBWifi() {
-		titleConnectivity.setText(getString(R.string.wifi));
 		new UDPBroadcastSender(mContext).sendUDPMessage(new WifiHandler(mContext).getNetworkAddressClassC());
 	}
 
 	public void initViewBWifiDirect() {
-		titleConnectivity.setText(getString(R.string.wifip2p));
+
 	}
 
 	public void setNewDevice(String ip, String name) {

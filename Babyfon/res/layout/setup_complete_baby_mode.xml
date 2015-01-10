@@ -4,9 +4,9 @@
     <LinearLayout style="@style/layout_header" >
 
         <TextView
-            android:id="@+id/text_titleSetupComplete"
+            android:id="@+id/title_setup_complete_baby_mode"
             style="@style/fragmentTitle"
-            android:text="Abschluss" />
+            android:text="@string/title_setup_complete_baby_mode" />
     </LinearLayout>
 
     <LinearLayout style="@style/layout_body" >
@@ -15,8 +15,6 @@
             android:id="@+id/tv_password"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_centerHorizontal="true"
             android:layout_marginTop="32dp"
             android:text="4711"
             android:textSize="64sp" />
@@ -26,7 +24,7 @@
 
 
             <Button
-            android:id="@+id/btn_setup_complete"
+            android:id="@+id/btn_forward_complete_baby_mode"
             style="@style/button_footer_single"
             android:text="@string/btn_complete_setup" />
     </LinearLayout>

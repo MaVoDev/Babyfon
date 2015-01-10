@@ -4,11 +4,17 @@ import babyfon.connectivity.bluetooth.BluetoothHandler;
 import babyfon.connectivity.wifi.WifiHandler;
 import babyfon.init.R;
 import babyfon.settings.SharedPrefs;
+import babyfon.view.fragment.overview.OverviewBabyFragment;
+import babyfon.view.fragment.overview.OverviewParentsFragment;
+import babyfon.view.fragment.setup.SetupDeviceModeFragment;
+import android.app.AlertDialog;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,7 +25,7 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.RadioGroup.OnCheckedChangeListener;
 
-public class SetupConnectionParentsFragment extends Fragment {
+public class SetupConnectionParentsModeFragment extends Fragment {
 
 	// Define UI elements
 	private Button btnBackward;
@@ -33,9 +39,10 @@ public class SetupConnectionParentsFragment extends Fragment {
 	private BluetoothHandler mBluetoothHandler;
 	private WifiHandler mWifiHandler;
 
-	private SetupSearchDevicesFragment mSearchFragment;
+	private SetupSearchDevicesFragment nextFragment;
 
 	private boolean isBluetoothAvailable = false;
+	
 	private boolean isWifiAvailable = false;
 	private boolean isWifiDirectAvailable = false;
 
@@ -46,9 +53,9 @@ public class SetupConnectionParentsFragment extends Fragment {
 	private Context mContext;
 
 	// Constructor
-	public SetupConnectionParentsFragment(Context mContext) {
+	public SetupConnectionParentsModeFragment(Context mContext) {
 		mSharedPrefs = new SharedPrefs(mContext);
-		mSearchFragment = new SetupSearchDevicesFragment(mContext);
+		nextFragment = new SetupSearchDevicesFragment(mContext);
 		mBluetoothHandler = new BluetoothHandler(mContext);
 		mWifiHandler = new WifiHandler(mContext);
 
@@ -127,16 +134,16 @@ public class SetupConnectionParentsFragment extends Fragment {
 		// Initialize TextViews
 		title = (TextView) view.findViewById(R.id.title_connection_parentsmode);
 		title.setTypeface(mTypeface_bi);
-		
+
 		updateUI();
 	}
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-		View view = inflater.inflate(R.layout.setup_connection_parentsmode, container, false);
+		View view = inflater.inflate(R.layout.setup_connection_parents_mode, container, false);
 
-		final FragmentManager fragmentManager = getFragmentManager();
+		final FragmentManager mFragmentManager = getFragmentManager();
 
 		initUiElements(view);
 		getAvailability();
@@ -170,17 +177,70 @@ public class SetupConnectionParentsFragment extends Fragment {
 			}
 		});
 
-		btnBackward = (Button) view.findViewById(R.id.btn_forwardSetupConnectionParentsMode);
 		btnBackward.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				mSharedPrefs.setConnectivityType(connectivityType);
-				fragmentManager.beginTransaction().replace(R.id.frame_container, mSearchFragment, null)
+
+				mFragmentManager.beginTransaction()
+						.replace(R.id.frame_container, new SetupDeviceModeFragment(mContext), null)
 						.addToBackStack(null).commit();
 			}
 		});
 
+		btnForward.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				mSharedPrefs.setConnectivityTypeTemp(connectivityType);
+				mFragmentManager.beginTransaction().replace(R.id.frame_container, nextFragment, null)
+						.addToBackStack(null).commit();
+			}
+		});
+		
+		onBackPressed(view, mFragmentManager);
+
 		return view;
+	}
+	
+	public void onBackPressed(View view, final FragmentManager mFragmentManager) {
+		view.setFocusableInTouchMode(true);
+		view.requestFocus();
+		view.setOnKeyListener(new View.OnKeyListener() {
+			@Override
+			public boolean onKey(View v, int keyCode, KeyEvent event) {
+
+				if (event.getAction() != KeyEvent.ACTION_DOWN)
+					return true;
+
+				switch (keyCode) {
+				case KeyEvent.KEYCODE_BACK:
+					new AlertDialog.Builder(getActivity())
+							.setTitle(mContext.getString(R.string.dialog_title_cancel_setup))
+							.setMessage(mContext.getString(R.string.dialog_message_cancel_setup))
+							.setNegativeButton(mContext.getString(R.string.dialog_button_no), null)
+							.setPositiveButton(mContext.getString(R.string.dialog_button_yes),
+									new DialogInterface.OnClickListener() {
+										@Override
+										public void onClick(DialogInterface dialog, int id) {
+											if (mSharedPrefs.getDeviceMode() == 0) {
+												mFragmentManager
+														.beginTransaction()
+														.replace(R.id.frame_container,
+																new OverviewBabyFragment(mContext), null)
+														.addToBackStack(null).commit();
+											} else {
+												mFragmentManager
+														.beginTransaction()
+														.replace(R.id.frame_container,
+																new OverviewParentsFragment(mContext), null)
+														.addToBackStack(null).commit();
+											}
+										}
+									}).create().show();
+					break;
+				}
+				return true;
+			}
+		});
 	}
 
 	@Override

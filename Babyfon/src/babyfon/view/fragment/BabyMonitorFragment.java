@@ -10,7 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-public class BabymonitorFragment extends Fragment {
+public class BabyMonitorFragment extends Fragment {
 
 	// Define UI elements
 	private TextView title;
@@ -22,7 +22,7 @@ public class BabymonitorFragment extends Fragment {
 	private Context mContext;
 
 	// Constructor
-	public BabymonitorFragment(Context mContext) {
+	public BabyMonitorFragment(Context mContext) {
 		this.mContext = mContext;
 	}
 

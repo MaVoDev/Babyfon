@@ -21,70 +21,8 @@ public class SharedPrefs {
 	}
 
 	/*
-	 * == General =====================================
+	 * == Network settings =====================================
 	 */
-
-	// == Connectivity =================================
-
-	/**
-	 * Get the active connectivity type.
-	 * 
-	 * @return int: -1 = no type, 0 = auto, 1 = Bluetooth, 2 = Wi-Fi, 3 = Wi-Fi
-	 *         Direct
-	 */
-	public int getConnectivityType() {
-		return mSharedPreferences.getInt("connectivity_type", -1);
-	}
-
-	/**
-	 * Set the active connectivity type.
-	 * 
-	 * @param int type: -1 = no type, 0 = auto, 1 = Bluetooth, 2 = Wi-Fi, 3 =
-	 *        Wi-Fi Direct
-	 */
-	public void setConnectivityType(int type) {
-		editor.putInt("connectivity_type", type).commit();
-	}
-
-	// == Device mode =================================
-
-	/**
-	 * Get the mode of the device.
-	 * 
-	 * @return int: -1 = no mode, 0 = baby mode, 1 = parent mode
-	 */
-	public int getDeviceMode() {
-		return mSharedPreferences.getInt("device_mode", -1);
-	}
-
-	/**
-	 * Set the mode of the device.
-	 * 
-	 * @param int mode: -1 = no mode, 0 = baby mode, 1 = parent mode
-	 */
-	public void setDeviceMode(int mode) {
-		editor.putInt("device_mode", mode).commit();
-	}
-
-	// == Password =================================
-
-	/**
-	 * Get the password for the connection.
-	 * 
-	 * @return int: -1 = no password
-	 */
-	public int getPassword() {
-		return mSharedPreferences.getInt("password", -1);
-	}
-
-	/**
-	 * Set the password for the connection.
-	 * 
-	 * @param int password: -1 = no password
-	 */
-	public void setPassword(int password) {
-		editor.putInt("password", password).commit();
-	}
 
 	// == Port TCP ====================================
 
@@ -214,8 +152,160 @@ public class SharedPrefs {
 	}
 
 	/*
-	 * == Setup =====================================
+	 * == Setup settings =====================================
 	 */
+
+	// == Device mode =================================
+
+	/**
+	 * Get the mode of the device.
+	 * 
+	 * @return int: -1 = no mode, 0 = baby mode, 1 = parent mode
+	 */
+	public int getDeviceMode() {
+		return mSharedPreferences.getInt("device_mode", -1);
+	}
+
+	/**
+	 * Set the mode of the device.
+	 * 
+	 * @param int mode: -1 = no mode, 0 = baby mode, 1 = parent mode
+	 */
+	public void setDeviceMode(int mode) {
+		editor.putInt("device_mode", mode).commit();
+	}
+
+	/**
+	 * Get the temporary mode of the device.
+	 * 
+	 * @return int: -1 = no mode, 0 = baby mode, 1 = parent mode
+	 */
+	public int getDeviceModeTemp() {
+		return mSharedPreferences.getInt("device_mode_temp", -1);
+	}
+
+	/**
+	 * Set the temporary mode of the device.
+	 * 
+	 * @param int temporary mode: -1 = no mode, 0 = baby mode, 1 = parent mode
+	 */
+	public void setDeviceModeTemp(int mode) {
+		editor.putInt("device_mode_temp", mode).commit();
+	}
+
+	// == Bluetooth shared state =================================
+
+	/**
+	 * Get the shared state of Bluetooth.
+	 * 
+	 * @return boolean: false = not shared, true = shared
+	 */
+	public boolean getBluetoothSharedState() {
+		return mSharedPreferences.getBoolean("bluetooth_shared_state", false);
+	}
+
+	/**
+	 * Set the shared state of Bluetooth.
+	 * 
+	 * @param boolean state: false = not shared, true = shared
+	 */
+	public void setBluetoothSharedState(boolean state) {
+		editor.putBoolean("bluetooth_shared_state", state).commit();
+	}
+
+	/**
+	 * Get the temporary shared state of Bluetooth.
+	 * 
+	 * @return int: false = not shared, true = shared
+	 */
+	public boolean getBluetoothSharedStateTemp() {
+		return mSharedPreferences.getBoolean("bluetooth_shared_state_temp", false);
+	}
+
+	/**
+	 * Set the temporary shared state of Bluetooth.
+	 * 
+	 * @param boolean temporary state: false = not shared, true = shared
+	 */
+	public void setBluetoothSharedStateTemp(boolean state) {
+		editor.putBoolean("bluetooth_shared_state_temp", state).commit();
+	}
+
+	// == Wi-Fi shared state =================================
+
+	/**
+	 * Get the shared state of Wi-Fi.
+	 * 
+	 * @return boolean: false = not shared, true = shared
+	 */
+	public boolean getWiFiSharedState() {
+		return mSharedPreferences.getBoolean("wifi_shared_state", false);
+	}
+
+	/**
+	 * Set the shared state of Wi-Fi.
+	 * 
+	 * @param boolean state: false = not shared, true = shared
+	 */
+	public void setWiFiSharedState(boolean state) {
+		editor.putBoolean("wifi_shared_state", state).commit();
+	}
+
+	/**
+	 * Get the temporary shared state of Wi-Fi.
+	 * 
+	 * @return boolean: false = not shared, true = shared
+	 */
+	public boolean getWiFiSharedStateTemp() {
+		return mSharedPreferences.getBoolean("wifi_shared_state_temp", false);
+	}
+
+	/**
+	 * Set the temporary shared state of Wi-Fi.
+	 * 
+	 * @param boolean temporary state: false = not shared, true = shared
+	 */
+	public void setWiFiSharedStateTemp(boolean state) {
+		editor.putBoolean("wifi_shared_state_temp", state).commit();
+	}
+
+	// == Wi-Fi Direct shared state =================================
+
+	/**
+	 * Get the shared state of Wi-Fi Direct.
+	 * 
+	 * @return boolean: false = not shared, true = shared
+	 */
+	public boolean getWiFiDirectSharedState() {
+		return mSharedPreferences.getBoolean("wifi_direct_shared_state", false);
+	}
+
+	/**
+	 * Set the shared state of Wi-Fi Direct.
+	 * 
+	 * @param boolean state: false = not shared, true = shared
+	 */
+	public void setWiFiDirectSharedState(boolean state) {
+		editor.putBoolean("wifi_direct_shared_state", state).commit();
+	}
+
+	/**
+	 * Get the temporary shared state of Wi-Fi Direct.
+	 * 
+	 * @return boolean: false = not shared, true = shared
+	 */
+	public boolean getWiFiDirectSharedStateTemp() {
+		return mSharedPreferences.getBoolean("wifi_direct_shared_state_temp", false);
+	}
+
+	/**
+	 * Set the temporary shared state of Wi-Fi Direct.
+	 * 
+	 * @param boolean temporary state: false = not shared, true = shared
+	 */
+	public void setWiFiDirectSharedStateTemp(boolean state) {
+		editor.putBoolean("wifi_direct_shared_state_temp", state).commit();
+	}
 
 	// == Privacy: Call =================================
 
@@ -237,6 +327,24 @@ public class SharedPrefs {
 		editor.putBoolean("privacy_call", state).commit();
 	}
 
+	/**
+	 * Get the temporary state of call privacy.
+	 * 
+	 * @return boolean: true = send forward, false = don't send forward
+	 */
+	public boolean getPrivacyCallTemp() {
+		return mSharedPreferences.getBoolean("privacy_call_temp", false);
+	}
+
+	/**
+	 * Set the temporary state of call privacy.
+	 * 
+	 * @param boolean state: temporary state of call privacy
+	 */
+	public void setPrivacyCallTemp(boolean state) {
+		editor.putBoolean("privacy_call_temp", state).commit();
+	}
+
 	// == Privacy: sms =================================
 
 	/**
@@ -255,5 +363,86 @@ public class SharedPrefs {
 	 */
 	public void setPrivacySMS(boolean state) {
 		editor.putBoolean("privacy_sms", state).commit();
+	}
+
+	/**
+	 * Get the temporary state of sms privacy.
+	 * 
+	 * @return boolean: true = send forward, false = don't send forward
+	 */
+	public boolean getPrivacySMSTemp() {
+		return mSharedPreferences.getBoolean("privacy_sms_temp", false);
+	}
+
+	/**
+	 * Set the temporary state of sms privacy.
+	 * 
+	 * @param boolean temporary state: temporary state of call privacy
+	 */
+	public void setPrivacySMSTemp(boolean state) {
+		editor.putBoolean("privacy_sms_temp", state).commit();
+	}
+
+	// == Password =================================
+
+	/**
+	 * Get the password for the connection.
+	 * 
+	 * @return String: -1 = no password
+	 */
+	public String getPassword() {
+		return mSharedPreferences.getString("password", null);
+	}
+
+	/**
+	 * Set the password for the connection.
+	 * 
+	 * @param String
+	 *            password: -1 = no password
+	 */
+	public void setPassword(String password) {
+		editor.putString("password", password).commit();
+	}
+
+	// == Connectivity =================================
+
+	/**
+	 * Get the active connectivity type.
+	 * 
+	 * @return int: -1 = no type, 0 = auto, 1 = Bluetooth, 2 = Wi-Fi, 3 = Wi-Fi
+	 *         Direct
+	 */
+	public int getConnectivityType() {
+		return mSharedPreferences.getInt("connectivity_type", -1);
+	}
+
+	/**
+	 * Set the active connectivity type.
+	 * 
+	 * @param int type: -1 = no type, 0 = auto, 1 = Bluetooth, 2 = Wi-Fi, 3 =
+	 *        Wi-Fi Direct
+	 */
+	public void setConnectivityType(int type) {
+		editor.putInt("connectivity_type", type).commit();
+	}
+
+	/**
+	 * Get the temporary connectivity type.
+	 * 
+	 * @return int: -1 = no type, 0 = auto, 1 = Bluetooth, 2 = Wi-Fi, 3 = Wi-Fi
+	 *         Direct
+	 */
+	public int getConnectivityTypeTemp() {
+		return mSharedPreferences.getInt("connectivity_type_temp", -1);
+	}
+
+	/**
+	 * Set the temporary connectivity type.
+	 * 
+	 * @param int temporary type: -1 = no type, 0 = auto, 1 = Bluetooth, 2 =
+	 *        Wi-Fi, 3 = Wi-Fi Direct
+	 */
+	public void setConnectivityTypeTemp(int type) {
+		editor.putInt("connectivity_type_temp", type).commit();
 	}
 }

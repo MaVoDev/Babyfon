@@ -47,7 +47,7 @@
             <Button
                 android:id="@+id/btn_backwardSetupConnectionBabyMode"
                 style="@style/button_footer_left"
-                android:text="@string/backward" />
+                android:text="@string/btn_backward" />
         </LinearLayout>
 
         <LinearLayout
@@ -59,7 +59,7 @@
             <Button
                 android:id="@+id/btn_forwardSetupConnectionBabyMode"
                 style="@style/button_footer_right"
-                android:text="@string/forward" />
+                android:text="@string/btn_forward" />
         </LinearLayout>
     </LinearLayout>
 

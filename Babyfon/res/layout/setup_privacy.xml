@@ -38,7 +38,7 @@
             <Button
                 android:id="@+id/btn_backwardSetupPrivacy"
                 style="@style/button_footer_left"
-                android:text="@string/backward" />
+                android:text="@string/btn_backward" />
         </LinearLayout>
 
         <LinearLayout
@@ -50,7 +50,7 @@
             <Button
                 android:id="@+id/btn_forwardSetupPrivacy"
                 style="@style/button_footer_right"
-                android:text="@string/forward" />
+                android:text="@string/btn_forward" />
         </LinearLayout>
     </LinearLayout>
 

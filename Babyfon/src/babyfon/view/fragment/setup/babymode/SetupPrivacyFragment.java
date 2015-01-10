@@ -2,11 +2,16 @@ package babyfon.view.fragment.setup.babymode;
 
 import babyfon.init.R;
 import babyfon.settings.SharedPrefs;
+import babyfon.view.fragment.overview.OverviewBabyFragment;
+import babyfon.view.fragment.overview.OverviewParentsFragment;
+import android.app.AlertDialog;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,7 +30,7 @@ public class SetupPrivacyFragment extends Fragment {
 	private TextView title;
 
 	// Fragments
-	private SetupCompleteBabyModeFragment mCompleteSetupFragment;
+	private SetupCompleteBabyModeFragment nextFragment;
 
 	private SharedPrefs mSharedPrefs;
 
@@ -33,7 +38,7 @@ public class SetupPrivacyFragment extends Fragment {
 
 	// Constructor
 	public SetupPrivacyFragment(Context mContext) {
-		mCompleteSetupFragment = new SetupCompleteBabyModeFragment(mContext);
+		nextFragment = new SetupCompleteBabyModeFragment(mContext);
 		mSharedPrefs = new SharedPrefs(mContext);
 
 		this.mContext = mContext;
@@ -73,7 +78,7 @@ public class SetupPrivacyFragment extends Fragment {
 		// Initialize TextViews
 		title = (TextView) view.findViewById(R.id.text_titleSetupPrivacy);
 		title.setTypeface(mTypeface_bi);
-		
+
 		updateUI();
 	}
 
@@ -82,32 +87,86 @@ public class SetupPrivacyFragment extends Fragment {
 
 		View view = inflater.inflate(R.layout.setup_privacy, container, false);
 
-		final FragmentManager fragmentManager = getFragmentManager();
+		final FragmentManager mFragmentManager = getFragmentManager();
 
 		initUiElements(view);
+
+		btnBackward.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+
+				mFragmentManager.beginTransaction()
+						.replace(R.id.frame_container, new SetupConnectionBabyModeFragment(mContext), null)
+						.addToBackStack(null).commit();
+			}
+		});
 
 		btnForward.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
 
 				if (chkboxPrivacyCall.isChecked()) {
-					mSharedPrefs.setPrivacyCall(true);
+					mSharedPrefs.setPrivacyCallTemp(true);
 				} else {
-					mSharedPrefs.setPrivacyCall(false);
+					mSharedPrefs.setPrivacyCallTemp(false);
 				}
 
 				if (chkboxPrivacySMS.isChecked()) {
-					mSharedPrefs.setPrivacySMS(true);
+					mSharedPrefs.setPrivacySMSTemp(true);
 				} else {
-					mSharedPrefs.setPrivacySMS(false);
+					mSharedPrefs.setPrivacySMSTemp(false);
 				}
 
-				fragmentManager.beginTransaction().replace(R.id.frame_container, mCompleteSetupFragment, null)
+				mFragmentManager.beginTransaction().replace(R.id.frame_container, nextFragment, null)
 						.addToBackStack(null).commit();
 			}
 		});
 
+		onBackPressed(view, mFragmentManager);
+
 		return view;
+	}
+
+	public void onBackPressed(View view, final FragmentManager mFragmentManager) {
+		view.setFocusableInTouchMode(true);
+		view.requestFocus();
+		view.setOnKeyListener(new View.OnKeyListener() {
+			@Override
+			public boolean onKey(View v, int keyCode, KeyEvent event) {
+
+				if (event.getAction() != KeyEvent.ACTION_DOWN)
+					return true;
+
+				switch (keyCode) {
+				case KeyEvent.KEYCODE_BACK:
+					new AlertDialog.Builder(getActivity())
+							.setTitle(mContext.getString(R.string.dialog_title_cancel_setup))
+							.setMessage(mContext.getString(R.string.dialog_message_cancel_setup))
+							.setNegativeButton(mContext.getString(R.string.dialog_button_no), null)
+							.setPositiveButton(mContext.getString(R.string.dialog_button_yes),
+									new DialogInterface.OnClickListener() {
+										@Override
+										public void onClick(DialogInterface dialog, int id) {
+											if (mSharedPrefs.getDeviceMode() == 0) {
+												mFragmentManager
+														.beginTransaction()
+														.replace(R.id.frame_container,
+																new OverviewBabyFragment(mContext), null)
+														.addToBackStack(null).commit();
+											} else {
+												mFragmentManager
+														.beginTransaction()
+														.replace(R.id.frame_container,
+																new OverviewParentsFragment(mContext), null)
+														.addToBackStack(null).commit();
+											}
+										}
+									}).create().show();
+					break;
+				}
+				return true;
+			}
+		});
 	}
 
 	@Override

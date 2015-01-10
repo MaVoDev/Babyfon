@@ -5,7 +5,7 @@ import android.widget.Toast;
 import babyfon.connectivity.wifi.TCPSender;
 import babyfon.init.R;
 import babyfon.view.activity.MainActivity;
-import babyfon.view.fragment.BabymonitorFragment;
+import babyfon.view.fragment.BabyMonitorFragment;
 import babyfon.view.fragment.setup.parentmode.SetupSearchDevicesFragment;
 
 public class Message {
@@ -30,7 +30,7 @@ public class Message {
 				@Override
 				public void run() {
 					Fragment fragment = mMainActivity.getFragmentById("BabymonitorFragment");
-					((BabymonitorFragment) fragment).setBatteryLevel(strArray[1]);
+					((BabyMonitorFragment) fragment).setBatteryLevel(strArray[1]);
 				}
 			});
 		}

@@ -61,7 +61,7 @@ public class WelcomeScreen extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.layout_welcomescreen);
+		setContentView(R.layout.layout_welcome_screen);
 
 		Thread background = new Thread() {
 			public void run() {
