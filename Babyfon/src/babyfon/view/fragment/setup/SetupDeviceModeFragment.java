@@ -4,6 +4,7 @@ import babyfon.init.R;
 import babyfon.settings.SharedPrefs;
 import babyfon.view.fragment.setup.babymode.SetupConnectionBabyFragment;
 import babyfon.view.fragment.setup.parentmode.SetupConnectionParentsFragment;
+import babyfon.view.fragment.setup.parentmode.SetupSearchDevicesFragment;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.Context;
@@ -29,16 +30,25 @@ public class SetupDeviceModeFragment extends Fragment {
 
 	private SharedPrefs mSharedPrefs;
 
-	private SetupConnectionBabyFragment connectionBabyFragment;
-	private SetupConnectionParentsFragment connectionParentsFragment;
+	// TODO: TEST VS!
+	// WIEDER ALTE REIN!
+	// private SetupConnectionBabyFragment connectionBabyFragment;
+	// private SetupConnectionParentsFragment connectionParentsFragment;
+	private SetupSearchDevicesFragment connectionBabyFragment;
+	private SetupSearchDevicesFragment connectionParentsFragment;
 
 	private Context mContext;
 
 	// Constructor
 	public SetupDeviceModeFragment(Context mContext) {
 		mSharedPrefs = new SharedPrefs(mContext);
-		connectionBabyFragment = new SetupConnectionBabyFragment(mContext);
-		connectionParentsFragment = new SetupConnectionParentsFragment(mContext);
+
+		// TODO: TEST VS!
+		// WIEDER ALTE REIN!
+		// connectionBabyFragment = new SetupConnectionBabyFragment(mContext);
+		// connectionParentsFragment = new SetupConnectionParentsFragment(mContext);
+		connectionBabyFragment = new SetupSearchDevicesFragment(mContext);
+		connectionParentsFragment = new SetupSearchDevicesFragment(mContext);
 
 		this.mContext = mContext;
 	}
@@ -74,8 +84,8 @@ public class SetupDeviceModeFragment extends Fragment {
 			@Override
 			public void onClick(View v) {
 				mSharedPrefs.setDeviceMode(0);
-				fragmentManager.beginTransaction().replace(R.id.frame_container, connectionBabyFragment, null)
-						.addToBackStack(null).commit();
+				fragmentManager.beginTransaction().replace(R.id.frame_container, connectionBabyFragment, null).addToBackStack(null)
+						.commit();
 			}
 		});
 
@@ -83,8 +93,8 @@ public class SetupDeviceModeFragment extends Fragment {
 			@Override
 			public void onClick(View v) {
 				mSharedPrefs.setDeviceMode(1);
-				fragmentManager.beginTransaction().replace(R.id.frame_container, connectionParentsFragment, null)
-						.addToBackStack(null).commit();
+				fragmentManager.beginTransaction().replace(R.id.frame_container, connectionParentsFragment, null).addToBackStack(null)
+						.commit();
 			}
 		});
 		return view;

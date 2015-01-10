@@ -3,6 +3,7 @@ package babyfon.view.fragment.setup.parentmode;
 import java.util.ArrayList;
 
 import babyfon.connectivity.ConnectionInterface;
+import babyfon.connectivity.ConnectionInterface.OnReceiveMsgListener;
 import babyfon.connectivity.ConnectionInterface.OnSearchStatusChangedListener;
 import babyfon.connectivity.bluetooth.BluetoothConnection;
 import babyfon.connectivity.bluetooth.BluetoothListAdapter;
@@ -37,7 +38,9 @@ public class SetupSearchDevicesFragment extends Fragment {
 	private ListView listViewDevices;
 	private Button btnCompleteSetup;
 	private Button btnSearchDevices;
+	private Button btnSendMsg;
 	private TextView titleConnectivity;
+	private TextView lastReceivedMsg;
 	private ProgressBar progressBarSearchDevices;
 
 	private ArrayList<BabyfonDevice> device;
@@ -74,12 +77,15 @@ public class SetupSearchDevicesFragment extends Fragment {
 		// Initialize Buttons
 		btnCompleteSetup = (Button) view.findViewById(R.id.btn_completeSetup);
 		btnSearchDevices = (Button) view.findViewById(R.id.btn_searchDevices);
+		btnSendMsg = (Button) view.findViewById(R.id.btn_sendMsg);
 
 		// Initialize Progressbar
 		progressBarSearchDevices = (ProgressBar) view.findViewById(R.id.progressBar_searching);
 
 		// Initialize TextViews
 		titleConnectivity = (TextView) view.findViewById(R.id.titleConnectivity);
+		lastReceivedMsg = (TextView) view.findViewById(R.id.tv_lastReceivedMsg);
+
 	}
 
 	@Override
@@ -142,20 +148,47 @@ public class SetupSearchDevicesFragment extends Fragment {
 						.addToBackStack(null).commit();
 			}
 		});
+
+		btnSendMsg.setOnClickListener(new OnClickListener() {
+
+			private int mCount = 0;
+
+			@Override
+			public void onClick(View v) {
+				mConnection.sendMessage("NACHRICHT " + mCount++);
+			}
+		});
+
 		return view;
 	}
 
 	public void initViewBluetooth() {
-		titleConnectivity.setText(getString(R.string.connect_bluetooth));
 
-		BluetoothListAdapter deviceListAdapter = new BluetoothListAdapter(mContext, R.layout.bluetooth_row_element);
-		mConnection = new BluetoothConnection(mContext, deviceListAdapter);
+		// BABY MODE
+		if (mSharedPrefs.getDeviceMode() == 0) {
+			titleConnectivity.setText(getString(R.string.connect_bluetooth) + " BABY (Server)");
 
+			mConnection = new BluetoothConnection(mContext);
+		}
+		// PARENT MODE
+		else {
+			titleConnectivity.setText(getString(R.string.connect_bluetooth) + " PARENTS (Client)");
+
+			BluetoothListAdapter deviceListAdapter = new BluetoothListAdapter(mContext, R.layout.bluetooth_row_element);
+			mConnection = new BluetoothConnection(mContext, deviceListAdapter);
+
+			// Setup ListView Adapter
+			// listViewDevices.setAdapter(mConnection.getListAdapter()); // TODO
+			// gucken ob es funzt
+			listViewDevices.setAdapter(deviceListAdapter);
+		}
+
+		//
+		// <Listener>
+		//
 		mConnection.setOnSearchStatusChangedListener(new OnSearchStatusChangedListener() {
-
 			@Override
 			public void onSearchStatusChanged(boolean isSearching) {
-
 				// ProgressBar zeigen, wenn gesucht wird
 				if (isSearching)
 					progressBarSearchDevices.setVisibility(View.VISIBLE);
@@ -165,10 +198,18 @@ public class SetupSearchDevicesFragment extends Fragment {
 
 			}
 		});
-		// Setup ListView Adapter
-		// listViewDevices.setAdapter(mConnection.getListAdapter()); // TODO
-		// gucken ob es funzt
-		listViewDevices.setAdapter(deviceListAdapter);
+
+		mConnection.setOnReceiveMsgListener(new OnReceiveMsgListener() {
+			@Override
+			public void onReceiveMsgListener(String msg) {
+				lastReceivedMsg.setText(msg);
+			}
+		});
+
+		//
+		// </Listener>
+		//
+
 	}
 
 	public void initViewBWifi() {

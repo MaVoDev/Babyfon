@@ -1,7 +1,9 @@
 package babyfon.connectivity.bluetooth;
 
+import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
+import android.bluetooth.BluetoothSocket;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -9,7 +11,7 @@ import android.content.IntentFilter;
 import android.util.Log;
 import android.widget.Toast;
 import babyfon.connectivity.ConnectionInterface;
-import babyfon.init.R;
+import babyfon.connectivity.ConnectionInterface.OnReceiveMsgListener;
 
 public class BluetoothConnection implements ConnectionInterface {
 
@@ -22,7 +24,11 @@ public class BluetoothConnection implements ConnectionInterface {
 	private BluetoothAdapter mBluetoothAdapter;
 	private BluetoothListAdapter mArrayAdapter;
 
-	OnSearchStatusChangedListener mOnSearchStatusChangedListener;
+	private BluetoothSocket mSocket;
+
+	private OnSearchStatusChangedListener mOnSearchStatusChangedListener;
+	private OnReceiveMsgListener mOnReceiveMsgListener;
+	private OnConnectionLostListener mOnConnectionLostListener;
 
 	// Receiver
 	private final BroadcastReceiver mReceiver = new BroadcastReceiver() {
@@ -45,6 +51,19 @@ public class BluetoothConnection implements ConnectionInterface {
 			}
 		}
 	};
+
+	private BluetoothClientThread mBluetoothCLient;
+	private BluetoothServerThread mBluetoothServer;
+
+	public BluetoothConnection(Context context) {
+		this.mContext = context;
+		mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+
+		if (mBluetoothAdapter.getScanMode() != BluetoothAdapter.SCAN_MODE_CONNECTABLE_DISCOVERABLE)
+			enableDiscoverability();
+		
+		mBluetoothServer = new BluetoothServerThread(mBluetoothAdapter, this);
+	}
 
 	// Konstruktor
 	public BluetoothConnection(Context context, BluetoothListAdapter adapter) {
@@ -128,9 +147,10 @@ public class BluetoothConnection implements ConnectionInterface {
 	}
 
 	private void enableDiscoverability() {
+
 		Intent discoverableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE);
 		discoverableIntent.putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, 0);
-		// startActivity(discoverableIntent);
+		mContext.startActivity(discoverableIntent);
 
 		// TODO: AUSLAGERN ODER ACTIVITY REINHOLEN!
 		// mContext.startActivityForResult(discoverableIntent,
@@ -151,10 +171,9 @@ public class BluetoothConnection implements ConnectionInterface {
 
 			Log.i(TAG, "STARTING BLUETOOTH DISCOVERY...");
 			boolean searching = mBluetoothAdapter.startDiscovery();
-			
+
 			mOnSearchStatusChangedListener.onSearchStatusChanged(searching);
-			
-			
+
 		}
 	}
 
@@ -162,7 +181,8 @@ public class BluetoothConnection implements ConnectionInterface {
 	public void connectToDeviceFromList(int position) {
 		BluetoothDevice device = mArrayAdapter.getItem(position);
 		Log.i(TAG, "Try to connect to device: " + device.getName());
-		new BluetoothClientThread(device, mBluetoothAdapter).start();
+		mBluetoothCLient = new BluetoothClientThread(device, mBluetoothAdapter, this);
+		mBluetoothCLient.start();
 	}
 
 	@Override
@@ -170,9 +190,41 @@ public class BluetoothConnection implements ConnectionInterface {
 		this.mOnSearchStatusChangedListener = l;
 	}
 
-	// @Override
-	// public ListAdapter getListAdapter() {
-	// return mArrayAdapter;
-	// }
+	@Override
+	public void setOnReceiveMsgListener(OnReceiveMsgListener l) {
+		this.mOnReceiveMsgListener = l;
+	}
+
+	@Override
+	public void setOnConnectionLostListener(OnConnectionLostListener l) {
+		this.mOnConnectionLostListener = l;
+	}
+
+	@Override
+	public void closeConnection() {
+		// TODO Disconnect Zeug
+	}
+
+	@Override
+	public void sendMessage(String message) {
+		if (mBluetoothCLient != null)
+			mBluetoothCLient.sendMessage(message);
+		else if(mBluetoothServer != null)
+			mBluetoothServer.sendMessage(message);
+	}
+
+	@Override
+	public void sendData(Object data) {
+		// TODO Auto-generated method stub
+
+	}
+
+	public OnConnectionLostListener getOnConnectionLostListener() {
+		return mOnConnectionLostListener;
+	}
+
+	public OnReceiveMsgListener getOnReceiveMsgListener() {
+		return mOnReceiveMsgListener;
+	}
 
 }

@@ -158,6 +158,7 @@ public class MainActivity extends FragmentActivity {
 		}
 
 		// TODO: Zu Testzwecken wird direkt Searchdevices activity geöffnet VS
+		mSharedPrefs.setDeviceMode(-1); // Damit man zur modus auswahl kommt
 		displayView(3);
 	}
 
@@ -335,7 +336,7 @@ public class MainActivity extends FragmentActivity {
 		case 3:
 			// TODO NACH TEST WIEDER EINKOMMENTIEREN! VS
 			// id = "SetupFragment";
-			id = "SetupSearchDevicesFragment";
+			id = "SetupFragment";
 			break;
 
 		default:

@@ -1,7 +1,14 @@
 package babyfon.connectivity.bluetooth;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.PrintWriter;
 import java.util.UUID;
+
+import babyfon.connectivity.ConnectionInterface.OnReceiveMsgListener;
 
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothServerSocket;
@@ -13,8 +20,17 @@ public class BluetoothServerThread extends Thread {
 	private final BluetoothServerSocket mmServerSocket;
 	private BluetoothSocket mSocket;
 
-	public BluetoothServerThread(BluetoothAdapter mBluetoothAdapter) {
+	private boolean isRunning;
+	private InputStream mmInStream;
+	private OutputStream mmOutStream;
+	private PrintWriter mPrintWriter;
+	private BufferedReader mBufferedReader;
+	private BluetoothConnection mBTConnection;
 
+	public BluetoothServerThread(BluetoothAdapter mBluetoothAdapter, BluetoothConnection bluetoothConnection) {
+
+		this.mBTConnection = bluetoothConnection;
+		
 		// Use a temporary object that is later assigned to mmServerSocket,
 		// because mmServerSocket is final
 		BluetoothServerSocket tmp = null;
@@ -46,8 +62,46 @@ public class BluetoothServerThread extends Thread {
 						+ mSocket.getRemoteDevice().getAddress() + "]");
 
 				// Start sending Audio to client
-//				mNoise = new AudioRecording(mSocket);
-//				mNoise.startRecording();
+				// mNoise = new AudioRecording(mSocket);
+				// mNoise.startRecording();
+
+				try {
+					isRunning = true;
+
+					mmInStream = mSocket.getInputStream();
+					mmOutStream = mSocket.getOutputStream();
+					mPrintWriter = new PrintWriter(mmOutStream);
+					mBufferedReader = new BufferedReader(new InputStreamReader(mmInStream));
+
+					// Receiver Thread
+					new Thread(new Runnable() {
+
+						@Override
+						public void run() {
+
+							String msg = null;
+							Log.i(TAG, "START listening for messages...");
+							// while (isRunning ) {
+							try {
+								OnReceiveMsgListener listener = mBTConnection.getOnReceiveMsgListener();
+
+								// Leite die empfangenen Nachrichten an den OnReceiveMsgListener weiter
+								while (isRunning && (msg = mBufferedReader.readLine()) != null) {
+									if (listener != null)
+										listener.onReceiveMsgListener(msg);
+								}
+
+							} catch (IOException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
+							// }
+							Log.i(TAG, "STOP listening for messages...");
+						}
+					}).start();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
 
 				try {
 					mmServerSocket.close();
@@ -75,10 +129,14 @@ public class BluetoothServerThread extends Thread {
 				mSocket.close();
 
 			// Stop Recording
-//			if (mNoise != null)
-//				mNoise.stopRecording();
+			// if (mNoise != null)
+			// mNoise.stopRecording();
 
 		} catch (IOException e) {
 		}
+	}
+
+	public void sendMessage(String message) {
+		mPrintWriter.println(message);
 	}
 }
