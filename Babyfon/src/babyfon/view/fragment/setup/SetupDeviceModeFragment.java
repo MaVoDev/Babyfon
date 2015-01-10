@@ -2,14 +2,12 @@ package babyfon.view.fragment.setup;
 
 import babyfon.init.R;
 import babyfon.settings.SharedPrefs;
-import babyfon.view.fragment.setup.babymode.SetupConnectionBabyFragment;
-import babyfon.view.fragment.setup.parentmode.SetupConnectionParentsFragment;
 import babyfon.view.fragment.setup.parentmode.SetupSearchDevicesFragment;
-import android.app.Fragment;
-import android.app.FragmentManager;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
