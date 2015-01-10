@@ -13,7 +13,7 @@ import android.widget.TextView;
 public class BabymonitorFragment extends Fragment {
 
 	// Define UI elements
-	private TextView textTitleBabymonitor;
+	private TextView title;
 
 	public String batteryLevel = "n/a";
 
@@ -47,8 +47,8 @@ public class BabymonitorFragment extends Fragment {
 		Typeface mTypeface = Typeface.createFromAsset(mContext.getAssets(), "fonts/BOOKOSBI.TTF");
 
 		// Initialize TextViews
-		textTitleBabymonitor = (TextView) view.findViewById(R.id.text_titleBabymonitor);
-		textTitleBabymonitor.setTypeface(mTypeface);
+		title = (TextView) view.findViewById(R.id.title_baby_monitor);
+		title.setTypeface(mTypeface);
 
 		textBatteryLevel = (TextView) view.findViewById(R.id.textBatteryLevel);
 	}
@@ -56,7 +56,7 @@ public class BabymonitorFragment extends Fragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-		View view = inflater.inflate(R.layout.layout_babymonitor, container, false);
+		View view = inflater.inflate(R.layout.main_babymonitor, container, false);
 
 		initUiElements(view);
 		updateUI();

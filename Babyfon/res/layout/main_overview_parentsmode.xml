@@ -1,0 +1,21 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/layout_content" >
+
+    <LinearLayout style="@style/layout_header" >
+
+        <TextView
+            android:id="@+id/title_overview_parentsmode"
+            style="@style/fragmentTitle"
+            android:text="@string/title_overview" >
+        </TextView>
+    </LinearLayout>
+
+    <LinearLayout style="@style/layout_body" >
+
+    </LinearLayout>
+
+    <LinearLayout style="@style/layout_footer" >
+
+    </LinearLayout>
+
+</LinearLayout>

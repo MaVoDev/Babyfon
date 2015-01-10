@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import babyfon.model.NavigationDrawerItemModel;
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Typeface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,11 +17,11 @@ import android.widget.TextView;
 
 public class NavigationDrawerListAdapter extends BaseAdapter {
 
-	private Context context;
+	private Context mContext;
 	private ArrayList<NavigationDrawerItemModel> navDrawerItems;
 
 	public NavigationDrawerListAdapter(Context context, ArrayList<NavigationDrawerItemModel> navDrawerItems) {
-		this.context = context;
+		this.mContext = context;
 		this.navDrawerItems = navDrawerItems;
 	}
 
@@ -42,7 +43,7 @@ public class NavigationDrawerListAdapter extends BaseAdapter {
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 		if (convertView == null) {
-			LayoutInflater mInflater = (LayoutInflater) context.getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
+			LayoutInflater mInflater = (LayoutInflater) mContext.getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
 			convertView = mInflater.inflate(R.layout.drawer_list_item, null);
 		}
 
@@ -52,6 +53,11 @@ public class NavigationDrawerListAdapter extends BaseAdapter {
 
 		imgIcon.setImageResource(navDrawerItems.get(position).getIcon());
 		txtTitle.setText(navDrawerItems.get(position).getTitle());
+
+		// Set Typeface
+		Typeface mTypeface_i = Typeface.createFromAsset(mContext.getAssets(), "fonts/BOOKOSI.TTF");
+		txtTitle.setTypeface(mTypeface_i);
+		txtCount.setTypeface(mTypeface_i);
 
 		// displaying count
 		// check whether it set visible or not

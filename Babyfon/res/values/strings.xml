@@ -12,23 +12,27 @@
     <string name="MESSAGE_SMS">BABYFON_MSG_SMS</string>
     <string name="MESSAGE_CALL">BABYFON_MSG_CALL</string>
 
-    <!-- Strings related to navigation drawer -->
-    <string name="nav_babymonitor">Babymonitor</string>
-    <string name="nav_overview">Übersicht</string>
-    <string name="nav_absence">Anrufe und SMS</string>
-    <string name="nav_setup">Einrichtungsassisitent</string>
+    <!-- Titles -->
+    <string name="title_baby_monitor">Babymonitor</string>
+    <string name="title_overview">Übersicht</string>
+    <string name="title_absence">Anrufe / SMS</string>
+    <string name="title_setup">Einrichtungsassisitent</string>
+    <string name="title_connection">Verbindung</string>
+    <string name="title_device_mode">Verbindung</string>
 
     <!-- # -->
     <string name="ip_localhost">127.0.0.1</string>
+    <string name="btn_complete_setup">Einrichtung abschließen</string>
+    <string name="btn_delete_list">Liste löschen</string>
 
     <!-- A -->
     <string name="app_name">Babyfon</string>
 
     <!-- B -->
 
-    <string name="connect_bluetooth">Bluetooth</string>
-    <string name="connect_wifi">Wi-Fi</string>
-    <string name="connect_wifip2p">Wi-Fi Direct</string>
+    <string name="bluetooth">Bluetooth</string>
+    <string name="wifi">Wi-Fi</string>
+    <string name="wifip2p">Wi-Fi Direct</string>
     <string name="connect_null">-</string>
 
     <!-- F -->

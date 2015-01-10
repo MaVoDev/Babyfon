@@ -88,7 +88,7 @@ public class SetupSearchDevicesFragment extends Fragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-		View view = inflater.inflate(R.layout.layout_setup_search, container, false);
+		View view = inflater.inflate(R.layout.setup_search, container, false);
 
 		final FragmentManager fragmentManager = getFragmentManager();
 
@@ -138,7 +138,7 @@ public class SetupSearchDevicesFragment extends Fragment {
 	}
 
 	public void initViewBluetooth() {
-		titleConnectivity.setText(getString(R.string.connect_bluetooth));
+		titleConnectivity.setText(getString(R.string.bluetooth));
 
 		BluetoothListAdapter deviceListAdapter = new BluetoothListAdapter(mContext, R.layout.bluetooth_row_element);
 		mConnection = new BluetoothConnection(mContext, deviceListAdapter);
@@ -150,12 +150,12 @@ public class SetupSearchDevicesFragment extends Fragment {
 	}
 
 	public void initViewBWifi() {
-		titleConnectivity.setText(getString(R.string.connect_wifi));
+		titleConnectivity.setText(getString(R.string.wifi));
 		new UDPBroadcastSender(mContext).sendUDPMessage(new WifiHandler(mContext).getNetworkAddressClassC());
 	}
 
 	public void initViewBWifiDirect() {
-		titleConnectivity.setText(getString(R.string.connect_wifip2p));
+		titleConnectivity.setText(getString(R.string.wifip2p));
 	}
 
 	public void setNewDevice(String ip, String name) {

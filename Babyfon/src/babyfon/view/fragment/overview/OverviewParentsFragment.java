@@ -14,7 +14,7 @@ import android.widget.TextView;
 public class OverviewParentsFragment extends Fragment {
 
 	// Define UI elements
-	private TextView textTitleOverviewParents;
+	private TextView title;
 	// private TextView tvConnectivityType;
 	// private TextView tvDeviceMode;
 
@@ -39,8 +39,8 @@ public class OverviewParentsFragment extends Fragment {
 		Typeface mTypeface = Typeface.createFromAsset(mContext.getAssets(), "fonts/BOOKOSBI.TTF");
 
 		// Initialize TextViews
-		textTitleOverviewParents = (TextView) view.findViewById(R.id.text_titleOverviewParents);
-		textTitleOverviewParents.setTypeface(mTypeface);
+		title = (TextView) view.findViewById(R.id.title_overview_parentsmode);
+		title.setTypeface(mTypeface);
 
 		// Initialize TextViews
 		// tvConnectivityType = (TextView)
@@ -62,7 +62,7 @@ public class OverviewParentsFragment extends Fragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-		View view = inflater.inflate(R.layout.layout_overview_parentsmode, container, false);
+		View view = inflater.inflate(R.layout.main_overview_parentsmode, container, false);
 
 		initUiElements(view);
 

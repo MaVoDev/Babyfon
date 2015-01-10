@@ -18,10 +18,11 @@ import android.widget.TextView;
 public class SetupPrivacyFragment extends Fragment {
 
 	// Define ui elements
-	private Button btnForwardSetupPrivacy;
+	private Button btnBackward;
+	private Button btnForward;
 	private CheckBox chkboxPrivacyCall;
 	private CheckBox chkboxPrivacySMS;
-	private TextView textTitlePrivacy;
+	private TextView title;
 
 	// Fragments
 	private SetupCompleteBabyModeFragment mCompleteSetupFragment;
@@ -38,6 +39,17 @@ public class SetupPrivacyFragment extends Fragment {
 		this.mContext = mContext;
 	}
 
+	public void updateUI() {
+		// Update buttons
+		if (mSharedPrefs.getGender() == 0) {
+			btnBackward.setBackgroundResource(R.drawable.btn_selector_male);
+			btnForward.setBackgroundResource(R.drawable.btn_selector_male);
+		} else {
+			btnBackward.setBackgroundResource(R.drawable.btn_selector_female);
+			btnForward.setBackgroundResource(R.drawable.btn_selector_female);
+		}
+	}
+
 	/**
 	 * Initialize the UI elements
 	 * 
@@ -45,30 +57,36 @@ public class SetupPrivacyFragment extends Fragment {
 	 */
 	private void initUiElements(View view) {
 		// Set Typeface
-		Typeface mTypeface = Typeface.createFromAsset(mContext.getAssets(), "fonts/BOOKOSBI.TTF");
+		Typeface mTypeface_bi = Typeface.createFromAsset(mContext.getAssets(), "fonts/BOOKOSBI.TTF");
+		Typeface mTypeface_i = Typeface.createFromAsset(mContext.getAssets(), "fonts/BOOKOSI.TTF");
 
 		// Initialize Buttons
-		btnForwardSetupPrivacy = (Button) view.findViewById(R.id.btn_forwardSetupPrivacy);
+		btnBackward = (Button) view.findViewById(R.id.btn_backwardSetupPrivacy);
+		btnBackward.setTypeface(mTypeface_i);
+		btnForward = (Button) view.findViewById(R.id.btn_forwardSetupPrivacy);
+		btnForward.setTypeface(mTypeface_i);
 
 		// Initialize Checkboxes
 		chkboxPrivacyCall = (CheckBox) view.findViewById(R.id.chkbox_privacyCall);
 		chkboxPrivacySMS = (CheckBox) view.findViewById(R.id.chkbox_privacySMS);
 
 		// Initialize TextViews
-		textTitlePrivacy = (TextView) view.findViewById(R.id.text_titlePrivacy);
-		textTitlePrivacy.setTypeface(mTypeface);
+		title = (TextView) view.findViewById(R.id.text_titleSetupPrivacy);
+		title.setTypeface(mTypeface_bi);
+		
+		updateUI();
 	}
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-		View view = inflater.inflate(R.layout.layout_setup_privacy, container, false);
+		View view = inflater.inflate(R.layout.setup_privacy, container, false);
 
 		final FragmentManager fragmentManager = getFragmentManager();
 
 		initUiElements(view);
 
-		btnForwardSetupPrivacy.setOnClickListener(new OnClickListener() {
+		btnForward.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
 
@@ -90,5 +108,13 @@ public class SetupPrivacyFragment extends Fragment {
 		});
 
 		return view;
+	}
+
+	@Override
+	public void onResume() {
+		super.onResume();
+		if (btnBackward != null && btnForward != null) {
+			updateUI();
+		}
 	}
 }

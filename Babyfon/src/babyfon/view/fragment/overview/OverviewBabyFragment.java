@@ -14,7 +14,7 @@ import android.widget.TextView;
 public class OverviewBabyFragment extends Fragment {
 
 	// Define UI elements
-	private TextView textTitleOverviewParents;
+	private TextView title;
 
 	private SharedPrefs mSharedPrefs;
 
@@ -37,14 +37,14 @@ public class OverviewBabyFragment extends Fragment {
 		Typeface mTypeface = Typeface.createFromAsset(mContext.getAssets(), "fonts/BOOKOSBI.TTF");
 
 		// Initialize TextViews
-		textTitleOverviewParents = (TextView) view.findViewById(R.id.text_titleOverviewBaby);
-		textTitleOverviewParents.setTypeface(mTypeface);
+		title = (TextView) view.findViewById(R.id.title_overview_babymode);
+		title.setTypeface(mTypeface);
 	}
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-		View view = inflater.inflate(R.layout.layout_overview_babymode, container, false);
+		View view = inflater.inflate(R.layout.main_overview_babymode, container, false);
 
 		initUiElements(view);
 

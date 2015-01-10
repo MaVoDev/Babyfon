@@ -1,0 +1,24 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/layout_content" >
+
+    <LinearLayout style="@style/layout_header" >
+
+        <TextView
+            android:id="@+id/title_absence"
+            style="@style/fragmentTitle"
+            android:text="@string/title_absence" >
+        </TextView>
+    </LinearLayout>
+
+    <LinearLayout style="@style/layout_body" >
+    </LinearLayout>
+
+    <LinearLayout style="@style/layout_footer" >
+
+        <Button
+            android:id="@+id/btn_delete_list"
+            style="@style/button_footer_single"
+            android:text="@string/btn_delete_list" />
+    </LinearLayout>
+
+</LinearLayout>
