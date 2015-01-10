@@ -29,6 +29,7 @@ public class BluetoothConnection implements ConnectionInterface {
 	private OnSearchStatusChangedListener mOnSearchStatusChangedListener;
 	private OnReceiveMsgListener mOnReceiveMsgListener;
 	private OnConnectionLostListener mOnConnectionLostListener;
+	private OnConnnectedListener mOnConnnectedListener;
 
 	// Receiver
 	private final BroadcastReceiver mReceiver = new BroadcastReceiver() {
@@ -61,8 +62,9 @@ public class BluetoothConnection implements ConnectionInterface {
 
 		if (mBluetoothAdapter.getScanMode() != BluetoothAdapter.SCAN_MODE_CONNECTABLE_DISCOVERABLE)
 			enableDiscoverability();
-		
+
 		mBluetoothServer = new BluetoothServerThread(mBluetoothAdapter, this);
+		mBluetoothServer.start();
 	}
 
 	// Konstruktor
@@ -201,6 +203,11 @@ public class BluetoothConnection implements ConnectionInterface {
 	}
 
 	@Override
+	public void setOnConnnectedListener(OnConnnectedListener l) {
+		this.mOnConnnectedListener = l;
+	}
+
+	@Override
 	public void closeConnection() {
 		// TODO Disconnect Zeug
 	}
@@ -209,7 +216,7 @@ public class BluetoothConnection implements ConnectionInterface {
 	public void sendMessage(String message) {
 		if (mBluetoothCLient != null)
 			mBluetoothCLient.sendMessage(message);
-		else if(mBluetoothServer != null)
+		else if (mBluetoothServer != null)
 			mBluetoothServer.sendMessage(message);
 	}
 
@@ -221,6 +228,10 @@ public class BluetoothConnection implements ConnectionInterface {
 
 	public OnConnectionLostListener getOnConnectionLostListener() {
 		return mOnConnectionLostListener;
+	}
+
+	public OnConnnectedListener getmOnConnnectedListener() {
+		return mOnConnnectedListener;
 	}
 
 	public OnReceiveMsgListener getOnReceiveMsgListener() {

@@ -3,6 +3,7 @@ package babyfon.view.fragment.setup.parentmode;
 import java.util.ArrayList;
 
 import babyfon.connectivity.ConnectionInterface;
+import babyfon.connectivity.ConnectionInterface.OnConnnectedListener;
 import babyfon.connectivity.ConnectionInterface.OnReceiveMsgListener;
 import babyfon.connectivity.ConnectionInterface.OnSearchStatusChangedListener;
 import babyfon.connectivity.bluetooth.BluetoothConnection;
@@ -39,8 +40,9 @@ public class SetupSearchDevicesFragment extends Fragment {
 	private Button btnCompleteSetup;
 	private Button btnSearchDevices;
 	private Button btnSendMsg;
-	private TextView titleConnectivity;
-	private TextView lastReceivedMsg;
+	private TextView titleConnectivityTV;
+	private TextView lastReceivedMsgTV;
+	private TextView connectionStatusTV;
 	private ProgressBar progressBarSearchDevices;
 
 	private ArrayList<BabyfonDevice> device;
@@ -83,8 +85,9 @@ public class SetupSearchDevicesFragment extends Fragment {
 		progressBarSearchDevices = (ProgressBar) view.findViewById(R.id.progressBar_searching);
 
 		// Initialize TextViews
-		titleConnectivity = (TextView) view.findViewById(R.id.titleConnectivity);
-		lastReceivedMsg = (TextView) view.findViewById(R.id.tv_lastReceivedMsg);
+		titleConnectivityTV = (TextView) view.findViewById(R.id.titleConnectivity);
+		lastReceivedMsgTV = (TextView) view.findViewById(R.id.tv_lastReceivedMsg);
+		connectionStatusTV = (TextView) view.findViewById(R.id.tv_connectionStatus);
 
 	}
 
@@ -149,16 +152,6 @@ public class SetupSearchDevicesFragment extends Fragment {
 			}
 		});
 
-		btnSendMsg.setOnClickListener(new OnClickListener() {
-
-			private int mCount = 0;
-
-			@Override
-			public void onClick(View v) {
-				mConnection.sendMessage("NACHRICHT " + mCount++);
-			}
-		});
-
 		return view;
 	}
 
@@ -168,13 +161,18 @@ public class SetupSearchDevicesFragment extends Fragment {
 
 		// BABY MODE
 		if (mSharedPrefs.getDeviceMode() == 0) {
-			titleConnectivity.setText(getString(R.string.bluetooth) + " BABY (Server)");
+
+			Log.i(TAG, "BABY MODE BLUETOOTH");
+
+			titleConnectivityTV.setText(getString(R.string.bluetooth) + " BABY (Server)");
 
 			mConnection = new BluetoothConnection(mContext);
 		}
 		// PARENT MODE
 		else {
-			titleConnectivity.setText(getString(R.string.bluetooth) + " PARENTS (Client)");
+			Log.i(TAG, "PARENT MODE BLUETOOTH");
+
+			titleConnectivityTV.setText(getString(R.string.bluetooth) + " PARENTS (Client)");
 
 			BluetoothListAdapter deviceListAdapter = new BluetoothListAdapter(mContext, R.layout.bluetooth_row_element);
 			mConnection = new BluetoothConnection(mContext, deviceListAdapter);
@@ -184,6 +182,16 @@ public class SetupSearchDevicesFragment extends Fragment {
 			// gucken ob es funzt
 			listViewDevices.setAdapter(deviceListAdapter);
 		}
+
+		btnSendMsg.setOnClickListener(new OnClickListener() {
+
+			private int mCount = 0;
+
+			@Override
+			public void onClick(View v) {
+				mConnection.sendMessage("NACHRICHT " + mCount++);
+			}
+		});
 
 		//
 		// <Listener>
@@ -203,8 +211,26 @@ public class SetupSearchDevicesFragment extends Fragment {
 
 		mConnection.setOnReceiveMsgListener(new OnReceiveMsgListener() {
 			@Override
-			public void onReceiveMsgListener(String msg) {
-				lastReceivedMsg.setText(msg);
+			public void onReceiveMsgListener(final String msg) {
+				getActivity().runOnUiThread(new Runnable() {
+
+					@Override
+					public void run() {
+						lastReceivedMsgTV.setText(msg);
+					}
+				});
+			}
+		});
+
+		mConnection.setOnConnnectedListener(new OnConnnectedListener() {
+			@Override
+			public void onConnectedListener(final String deviceName) {
+				getActivity().runOnUiThread(new Runnable() {
+					@Override
+					public void run() {
+						connectionStatusTV.setText("Connected to: " + deviceName);
+					}
+				});
 			}
 		});
 
@@ -215,12 +241,12 @@ public class SetupSearchDevicesFragment extends Fragment {
 	}
 
 	public void initViewBWifi() {
-		titleConnectivity.setText(getString(R.string.wifi));
+		titleConnectivityTV.setText(getString(R.string.wifi));
 		new UDPBroadcastSender(mContext).sendUDPMessage(new WifiHandler(mContext).getNetworkAddressClassC());
 	}
 
 	public void initViewBWifiDirect() {
-		titleConnectivity.setText(getString(R.string.wifip2p));
+		titleConnectivityTV.setText(getString(R.string.wifip2p));
 	}
 
 	public void setNewDevice(String ip, String name) {

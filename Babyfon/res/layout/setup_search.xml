@@ -10,13 +10,22 @@
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="31dp"
+        android:text="TITLE"
+        android:textSize="16dp" />
+    <TextView
+        android:id="@+id/tv_connectionStatus"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@id/titleConnectivity"
+        android:text="CONNECTION STATUS"
         android:textSize="16dp" />
 
     <Button
         android:id="@+id/btn_searchDevices"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/titleConnectivity"
+        android:layout_below="@id/tv_connectionStatus"
         android:text="Search..." />
 
     <ProgressBar

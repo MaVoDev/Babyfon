@@ -30,7 +30,7 @@ public class BluetoothServerThread extends Thread {
 	public BluetoothServerThread(BluetoothAdapter mBluetoothAdapter, BluetoothConnection bluetoothConnection) {
 
 		this.mBTConnection = bluetoothConnection;
-		
+
 		// Use a temporary object that is later assigned to mmServerSocket,
 		// because mmServerSocket is final
 		BluetoothServerSocket tmp = null;
@@ -44,6 +44,7 @@ public class BluetoothServerThread extends Thread {
 		mmServerSocket = tmp;
 	}
 
+	@Override
 	public void run() {
 		mSocket = null;
 		// Keep listening until exception occurs or a socket is returned
@@ -57,9 +58,6 @@ public class BluetoothServerThread extends Thread {
 			if (mSocket != null) {
 				// Do work to manage the connection (in a separate thread)
 				// manageConnectedSocket(socket);
-
-				Log.i(TAG, "SOCKET CONNECTED!!!!!!!! [Name: " + mSocket.getRemoteDevice().getName() + "; MAC: "
-						+ mSocket.getRemoteDevice().getAddress() + "]");
 
 				// Start sending Audio to client
 				// mNoise = new AudioRecording(mSocket);
@@ -87,6 +85,7 @@ public class BluetoothServerThread extends Thread {
 
 								// Leite die empfangenen Nachrichten an den OnReceiveMsgListener weiter
 								while (isRunning && (msg = mBufferedReader.readLine()) != null) {
+									Log.i(TAG, "Message received: " + msg);
 									if (listener != null)
 										listener.onReceiveMsgListener(msg);
 								}
@@ -101,6 +100,7 @@ public class BluetoothServerThread extends Thread {
 					}).start();
 				} catch (IOException e) {
 					e.printStackTrace();
+					Log.e(TAG, "Error during Connection: " + e.getMessage());
 				}
 
 				try {
@@ -113,6 +113,12 @@ public class BluetoothServerThread extends Thread {
 					e.printStackTrace();
 				}
 
+				Log.i(TAG, "SOCKET CONNECTED!!!!!!!! [Name: " + mSocket.getRemoteDevice().getName() + "; MAC: "
+						+ mSocket.getRemoteDevice().getAddress() + "]");
+
+				mBTConnection.getmOnConnnectedListener().onConnectedListener(mSocket.getRemoteDevice().getName());
+
+				// STOP WHILE SCHLEIFE
 				break;
 			}
 		}
@@ -136,7 +142,26 @@ public class BluetoothServerThread extends Thread {
 		}
 	}
 
-	public void sendMessage(String message) {
-		mPrintWriter.println(message);
+	public void sendMessage(String msg) {
+		if (mPrintWriter != null) {
+			Log.i(TAG, "Sending message over PrintWriter.");
+			mPrintWriter.println(msg);
+			mPrintWriter.flush();
+		} else {
+			Log.i(TAG, "No Message sent. PrintWriter is null!");
+		}
+
+		// if (mmOutStream != null) {
+		// Log.i(TAG, "Sending message over PrintWriter.");
+		// try {
+		// mmOutStream.write(msg.getBytes());
+		// } catch (IOException e) {
+		// // TODO Auto-generated catch block
+		// e.printStackTrace();
+		// }
+		// } else {
+		// Log.i(TAG, "No Message sent. mmOutStream is null!");
+		// }
+
 	}
 }

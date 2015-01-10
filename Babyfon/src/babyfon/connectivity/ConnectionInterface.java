@@ -33,9 +33,17 @@ public interface ConnectionInterface {
 		void onConnectionLostListener(String errorMsg);
 	}
 
+	public interface OnConnnectedListener {
+
+		void onConnectedListener(String deviceName);
+	}
+
 	public void setOnSearchStatusChangedListener(OnSearchStatusChangedListener l);
 
 	public void setOnReceiveMsgListener(OnReceiveMsgListener l);
 
 	public void setOnConnectionLostListener(OnConnectionLostListener l);
+
+	public void setOnConnnectedListener(OnConnnectedListener l);
+
 }

@@ -16,7 +16,7 @@ import android.util.Log;
 
 public class BluetoothClientThread extends Thread {
 	private static final String TAG = BluetoothClientThread.class.getCanonicalName();
-	private final BluetoothSocket mmSocket;
+	private final BluetoothSocket mSocket;
 	private final BluetoothDevice mmDevice;
 	private BluetoothAdapter mBluetoothAdapter;
 	private BluetoothConnection mBTConnection;
@@ -43,7 +43,7 @@ public class BluetoothClientThread extends Thread {
 			tmp = device.createRfcommSocketToServiceRecord(UUID.fromString("5644D080-6B9F-11E4-9803-0800200C9A66"));
 		} catch (IOException e) {
 		}
-		mmSocket = tmp;
+		mSocket = tmp;
 	}
 
 	@Override
@@ -54,7 +54,7 @@ public class BluetoothClientThread extends Thread {
 		try {
 			// Connect the device through the socket. This will block until it
 			// succeeds or throws an exception
-			mmSocket.connect();
+			mSocket.connect();
 		} catch (IOException connectException) {
 			// Unable to connect; close the socket and get out
 			try {
@@ -62,7 +62,7 @@ public class BluetoothClientThread extends Thread {
 				// ist
 				// ...und User fragen, ob auf dem Gerät die Babyfon-App läuft
 				Log.e(TAG, "Connection error: " + connectException.getMessage());
-				mmSocket.close();
+				mSocket.close();
 			} catch (IOException closeException) {
 				Log.e(TAG, "Error on Closing Socket: " + closeException.getMessage());
 			}
@@ -74,14 +74,14 @@ public class BluetoothClientThread extends Thread {
 		}
 
 		// Do work to manage the connection (in a separate thread)
-		Log.i(TAG, "CONNECTED SUCCESSFULLY TO SERVER!!!!!!!! [Name: " + mmSocket.getRemoteDevice().getName() + "; MAC: "
-				+ mmSocket.getRemoteDevice().getAddress() + "]");
+		Log.i(TAG, "CONNECTED SUCCESSFULLY TO SERVER!!!!!!!! [Name: " + mSocket.getRemoteDevice().getName() + "; MAC: "
+				+ mSocket.getRemoteDevice().getAddress() + "]");
 
 		try {
 			isRunning = true;
 
-			mmInStream = mmSocket.getInputStream();
-			mmOutStream = mmSocket.getOutputStream();
+			mmInStream = mSocket.getInputStream();
+			mmOutStream = mSocket.getOutputStream();
 			mPrintWriter = new PrintWriter(mmOutStream);
 			mBufferedReader = new BufferedReader(new InputStreamReader(mmInStream));
 
@@ -99,6 +99,7 @@ public class BluetoothClientThread extends Thread {
 
 						// Leite die empfangenen Nachrichten an den OnReceiveMsgListener weiter
 						while (isRunning && (msg = mBufferedReader.readLine()) != null) {
+							Log.i(TAG, "Message received: " + msg);
 							if (listener != null)
 								listener.onReceiveMsgListener(msg);
 						}
@@ -111,21 +112,44 @@ public class BluetoothClientThread extends Thread {
 					Log.i(TAG, "STOP listening for messages...");
 				}
 			}).start();
+
+			mBTConnection.getmOnConnnectedListener().onConnectedListener(mSocket.getRemoteDevice().getName());
 		} catch (IOException e) {
 			e.printStackTrace();
+			Log.e(TAG, "Error during Connection: " + e.getMessage());
 		}
+
 		// new BluetoothReceiver(mmSocket, mBTConnection.getOnReceiveMsgListener());
 
 	}
 
 	public void sendMessage(String msg) {
-		mPrintWriter.println(msg);
+		if (mPrintWriter != null) {
+			Log.i(TAG, "Sending message over PrintWriter.");
+			mPrintWriter.println(msg);
+			mPrintWriter.flush();
+		} else {
+			Log.i(TAG, "No Message sent. PrintWriter is null!");
+		}
+
+		// if (mmOutStream != null) {
+		// Log.i(TAG, "Sending message over PrintWriter.");
+		// try {
+		// mmOutStream.write(msg.getBytes());
+		// } catch (IOException e) {
+		// // TODO Auto-generated catch block
+		// e.printStackTrace();
+		// }
+		// } else {
+		// Log.i(TAG, "No Message sent. mmOutStream is null!");
+		// }
+
 	}
 
 	/** Will cancel an in-progress connection, and close the socket */
 	public void cancel() {
 		try {
-			mmSocket.close();
+			mSocket.close();
 		} catch (IOException e) {
 		}
 	}
