@@ -23,7 +23,7 @@ public class SetupStartFragment extends Fragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-		View view = inflater.inflate(R.layout.layout_setup_start, container, false);
+		View view = inflater.inflate(R.layout.main_setup, container, false);
 
 		final FragmentManager fragmentManager = getFragmentManager();
 		

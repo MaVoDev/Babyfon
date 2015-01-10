@@ -29,17 +29,22 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.content.res.TypedArray;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.widget.DrawerLayout;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.style.TypefaceSpan;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 
 public class MainActivity extends FragmentActivity {
@@ -131,6 +136,8 @@ public class MainActivity extends FragmentActivity {
 		// enabling action bar app icon and behaving it as toggle button
 		getActionBar().setDisplayHomeAsUpEnabled(true);
 		getActionBar().setHomeButtonEnabled(true);
+		
+		
 
 		// Drawer Layout, Drawer Icon, Drawer Name (Drawer open, close)
 		mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, R.drawable.ic_drawer, R.string.app_name, R.string.app_name) {
@@ -190,19 +197,19 @@ public class MainActivity extends FragmentActivity {
 		super.onResume();
 
 		ActionBar actionBar = getActionBar();
-		FrameLayout layout = (FrameLayout) findViewById(R.id.frame_container);
-
+		FrameLayout frameLayout = (FrameLayout) findViewById(R.id.frame_container);
+		
 		// Layout related to the gender of the baby
 		if (mSharedPrefs.getGender() == 0) {
 			// Set action bar color
 			actionBar.setBackgroundDrawable(getResources().getDrawable(R.drawable.bg_actionbar_male));
 			// Set layout background color
-			layout.setBackgroundResource(R.drawable.bg_male);
+			frameLayout.setBackgroundResource(R.drawable.bg_male);
 		} else {
 			// Set action bar color
 			actionBar.setBackgroundDrawable(getResources().getDrawable(R.drawable.bg_actionbar_female));
 			// Set layout background color
-			layout.setBackgroundResource(R.drawable.bg_female);
+			frameLayout.setBackgroundResource(R.drawable.bg_female);
 		}
 	}
 

@@ -4,36 +4,29 @@
     <LinearLayout style="@style/layout_header" >
 
         <TextView
-            android:id="@+id/text_titleConnectionBaby"
+            android:id="@+id/title_device_mode"
             style="@style/fragmentTitle"
-            android:text="@string/title_connection" />
+            android:text="@string/title_device_mode" />
     </LinearLayout>
 
     <LinearLayout style="@style/layout_body" >
 
-        <CheckBox
-            android:id="@+id/chkBoxConnectionWifi"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="32dp"
-            android:checked="true"
-            android:text="@string/wifi" />
+        <ImageView
+            android:id="@+id/imgbtn_baby"
+            android:layout_width="250dp"
+            android:layout_height="125dp"
+            android:layout_gravity="center"
+            android:scaleType="fitXY"
+            android:src="@drawable/btn_baby" />
 
-        <CheckBox
-            android:id="@+id/chkBoxConnectionWifiDirect"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:checked="true"
-            android:text="@string/wifip2p" />
-
-        <CheckBox
-            android:id="@+id/chkBoxConnectionBluetooth"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="32dp"
-            android:checked="true"
-            android:text="@string/bluetooth" />
-
+        <ImageView
+            android:id="@+id/imgbtn_parents"
+            android:layout_width="250dp"
+            android:layout_height="125dp"
+            android:layout_gravity="center"
+            android:layout_marginTop="12dp"
+            android:scaleType="fitXY"
+            android:src="@drawable/btn_parents" />
     </LinearLayout>
 
     <LinearLayout style="@style/layout_footer" >
@@ -45,7 +38,7 @@
             android:layout_weight="1" >
 
             <Button
-                android:id="@+id/btn_backwardSetupConnectionBabyMode"
+                android:id="@+id/btn_backwardSetupDeviceMode"
                 style="@style/button_footer_left"
                 android:text="@string/backward" />
         </LinearLayout>
@@ -57,7 +50,7 @@
             android:layout_weight="1" >
 
             <Button
-                android:id="@+id/btn_forwardSetupConnectionBabyMode"
+                android:id="@+id/btn_forwardSetupDeviceMode"
                 style="@style/button_footer_right"
                 android:text="@string/forward" />
         </LinearLayout>

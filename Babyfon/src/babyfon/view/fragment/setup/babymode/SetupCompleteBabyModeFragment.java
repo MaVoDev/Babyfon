@@ -10,6 +10,7 @@ import babyfon.view.fragment.overview.OverviewBabyFragment;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.Context;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -22,8 +23,9 @@ import android.widget.TextView;
 public class SetupCompleteBabyModeFragment extends Fragment {
 
 	// Define UI elements
-	private Button btnCompleteSetup;
+	private Button btnForward;
 	private TextView tvPassword;
+	private TextView title;
 
 	private SharedPrefs mSharedPrefs;
 	private Sound mSound;
@@ -40,17 +42,35 @@ public class SetupCompleteBabyModeFragment extends Fragment {
 		this.mContext = mContext;
 	}
 
+	public void updateUI() {
+		// Update buttons
+		if (mSharedPrefs.getGender() == 0) {
+			btnForward.setBackgroundResource(R.drawable.btn_selector_male);
+		} else {
+			btnForward.setBackgroundResource(R.drawable.btn_selector_female);
+		}
+	}
+
 	/**
 	 * Initialize the UI elements
 	 * 
 	 * @param view
 	 */
 	private void initUiElements(View view) {
+		// Set Typeface
+		Typeface mTypeface_bi = Typeface.createFromAsset(mContext.getAssets(), "fonts/BOOKOSBI.TTF");
+		Typeface mTypeface_i = Typeface.createFromAsset(mContext.getAssets(), "fonts/BOOKOSI.TTF");
+
 		// Initialize Button
-		btnCompleteSetup = (Button) view.findViewById(R.id.btn_complete_setup);
+		btnForward = (Button) view.findViewById(R.id.btn_setup_complete);
+		btnForward.setTypeface(mTypeface_i);
 
 		// Initialize TextViews
+		title = (TextView) view.findViewById(R.id.text_titleSetupComplete);
+		title.setTypeface(mTypeface_bi);
 		tvPassword = (TextView) view.findViewById(R.id.tv_password);
+		
+		updateUI();
 	}
 
 	@Override
@@ -65,7 +85,7 @@ public class SetupCompleteBabyModeFragment extends Fragment {
 			MainActivity.mUDPReceiver.start();
 		}
 
-		View view = inflater.inflate(R.layout.layout_setup_completebabymode, container, false);
+		View view = inflater.inflate(R.layout.setup_complete_babymode, container, false);
 
 		final FragmentManager fragmentManager = getFragmentManager();
 
@@ -76,7 +96,7 @@ public class SetupCompleteBabyModeFragment extends Fragment {
 		mSound.mute();
 
 		// OnClickListener for the Button btnCompleteSetup
-		btnCompleteSetup.setOnClickListener(new OnClickListener() {
+		btnForward.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
 
@@ -97,5 +117,13 @@ public class SetupCompleteBabyModeFragment extends Fragment {
 		mSharedPrefs.setPassword(password);
 
 		return password;
+	}
+
+	@Override
+	public void onResume() {
+		super.onResume();
+		if (btnForward != null) {
+			updateUI();
+		}
 	}
 }

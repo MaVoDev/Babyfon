@@ -100,7 +100,7 @@ public class SetupSearchDevicesFragment extends Fragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-		View view = inflater.inflate(R.layout.layout_setup_search, container, false);
+		View view = inflater.inflate(R.layout.setup_search, container, false);
 
 		final FragmentManager fragmentManager = getFragmentManager();
 
@@ -163,16 +163,18 @@ public class SetupSearchDevicesFragment extends Fragment {
 	}
 
 	public void initViewBluetooth() {
+		// TODO TEST; wieder rein VS!
+		// titleConnectivity.setText(getString(R.string.bluetooth));
 
 		// BABY MODE
 		if (mSharedPrefs.getDeviceMode() == 0) {
-			titleConnectivity.setText(getString(R.string.connect_bluetooth) + " BABY (Server)");
+			titleConnectivity.setText(getString(R.string.bluetooth) + " BABY (Server)");
 
 			mConnection = new BluetoothConnection(mContext);
 		}
 		// PARENT MODE
 		else {
-			titleConnectivity.setText(getString(R.string.connect_bluetooth) + " PARENTS (Client)");
+			titleConnectivity.setText(getString(R.string.bluetooth) + " PARENTS (Client)");
 
 			BluetoothListAdapter deviceListAdapter = new BluetoothListAdapter(mContext, R.layout.bluetooth_row_element);
 			mConnection = new BluetoothConnection(mContext, deviceListAdapter);
@@ -213,12 +215,12 @@ public class SetupSearchDevicesFragment extends Fragment {
 	}
 
 	public void initViewBWifi() {
-		titleConnectivity.setText(getString(R.string.connect_wifi));
+		titleConnectivity.setText(getString(R.string.wifi));
 		new UDPBroadcastSender(mContext).sendUDPMessage(new WifiHandler(mContext).getNetworkAddressClassC());
 	}
 
 	public void initViewBWifiDirect() {
-		titleConnectivity.setText(getString(R.string.connect_wifip2p));
+		titleConnectivity.setText(getString(R.string.wifip2p));
 	}
 
 	public void setNewDevice(String ip, String name) {

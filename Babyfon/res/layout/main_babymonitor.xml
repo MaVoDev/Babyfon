@@ -1,12 +1,16 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:orientation="vertical" >
+    style="@style/layout_content" >
 
-    <TextView
-        android:id="@+id/text_titleBabymonitor"
-        style="@style/fragmentTitle"
-        android:text="Babymonitor" />
+    <LinearLayout style="@style/layout_header" >
+
+        <TextView
+            android:id="@+id/title_baby_monitor"
+            style="@style/fragmentTitle"
+            android:text="@string/title_baby_monitor" >
+        </TextView>
+    </LinearLayout>
+
+    <LinearLayout style="@style/layout_body" >
 
     <ImageView
         android:id="@+id/imageView1"
@@ -26,5 +30,10 @@
         android:layout_marginBottom="18dp"
         android:layout_marginRight="11dp"
         android:text="100%" />
+    </LinearLayout>
+
+    <LinearLayout style="@style/layout_footer" >
+
+    </LinearLayout>
 
 </LinearLayout>

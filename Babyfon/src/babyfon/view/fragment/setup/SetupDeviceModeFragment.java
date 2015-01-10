@@ -8,13 +8,10 @@ import babyfon.view.fragment.setup.parentmode.SetupSearchDevicesFragment;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.Context;
-import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
-import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -24,9 +21,11 @@ import android.widget.TextView;
 public class SetupDeviceModeFragment extends Fragment {
 
 	// Define UI elements
+	private Button btnBackward;
+	private Button btnForward;
 	private ImageView imgViewBabyMode;
 	private ImageView imgViewParentsMode;
-	private TextView textTitleDeviceMode;
+	private TextView title;
 
 	private SharedPrefs mSharedPrefs;
 
@@ -53,6 +52,17 @@ public class SetupDeviceModeFragment extends Fragment {
 		this.mContext = mContext;
 	}
 
+	public void updateUI() {
+		// Update buttons
+		if (mSharedPrefs.getGender() == 0) {
+			btnBackward.setBackgroundResource(R.drawable.btn_selector_male);
+			btnForward.setBackgroundResource(R.drawable.btn_selector_male);
+		} else {
+			btnBackward.setBackgroundResource(R.drawable.btn_selector_female);
+			btnForward.setBackgroundResource(R.drawable.btn_selector_female);
+		}
+	}
+
 	/**
 	 * Initialize the UI elements
 	 * 
@@ -60,21 +70,30 @@ public class SetupDeviceModeFragment extends Fragment {
 	 */
 	private void initUiElements(View view) {
 		// Set Typeface
-		Typeface mTypeface = Typeface.createFromAsset(mContext.getAssets(), "fonts/BOOKOSBI.TTF");
+		Typeface mTypeface_bi = Typeface.createFromAsset(mContext.getAssets(), "fonts/BOOKOSBI.TTF");
+		Typeface mTypeface_i = Typeface.createFromAsset(mContext.getAssets(), "fonts/BOOKOSI.TTF");
+
+		// Initialize Buttons
+		btnBackward = (Button) view.findViewById(R.id.btn_backwardSetupDeviceMode);
+		btnBackward.setTypeface(mTypeface_i);
+		btnForward = (Button) view.findViewById(R.id.btn_forwardSetupDeviceMode);
+		btnForward.setTypeface(mTypeface_i);
 
 		// Initialize ImageViews
 		imgViewBabyMode = (ImageView) view.findViewById(R.id.imgbtn_baby);
 		imgViewParentsMode = (ImageView) view.findViewById(R.id.imgbtn_parents);
 
 		// Initialize TextViews
-		textTitleDeviceMode = (TextView) view.findViewById(R.id.text_titleDeviceMode);
-		textTitleDeviceMode.setTypeface(mTypeface);
+		title = (TextView) view.findViewById(R.id.title_device_mode);
+		title.setTypeface(mTypeface_bi);
+
+		updateUI();
 	}
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-		View view = inflater.inflate(R.layout.layout_setup_devicemode, container, false);
+		View view = inflater.inflate(R.layout.setup_devicemode, container, false);
 
 		final FragmentManager fragmentManager = getFragmentManager();
 
@@ -98,5 +117,13 @@ public class SetupDeviceModeFragment extends Fragment {
 			}
 		});
 		return view;
+	}
+
+	@Override
+	public void onResume() {
+		super.onResume();
+		if (btnBackward != null && btnForward != null) {
+			updateUI();
+		}
 	}
 }
