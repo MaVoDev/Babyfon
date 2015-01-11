@@ -8,6 +8,7 @@ import babyfon.settings.SharedPrefs;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.RelativeLayout;
 
 public class WelcomeScreen extends Activity {
@@ -20,6 +21,8 @@ public class WelcomeScreen extends Activity {
 	private UDPReceiver mUDPReceiver;
 
 	private SharedPrefs mSharedPrefs;
+	
+	private static final String TAG = WelcomeScreen.class.getCanonicalName();
 
 	@Override
 	protected void onStart() {
@@ -37,7 +40,7 @@ public class WelcomeScreen extends Activity {
 			// Set background color
 			layout.setBackgroundResource(R.drawable.bg_female);
 		}
-
+		
 		// Load default modules
 		// TCP Receiver
 		if (mSharedPrefs.getDeviceMode() != -1) {
@@ -56,6 +59,10 @@ public class WelcomeScreen extends Activity {
 				// UDP Receiver (off)
 			}
 		}
+	}
+	
+	public void handleModules() {
+		
 	}
 
 	@Override

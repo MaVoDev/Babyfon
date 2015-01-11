@@ -9,9 +9,12 @@ import babyfon.connectivity.wifi.TCPReceiver;
 import babyfon.connectivity.wifi.UDPBroadcastSender;
 import babyfon.connectivity.wifi.WifiHandler;
 import babyfon.init.R;
+import babyfon.settings.ModuleHandler;
 import babyfon.settings.SharedPrefs;
+import babyfon.view.activity.MainActivity;
 import babyfon.view.fragment.overview.OverviewBabyFragment;
 import babyfon.view.fragment.overview.OverviewParentsFragment;
+import babyfon.view.fragment.setup.SetupStartFragment;
 import android.app.AlertDialog;
 import android.app.Fragment;
 import android.app.FragmentManager;
@@ -37,7 +40,6 @@ public class SetupSearchDevicesFragment extends Fragment {
 	private Button btnBackward;
 	private Button btnForward;
 	private ListView listViewDevices;
-	private Button btnSearchDevices;
 	private TextView title;
 
 	private static ArrayList<BabyfonDevice> device;
@@ -92,7 +94,6 @@ public class SetupSearchDevicesFragment extends Fragment {
 		btnBackward.setTypeface(mTypeface_i);
 		btnForward = (Button) view.findViewById(R.id.btn_forward_search);
 		btnForward.setTypeface(mTypeface_i);
-		btnSearchDevices = (Button) view.findViewById(R.id.btn_searchDevices);
 
 		// Initialize TextViews
 		title = (TextView) view.findViewById(R.id.title_search);
@@ -111,6 +112,12 @@ public class SetupSearchDevicesFragment extends Fragment {
 		device = new ArrayList<BabyfonDevice>();
 
 		initUiElements(view);
+		
+		if (mSharedPrefs.getConnectivityTypeTemp() == 2) {
+			new ModuleHandler(mContext).startTCPReceiver();
+		} else {
+			new ModuleHandler(mContext).stopTCPReceiver();
+		}
 
 		connectivityType = mSharedPrefs.getConnectivityTypeTemp();
 		switch (connectivityType) {
@@ -124,14 +131,6 @@ public class SetupSearchDevicesFragment extends Fragment {
 			initViewBWifiDirect();
 			break;
 		}
-
-		// Setup Search-Button
-		btnSearchDevices.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				mConnection.searchDevices();
-			}
-		});
 
 		// Setup List-View
 		listViewDevices.setOnItemClickListener(new OnItemClickListener() {
@@ -152,7 +151,6 @@ public class SetupSearchDevicesFragment extends Fragment {
 			}
 		});
 
-		// OnClickListener for the Button btnCompleteSetup
 		btnForward.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -186,17 +184,32 @@ public class SetupSearchDevicesFragment extends Fragment {
 									new DialogInterface.OnClickListener() {
 										@Override
 										public void onClick(DialogInterface dialog, int id) {
-											if (mSharedPrefs.getDeviceMode() == 0) {
-												mFragmentManager
-														.beginTransaction()
-														.replace(R.id.frame_container,
-																new OverviewBabyFragment(mContext), null)
-														.addToBackStack(null).commit();
+											if (mSharedPrefs.getDeviceMode() != -1) {
+												if (mSharedPrefs.getDeviceMode() == 0) {
+													mFragmentManager
+															.beginTransaction()
+															.replace(R.id.frame_container,
+																	new OverviewBabyFragment(mContext), null)
+															.addToBackStack(null).commit();
+												} else {
+													mFragmentManager
+															.beginTransaction()
+															.replace(R.id.frame_container,
+																	new OverviewParentsFragment(mContext), null)
+															.addToBackStack(null).commit();
+												}
 											} else {
+												if (MainActivity.mTCPReceiver != null) {
+													// Stop TCP Receiver
+													Log.i(TAG, "Try to stop TCP receiver...");
+													MainActivity.mTCPReceiver.stop();
+												} else {
+													Log.e(TAG, "TCP receiver is not running.");
+												}
 												mFragmentManager
 														.beginTransaction()
 														.replace(R.id.frame_container,
-																new OverviewParentsFragment(mContext), null)
+																new SetupStartFragment(mContext), null)
 														.addToBackStack(null).commit();
 											}
 										}
@@ -230,7 +243,7 @@ public class SetupSearchDevicesFragment extends Fragment {
 
 		device.add(new BabyfonDevice(ip, name));
 		Log.i(TAG, "Device found: " + ip + " | " + name);
-		Log.i(TAG, "Number of devices found: " + device.size());
+		Log.i(TAG, "Number of devices: " + device.size());
 	}
 
 	static class BabyfonDevice {

@@ -1,10 +1,9 @@
 package babyfon.view.fragment.setup.parentmode;
 
-import babyfon.connectivity.wifi.UDPReceiver;
 import babyfon.init.R;
 import babyfon.performance.Sound;
+import babyfon.settings.ModuleHandler;
 import babyfon.settings.SharedPrefs;
-import babyfon.view.activity.MainActivity;
 import babyfon.view.fragment.BabyMonitorFragment;
 import android.app.Fragment;
 import android.app.FragmentManager;
@@ -25,6 +24,7 @@ public class SetupCompleteParentsModeFragment extends Fragment {
 	private Button btnForward;
 	private TextView title;
 
+	private ModuleHandler mModuleHandler;
 	private SharedPrefs mSharedPrefs;
 	private Sound mSound;
 
@@ -34,6 +34,7 @@ public class SetupCompleteParentsModeFragment extends Fragment {
 
 	// Constructor
 	public SetupCompleteParentsModeFragment(Context mContext) {
+		mModuleHandler = new ModuleHandler(mContext);
 		mSharedPrefs = new SharedPrefs(mContext);
 		mSound = new Sound(mContext);
 
@@ -69,24 +70,23 @@ public class SetupCompleteParentsModeFragment extends Fragment {
 
 		updateUI();
 	}
+	
+	public void handleModules() {
+		mModuleHandler.stopUDPeceiver();
+		mModuleHandler.unregisterBattery();
+	}
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-		Log.i(TAG, "Start parents mode...");
-
-		// Start UDP receiver
-		if (MainActivity.mUDPReceiver == null) {
-			Log.i(TAG, "Try to start UDP receiver...");
-			MainActivity.mUDPReceiver = new UDPReceiver(mContext);
-			MainActivity.mUDPReceiver.start();
-		}
-
+		Log.i(TAG, "Starting parents mode...");
+		
 		View view = inflater.inflate(R.layout.setup_complete_parents_mode, container, false);
 
 		final FragmentManager mFragmentManager = getFragmentManager();
-
+		
 		initUiElements(view);
+		handleModules();
 
 		// Store values in the shared preferences
 		mSharedPrefs.setDeviceMode(mSharedPrefs.getDeviceModeTemp());

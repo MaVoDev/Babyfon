@@ -14,6 +14,7 @@ import babyfon.connectivity.wifi.TCPReceiver;
 import babyfon.connectivity.wifi.UDPReceiver;
 import babyfon.model.NavigationDrawerItemModel;
 import babyfon.performance.Battery;
+import babyfon.settings.ModuleHandler;
 import babyfon.settings.SharedPrefs;
 import babyfon.view.fragment.AbsenceFragment;
 import babyfon.view.fragment.BabyMonitorFragment;
@@ -21,7 +22,6 @@ import babyfon.view.fragment.overview.OverviewBabyFragment;
 import babyfon.view.fragment.overview.OverviewParentsFragment;
 import babyfon.view.fragment.setup.SetupDeviceModeFragment;
 import babyfon.view.fragment.setup.SetupStartFragment;
-import babyfon.view.fragment.setup.parentmode.SetupSearchDevicesFragment;
 import android.app.ActionBar;
 import android.app.AlertDialog;
 import android.app.Fragment;
@@ -35,7 +35,6 @@ import android.os.StrictMode;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.widget.DrawerLayout;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -50,7 +49,11 @@ public class MainActivity extends FragmentActivity {
 	private ActionBarDrawerToggle mDrawerToggle;
 
 	// Modules
-	private Battery mBattery;
+	public static Battery mBattery;
+	public static TCPReceiver mTCPReceiver;
+	public static UDPReceiver mUDPReceiver;
+
+	private ModuleHandler mModuleHandler;
 
 	Map<String, Fragment> mFragmentMap = new HashMap<String, Fragment>();
 
@@ -67,13 +70,15 @@ public class MainActivity extends FragmentActivity {
 	private ArrayList<NavigationDrawerItemModel> items;
 	private NavigationDrawerListAdapter adapter;
 
-	// Receiver
-	private TCPReceiver mTCPReceiver;
-	public static UDPReceiver mUDPReceiver;
-
 	private SharedPrefs mSharedPrefs;
 
-	private static final String TAG = TCPReceiver.class.getCanonicalName();
+	public void handleModules() {
+		if (mSharedPrefs.getDeviceMode() != -1) {
+			if (mSharedPrefs.getWiFiSharedState() || mSharedPrefs.getConnectivityType() == 2) {
+				mModuleHandler.startTCPReceiver();
+			}
+		}
+	}
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -88,17 +93,13 @@ public class MainActivity extends FragmentActivity {
 		new StreamSender(this);
 
 		mSharedPrefs = new SharedPrefs(this);
+		mModuleHandler = new ModuleHandler(this);
+
+		handleModules();
 
 		new CallReceiver(this).missedCalls();
 
-		mBattery = new Battery(this); // TODO Only baby mode
 		new SMSReceiver(this); // TODO Only baby mode
-
-		if (mTCPReceiver == null) {
-			Log.i(TAG, "Try to start TCP receiver...");
-			mTCPReceiver = new TCPReceiver(this);
-			mTCPReceiver.start();
-		}
 
 		appTitle = drawerTitle = getTitle();
 
@@ -164,19 +165,11 @@ public class MainActivity extends FragmentActivity {
 
 	@Override
 	protected void onDestroy() {
-		if (mBattery != null) {
-			mBattery.unregister();
-		}
-
-		if (mTCPReceiver != null) {
-			mTCPReceiver.stop();
-		}
-
-		if (mUDPReceiver != null) {
-			mUDPReceiver.stop();
-		}
-
 		super.onDestroy();
+
+		mModuleHandler.unregisterBattery();
+		mModuleHandler.stopTCPReceiver();
+		mModuleHandler.stopUDPeceiver();
 	}
 
 	@Override

@@ -1,6 +1,5 @@
 ToDo:
 =============================================================================================================
-# Module für den passenden Modus laden
 - Babymodus: Verbindungen aktivieren (wenn aus), die gewählt wurden (auch überprüfen, ob an)
 - Elternmodus: Verbindung aktivieren (wenn aus), die gewählt wurde (auch überprüfen, ob an)
 - Verpasste Anrufe weiterleiten
@@ -30,5 +29,6 @@ Design:
 Bugs:
 =============================================================================================================
 - MainActivity: Wenn ein Modus gewählt ist, soll SetupStartFragment übersprungen werden. Das geht zurzeit nur, wenn die App geschlossen und neu gestartet wird. Soll aber gleich nach dem beenden eines Setup-Modus geschehen.
-- SMSReceiver: SMS wird nicht gesendet (Zeile 51 wird nicht ausgeführt)      
+- SMSReceiver: SMS wird nicht gesendet (Zeile 51 wird nicht ausgeführt)  
+- Bluetooth: Wenn im Elternmode Bluetooth gewählt ist und die App beendet wird, gibts nen Absturz    
 - Wenn man das Setup beendet, aktualisiert sich der NavigationDrawer nicht. Der Einrichtungsassistent bleibt selected.

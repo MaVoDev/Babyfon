@@ -1,11 +1,9 @@
 package babyfon.view.fragment.setup.babymode;
 
-import babyfon.connectivity.wifi.UDPReceiver;
-import babyfon.connectivity.wifi.WifiHandler;
 import babyfon.init.R;
 import babyfon.performance.Sound;
+import babyfon.settings.ModuleHandler;
 import babyfon.settings.SharedPrefs;
-import babyfon.view.activity.MainActivity;
 import babyfon.view.fragment.overview.OverviewBabyFragment;
 import android.app.Fragment;
 import android.app.FragmentManager;
@@ -27,6 +25,7 @@ public class SetupCompleteBabyModeFragment extends Fragment {
 	private TextView tvPassword;
 	private TextView title;
 
+	private ModuleHandler mModuleHandler;
 	private SharedPrefs mSharedPrefs;
 	private Sound mSound;
 
@@ -36,6 +35,7 @@ public class SetupCompleteBabyModeFragment extends Fragment {
 
 	// Constructor
 	public SetupCompleteBabyModeFragment(Context mContext) {
+		mModuleHandler = new ModuleHandler(mContext);
 		mSharedPrefs = new SharedPrefs(mContext);
 		mSound = new Sound(mContext);
 
@@ -72,17 +72,28 @@ public class SetupCompleteBabyModeFragment extends Fragment {
 
 		updateUI();
 	}
+	
+	public void handleModules() {
+		if (mSharedPrefs.getWiFiSharedStateTemp()) {
+			mModuleHandler.startTCPReceiver();
+			mModuleHandler.startUDPReceiver();
+		} else {
+			mModuleHandler.stopTCPReceiver();
+			mModuleHandler.stopUDPeceiver();
+		}
+	}
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-		Log.i(TAG, "Start baby mode...");
+		Log.i(TAG, "Starting baby mode...");
 
 		View view = inflater.inflate(R.layout.setup_complete_baby_mode, container, false);
 
 		final FragmentManager mFragmentManager = getFragmentManager();
 
 		initUiElements(view);
+		handleModules();
 
 		String password = getRandomPassword();
 		tvPassword.setText(password);
