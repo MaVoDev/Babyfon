@@ -31,6 +31,7 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.content.res.TypedArray;
 import android.os.Bundle;
+import android.os.Message;
 import android.os.StrictMode;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.FragmentActivity;
@@ -167,9 +168,11 @@ public class MainActivity extends FragmentActivity {
 	protected void onDestroy() {
 		super.onDestroy();
 
+		new babyfon.Message(this).send(this.getString(R.string.MESSAGE_SYSTEM_EXIT));
+
 		mModuleHandler.unregisterBattery();
 		mModuleHandler.stopTCPReceiver();
-		mModuleHandler.stopUDPeceiver();
+		mModuleHandler.stopUDPReceiver();
 	}
 
 	@Override

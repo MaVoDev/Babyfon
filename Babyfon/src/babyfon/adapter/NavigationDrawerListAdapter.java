@@ -70,5 +70,4 @@ public class NavigationDrawerListAdapter extends BaseAdapter {
 
 		return convertView;
 	}
-
 }

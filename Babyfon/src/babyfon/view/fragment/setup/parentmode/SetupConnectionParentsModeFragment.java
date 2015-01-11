@@ -180,7 +180,6 @@ public class SetupConnectionParentsModeFragment extends Fragment {
 		btnBackward.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-
 				mFragmentManager.beginTransaction()
 						.replace(R.id.frame_container, new SetupDeviceModeFragment(mContext), null)
 						.addToBackStack(null).commit();

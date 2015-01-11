@@ -99,7 +99,7 @@ public class ModuleHandler {
 	/**
 	 * Stop UDP receiver
 	 */
-	public void stopUDPeceiver() {
+	public void stopUDPReceiver() {
 		if (MainActivity.mUDPReceiver != null) {
 			Log.i(TAG, "Try to stop UDP receiver...");
 			if (MainActivity.mUDPReceiver.stop()) {

@@ -5,12 +5,17 @@ import babyfon.performance.Sound;
 import babyfon.settings.ModuleHandler;
 import babyfon.settings.SharedPrefs;
 import babyfon.view.fragment.BabyMonitorFragment;
+import babyfon.view.fragment.overview.OverviewBabyFragment;
+import babyfon.view.fragment.overview.OverviewParentsFragment;
+import android.app.AlertDialog;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,6 +28,7 @@ public class SetupCompleteParentsModeFragment extends Fragment {
 	// Define UI elements
 	private Button btnForward;
 	private TextView title;
+	private TextView info;
 
 	private ModuleHandler mModuleHandler;
 	private SharedPrefs mSharedPrefs;
@@ -67,12 +73,15 @@ public class SetupCompleteParentsModeFragment extends Fragment {
 		// Initialize TextViews
 		title = (TextView) view.findViewById(R.id.title_setup_complete_parents_mode);
 		title.setTypeface(mTypeface_bi);
+		info = (TextView) view.findViewById(R.id.text_connection_complete);
+		info.setText("Mit '" + mSharedPrefs.getRemoteName() + "' verbunden");
+		info.setTypeface(mTypeface_i);
 
 		updateUI();
 	}
-	
+
 	public void handleModules() {
-		mModuleHandler.stopUDPeceiver();
+		mModuleHandler.stopUDPReceiver();
 		mModuleHandler.unregisterBattery();
 	}
 
@@ -80,17 +89,17 @@ public class SetupCompleteParentsModeFragment extends Fragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
 		Log.i(TAG, "Starting parents mode...");
-		
+
 		View view = inflater.inflate(R.layout.setup_complete_parents_mode, container, false);
 
 		final FragmentManager mFragmentManager = getFragmentManager();
-		
-		initUiElements(view);
-		handleModules();
 
 		// Store values in the shared preferences
 		mSharedPrefs.setDeviceMode(mSharedPrefs.getDeviceModeTemp());
 		mSharedPrefs.setConnectivityType(mSharedPrefs.getConnectivityTypeTemp());
+
+		initUiElements(view);
+		handleModules();
 
 		mSound.soundOn();
 
@@ -105,7 +114,51 @@ public class SetupCompleteParentsModeFragment extends Fragment {
 			}
 		});
 
+		onBackPressed(view, mFragmentManager);
+
 		return view;
+	}
+
+	public void onBackPressed(View view, final FragmentManager mFragmentManager) {
+		view.setFocusableInTouchMode(true);
+		view.requestFocus();
+		view.setOnKeyListener(new View.OnKeyListener() {
+			@Override
+			public boolean onKey(View v, int keyCode, KeyEvent event) {
+
+				if (event.getAction() != KeyEvent.ACTION_DOWN)
+					return true;
+
+				switch (keyCode) {
+				case KeyEvent.KEYCODE_BACK:
+					new AlertDialog.Builder(getActivity())
+							.setTitle(mContext.getString(R.string.dialog_title_cancel_setup))
+							.setMessage(mContext.getString(R.string.dialog_message_cancel_setup))
+							.setNegativeButton(mContext.getString(R.string.dialog_button_no), null)
+							.setPositiveButton(mContext.getString(R.string.dialog_button_yes),
+									new DialogInterface.OnClickListener() {
+										@Override
+										public void onClick(DialogInterface dialog, int id) {
+											if (mSharedPrefs.getDeviceMode() == 0) {
+												mFragmentManager
+														.beginTransaction()
+														.replace(R.id.frame_container,
+																new OverviewBabyFragment(mContext), null)
+														.addToBackStack(null).commit();
+											} else {
+												mFragmentManager
+														.beginTransaction()
+														.replace(R.id.frame_container,
+																new OverviewParentsFragment(mContext), null)
+														.addToBackStack(null).commit();
+											}
+										}
+									}).create().show();
+					break;
+				}
+				return true;
+			}
+		});
 	}
 
 	@Override

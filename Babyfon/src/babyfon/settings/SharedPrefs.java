@@ -24,6 +24,48 @@ public class SharedPrefs {
 	 * == Network settings =====================================
 	 */
 
+	// == Remote address ====================================
+
+	/**
+	 * Get the remote address.
+	 * 
+	 * @return String: remote address
+	 */
+	public String getRemoteAddress() {
+		return mSharedPreferences.getString("remote_address", null);
+	}
+
+	/**
+	 * Set the remote address.
+	 * 
+	 * @param String
+	 *            remote address
+	 */
+	public void setRemoteAdress(String remoteAddress) {
+		editor.putString("remote_address", remoteAddress).commit();
+	}
+
+	// == Remote name ====================================
+
+	/**
+	 * Get the remote name.
+	 * 
+	 * @return String: remote name
+	 */
+	public String getRemoteName() {
+		return mSharedPreferences.getString("remote_name", null);
+	}
+
+	/**
+	 * Set the remote name.
+	 * 
+	 * @param String
+	 *            remote name
+	 */
+	public void setRemoteName(String remoteName) {
+		editor.putString("remote_name", remoteName).commit();
+	}
+
 	// == Port TCP ====================================
 
 	/**

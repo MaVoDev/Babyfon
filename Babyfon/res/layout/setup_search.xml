@@ -13,37 +13,23 @@
 
         <ListView
             android:id="@+id/listView_devices"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:divider="@android:drawable/divider_horizontal_dark" >
+            android:layout_marginLeft="2dp"
+            android:layout_marginRight="2dp"
+            android:layout_weight="100"
+            android:choiceMode="singleChoice" >
         </ListView>
     </LinearLayout>
 
     <LinearLayout style="@style/layout_footer" >
 
-        <LinearLayout
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom"
-            android:layout_weight="1" >
-
-            <Button
-                android:id="@+id/btn_backward_search"
-                style="@style/button_footer_left"
-                android:text="@string/btn_backward" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom"
-            android:layout_weight="1" >
-
-            <Button
-                android:id="@+id/btn_forward_search"
-                style="@style/button_footer_right"
-                android:text="@string/btn_forward" />
-        </LinearLayout>
+        <Button
+            android:id="@+id/btn_refresh_list"
+            style="@style/button_footer_single"
+            android:layout_marginTop="10dp"
+            android:layout_weight="1"
+            android:text="@string/btn_refresh" />
     </LinearLayout>
 
 </LinearLayout>

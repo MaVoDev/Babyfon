@@ -37,6 +37,19 @@
         <item name="android:layout_marginBottom">10dp</item>
     </style>
 
+    <style name="layout_header">
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:orientation">vertical</item>
+        <item name="android:layout_marginLeft">10dp</item>
+        <item name="android:gravity">top</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:layout_gravity">top</item>
+        <item name="android:layout_marginRight">10dp</item>
+        <item name="android:layout_marginTop">10dp</item>
+        <item name="android:layout_marginBottom">16dp</item>
+    </style>
+
     <style name="layout_footer">
         <item name="android:layout_width">fill_parent</item>
         <item name="android:layout_height">wrap_content</item>
@@ -50,47 +63,32 @@
         <item name="android:layout_marginBottom">10dp</item>
     </style>
 
-    <style name="layout_header">
-        <item name="android:layout_width">fill_parent</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:orientation">vertical</item>
-        <item name="android:layout_marginLeft">10dp</item>
-        <item name="android:gravity">top</item>
-        <item name="android:layout_weight">1</item>
-        <item name="android:layout_gravity">top</item>
-        <item name="android:layout_marginRight">10dp</item>
-        <item name="android:layout_marginTop">10dp</item>
-        <item name="android:layout_marginBottom">10dp</item>
-    </style>
-
     <style name="layout_body">
         <item name="android:layout_width">fill_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:orientation">vertical</item>
         <item name="android:layout_marginLeft">10dp</item>
-        <item name="android:layout_weight">1</item>
+        <item name="android:layout_weight">100</item>
         <item name="android:layout_marginRight">10dp</item>
     </style>
 
     <!-- Button -->
     <style name="button_footer_right">
         <item name="android:layout_width">fill_parent</item>
-        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_height">@dimen/buttons_height</item>
         <item name="android:layout_marginLeft">2dp</item>
     </style>
 
     <style name="button_footer_left">
         <item name="android:layout_width">fill_parent</item>
-        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_height">@dimen/buttons_height</item>
         <item name="android:layout_marginRight">2dp</item>
     </style>
 
     <style name="button_footer_single">
         <item name="android:layout_gravity">bottom</item>
         <item name="android:layout_width">fill_parent</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_marginRight">2dp</item>
-        <item name="android:layout_marginLeft">2dp</item>
+        <item name="android:layout_height">@dimen/buttons_height</item>
     </style>
 
 </resources>

@@ -3,10 +3,14 @@
 
     <!-- Message types -->
     <string name="MESSAGE_BATTERY">BABYFON_MSG_BATTERY</string>
-    <string name="MESSAGE_CONNECTION_CONFIRM">BABYFON_MSG_CONNECTION_CONFIRM</string>
-    <string name="MESSAGE_CONNECTION_REQUEST">BABYFON_MSG_CONNECTION_REQUEST</string>
+    <string name="MESSAGE_CONNECTION_FOUND">BABYFON_MSG_CONNECTION_FOUND</string>
+    <string name="MESSAGE_CONNECTION_SEARCH">BABYFON_MSG_CONNECTION_SEARCH</string>
     <string name="MESSAGE_SMS">BABYFON_MSG_SMS</string>
     <string name="MESSAGE_CALL">BABYFON_MSG_CALL</string>
+    <string name="MESSAGE_AUTH_REQ">BABYFON_MSG_AUTH_REQ</string>
+    <string name="MESSAGE_AUTH_CONFIRMED">MESSAGE_AUTH_CONFIRMED</string>
+    <string name="MESSAGE_AUTH_DENIED">MESSAGE_AUTH_DENIED</string>
+    <string name="MESSAGE_SYSTEM_EXIT">MESSAGE_SYSTEM_EXIT</string>       
 
     <!-- Titles -->
     <string name="title_baby_monitor">Babymonitor</string>
@@ -17,7 +21,7 @@
     <string name="title_device_mode">Gerätemodus</string>
     <string name="title_search">Geräte suchen</string>
     <string name="title_setup_complete_baby_mode">Abschluss</string>
-    <string name="title_setup_complete_parents_mode">Abschluss</string>
+    <string name="title_setup_complete_parents_mode">Erfolgreich</string>
 
     <!-- Dialogs -->
     <string name="dialog_button_yes">Ja</string>
@@ -30,6 +34,7 @@
     <!-- Buttons -->
     <string name="btn_forward">Weiter</string>
     <string name="btn_backward">Zurück</string>
+    <string name="btn_refresh">Liste aktualisieren</string>
     
     
     <!-- # -->

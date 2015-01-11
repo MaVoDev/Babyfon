@@ -79,7 +79,7 @@ public class SetupCompleteBabyModeFragment extends Fragment {
 			mModuleHandler.startUDPReceiver();
 		} else {
 			mModuleHandler.stopTCPReceiver();
-			mModuleHandler.stopUDPeceiver();
+			mModuleHandler.stopUDPReceiver();
 		}
 	}
 

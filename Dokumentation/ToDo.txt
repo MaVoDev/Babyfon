@@ -3,9 +3,7 @@ ToDo:
 - Babymodus: Verbindungen aktivieren (wenn aus), die gewählt wurden (auch überprüfen, ob an)
 - Elternmodus: Verbindung aktivieren (wenn aus), die gewählt wurde (auch überprüfen, ob an)
 - Verpasste Anrufe weiterleiten
-3 Eingehende SMS weiterleiten
-3 Passwortauthorisierung über WiFi anfragen (Kann man das auch fürsBluetooth verwenden?)
-3 Wenn maximale Anzahl erlaubter Geräte sich auf dem Babymode verbunden haben (erstmal nur 1), dann stopp UDP Receiver, sonst start (wenn inaktiv)
+- Eingehende SMS weiterleiten
 - Audiostreaming
 - Mikrofonsensibilität einstellen können
 - Geräusch erkennen
@@ -17,11 +15,10 @@ ToDo:
 
 Design:
 =============================================================================================================
-# ListView für Verpasste Anrufe/SMS und gefundene Geräte erstellen
+- ListView für Verpasste Anrufe/SMS 
 - Verpasste Anrufe anzeigen
 - Übersichtsseite Baby: Babymodus on/off (Wenn off, dann nachricht an Elternmode), Passwort anzeigen, Freigegebene Verbindungen, Verbundene Geräte
 - Eingehende SMS anzeigen
-- Gefundene Geräte anzeigen
 - Babymonitor: eingehenden Audiostream (Button On/Off), batterie vom Babygerät, Geräuschpegel, Signalisierungsalarm
 - Navigation Drawer
 - Im Babymodus Navigation Drawer auf Übersicht und Setup beschränken
