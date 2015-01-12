@@ -10,10 +10,10 @@
 
     <!-- Navigation Drawer Icons -->
     <array name="navigation_drawer_icons">
-        <item>@drawable/ic_launcher</item>
-        <item>@android:drawable/ic_menu_view</item>
-        <item>@android:drawable/stat_notify_missed_call</item>
-        <item>@drawable/ic_launcher</item>
+        <item>@drawable/overview</item>
+        <item>@drawable/babymonitor</item>
+        <item>@drawable/absence</item>
+        <item>@drawable/setup</item>
     </array>
 
 </resources>

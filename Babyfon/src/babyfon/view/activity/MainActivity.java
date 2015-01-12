@@ -36,6 +36,7 @@ import android.os.StrictMode;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v4.widget.DrawerLayout.DrawerListener;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -120,7 +121,7 @@ public class MainActivity extends FragmentActivity {
 		// Listenelement: Babymonitor
 		items.add(new NavigationDrawerItemModel(navMenuTitles[1], navMenuIcons.getResourceId(1, -1)));
 		// Listenelement: Anrufe und Nachrichten in Abwesenheit
-		items.add(new NavigationDrawerItemModel(navMenuTitles[2], navMenuIcons.getResourceId(2, -1), true, "3"));
+		items.add(new NavigationDrawerItemModel(navMenuTitles[2], navMenuIcons.getResourceId(2, -1), true, "0"));
 		// Listenelement: Einrichtungsassistent
 		items.add(new NavigationDrawerItemModel(navMenuTitles[3], navMenuIcons.getResourceId(3, -1)));
 
@@ -203,11 +204,15 @@ public class MainActivity extends FragmentActivity {
 			actionBar.setBackgroundDrawable(getResources().getDrawable(R.drawable.bg_actionbar_male));
 			// Set layout background color
 			frameLayout.setBackgroundResource(R.drawable.bg_male);
+			// Set navigation drawer background
+			mDrawerList.setBackgroundResource(R.drawable.bg_navigation_drawer_male);
 		} else {
 			// Set action bar color
 			actionBar.setBackgroundDrawable(getResources().getDrawable(R.drawable.bg_actionbar_female));
 			// Set layout background color
 			frameLayout.setBackgroundResource(R.drawable.bg_female);
+			// Set navigation drawer background
+			mDrawerList.setBackgroundResource(R.drawable.bg_navigation_drawer_female);
 		}
 	}
 
