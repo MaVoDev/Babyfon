@@ -11,7 +11,6 @@ import babyfon.settings.ModuleHandler;
 import babyfon.settings.SharedPrefs;
 import babyfon.view.activity.MainActivity;
 import babyfon.view.fragment.BabyMonitorFragment;
-import babyfon.view.fragment.overview.OverviewParentsFragment;
 import babyfon.view.fragment.setup.parentmode.SetupCompleteParentsModeFragment;
 import babyfon.view.fragment.setup.parentmode.SetupSearchDevicesFragment;
 
@@ -38,7 +37,7 @@ public class Message {
 	public void handleIncomingMessage(String str) {
 		final String[] strArray = str.split(";");
 
-		if (strArray[0].equals(mContext.getString(R.string.MESSAGE_BATTERY))) {
+		if (strArray[0].equals(mContext.getString(R.string.BABYFON_MSG_BATTERY))) {
 			// Batterie
 			((MainActivity) mContext).runOnUiThread(new Runnable() {
 				@Override
@@ -68,6 +67,8 @@ public class Message {
 			mSharedPrefs.setRemoteAdress(remoteAddress);
 
 			if (mSharedPrefs.getPassword().equals(password)) {
+				mModuleHandler.stopUDPReceiver();
+				mModuleHandler.registerBattery();
 				send(mContext.getString(R.string.MESSAGE_AUTH_CONFIRMED));
 			} else {
 				send(mContext.getString(R.string.MESSAGE_AUTH_DENIED));
@@ -75,8 +76,6 @@ public class Message {
 		}
 
 		if (strArray[0].equals(mContext.getString(R.string.MESSAGE_AUTH_CONFIRMED))) {
-			mModuleHandler.stopUDPReceiver();
-
 			FragmentManager mFragmentManager = ((Activity) mContext).getFragmentManager();
 			mFragmentManager.beginTransaction()
 					.replace(R.id.frame_container, new SetupCompleteParentsModeFragment(mContext), null)
@@ -96,16 +95,10 @@ public class Message {
 		if (strArray[0].equals(mContext.getString(R.string.MESSAGE_SYSTEM_EXIT))) {
 			if (mSharedPrefs.getDeviceMode() == 0) {
 				mModuleHandler.startUDPReceiver();
+				mModuleHandler.unregisterBattery();
+				
 				mSharedPrefs.setRemoteAdress(null);
 				mSharedPrefs.setRemoteName(null);
-
-				((MainActivity) mContext).runOnUiThread(new Runnable() {
-					@Override
-					public void run() {
-						Toast toast = Toast.makeText(mContext, "Falsches Passwort!", Toast.LENGTH_SHORT);
-						toast.show();
-					}
-				});
 			} else {
 				mSharedPrefs.setRemoteAdress(null);
 				mSharedPrefs.setRemoteName(null);

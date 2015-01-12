@@ -13,16 +13,7 @@ import android.widget.RelativeLayout;
 
 public class WelcomeScreen extends Activity {
 
-	// Modules
-	private Battery mBattery;
-
-	// Receiver
-	private TCPReceiver mTCPReceiver;
-	private UDPReceiver mUDPReceiver;
-
 	private SharedPrefs mSharedPrefs;
-	
-	private static final String TAG = WelcomeScreen.class.getCanonicalName();
 
 	@Override
 	protected void onStart() {
@@ -40,29 +31,6 @@ public class WelcomeScreen extends Activity {
 			// Set background color
 			layout.setBackgroundResource(R.drawable.bg_female);
 		}
-		
-		// Load default modules
-		// TCP Receiver
-		if (mSharedPrefs.getDeviceMode() != -1) {
-			// Load mode modules
-			if (mSharedPrefs.getDeviceMode() == 0) {
-				// Load baby modules
-				// Battery
-				// Call
-				// SMS
-				// UDP Receiver
-			} else {
-				// Load parents modules
-				// Battery (off)
-				// Call (off)
-				// SMS (off)
-				// UDP Receiver (off)
-			}
-		}
-	}
-	
-	public void handleModules() {
-		
 	}
 
 	@Override

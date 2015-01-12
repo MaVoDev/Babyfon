@@ -25,6 +25,7 @@ Design:
 
 Bugs:
 =============================================================================================================
+- Batteriestatus wird im Babymonitor nicht mehr aktualisiert. Richtig empfangen wird es. Auch die Methode wird aufgerufen. Aber anscheinend nur nach dem Setup, sonst gehts.
 - MainActivity: Wenn ein Modus gewählt ist, soll SetupStartFragment übersprungen werden. Das geht zurzeit nur, wenn die App geschlossen und neu gestartet wird. Soll aber gleich nach dem beenden eines Setup-Modus geschehen.
 - SMSReceiver: SMS wird nicht gesendet (Zeile 51 wird nicht ausgeführt)  
 - Bluetooth: Wenn im Elternmode Bluetooth gewählt ist und die App beendet wird, gibts nen Absturz    

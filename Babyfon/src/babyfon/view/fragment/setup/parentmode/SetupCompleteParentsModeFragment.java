@@ -94,14 +94,18 @@ public class SetupCompleteParentsModeFragment extends Fragment {
 
 		final FragmentManager mFragmentManager = getFragmentManager();
 
+		if (mSharedPrefs.getDeviceMode() != 1) {
+			// Turn the sound on if the baby mode or no mode was previously
+			// active.
+			mSound.soundOn();
+		}
+
 		// Store values in the shared preferences
 		mSharedPrefs.setDeviceMode(mSharedPrefs.getDeviceModeTemp());
 		mSharedPrefs.setConnectivityType(mSharedPrefs.getConnectivityTypeTemp());
 
 		initUiElements(view);
 		handleModules();
-
-		mSound.soundOn();
 
 		// OnClickListener for the Button btnCompleteSetup
 		btnForward.setOnClickListener(new OnClickListener() {

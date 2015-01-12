@@ -14,6 +14,7 @@ import babyfon.connectivity.wifi.TCPReceiver;
 import babyfon.connectivity.wifi.UDPReceiver;
 import babyfon.model.NavigationDrawerItemModel;
 import babyfon.performance.Battery;
+import babyfon.performance.Sound;
 import babyfon.settings.ModuleHandler;
 import babyfon.settings.SharedPrefs;
 import babyfon.view.fragment.AbsenceFragment;
@@ -31,7 +32,6 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.content.res.TypedArray;
 import android.os.Bundle;
-import android.os.Message;
 import android.os.StrictMode;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.FragmentActivity;
@@ -168,7 +168,13 @@ public class MainActivity extends FragmentActivity {
 	protected void onDestroy() {
 		super.onDestroy();
 
-		new babyfon.Message(this).send(this.getString(R.string.MESSAGE_SYSTEM_EXIT));
+		if (mSharedPrefs.getRemoteAddress() != null) {
+			new babyfon.Message(this).send(this.getString(R.string.MESSAGE_SYSTEM_EXIT));
+		}
+
+		if (mSharedPrefs.getDeviceMode() == 0) {
+			new Sound(this).soundOn();
+		}
 
 		mModuleHandler.unregisterBattery();
 		mModuleHandler.stopTCPReceiver();
@@ -176,9 +182,12 @@ public class MainActivity extends FragmentActivity {
 	}
 
 	@Override
-	protected void onPause() {
-		super.onPause();
+	protected void onStart() {
+		super.onStart();
 
+		if (mSharedPrefs.getDeviceMode() == 0) {
+			new Sound(this).mute();
+		}
 	}
 
 	@Override

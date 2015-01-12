@@ -58,8 +58,6 @@ public class SetupSearchDevicesFragment extends Fragment {
 
 	private static ArrayList<DeviceListItemModel> devices;
 
-	private SetupCompleteParentsModeFragment nextFragment;
-
 	private int connectivityType;
 
 	private ModuleHandler mModuleHandler;
@@ -73,12 +71,8 @@ public class SetupSearchDevicesFragment extends Fragment {
 
 	// Constructor
 	public SetupSearchDevicesFragment(Context mContext) {
-		nextFragment = new SetupCompleteParentsModeFragment(mContext);
-
 		mModuleHandler = new ModuleHandler(mContext);
 		mSharedPrefs = new SharedPrefs(mContext);
-
-		this.mContext = mContext;
 	}
 
 	public void updateUI() {
@@ -151,6 +145,8 @@ public class SetupSearchDevicesFragment extends Fragment {
 
 		initUiElements(view);
 
+		mModuleHandler.unregisterBattery();
+
 		if (mSharedPrefs.getConnectivityTypeTemp() == 2) {
 			new ModuleHandler(mContext).startTCPReceiver();
 		} else {
@@ -204,6 +200,7 @@ public class SetupSearchDevicesFragment extends Fragment {
 										public void onClick(DialogInterface dialog, int id) {
 											if (mSharedPrefs.getDeviceMode() != -1) {
 												if (mSharedPrefs.getDeviceMode() == 0) {
+													mModuleHandler.registerBattery();
 													mFragmentManager
 															.beginTransaction()
 															.replace(R.id.frame_container,

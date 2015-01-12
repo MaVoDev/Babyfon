@@ -15,7 +15,7 @@ public class BabyMonitorFragment extends Fragment {
 	// Define UI elements
 	private TextView title;
 
-	public String batteryLevel = "n/a";
+	public String batteryLevel;
 
 	private TextView textBatteryLevel;
 
@@ -44,13 +44,15 @@ public class BabyMonitorFragment extends Fragment {
 	 */
 	private void initUiElements(View view) {
 		// Set Typeface
-		Typeface mTypeface = Typeface.createFromAsset(mContext.getAssets(), "fonts/BOOKOSBI.TTF");
+		Typeface mTypeface_i = Typeface.createFromAsset(mContext.getAssets(), "fonts/BOOKOSI.TTF");
+		Typeface mTypeface_bi = Typeface.createFromAsset(mContext.getAssets(), "fonts/BOOKOSBI.TTF");
 
 		// Initialize TextViews
 		title = (TextView) view.findViewById(R.id.title_baby_monitor);
-		title.setTypeface(mTypeface);
+		title.setTypeface(mTypeface_bi);
 
 		textBatteryLevel = (TextView) view.findViewById(R.id.textBatteryLevel);
+		textBatteryLevel.setTypeface(mTypeface_i);
 	}
 
 	@Override
