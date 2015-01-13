@@ -24,6 +24,7 @@ public class SetupCompleteBabyModeFragment extends Fragment {
 	private Button btnForward;
 	private TextView tvPassword;
 	private TextView title;
+	private TextView infoText;
 
 	private ModuleHandler mModuleHandler;
 	private SharedPrefs mSharedPrefs;
@@ -69,6 +70,9 @@ public class SetupCompleteBabyModeFragment extends Fragment {
 		title = (TextView) view.findViewById(R.id.title_setup_complete_baby_mode);
 		title.setTypeface(mTypeface_bi);
 		tvPassword = (TextView) view.findViewById(R.id.tv_password);
+		tvPassword.setTypeface(mTypeface_i);
+		infoText = (TextView) view.findViewById(R.id.text_complete_baby);
+		infoText.setTypeface(mTypeface_i);
 
 		updateUI();
 	}

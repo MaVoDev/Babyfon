@@ -11,22 +11,34 @@
 
     <LinearLayout style="@style/layout_body" >
 
-        <ImageView
-            android:id="@+id/imgbtn_baby"
-            android:layout_width="250dp"
-            android:layout_height="125dp"
-            android:layout_gravity="center"
-            android:scaleType="fitXY"
-            android:src="@drawable/btn_baby" />
+        <TextView
+            android:id="@+id/text_device_mode"
+            style="@style/info_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/text_device_mode" />
 
-        <ImageView
-            android:id="@+id/imgbtn_parents"
-            android:layout_width="250dp"
-            android:layout_height="125dp"
-            android:layout_gravity="center"
-            android:layout_marginTop="12dp"
-            android:scaleType="fitXY"
-            android:src="@drawable/btn_parents" />
+        <RadioGroup
+            android:id="@+id/radio_group_mode"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp" >
+
+            <RadioButton
+                android:id="@+id/radio_baby"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checked="true"
+                android:text="@string/at_baby" />
+
+            <RadioButton
+                android:id="@+id/radio_parents"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:checked="false"
+                android:text="@string/at_parents" />
+        </RadioGroup>
     </LinearLayout>
 
     <LinearLayout style="@style/layout_footer" >

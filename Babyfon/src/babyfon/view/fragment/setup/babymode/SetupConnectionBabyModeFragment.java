@@ -33,6 +33,7 @@ public class SetupConnectionBabyModeFragment extends Fragment {
 	private CheckBox chkBoxWifi;
 	private CheckBox chkBoxWifiDirect;
 	private TextView title;
+	private TextView infoText;
 
 	private BluetoothHandler mBluetoothHandler;
 	private WifiHandler mWifiHandler;
@@ -98,14 +99,19 @@ public class SetupConnectionBabyModeFragment extends Fragment {
 		// Initialize Checkboxes
 		chkBoxBluetooth = (CheckBox) view.findViewById(R.id.chkBoxConnectionBluetooth);
 		chkBoxBluetooth.setEnabled(true);
+		chkBoxBluetooth.setTypeface(mTypeface_i);
 		chkBoxWifi = (CheckBox) view.findViewById(R.id.chkBoxConnectionWifi);
 		chkBoxWifi.setEnabled(true);
+		chkBoxWifi.setTypeface(mTypeface_i);
 		chkBoxWifiDirect = (CheckBox) view.findViewById(R.id.chkBoxConnectionWifiDirect);
 		chkBoxWifiDirect.setEnabled(true);
+		chkBoxWifiDirect.setTypeface(mTypeface_i);
 
 		// Initialize TextViews
 		title = (TextView) view.findViewById(R.id.text_titleConnectionBaby);
 		title.setTypeface(mTypeface_bi);
+		infoText = (TextView) view.findViewById(R.id.text_connection);
+		infoText.setTypeface(mTypeface_i);
 
 		updateUI();
 	}

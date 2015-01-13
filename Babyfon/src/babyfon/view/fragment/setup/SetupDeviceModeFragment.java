@@ -3,6 +3,7 @@ package babyfon.view.fragment.setup;
 import babyfon.init.R;
 import babyfon.settings.SharedPrefs;
 import babyfon.view.fragment.setup.babymode.SetupConnectionBabyModeFragment;
+import babyfon.view.fragment.setup.babymode.SetupForwardingFragment;
 import babyfon.view.fragment.setup.parentmode.SetupConnectionParentsModeFragment;
 import android.app.Fragment;
 import android.app.FragmentManager;
@@ -14,29 +15,33 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.ImageView;
+import android.widget.RadioButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class SetupDeviceModeFragment extends Fragment {
 
 	// Define UI elements
 	private Button btnForward;
-	private ImageView imgViewBabyMode;
-	private ImageView imgViewParentsMode;
+	private RadioButton radioBaby;
+	private RadioButton radioParents;
 	private TextView title;
+	private TextView infoText;
 
 	private SharedPrefs mSharedPrefs;
 
-	private SetupConnectionBabyModeFragment connectionBabyFragment;
-	private SetupConnectionParentsModeFragment connectionParentsFragment;
+	private SetupConnectionBabyModeFragment nextFragmentBaby;
+	private SetupConnectionParentsModeFragment nextFragmentParents;
 
 	private Context mContext;
 
 	// Constructor
 	public SetupDeviceModeFragment(Context mContext) {
 		mSharedPrefs = new SharedPrefs(mContext);
-		connectionBabyFragment = new SetupConnectionBabyModeFragment(mContext);
-		connectionParentsFragment = new SetupConnectionParentsModeFragment(mContext);
+		nextFragmentBaby = new SetupConnectionBabyModeFragment(mContext);
+		nextFragmentParents = new SetupConnectionParentsModeFragment(mContext);
 
 		this.mContext = mContext;
 	}
@@ -64,13 +69,17 @@ public class SetupDeviceModeFragment extends Fragment {
 		btnForward = (Button) view.findViewById(R.id.btn_forwardSetupDeviceMode);
 		btnForward.setTypeface(mTypeface_i);
 
-		// Initialize ImageViews
-		imgViewBabyMode = (ImageView) view.findViewById(R.id.imgbtn_baby);
-		imgViewParentsMode = (ImageView) view.findViewById(R.id.imgbtn_parents);
+		// Initialize Checkboxes
+		radioBaby = (RadioButton) view.findViewById(R.id.radio_baby);
+		radioBaby.setTypeface(mTypeface_i);
+		radioParents = (RadioButton) view.findViewById(R.id.radio_parents);
+		radioParents.setTypeface(mTypeface_i);
 
 		// Initialize TextViews
 		title = (TextView) view.findViewById(R.id.title_device_mode);
 		title.setTypeface(mTypeface_bi);
+		infoText = (TextView) view.findViewById(R.id.text_device_mode);
+		infoText.setTypeface(mTypeface_i);
 
 		updateUI();
 	}
@@ -84,23 +93,21 @@ public class SetupDeviceModeFragment extends Fragment {
 
 		initUiElements(view);
 
-		imgViewBabyMode.setOnClickListener(new OnClickListener() {
+		btnForward.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				mSharedPrefs.setDeviceModeTemp(0);
-				mFragmentManager.beginTransaction().replace(R.id.frame_container, connectionBabyFragment, null)
-						.addToBackStack(null).commit();
+				if (radioBaby.isChecked()) {
+					mSharedPrefs.setDeviceModeTemp(0);
+					mFragmentManager.beginTransaction().replace(R.id.frame_container, nextFragmentBaby, null)
+							.addToBackStack(null).commit();
+				} else {
+					mSharedPrefs.setDeviceModeTemp(1);
+					mFragmentManager.beginTransaction().replace(R.id.frame_container, nextFragmentParents, null)
+							.addToBackStack(null).commit();
+				}
 			}
 		});
 
-		imgViewParentsMode.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				mSharedPrefs.setDeviceModeTemp(1);
-				mFragmentManager.beginTransaction().replace(R.id.frame_container, connectionParentsFragment, null)
-						.addToBackStack(null).commit();
-			}
-		});
 		return view;
 	}
 

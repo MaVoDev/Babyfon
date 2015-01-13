@@ -11,29 +11,36 @@
 
     <LinearLayout style="@style/layout_body" >
 
+        <TextView
+            android:id="@+id/text_connection"
+            style="@style/info_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/text_connection" />
+
         <CheckBox
             android:id="@+id/chkBoxConnectionWifi"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="32dp"
-            android:checked="true"
+            android:layout_marginTop="20dp"
+            android:checked="false"
             android:text="@string/wifi" />
 
         <CheckBox
             android:id="@+id/chkBoxConnectionWifiDirect"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:checked="true"
+            android:layout_marginTop="20dp"
+            android:checked="false"
             android:text="@string/wifip2p" />
 
         <CheckBox
             android:id="@+id/chkBoxConnectionBluetooth"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="32dp"
-            android:checked="true"
+            android:layout_marginTop="20dp"
+            android:checked="false"
             android:text="@string/bluetooth" />
-
     </LinearLayout>
 
     <LinearLayout style="@style/layout_footer" >

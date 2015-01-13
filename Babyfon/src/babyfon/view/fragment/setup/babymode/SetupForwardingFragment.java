@@ -31,7 +31,7 @@ public class SetupForwardingFragment extends Fragment {
 	private CheckBox chkboxCall;
 	private CheckBox chkboxSMS;
 	private TextView title;
-	private TextView info_text;
+	private TextView infoText;
 	private RadioButton radioForwardSMS;
 	private RadioButton radioInfoSMS;
 
@@ -92,8 +92,8 @@ public class SetupForwardingFragment extends Fragment {
 		// Initialize TextViews
 		title = (TextView) view.findViewById(R.id.title_forwarding);
 		title.setTypeface(mTypeface_bi);
-		info_text = (TextView) view.findViewById(R.id.text_privacy);
-		info_text.setTypeface(mTypeface_i);
+		infoText = (TextView) view.findViewById(R.id.text_forwarding);
+		infoText.setTypeface(mTypeface_i);
 
 		updateUI();
 	}

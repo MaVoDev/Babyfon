@@ -95,6 +95,8 @@
         <item name="android:gravity">center_horizontal</item>
         <item name="android:textSize">@dimen/info_text</item>
         <item name="android:layout_marginBottom">10dp</item>
+        <item name="android:padding">8dp</item>
+        <item name="android:background">@drawable/bg_info_text_male</item>
     </style>
 
 </resources>

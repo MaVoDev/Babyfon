@@ -47,41 +47,25 @@
 
     <!-- Fragment info texts -->
     <string name="text_forwarding">Du kannst Anrufe und SMS an das verbundene Gerät weiterleiten lassen. Wähle dazu die gewünschte Option.</string>
+    <string name="text_connection">Wähle mindestens eine Verbindung, über die du mit einem anderen Gerät kommunizieren möchtest.</string>
+    <string name="text_device_mode">Entscheide zwischen dem Baby- und dem Elternmodus. Bei wem wird das Gerät später liegen?</string>
+    <string name="text_complete_baby">Die Einrichtung ist abgeschlossen und der Babymodus ist jetzt aktiv. Mit dem unten stehenden Passwort kannst du dich mit diesem Gerät verbinden.</string>
 
     <!-- # -->
     <string name="ip_localhost">127.0.0.1</string>
     <string name="btn_complete_setup">Einrichtung abschließen</string>
     <string name="btn_delete_list">Liste löschen</string>
-
-    <!-- A -->
     <string name="app_name">Babyfon</string>
-
-    <!-- B -->
-
     <string name="bluetooth">Bluetooth</string>
-    <string name="wifi">Wi-Fi</string>
+    <string name="wifi">Wi-Fi (W-LAN)</string>
     <string name="wifip2p">Wi-Fi Direct</string>
-    <string name="connect_null">-</string>
-
-    <!-- F -->
-
-
-    <!-- M -->
-    <string name="mode_baby">Babymodus</string>
-    <string name="mode_parents">Elternmodus</string>
-
-    <!-- O -->
+    <string name="at_baby">Bei dem Baby</string>
+    <string name="at_parents">Bei den Eltern</string>
     <string name="ok">OK</string>
-
-    <!-- N -->
     <string name="no">Nein</string>
-
-    <!-- S -->
     <string name="settings">Einstellungen</string>
     <string name="call_name_unknown">Unbekannter Anrufer</string>
     <string name="call_number_unknown">Die Telefonnummer wurde unterdrückt</string>
-
-    <!-- Y -->
     <string name="yes">Ja</string>
 
     <!-- Error Types -->
@@ -92,12 +76,6 @@
     <string name="ERRMSG_UNKNOWN_ERROR">Es ist ein unbekannter Fehler aufgetreten.</string>
     <string name="ERRMSG_WIFI_STATE_ERROR">Wi-Fi ist nicht eingeschaltet.</string>
     <string name="ERRMSG_WIFI_CONNECTION_ERROR">Keine Netzwerkverbindung gefunden.</string>
-
-    <!-- Memos -->
-    <string name="privacy_call_yes">Anrufe werden nicht weitergeleitet</string>
-    <string name="privacy_call_no">Anrufe werden weitergeleitet</string>
-    <string name="privacy_sms_yes">SMS werden nicht weitergeleitet</string>
-    <string name="privacy_sms_no">SMS werden weitergeleitet</string>
 
     <!-- Content Description -->
     <string name="desc_img_default">Image default description</string>

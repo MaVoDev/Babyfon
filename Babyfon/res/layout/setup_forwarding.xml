@@ -12,7 +12,7 @@
     <LinearLayout style="@style/layout_body" >
 
         <TextView
-            android:id="@+id/text_privacy"
+            android:id="@+id/text_forwarding"
             style="@style/info_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
