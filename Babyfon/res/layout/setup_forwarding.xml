@@ -1,0 +1,87 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/layout_content" >
+
+    <LinearLayout style="@style/layout_header" >
+
+        <TextView
+            android:id="@+id/title_forwarding"
+            style="@style/fragmentTitle"
+            android:text="@string/title_forwarding" />
+    </LinearLayout>
+
+    <LinearLayout style="@style/layout_body" >
+
+        <TextView
+            android:id="@+id/text_privacy"
+            style="@style/info_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/text_forwarding" />
+
+        <CheckBox
+            android:id="@+id/chkbox_forwarding_Call"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:checked="false"
+            android:text="@string/chkbox_incoming_calls" />
+
+        <CheckBox
+            android:id="@+id/chkbox_forwarding_SMS"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:text="@string/chkbox_incoming_sms" />
+
+        <RadioGroup
+            android:id="@+id/radio_group_sms"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="24dp" >
+
+            <RadioButton
+                android:id="@+id/forward_sms_info"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checked="true"
+                android:enabled="false"
+                android:text="@string/radio_only_notify" />
+
+            <RadioButton
+                android:id="@+id/forward_sms"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checked="false"
+                android:enabled="false"
+                android:text="@string/radio_forward" />
+        </RadioGroup>
+    </LinearLayout>
+
+    <LinearLayout style="@style/layout_footer" >
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:layout_weight="1" >
+
+            <Button
+                android:id="@+id/btn_backward_setup_forwarding"
+                style="@style/button_footer_left"
+                android:text="@string/btn_backward" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:layout_weight="1" >
+
+            <Button
+                android:id="@+id/btn_forward_setup_forwarding"
+                style="@style/button_footer_right"
+                android:text="@string/btn_forward" />
+        </LinearLayout>
+    </LinearLayout>
+
+</LinearLayout>

@@ -18,16 +18,22 @@ import android.view.ViewGroup;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 
-public class SetupPrivacyFragment extends Fragment {
+public class SetupForwardingFragment extends Fragment {
 
 	// Define ui elements
 	private Button btnBackward;
 	private Button btnForward;
-	private CheckBox chkboxPrivacyCall;
-	private CheckBox chkboxPrivacySMS;
+	private CheckBox chkboxCall;
+	private CheckBox chkboxSMS;
 	private TextView title;
+	private TextView info_text;
+	private RadioButton radioForwardSMS;
+	private RadioButton radioInfoSMS;
 
 	// Fragments
 	private SetupCompleteBabyModeFragment nextFragment;
@@ -37,7 +43,7 @@ public class SetupPrivacyFragment extends Fragment {
 	private Context mContext;
 
 	// Constructor
-	public SetupPrivacyFragment(Context mContext) {
+	public SetupForwardingFragment(Context mContext) {
 		nextFragment = new SetupCompleteBabyModeFragment(mContext);
 		mSharedPrefs = new SharedPrefs(mContext);
 
@@ -66,18 +72,28 @@ public class SetupPrivacyFragment extends Fragment {
 		Typeface mTypeface_i = Typeface.createFromAsset(mContext.getAssets(), "fonts/BOOKOSI.TTF");
 
 		// Initialize Buttons
-		btnBackward = (Button) view.findViewById(R.id.btn_backwardSetupPrivacy);
+		btnBackward = (Button) view.findViewById(R.id.btn_backward_setup_forwarding);
 		btnBackward.setTypeface(mTypeface_i);
-		btnForward = (Button) view.findViewById(R.id.btn_forwardSetupPrivacy);
+		btnForward = (Button) view.findViewById(R.id.btn_forward_setup_forwarding);
 		btnForward.setTypeface(mTypeface_i);
 
 		// Initialize Checkboxes
-		chkboxPrivacyCall = (CheckBox) view.findViewById(R.id.chkbox_privacyCall);
-		chkboxPrivacySMS = (CheckBox) view.findViewById(R.id.chkbox_privacySMS);
+		chkboxCall = (CheckBox) view.findViewById(R.id.chkbox_forwarding_Call);
+		chkboxCall.setTypeface(mTypeface_i);
+		chkboxSMS = (CheckBox) view.findViewById(R.id.chkbox_forwarding_SMS);
+		chkboxSMS.setTypeface(mTypeface_i);
+
+		// Initialize RadioButtons
+		radioForwardSMS = (RadioButton) view.findViewById(R.id.forward_sms);
+		radioForwardSMS.setTypeface(mTypeface_i);
+		radioInfoSMS = (RadioButton) view.findViewById(R.id.forward_sms_info);
+		radioInfoSMS.setTypeface(mTypeface_i);
 
 		// Initialize TextViews
-		title = (TextView) view.findViewById(R.id.text_titleSetupPrivacy);
+		title = (TextView) view.findViewById(R.id.title_forwarding);
 		title.setTypeface(mTypeface_bi);
+		info_text = (TextView) view.findViewById(R.id.text_privacy);
+		info_text.setTypeface(mTypeface_i);
 
 		updateUI();
 	}
@@ -85,7 +101,7 @@ public class SetupPrivacyFragment extends Fragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-		View view = inflater.inflate(R.layout.setup_privacy, container, false);
+		View view = inflater.inflate(R.layout.setup_forwarding, container, false);
 
 		final FragmentManager mFragmentManager = getFragmentManager();
 
@@ -105,20 +121,41 @@ public class SetupPrivacyFragment extends Fragment {
 			@Override
 			public void onClick(View v) {
 
-				if (chkboxPrivacyCall.isChecked()) {
-					mSharedPrefs.setPrivacyCallTemp(true);
+				if (chkboxCall.isChecked()) {
+					mSharedPrefs.setForwardingCallInfoTemp(true);
 				} else {
-					mSharedPrefs.setPrivacyCallTemp(false);
+					mSharedPrefs.setForwardingCallInfoTemp(false);
 				}
 
-				if (chkboxPrivacySMS.isChecked()) {
-					mSharedPrefs.setPrivacySMSTemp(true);
+				if (chkboxSMS.isChecked()) {
+					if (radioInfoSMS.isChecked()) {
+						mSharedPrefs.setForwardingSMSInfoTemp(true);
+						mSharedPrefs.setForwardingSMSTemp(false);
+					} else {
+						mSharedPrefs.setForwardingSMSTemp(true);
+						mSharedPrefs.setForwardingSMSInfoTemp(false);
+					}
 				} else {
-					mSharedPrefs.setPrivacySMSTemp(false);
+					mSharedPrefs.setForwardingSMSInfoTemp(false);
+					mSharedPrefs.setForwardingSMSTemp(false);
 				}
 
 				mFragmentManager.beginTransaction().replace(R.id.frame_container, nextFragment, null)
 						.addToBackStack(null).commit();
+			}
+		});
+
+		chkboxSMS.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+
+			@Override
+			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+				if (isChecked) {
+					radioForwardSMS.setEnabled(true);
+					radioInfoSMS.setEnabled(true);
+				} else {
+					radioForwardSMS.setEnabled(false);
+					radioInfoSMS.setEnabled(false);
+				}
 			}
 		});
 

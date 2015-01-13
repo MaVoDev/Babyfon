@@ -72,7 +72,7 @@ public class SetupCompleteBabyModeFragment extends Fragment {
 
 		updateUI();
 	}
-	
+
 	public void handleModules() {
 		if (mSharedPrefs.getWiFiSharedStateTemp()) {
 			mModuleHandler.startTCPReceiver();
@@ -81,7 +81,7 @@ public class SetupCompleteBabyModeFragment extends Fragment {
 			mModuleHandler.stopTCPReceiver();
 			mModuleHandler.stopUDPReceiver();
 		}
-		
+
 		mSharedPrefs.setRemoteAdress(null);
 		mSharedPrefs.setRemoteName(null);
 	}
@@ -103,12 +103,21 @@ public class SetupCompleteBabyModeFragment extends Fragment {
 
 		// Store values in the shared preferences
 		mSharedPrefs.setDeviceMode(mSharedPrefs.getDeviceModeTemp());
+		Log.d(TAG, "Deveice mode: " + mSharedPrefs.getDeviceMode());
 		mSharedPrefs.setBluetoothSharedState(mSharedPrefs.getBluetoothSharedStateTemp());
+		Log.d(TAG, "Bluetooth state: " + mSharedPrefs.getBluetoothSharedState());
 		mSharedPrefs.setWiFiSharedState(mSharedPrefs.getWiFiSharedStateTemp());
+		Log.d(TAG, "Wi-Fi state: " + mSharedPrefs.getWiFiSharedState());
 		mSharedPrefs.setWiFiDirectSharedState(mSharedPrefs.getWiFiDirectSharedStateTemp());
-		mSharedPrefs.setPrivacyCall(mSharedPrefs.getPrivacyCallTemp());
-		mSharedPrefs.setPrivacySMS(mSharedPrefs.getPrivacySMSTemp());
+		Log.d(TAG, "Wi-Fi Direct state: " + mSharedPrefs.getWiFiDirectSharedState());
+		mSharedPrefs.setForwardingCallInfo(mSharedPrefs.getForwardingCallInfoTemp());
+		Log.d(TAG, "Forwarding Call info: " + mSharedPrefs.getForwardingCallInfo());
+		mSharedPrefs.setForwardingSMS(mSharedPrefs.getForwardingSMSTemp());
+		Log.d(TAG, "Forwarding SMS: " + mSharedPrefs.getForwardingSMS());
+		mSharedPrefs.setForwardingSMSInfo(mSharedPrefs.getForwardingSMSInfoTemp());
+		Log.d(TAG, "Forwarding SMS info: " + mSharedPrefs.getForwardingSMSInfo());
 		mSharedPrefs.setPassword(password);
+		Log.d(TAG, "Password: " + mSharedPrefs.getPassword());
 
 		mSound.mute();
 

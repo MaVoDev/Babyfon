@@ -349,80 +349,116 @@ public class SharedPrefs {
 		editor.putBoolean("wifi_direct_shared_state_temp", state).commit();
 	}
 
-	// == Privacy: Call =================================
+	// == Forwarding: Call =================================
 
 	/**
-	 * Get the state of call privacy.
+	 * Get the state of call info.
 	 * 
-	 * @return boolean: true = send forward, false = don't send forward
+	 * @return boolean: true = send , false = don't send
 	 */
-	public boolean getPrivacyCall() {
-		return mSharedPreferences.getBoolean("privacy_call", false);
+	public boolean getForwardingCallInfo() {
+		return mSharedPreferences.getBoolean("forwarding_call_info", false);
 	}
 
 	/**
-	 * Set the state of call privacy.
+	 * Set the state of call info.
 	 * 
-	 * @param boolean state: state of call privacy
+	 * @param boolean state: state of call forwarding
 	 */
-	public void setPrivacyCall(boolean state) {
-		editor.putBoolean("privacy_call", state).commit();
+	public void setForwardingCallInfo(boolean state) {
+		editor.putBoolean("forwarding_call_info", state).commit();
 	}
 
 	/**
-	 * Get the temporary state of call privacy.
+	 * Get the temporary state of call info.
 	 * 
-	 * @return boolean: true = send forward, false = don't send forward
+	 * @return boolean: true = send forward, false = don't send
 	 */
-	public boolean getPrivacyCallTemp() {
-		return mSharedPreferences.getBoolean("privacy_call_temp", false);
+	public boolean getForwardingCallInfoTemp() {
+		return mSharedPreferences.getBoolean("forwarding_call_info_temp", false);
 	}
 
 	/**
-	 * Set the temporary state of call privacy.
+	 * Set the temporary state of call info.
 	 * 
-	 * @param boolean state: temporary state of call privacy
+	 * @param boolean state: temporary state of call
 	 */
-	public void setPrivacyCallTemp(boolean state) {
-		editor.putBoolean("privacy_call_temp", state).commit();
+	public void setForwardingCallInfoTemp(boolean state) {
+		editor.putBoolean("forwarding_call_info_temp", state).commit();
 	}
 
-	// == Privacy: sms =================================
+	// == Forwarding: sms =================================
 
 	/**
-	 * Get the state of sms privacy.
+	 * Get the state of sms forwarding.
 	 * 
-	 * @return boolean: true = send forward, false = don't send forward
+	 * @return boolean: true = send , false = don't send
 	 */
-	public boolean getPrivacySMS() {
-		return mSharedPreferences.getBoolean("privacy_sms", false);
-	}
-
-	/**
-	 * Set the state of sms privacy.
-	 * 
-	 * @param boolean state: state of call privacy
-	 */
-	public void setPrivacySMS(boolean state) {
-		editor.putBoolean("privacy_sms", state).commit();
+	public boolean getForwardingSMS() {
+		return mSharedPreferences.getBoolean("forwarding_sms", false);
 	}
 
 	/**
-	 * Get the temporary state of sms privacy.
+	 * Set the state of sms forwarding.
 	 * 
-	 * @return boolean: true = send forward, false = don't send forward
+	 * @param boolean state: state of call forwarding
 	 */
-	public boolean getPrivacySMSTemp() {
-		return mSharedPreferences.getBoolean("privacy_sms_temp", false);
+	public void setForwardingSMS(boolean state) {
+		editor.putBoolean("forwarding_sms", state).commit();
 	}
 
 	/**
-	 * Set the temporary state of sms privacy.
+	 * Get the temporary state of sms forwarding.
 	 * 
-	 * @param boolean temporary state: temporary state of call privacy
+	 * @return boolean: true = send , false = don't send
 	 */
-	public void setPrivacySMSTemp(boolean state) {
-		editor.putBoolean("privacy_sms_temp", state).commit();
+	public boolean getForwardingSMSTemp() {
+		return mSharedPreferences.getBoolean("forwarding_sms_temp", false);
+	}
+
+	/**
+	 * Set the temporary state of sms forwarding.
+	 * 
+	 * @param boolean temporary state: temporary state of sms forwarding
+	 */
+	public void setForwardingSMSTemp(boolean state) {
+		editor.putBoolean("forwarding_sms_temp", state).commit();
+	}
+
+	/**
+	 * Get the state of sms forwarding info.
+	 * 
+	 * @return boolean: true = send, false = don't send
+	 */
+	public boolean getForwardingSMSInfo() {
+		return mSharedPreferences.getBoolean("forwarding_sms_info", false);
+	}
+
+	/**
+	 * Set the state of sms info forwarding.
+	 * 
+	 * @param boolean state: state of call forwarding
+	 */
+	public void setForwardingSMSInfo(boolean state) {
+		editor.putBoolean("forwarding_sms_info", state).commit();
+	}
+
+	/**
+	 * Get the temporary state of sms info forwarding.
+	 * 
+	 * @return boolean: true = send, false = don't send
+	 */
+	public boolean getForwardingSMSInfoTemp() {
+		return mSharedPreferences.getBoolean("forwarding_sms_info_temp", false);
+	}
+
+	/**
+	 * Set the temporary state of sms info forwarding.
+	 * 
+	 * @param boolean temporary state: temporary state of sms info forwarding
+	 */
+	public void setForwardingSMSInfoTemp(boolean state) {
+		editor.putBoolean("forwarding_sms_info_temp", state).commit();
 	}
 
 	// == Password =================================
@@ -486,5 +522,43 @@ public class SharedPrefs {
 	 */
 	public void setConnectivityTypeTemp(int type) {
 		editor.putInt("connectivity_type_temp", type).commit();
+	}
+
+	// == Number of connections =================================
+
+	/**
+	 * Get the number of connections.
+	 * 
+	 * @return int: 0 = block, 1 - n connection devices
+	 */
+	public int getNumberOfConnections() {
+		return mSharedPreferences.getInt("number_of_connections", 1);
+	}
+
+	/**
+	 * Set the number of connections.
+	 * 
+	 * @param int mode: 0 = block, 1 - n connection devices
+	 */
+	public void setNumberOfConnections(int num) {
+		editor.putInt("number_of_connections", num).commit();
+	}
+
+	/**
+	 * Get the temporary number of connections.
+	 * 
+	 * @return int: 0 = block, 1 - n connection devices
+	 */
+	public int getNumberOfConnectionsTemp() {
+		return mSharedPreferences.getInt("number_of_connections_temp", -1);
+	}
+
+	/**
+	 * Set the temporary number of connections.
+	 * 
+	 * @param int temporary mode: 0 = block, 1 - n connection devices
+	 */
+	public void setNumberOfConnectionsTemp(int num) {
+		editor.putInt("number_of_connections_temp", num).commit();
 	}
 }

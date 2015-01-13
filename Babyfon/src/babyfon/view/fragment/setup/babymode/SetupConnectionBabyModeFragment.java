@@ -37,7 +37,7 @@ public class SetupConnectionBabyModeFragment extends Fragment {
 	private BluetoothHandler mBluetoothHandler;
 	private WifiHandler mWifiHandler;
 
-	private SetupPrivacyFragment nextFragment;
+	private SetupForwardingFragment nextFragment;
 	private SharedPrefs mSharedPrefs;
 
 	private Context mContext;
@@ -47,7 +47,7 @@ public class SetupConnectionBabyModeFragment extends Fragment {
 
 	// Constructor
 	public SetupConnectionBabyModeFragment(Context mContext) {
-		nextFragment = new SetupPrivacyFragment(mContext);
+		nextFragment = new SetupForwardingFragment(mContext);
 		mBluetoothHandler = new BluetoothHandler();
 		mWifiHandler = new WifiHandler(mContext);
 
