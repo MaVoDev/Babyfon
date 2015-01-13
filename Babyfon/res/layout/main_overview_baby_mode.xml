@@ -14,7 +14,23 @@
 
     </LinearLayout>
 
-    <LinearLayout style="@style/layout_footer" >
+    <LinearLayout style="@style/layout_footer" 
+        android:gravity="right"
+        android:layout_gravity="center_vertical">
+
+        <TextView
+            android:id="@+id/textView1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:text="Babymodus ist inaktiv" />
+
+        <ToggleButton
+            android:id="@+id/toggleButton1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            android:text="ToggleButton" />
 
     </LinearLayout>
 

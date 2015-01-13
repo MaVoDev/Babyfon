@@ -4,24 +4,28 @@ ToDo:
 - Elternmodus: Verbindung aktivieren (wenn aus), die gewählt wurde (auch überprüfen, ob an)
 - Verpasste Anrufe weiterleiten
 - Eingehende SMS weiterleiten
-- Audiostreaming
-- Mikrofonsensibilität einstellen können
+- Verbundenes Gerät kann im BabyOverview entfernt werden
+- Audiostreaming per WiFi und Bluetooth
+- Mikrofonsensibilität einstellen können im BabyOverview
 - Geräusch erkennen
 - WiFi Direct State
 - WiFi Direct Verbindung
 - Bluetooth Verbindung
-- Service
 - Call als Receiver laufen lassen
+# Verbindung des Parentsmode im Babymode in den Shared speichern und diese verwenden (für beide Modi) und immer auf diese Prüfen (setConnectivity). Eine extra Klasse für den Test (welche Verbindung, Verbindung aktiv, Remote vorhanden)
+# Service
+# Privacy vervollständigen und abschließen (- Eingehende Anrufe, - Eingehende SMS, --Nur Benachrichtigen, --SMS weiterleiten) Davor noch einen Text, bla blubb...
+# DeviceModeFragment abschließen
+# Übersichtsseite Baby: Babymodus on/off (Wenn off, dann nachricht an Elternmode), Passwort anzeigen, Anzahl Freigegebene Verbindungen, Verbundene Geräte (Auch quick einstellbar im Overview)
+# ListView für Verpasste Anrufe/SMS 
+# Anzahl maximaler Verbindungen
 
 Design:
 =============================================================================================================
-- ListView für Verpasste Anrufe/SMS 
-- Verpasste Anrufe anzeigen
-- Übersichtsseite Baby: Babymodus on/off (Wenn off, dann nachricht an Elternmode), Passwort anzeigen, Freigegebene Verbindungen, Verbundene Geräte
 - Eingehende SMS anzeigen
-- Babymonitor: eingehenden Audiostream (Button On/Off), batterie vom Babygerät, Geräuschpegel, Signalisierungsalarm
-- Navigation Drawer
-- Im Babymodus Navigation Drawer auf Übersicht und Setup beschränken
+- Verpasste Anrufe anzeigen
+- Babymonitor: eingehenden Audiostream (Button On/Off), Batterie, Geräuschpegel, Signalisierungsalarm
+- (Im Babymodus Navigation Drawer auf Übersicht und Setup beschränken)
 
 Bugs:
 =============================================================================================================

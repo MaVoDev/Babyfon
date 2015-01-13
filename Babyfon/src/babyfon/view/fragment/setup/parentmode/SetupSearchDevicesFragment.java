@@ -21,6 +21,7 @@ import babyfon.view.activity.MainActivity;
 import babyfon.view.fragment.BabyMonitorFragment;
 import babyfon.view.fragment.overview.OverviewBabyFragment;
 import babyfon.view.fragment.overview.OverviewParentsFragment;
+import babyfon.view.fragment.setup.SetupDeviceModeFragment;
 import babyfon.view.fragment.setup.SetupStartFragment;
 import android.app.AlertDialog;
 import android.app.Fragment;
@@ -50,6 +51,7 @@ import android.widget.Toast;
 public class SetupSearchDevicesFragment extends Fragment {
 
 	// Define ui elements
+	private Button btnBackward;
 	private Button btnRefresh;
 	private static ListView listViewDevices;
 	private TextView title;
@@ -73,14 +75,18 @@ public class SetupSearchDevicesFragment extends Fragment {
 	public SetupSearchDevicesFragment(Context mContext) {
 		mModuleHandler = new ModuleHandler(mContext);
 		mSharedPrefs = new SharedPrefs(mContext);
+
+		this.mContext = mContext;
 	}
 
 	public void updateUI() {
 		// Update buttons
 		if (mSharedPrefs.getGender() == 0) {
 			btnRefresh.setBackgroundResource(R.drawable.btn_selector_male);
+			btnBackward.setBackgroundResource(R.drawable.btn_selector_male);
 		} else {
 			btnRefresh.setBackgroundResource(R.drawable.btn_selector_female);
+			btnBackward.setBackgroundResource(R.drawable.btn_selector_female);
 		}
 	}
 
@@ -126,6 +132,8 @@ public class SetupSearchDevicesFragment extends Fragment {
 		// Initialize Buttons
 		btnRefresh = (Button) view.findViewById(R.id.btn_refresh_list);
 		btnRefresh.setTypeface(mTypeface_i);
+		btnBackward = (Button) view.findViewById(R.id.btn_backwardSetupSearch);
+		btnBackward.setTypeface(mTypeface_i);
 
 		// Initialize TextViews
 		title = (TextView) view.findViewById(R.id.title_search);
@@ -141,17 +149,11 @@ public class SetupSearchDevicesFragment extends Fragment {
 
 		final FragmentManager mFragmentManager = getFragmentManager();
 
-		devices = new ArrayList<DeviceListItemModel>();
-
 		initUiElements(view);
 
-		mModuleHandler.unregisterBattery();
+		devices = new ArrayList<DeviceListItemModel>();
 
-		if (mSharedPrefs.getConnectivityTypeTemp() == 2) {
-			new ModuleHandler(mContext).startTCPReceiver();
-		} else {
-			new ModuleHandler(mContext).stopTCPReceiver();
-		}
+		mModuleHandler.unregisterBattery();
 
 		connectivityType = mSharedPrefs.getConnectivityTypeTemp();
 		switch (connectivityType) {
@@ -165,6 +167,15 @@ public class SetupSearchDevicesFragment extends Fragment {
 			initViewBWifiDirect();
 			break;
 		}
+
+		btnBackward.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				mFragmentManager.beginTransaction()
+						.replace(R.id.frame_container, new SetupConnectionParentsModeFragment(mContext), null)
+						.addToBackStack(null).commit();
+			}
+		});
 
 		btnRefresh.setOnClickListener(new OnClickListener() {
 			@Override

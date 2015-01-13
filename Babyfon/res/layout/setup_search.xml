@@ -24,12 +24,31 @@
 
     <LinearLayout style="@style/layout_footer" >
 
-        <Button
-            android:id="@+id/btn_refresh_list"
-            style="@style/button_footer_single"
-            android:layout_marginTop="10dp"
-            android:layout_weight="1"
-            android:text="@string/btn_refresh" />
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:layout_weight="1" >
+
+            <Button
+                android:id="@+id/btn_backwardSetupSearch"
+                style="@style/button_footer_left"
+                android:text="@string/btn_backward" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:layout_weight="1" >
+
+            <Button
+                android:id="@+id/btn_refresh_list"
+                style="@style/button_footer_right"
+                android:layout_marginTop="10dp"
+                android:layout_weight="1"
+                android:text="@string/btn_refresh" />
+        </LinearLayout>
     </LinearLayout>
 
 </LinearLayout>
