@@ -31,7 +31,9 @@ public class Message {
 	}
 
 	public void send(String str) {
-		new TCPSender(mContext).sendMessage(mSharedPrefs.getRemoteAddress(), str);
+		if (mSharedPrefs.getConnectivityType() == 2) {
+			new TCPSender(mContext).sendMessage(mSharedPrefs.getRemoteAddress(), str);
+		}
 	}
 
 	public void handleIncomingMessage(String str) {
@@ -61,14 +63,19 @@ public class Message {
 		}
 
 		if (strArray[0].equals(mContext.getString(R.string.MESSAGE_AUTH_REQ))) {
+			System.out.println(strArray.length);
 			final String password = strArray[1];
 			final String remoteAddress = strArray[2];
+			final String connectivityType = strArray[3];
 
 			mSharedPrefs.setRemoteAdress(remoteAddress);
 
 			if (mSharedPrefs.getPassword().equals(password)) {
-
+				mSharedPrefs.setConnectivityType(Integer.parseInt(connectivityType));
 				int numberOfConnections = mSharedPrefs.getNumberOfConnections() + 1;
+				
+				send(mContext.getString(R.string.MESSAGE_AUTH_CONFIRMED));
+				
 				mSharedPrefs.setNumberOfConnections(numberOfConnections);
 				if (mSharedPrefs.getNumberOfAllowedConnections() < numberOfConnections) {
 
@@ -76,7 +83,6 @@ public class Message {
 					mModuleHandler.stopUDPReceiver();
 				}
 				mModuleHandler.registerBattery();
-				send(mContext.getString(R.string.MESSAGE_AUTH_CONFIRMED));
 			} else {
 				send(mContext.getString(R.string.MESSAGE_AUTH_DENIED));
 			}

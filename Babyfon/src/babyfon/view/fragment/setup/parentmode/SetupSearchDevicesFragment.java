@@ -312,7 +312,7 @@ public class SetupSearchDevicesFragment extends Fragment {
 							e.printStackTrace();
 						}
 						new Message(mContext).send(mContext.getString(R.string.MESSAGE_AUTH_REQ) + ";" + password + ";"
-								+ localIP);
+								+ localIP + ";" + mSharedPrefs.getConnectivityTypeTemp());
 					}
 				});
 
