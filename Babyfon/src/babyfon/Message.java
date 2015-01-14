@@ -67,7 +67,14 @@ public class Message {
 			mSharedPrefs.setRemoteAdress(remoteAddress);
 
 			if (mSharedPrefs.getPassword().equals(password)) {
-				mModuleHandler.stopUDPReceiver();
+
+				int numberOfConnections = mSharedPrefs.getNumberOfConnections() + 1;
+				mSharedPrefs.setNumberOfConnections(numberOfConnections);
+				if (mSharedPrefs.getNumberOfAllowedConnections() < numberOfConnections) {
+
+				} else {
+					mModuleHandler.stopUDPReceiver();
+				}
 				mModuleHandler.registerBattery();
 				send(mContext.getString(R.string.MESSAGE_AUTH_CONFIRMED));
 			} else {
@@ -96,7 +103,7 @@ public class Message {
 			if (mSharedPrefs.getDeviceMode() == 0) {
 				mModuleHandler.startUDPReceiver();
 				mModuleHandler.unregisterBattery();
-				
+
 				mSharedPrefs.setRemoteAdress(null);
 				mSharedPrefs.setRemoteName(null);
 			} else {

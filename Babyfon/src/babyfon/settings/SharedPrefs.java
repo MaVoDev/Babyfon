@@ -529,36 +529,56 @@ public class SharedPrefs {
 	/**
 	 * Get the number of connections.
 	 * 
-	 * @return int: 0 = block, 1 - n connection devices
+	 * @return int: 0 = no clients, 1 - n clients
 	 */
 	public int getNumberOfConnections() {
-		return mSharedPreferences.getInt("number_of_connections", 1);
+		return mSharedPreferences.getInt("number_of_connections", 0);
 	}
 
 	/**
 	 * Set the number of connections.
 	 * 
-	 * @param int mode: 0 = block, 1 - n connection devices
+	 * @param int mode: 0 = no clients, 1 - n clients
 	 */
 	public void setNumberOfConnections(int num) {
 		editor.putInt("number_of_connections", num).commit();
 	}
 
+	// == Number of allowed connections =================================
+
 	/**
-	 * Get the temporary number of connections.
+	 * Get the number of allowed connections.
 	 * 
-	 * @return int: 0 = block, 1 - n connection devices
+	 * @return int: 0 = no clients, 1 - n clients
 	 */
-	public int getNumberOfConnectionsTemp() {
-		return mSharedPreferences.getInt("number_of_connections_temp", -1);
+	public int getNumberOfAllowedConnections() {
+		return mSharedPreferences.getInt("number_of_allowed_connections", 0);
 	}
 
 	/**
-	 * Set the temporary number of connections.
+	 * Set the number of allowed connections.
 	 * 
-	 * @param int temporary mode: 0 = block, 1 - n connection devices
+	 * @param int mode: 0 = no clients, 1 - n clients
 	 */
-	public void setNumberOfConnectionsTemp(int num) {
-		editor.putInt("number_of_connections_temp", num).commit();
+	public void setNumberOfAllowedConnections(int num) {
+		editor.putInt("number_of_allowed_connections", num).commit();
+	}
+
+	/**
+	 * Get the temporary number of allowed connections.
+	 * 
+	 * @return int: 0 = no clients, 1 - n clients
+	 */
+	public int getNumberOfAllowedConnectionsTemp() {
+		return mSharedPreferences.getInt("number_of_allowed_connections_temp", 1);
+	}
+
+	/**
+	 * Set the temporary number of allowed connections.
+	 * 
+	 * @param int temporary mode: 0 = no clients, 1 - n clients
+	 */
+	public void setNumberOfAllowedConnectionsTemp(int num) {
+		editor.putInt("number_of_allowed_connections_temp", num).commit();
 	}
 }

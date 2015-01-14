@@ -102,7 +102,9 @@ public class SetupCompleteParentsModeFragment extends Fragment {
 
 		// Store values in the shared preferences
 		mSharedPrefs.setDeviceMode(mSharedPrefs.getDeviceModeTemp());
+		Log.d(TAG, "Device mode: " + mSharedPrefs.getDeviceMode());
 		mSharedPrefs.setConnectivityType(mSharedPrefs.getConnectivityTypeTemp());
+		Log.d(TAG, "Connectivity type: " + mSharedPrefs.getConnectivityType());
 
 		initUiElements(view);
 		handleModules();

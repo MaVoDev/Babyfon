@@ -12,18 +12,12 @@ ToDo:
 - WiFi Direct Verbindung
 - Bluetooth Verbindung
 - Call als Receiver laufen lassen
-# Anzahl maximaler Verbindungen (in Prefs vorhanden)
-	- UDP Receiver aktivieren wenn Verbindungsanzahl nicht erreicht z.B wenn ein Gerät gekickt wurde
-	- UDP Receiver aktivieren beim Starten wenn Verbindungsanzahl nicht erreicht
-	- UDP Receiver deaktivieren wenn Verbindungsanzahl erreicht
-	- Battery Receiver aktivieren wenn mit einem Gerät verbunden.
-	- Battery Receiver deaktivieren wenn mit keinem Gerät verbunden.
-
+- UDP Receiver aktivieren und Batterie Reciever deaktivieren, wenn Verbindungsanzahl nicht erreicht z.B wenn ein Gerät gekickt wurde
 # Verbindung des Parentsmode im Babymode in den Shared speichern und diese verwenden (für beide Modi) und immer auf diese Prüfen (setConnectivity). Eine extra Klasse für den Test (welche Verbindung, Verbindung aktiv, Remote vorhanden)
 # Service
-# DeviceModeFragment abschließen
 # Übersichtsseite Baby: Babymodus on/off (Wenn off, dann nachricht an Elternmode), Passwort anzeigen, Anzahl Freigegebene Verbindungen, Verbundene Geräte (Auch quick einstellbar im Overview)
 # ListView für Verpasste Anrufe/SMS 
+# Design der Fragments fertigstellen
 
 
 Design:

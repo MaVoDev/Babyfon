@@ -36,7 +36,6 @@ import android.os.StrictMode;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v4.widget.DrawerLayout.DrawerListener;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -148,6 +147,7 @@ public class MainActivity extends FragmentActivity {
 			}
 
 			public void onDrawerOpened(View drawerView) {
+				// Set Typeface
 				getActionBar().setTitle(drawerTitle);
 				// calling onPrepareOptionsMenu() to hide action bar icons
 				invalidateOptionsMenu();
@@ -187,6 +187,13 @@ public class MainActivity extends FragmentActivity {
 		super.onStart();
 
 		if (mSharedPrefs.getDeviceMode() == 0) {
+			if (mSharedPrefs.getNumberOfConnections() < mSharedPrefs.getNumberOfAllowedConnections()) {
+				mModuleHandler.startUDPReceiver();
+			} else {
+				if (mSharedPrefs.getNumberOfConnections() > 0) {
+					mModuleHandler.registerBattery();
+				}
+			}
 			new Sound(this).mute();
 		}
 	}
