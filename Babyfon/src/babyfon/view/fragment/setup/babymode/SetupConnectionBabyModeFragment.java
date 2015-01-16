@@ -206,7 +206,6 @@ public class SetupConnectionBabyModeFragment extends Fragment {
 			@Override
 			public void onClick(View v) {
 				mSharedPrefs.setConnectivityTypeTemp(connectivityType);
-				Log.d(TAG, "Temporary connectivity: " + mSharedPrefs.getConnectivityTypeTemp());
 				mFragmentManager.beginTransaction().replace(R.id.frame_container, nextFragment, null)
 						.addToBackStack(null).commit();
 			}

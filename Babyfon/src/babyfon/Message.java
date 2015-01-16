@@ -81,15 +81,7 @@ public class Message {
 
 				mModuleHandler.stopUDPReceiver();
 				mModuleHandler.registerBattery();
-				
-				//TODO Funktioniert nicht, der Name wird nicht im Baby Overview aktualisier.
-//				((MainActivity) mContext).runOnUiThread(new Runnable() {
-//					@Override
-//					public void run() {
-//						Fragment fragment = ((MainActivity) mContext).getFragmentById("OverviewFragmentBaby");
-//						((OverviewBabyFragment) fragment).updateUI();
-//					}
-//				});
+
 			} else {
 				send(mContext.getString(R.string.MESSAGE_AUTH_DENIED));
 			}
@@ -112,25 +104,27 @@ public class Message {
 			});
 		}
 
-		if (strArray[0].equals(mContext.getString(R.string.MESSAGE_SYSTEM_EXIT))) {
+		if (strArray[0].equals(mContext.getString(R.string.MESSAGE_SYSTEM_AWAY))) {
 			if (mSharedPrefs.getDeviceMode() == 0) {
-				mModuleHandler.startUDPReceiver();
 				mModuleHandler.unregisterBattery();
-
-				mSharedPrefs.setRemoteAdress(null);
-				mSharedPrefs.setRemoteName(null);
-			} else {
-				mSharedPrefs.setRemoteAdress(null);
-				mSharedPrefs.setRemoteName(null);
 			}
-
-			((MainActivity) mContext).runOnUiThread(new Runnable() {
-				@Override
-				public void run() {
-					Toast toast = Toast.makeText(mContext, "Das Remotegerät wurde beendet.", Toast.LENGTH_SHORT);
-					toast.show();
-				}
-			});
+			mSharedPrefs.setRemoteOnlineState(false);
+		}
+		
+		if (strArray[0].equals(mContext.getString(R.string.MESSAGE_SYSTEM_DISCONNECTED))) {
+			if (mSharedPrefs.getDeviceMode() == 0) {
+				mModuleHandler.unregisterBattery();
+			}
+			mSharedPrefs.setRemoteOnlineState(false);
+			mSharedPrefs.setRemoteAdress(null);
+			mSharedPrefs.setRemoteName(null);
+		}
+		
+		if (strArray[0].equals(mContext.getString(R.string.MESSAGE_SYSTEM_REJOIN))) {
+			if (mSharedPrefs.getDeviceMode() == 0) {
+				mModuleHandler.registerBattery();
+			}
+			mSharedPrefs.setRemoteOnlineState(true);
 		}
 	}
 

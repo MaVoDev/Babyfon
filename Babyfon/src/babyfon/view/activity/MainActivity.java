@@ -79,11 +79,11 @@ public class MainActivity extends FragmentActivity {
 		if (mSharedPrefs.getDeviceMode() != -1) {
 			if (mSharedPrefs.getConnectivityType() == 2) {
 				mModuleHandler.startTCPReceiver();
+			} else {
+				if (mSharedPrefs.getRemoteAddress() == null) {
+					mModuleHandler.startUDPReceiver();
+				}
 			}
-		}
-
-		if (mSharedPrefs.getRemoteAddress() == null) {
-			mModuleHandler.startUDPReceiver();
 		}
 	}
 
@@ -178,7 +178,7 @@ public class MainActivity extends FragmentActivity {
 		super.onDestroy();
 
 		if (mSharedPrefs.getRemoteAddress() != null) {
-			new babyfon.Message(this).send(this.getString(R.string.MESSAGE_SYSTEM_EXIT));
+			new babyfon.Message(this).send(this.getString(R.string.MESSAGE_SYSTEM_AWAY));
 		}
 
 		if (mSharedPrefs.getDeviceMode() == 0) {
@@ -194,16 +194,17 @@ public class MainActivity extends FragmentActivity {
 	protected void onStart() {
 		super.onStart();
 
-		if (mSharedPrefs.getDeviceMode() == 0) {
-			if (mSharedPrefs.getNumberOfConnections() < mSharedPrefs.getNumberOfAllowedConnections()) {
-				mModuleHandler.startUDPReceiver();
-			} else {
-				if (mSharedPrefs.getNumberOfConnections() > 0) {
-					mModuleHandler.registerBattery();
-				}
+		if (mSharedPrefs.getRemoteAddress() != null) {
+			new babyfon.Message(this).send(this.getString(R.string.MESSAGE_SYSTEM_REJOIN));
+			if (mSharedPrefs.getDeviceMode() == 0) {
+				mModuleHandler.registerBattery();
 			}
-			new Sound(this).mute();
+		} else {
+			if (mSharedPrefs.getDeviceMode() == 0) {
+				mModuleHandler.startUDPReceiver();
+			}
 		}
+		new Sound(this).mute();
 	}
 
 	@Override
@@ -343,7 +344,7 @@ public class MainActivity extends FragmentActivity {
 
 	/**
 	 * Diplaying fragment view for selected nav drawer list item
-	 * */
+	 */
 	private void displayView(int position) {
 		// update the main content by replacing fragments
 		Fragment fragment = null;

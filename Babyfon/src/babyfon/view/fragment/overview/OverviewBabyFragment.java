@@ -4,6 +4,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import babyfon.Generator;
+import babyfon.Message;
 import babyfon.init.R;
 import babyfon.settings.ModuleHandler;
 import babyfon.settings.SharedPrefs;
@@ -141,7 +142,7 @@ public class OverviewBabyFragment extends Fragment {
 			if (mSharedPrefs.isRemoteOnline()) {
 				remoteOnlineState.setImageResource(android.R.drawable.presence_online);
 			} else {
-				remoteOnlineState.setImageResource(android.R.drawable.presence_offline);
+				remoteOnlineState.setImageResource(android.R.drawable.presence_away);
 			}
 		} else {
 			// remote host isn't connected
@@ -177,7 +178,7 @@ public class OverviewBabyFragment extends Fragment {
 		} else {
 			callState.setText(R.string.radio_send_false);
 		}
-		
+
 		// password
 		passwordState.setText(mSharedPrefs.getPassword());
 	}
@@ -398,15 +399,22 @@ public class OverviewBabyFragment extends Fragment {
 									@Override
 									public void onClick(DialogInterface dialog, int id) {
 										if (isActive) {
-											// enabled -> disabled 
+											// enabled -> disabled
 											mSharedPrefs.setActiveStateBabyMode(false);
-											mModuleHandler.stopUDPReceiver();
-											mModuleHandler.unregisterBattery();
-										} else {	
+											if (mSharedPrefs.getRemoteAddress() != null) {
+												new Message(mContext).send(mContext
+														.getString(R.string.MESSAGE_SYSTEM_AWAY));
+												mModuleHandler.unregisterBattery();
+											} else {
+												mModuleHandler.stopUDPReceiver();
+											}
+										} else {
 											// disabled -> enabled
 											mSharedPrefs.setActiveStateBabyMode(true);
-											if(mSharedPrefs.getRemoteAddress() != null) {
+											if (mSharedPrefs.getRemoteAddress() != null) {
 												mModuleHandler.registerBattery();
+												new Message(mContext).send(mContext
+														.getString(R.string.MESSAGE_SYSTEM_REJOIN));
 											} else {
 												mModuleHandler.startUDPReceiver();
 											}
@@ -421,7 +429,9 @@ public class OverviewBabyFragment extends Fragment {
 	}
 
 	public void startUiUpdateThread() {
-		timer = new Timer();
+		if (timer == null) {
+			timer = new Timer();
+		}
 		timer.scheduleAtFixedRate(new TimerTask() {
 			public void run() {
 				getActivity().runOnUiThread(new Runnable() {
@@ -437,6 +447,9 @@ public class OverviewBabyFragment extends Fragment {
 	public void onResume() {
 		super.onResume();
 
+		if (timer == null) {
+			timer = new Timer();
+		}
 		startUiUpdateThread();
 	}
 
@@ -444,6 +457,19 @@ public class OverviewBabyFragment extends Fragment {
 	public void onPause() {
 		super.onPause();
 
-		timer.cancel();
+		if (timer != null) {
+			timer.cancel();
+			timer = null;
+		}
+	}
+
+	@Override
+	public void onDestroy() {
+		super.onDestroy();
+
+		if (timer != null) {
+			timer.cancel();
+			timer = null;
+		}
 	}
 }

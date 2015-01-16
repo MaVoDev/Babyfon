@@ -10,7 +10,9 @@
     <string name="MESSAGE_AUTH_REQ">BABYFON_MSG_AUTH_REQ</string>
     <string name="MESSAGE_AUTH_CONFIRMED">MESSAGE_AUTH_CONFIRMED</string>
     <string name="MESSAGE_AUTH_DENIED">MESSAGE_AUTH_DENIED</string>
-    <string name="MESSAGE_SYSTEM_EXIT">MESSAGE_SYSTEM_EXIT</string>
+    <string name="MESSAGE_SYSTEM_AWAY">MESSAGE_SYSTEM_AWAY</string>
+    <string name="MESSAGE_SYSTEM_DISCONNECTED">MESSAGE_SYSTEM_DISCONNECTED</string>
+    <string name="MESSAGE_SYSTEM_REJOIN">MESSAGE_SYSTEM_REJOIN</string>
 
     <!-- Titles -->
     <string name="title_baby_monitor">Babymonitor</string>
