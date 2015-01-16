@@ -74,7 +74,7 @@ public class SetupCompleteParentsModeFragment extends Fragment {
 		title = (TextView) view.findViewById(R.id.title_setup_complete_parents_mode);
 		title.setTypeface(mTypeface_bi);
 		info = (TextView) view.findViewById(R.id.text_connection_complete);
-		info.setText("Mit '" + mSharedPrefs.getRemoteName() + "' verbunden");
+		info.setText("Du bist nun mit '" + mSharedPrefs.getRemoteName() + "' verbunden.");
 		info.setTypeface(mTypeface_i);
 
 		updateUI();
@@ -101,6 +101,7 @@ public class SetupCompleteParentsModeFragment extends Fragment {
 		}
 
 		// Store values in the shared preferences
+		mSharedPrefs.setActiveStateBabyMode(false);
 		mSharedPrefs.setDeviceMode(mSharedPrefs.getDeviceModeTemp());
 		Log.d(TAG, "Device mode: " + mSharedPrefs.getDeviceMode());
 		mSharedPrefs.setConnectivityType(mSharedPrefs.getConnectivityTypeTemp());

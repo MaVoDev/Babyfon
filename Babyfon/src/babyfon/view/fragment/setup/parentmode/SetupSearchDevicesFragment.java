@@ -56,8 +56,6 @@ public class SetupSearchDevicesFragment extends Fragment {
 	private static ListView listViewDevices;
 	private TextView title;
 
-	private static boolean isConnected = false;
-
 	private static ArrayList<DeviceListItemModel> devices;
 
 	private int connectivityType;
@@ -88,10 +86,11 @@ public class SetupSearchDevicesFragment extends Fragment {
 			btnRefresh.setBackgroundResource(R.drawable.btn_selector_female);
 			btnBackward.setBackgroundResource(R.drawable.btn_selector_female);
 		}
+		
+		
 	}
 
 	public static void updateList() {
-		isConnected = false;
 		DeviceListAdapter adapter = new DeviceListAdapter(mContext.getApplicationContext(), devices);
 
 		// Assign adapter to ListView
@@ -244,6 +243,7 @@ public class SetupSearchDevicesFragment extends Fragment {
 	public void refreshDeviceList() {
 		if (mSharedPrefs.getConnectivityType() == 2) {
 			devices.clear();
+			updateList();
 			initViewBWifi();
 		}
 	}
@@ -312,7 +312,7 @@ public class SetupSearchDevicesFragment extends Fragment {
 							e.printStackTrace();
 						}
 						new Message(mContext).send(mContext.getString(R.string.MESSAGE_AUTH_REQ) + ";" + password + ";"
-								+ localIP + ";" + mSharedPrefs.getConnectivityTypeTemp());
+								+ localIP + ";" + android.os.Build.MODEL);
 					}
 				});
 

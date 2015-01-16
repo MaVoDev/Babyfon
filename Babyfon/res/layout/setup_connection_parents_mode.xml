@@ -4,36 +4,48 @@
     <LinearLayout style="@style/layout_header" >
 
         <TextView
-            android:id="@+id/title_connection_parentsmode"
+            android:id="@+id/title_connection_parents"
             style="@style/fragmentTitle"
             android:text="@string/title_connection" />
     </LinearLayout>
 
     <LinearLayout style="@style/layout_body" >
 
-        <RadioGroup
-            android:id="@+id/radioConnectivity"
+        <TextView
+            android:id="@+id/text_connection_parents"
+            style="@style/info_text"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" >
+            android:layout_height="wrap_content"
+            android:text="@string/text_connection_parents" />
+
+        <RadioGroup
+            android:id="@+id/radio_group_connection_parents"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp" >
 
             <RadioButton
-                android:id="@+id/radioConnectivityBluetooth"
+                android:id="@+id/radio_wifi_parents"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:checked="true"
-                android:text="@string/bluetooth" />
-
-            <RadioButton
-                android:id="@+id/radioConnectivityWifi"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
                 android:text="@string/wifi" />
 
             <RadioButton
-                android:id="@+id/radioConnectivityWifiDirect"
+                android:id="@+id/radio_wifi_direct_parents"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:checked="false"
                 android:text="@string/wifip2p" />
+
+            <RadioButton
+                android:id="@+id/radio_bluetooth_parents"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:checked="false"
+                android:text="@string/bluetooth" />
         </RadioGroup>
     </LinearLayout>
 
@@ -46,7 +58,7 @@
             android:layout_weight="1" >
 
             <Button
-                android:id="@+id/btn_backwardSetupConnectionParentsMode"
+                android:id="@+id/btn_backward_connection_parents"
                 style="@style/button_footer_left"
                 android:text="@string/btn_backward" />
         </LinearLayout>
@@ -58,7 +70,7 @@
             android:layout_weight="1" >
 
             <Button
-                android:id="@+id/btn_forwardSetupConnectionParentsMode"
+                android:id="@+id/btn_forward_connection_parents"
                 style="@style/button_footer_right"
                 android:text="@string/btn_forward" />
         </LinearLayout>

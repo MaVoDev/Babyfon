@@ -14,26 +14,35 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.View.OnClickListener;
 import android.widget.Button;
-import android.widget.CheckBox;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
-import android.widget.Toast;
+import android.widget.RadioGroup.OnCheckedChangeListener;
 
 public class SetupConnectionBabyModeFragment extends Fragment {
 
 	// Define UI elements
 	private Button btnBackward;
 	private Button btnForward;
-	private CheckBox chkBoxBluetooth;
-	private CheckBox chkBoxWifi;
-	private CheckBox chkBoxWifiDirect;
+	private RadioGroup radioGrpConnectivity;
+	private RadioButton radioBluetooth;
+	private RadioButton radioWifi;
+	private RadioButton radioWifiDirect;
 	private TextView title;
 	private TextView infoText;
+
+	private boolean isBluetoothAvailable;
+	private boolean isWifiAvailable;
+	private boolean isWifiDirectAvailable;
+
+	private int connectivityType;
 
 	private BluetoothHandler mBluetoothHandler;
 	private WifiHandler mWifiHandler;
@@ -43,8 +52,7 @@ public class SetupConnectionBabyModeFragment extends Fragment {
 
 	private Context mContext;
 
-	private boolean isBluetoothAvailable = false;
-	private boolean isWifiAvailable = false;
+	private static final String TAG = SetupConnectionBabyModeFragment.class.getCanonicalName();
 
 	// Constructor
 	public SetupConnectionBabyModeFragment(Context mContext) {
@@ -62,10 +70,39 @@ public class SetupConnectionBabyModeFragment extends Fragment {
 	public void getAvailability() {
 		if (mBluetoothHandler.getBluetoothState() != -1) {
 			isBluetoothAvailable = true;
+		} else {
+			isBluetoothAvailable = false;
 		}
 
 		if (mWifiHandler.getWifiState() != -1) {
 			isWifiAvailable = true;
+			isWifiDirectAvailable = true;
+		} else {
+			isWifiAvailable = false;
+			isWifiDirectAvailable = false;
+		}
+	}
+
+	/**
+	 * Liest die ausgewählte Verbindungsart aus.
+	 * 
+	 * @param checkId
+	 *            ausgewählte Verbindungsart
+	 */
+	private void getConnectivityType(int checkedId) {
+		switch (checkedId) {
+		case R.id.radio_wifi_baby:
+			// Wi-Fi ausgewählt
+			connectivityType = 2;
+			break;
+		case R.id.radio_wifi_direct_baby:
+			// Wi-Fi Direct ausgewählt
+			connectivityType = 3;
+			break;
+		case R.id.radio_bluetooth_baby:
+			// Bluetooth ausgewählt
+			connectivityType = 1;
+			break;
 		}
 	}
 
@@ -96,16 +133,16 @@ public class SetupConnectionBabyModeFragment extends Fragment {
 		btnBackward = (Button) view.findViewById(R.id.btn_backwardSetupConnectionBabyMode);
 		btnBackward.setTypeface(mTypeface_i);
 
-		// Initialize Checkboxes
-		chkBoxBluetooth = (CheckBox) view.findViewById(R.id.chkBoxConnectionBluetooth);
-		chkBoxBluetooth.setEnabled(true);
-		chkBoxBluetooth.setTypeface(mTypeface_i);
-		chkBoxWifi = (CheckBox) view.findViewById(R.id.chkBoxConnectionWifi);
-		chkBoxWifi.setEnabled(true);
-		chkBoxWifi.setTypeface(mTypeface_i);
-		chkBoxWifiDirect = (CheckBox) view.findViewById(R.id.chkBoxConnectionWifiDirect);
-		chkBoxWifiDirect.setEnabled(true);
-		chkBoxWifiDirect.setTypeface(mTypeface_i);
+		// Initialize RadioGroups
+		radioGrpConnectivity = (RadioGroup) view.findViewById(R.id.radio_group_connection_baby);
+
+		// Initialize RadioButtons
+		radioBluetooth = (RadioButton) view.findViewById(R.id.radio_bluetooth_baby);
+		radioBluetooth.setTypeface(mTypeface_i);
+		radioWifi = (RadioButton) view.findViewById(R.id.radio_wifi_baby);
+		radioWifi.setTypeface(mTypeface_i);
+		radioWifiDirect = (RadioButton) view.findViewById(R.id.radio_wifi_direct_baby);
+		radioWifiDirect.setTypeface(mTypeface_i);
 
 		// Initialize TextViews
 		title = (TextView) view.findViewById(R.id.text_titleConnectionBaby);
@@ -124,15 +161,36 @@ public class SetupConnectionBabyModeFragment extends Fragment {
 		final FragmentManager mFragmentManager = getFragmentManager();
 
 		initUiElements(view);
+		getAvailability();
 
+		getConnectivityType(radioGrpConnectivity.getCheckedRadioButtonId());
+
+		// Set Bluetooth availability
+		radioBluetooth.setEnabled(isBluetoothAvailable);
+
+		// Set Wi-Fi availability
+		radioWifi.setEnabled(isWifiAvailable);
+
+		// Set Wi-Fi Direct availability
+		radioWifiDirect.setEnabled(isWifiDirectAvailable);
+
+		// Check the next available connectivity
 		if (!isBluetoothAvailable) {
-			chkBoxBluetooth.setEnabled(false);
+			if (!isWifiAvailable) {
+				if (!isWifiDirectAvailable) {
+					radioGrpConnectivity.clearCheck();
+				}
+			} else {
+				radioWifi.setChecked(true);
+			}
 		}
 
-		if (!isWifiAvailable) {
-			chkBoxWifi.setEnabled(false);
-			chkBoxWifiDirect.setEnabled(false);
-		}
+		radioGrpConnectivity.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+			public void onCheckedChanged(RadioGroup group, int checkedId) {
+				// checkedId repräsentiert die ausgewählte Option.
+				getConnectivityType(checkedId);
+			}
+		});
 
 		btnBackward.setOnClickListener(new OnClickListener() {
 			@Override
@@ -147,17 +205,10 @@ public class SetupConnectionBabyModeFragment extends Fragment {
 		btnForward.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				if (chkBoxBluetooth.isChecked() || chkBoxWifi.isChecked() || chkBoxWifiDirect.isChecked()) {
-					mSharedPrefs.setBluetoothSharedStateTemp(chkBoxBluetooth.isChecked());
-					mSharedPrefs.setWiFiSharedStateTemp(chkBoxWifi.isChecked());
-					mSharedPrefs.setWiFiDirectSharedStateTemp(chkBoxWifiDirect.isChecked());
-					
-					mFragmentManager.beginTransaction().replace(R.id.frame_container, nextFragment, null)
-							.addToBackStack(null).commit();
-				} else {
-					Toast toast = Toast.makeText(mContext, "Wähle mindestens eine Verbindung aus.", Toast.LENGTH_SHORT);
-					toast.show();
-				}
+				mSharedPrefs.setConnectivityTypeTemp(connectivityType);
+				Log.d(TAG, "Temporary connectivity: " + mSharedPrefs.getConnectivityTypeTemp());
+				mFragmentManager.beginTransaction().replace(R.id.frame_container, nextFragment, null)
+						.addToBackStack(null).commit();
 			}
 		});
 

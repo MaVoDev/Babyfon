@@ -1,14 +1,10 @@
 package babyfon.view.activity;
 
-import babyfon.connectivity.wifi.TCPReceiver;
-import babyfon.connectivity.wifi.UDPReceiver;
 import babyfon.init.R;
-import babyfon.performance.Battery;
 import babyfon.settings.SharedPrefs;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.RelativeLayout;
 
 public class WelcomeScreen extends Activity {
@@ -42,7 +38,7 @@ public class WelcomeScreen extends Activity {
 			public void run() {
 
 				try {
-					sleep(3000);
+					sleep(10);
 
 					Intent intent = new Intent(getBaseContext(), MainActivity.class);
 					startActivity(intent);

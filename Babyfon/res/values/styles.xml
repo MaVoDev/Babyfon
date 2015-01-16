@@ -70,7 +70,7 @@
         <item name="android:orientation">vertical</item>
         <item name="android:layout_marginLeft">20dp</item>
         <item name="android:layout_weight">100</item>
-        <item name="android:layout_marginRight">22dp</item>
+        <item name="android:layout_marginRight">20dp</item>
     </style>
 
     <!-- Button -->
@@ -91,13 +91,30 @@
         <item name="android:layout_width">fill_parent</item>
         <item name="android:layout_height">@dimen/buttons_height</item>
     </style>
-    
+
     <style name="info_text">
         <item name="android:gravity">center_horizontal</item>
         <item name="android:textSize">@dimen/info_text</item>
         <item name="android:layout_marginBottom">10dp</item>
-        <item name="android:padding">8dp</item>
-        <item name="android:background">@drawable/bg_info_text</item>
+        <item name="android:padding">16dp</item>
+        <item name="android:background">@android:drawable/dialog_holo_light_frame</item>
+    </style>
+
+    <!-- Layout overview baby -->
+    <style name="overview_edit_layout">
+        <item name="android:layout_width">120dp</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:layout_gravity">center_vertical</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:gravity">right</item>
+        <item name="android:orientation">vertical</item>
+    </style>
+
+    <style name="overview_edit">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginLeft">16dp</item>
+        <item name="android:layout_gravity">center_vertical</item>
     </style>
 
 </resources>

@@ -16,31 +16,37 @@
             style="@style/info_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/text_connection" />
+            android:text="@string/text_connection_baby" />
 
-        <CheckBox
-            android:id="@+id/chkBoxConnectionWifi"
+        <RadioGroup
+            android:id="@+id/radio_group_connection_baby"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:checked="false"
-            android:text="@string/wifi" />
+            android:layout_marginTop="20dp" >
 
-        <CheckBox
-            android:id="@+id/chkBoxConnectionWifiDirect"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:checked="false"
-            android:text="@string/wifip2p" />
+            <RadioButton
+                android:id="@+id/radio_wifi_baby"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checked="true"
+                android:text="@string/wifi" />
 
-        <CheckBox
-            android:id="@+id/chkBoxConnectionBluetooth"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:checked="false"
-            android:text="@string/bluetooth" />
+            <RadioButton
+                android:id="@+id/radio_wifi_direct_baby"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:checked="false"
+                android:text="@string/wifip2p" />
+
+            <RadioButton
+                android:id="@+id/radio_bluetooth_baby"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:checked="false"
+                android:text="@string/bluetooth" />
+        </RadioGroup>
     </LinearLayout>
 
     <LinearLayout style="@style/layout_footer" >

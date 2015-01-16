@@ -1,5 +1,6 @@
 package babyfon.view.fragment.setup.babymode;
 
+import babyfon.Generator;
 import babyfon.init.R;
 import babyfon.performance.Sound;
 import babyfon.settings.ModuleHandler;
@@ -78,7 +79,7 @@ public class SetupCompleteBabyModeFragment extends Fragment {
 	}
 
 	public void handleModules() {
-		if (mSharedPrefs.getWiFiSharedStateTemp()) {
+		if (mSharedPrefs.getConnectivityTypeTemp() == 2) {
 			mModuleHandler.startTCPReceiver();
 			mModuleHandler.startUDPReceiver();
 		} else {
@@ -102,18 +103,15 @@ public class SetupCompleteBabyModeFragment extends Fragment {
 		initUiElements(view);
 		handleModules();
 
-		String password = getRandomPassword();
+		String password = new Generator().getRandomPassword();
 		tvPassword.setText(password);
 
 		// Store values in the shared preferences
+		mSharedPrefs.setActiveStateBabyMode(true);
 		mSharedPrefs.setDeviceMode(mSharedPrefs.getDeviceModeTemp());
 		Log.d(TAG, "Device mode: " + mSharedPrefs.getDeviceMode());
-		mSharedPrefs.setBluetoothSharedState(mSharedPrefs.getBluetoothSharedStateTemp());
-		Log.d(TAG, "Bluetooth state: " + mSharedPrefs.getBluetoothSharedState());
-		mSharedPrefs.setWiFiSharedState(mSharedPrefs.getWiFiSharedStateTemp());
-		Log.d(TAG, "Wi-Fi state: " + mSharedPrefs.getWiFiSharedState());
-		mSharedPrefs.setWiFiDirectSharedState(mSharedPrefs.getWiFiDirectSharedStateTemp());
-		Log.d(TAG, "Wi-Fi Direct state: " + mSharedPrefs.getWiFiDirectSharedState());
+		mSharedPrefs.setConnectivityType(mSharedPrefs.getConnectivityTypeTemp());
+		Log.d(TAG, "Connectivity type: " + mSharedPrefs.getConnectivityType());
 		mSharedPrefs.setForwardingCallInfo(mSharedPrefs.getForwardingCallInfoTemp());
 		Log.d(TAG, "Forwarding Call info: " + mSharedPrefs.getForwardingCallInfo());
 		mSharedPrefs.setForwardingSMS(mSharedPrefs.getForwardingSMSTemp());
@@ -141,13 +139,6 @@ public class SetupCompleteBabyModeFragment extends Fragment {
 		});
 
 		return view;
-	}
-
-	public String getRandomPassword() {
-		// Generating a password between 1000 and 10000
-		int password = (int) Math.floor(Math.random() * 9000 + 1000);
-
-		return password + "";
 	}
 
 	@Override

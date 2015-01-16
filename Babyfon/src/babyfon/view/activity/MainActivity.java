@@ -68,6 +68,8 @@ public class MainActivity extends FragmentActivity {
 	private String[] navMenuTitles;
 	private TypedArray navMenuIcons;
 
+	private OverviewBabyFragment mOverviewBabyFragment;
+
 	private ArrayList<NavigationDrawerItemModel> items;
 	private NavigationDrawerListAdapter adapter;
 
@@ -75,9 +77,13 @@ public class MainActivity extends FragmentActivity {
 
 	public void handleModules() {
 		if (mSharedPrefs.getDeviceMode() != -1) {
-			if (mSharedPrefs.getWiFiSharedState() || mSharedPrefs.getConnectivityType() == 2) {
+			if (mSharedPrefs.getConnectivityType() == 2) {
 				mModuleHandler.startTCPReceiver();
 			}
+		}
+
+		if (mSharedPrefs.getRemoteAddress() == null) {
+			mModuleHandler.startUDPReceiver();
 		}
 	}
 
@@ -90,6 +96,8 @@ public class MainActivity extends FragmentActivity {
 			StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
 			StrictMode.setThreadPolicy(policy);
 		}
+
+		mOverviewBabyFragment = new OverviewBabyFragment(this);
 
 		new StreamSender(this);
 
@@ -308,6 +316,9 @@ public class MainActivity extends FragmentActivity {
 				// Parents mode
 				fragment = new OverviewParentsFragment(this);
 			}
+		} else if (id.equals("OverviewFragmentBaby")) {
+			// Baby mode
+			fragment = new OverviewBabyFragment(this);
 		} else if (id.equals("BabymonitorFragment")) {
 			// Open babymonitor
 			fragment = new BabyMonitorFragment(this);
@@ -359,7 +370,7 @@ public class MainActivity extends FragmentActivity {
 		if (fragment == null) {
 			fragment = createFragmentById(id);
 		}
-
+		// TODO hier ist der Fehler beim Abschlieﬂen des Setups
 		if (fragment != null) {
 			FragmentManager fragmentManager = getFragmentManager();
 			fragmentManager.beginTransaction().replace(R.id.frame_container, fragment).commit();

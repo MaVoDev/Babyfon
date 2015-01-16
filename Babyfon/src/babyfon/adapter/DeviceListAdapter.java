@@ -47,12 +47,10 @@ public class DeviceListAdapter extends BaseAdapter {
 		}
 
 		TextView deviceName = (TextView) convertView.findViewById(R.id.device_name);
-
 		deviceName.setText(deviceItems.get(position).getDeviceName());
 
 		// Set Typeface
 		Typeface mTypeface_i = Typeface.createFromAsset(mContext.getAssets(), "fonts/BOOKOSI.TTF");
-		deviceName.setTypeface(mTypeface_i);
 		deviceName.setTypeface(mTypeface_i);
 
 		return convertView;

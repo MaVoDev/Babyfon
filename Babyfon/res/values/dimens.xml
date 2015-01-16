@@ -3,5 +3,6 @@
     <!-- Buttons -->
     <dimen name="buttons_height">42dp</dimen>
     <dimen name="info_text">17sp</dimen>
+    <dimen name="overview">8dp</dimen>
 
 </resources>

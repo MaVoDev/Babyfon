@@ -11,6 +11,7 @@ import babyfon.settings.ModuleHandler;
 import babyfon.settings.SharedPrefs;
 import babyfon.view.activity.MainActivity;
 import babyfon.view.fragment.BabyMonitorFragment;
+import babyfon.view.fragment.overview.OverviewBabyFragment;
 import babyfon.view.fragment.setup.parentmode.SetupCompleteParentsModeFragment;
 import babyfon.view.fragment.setup.parentmode.SetupSearchDevicesFragment;
 
@@ -31,7 +32,7 @@ public class Message {
 	}
 
 	public void send(String str) {
-		if (mSharedPrefs.getConnectivityType() == 2) {
+		if (mSharedPrefs.getConnectivityType() == 2 || mSharedPrefs.getConnectivityTypeTemp() == 2) {
 			new TCPSender(mContext).sendMessage(mSharedPrefs.getRemoteAddress(), str);
 		}
 	}
@@ -63,26 +64,32 @@ public class Message {
 		}
 
 		if (strArray[0].equals(mContext.getString(R.string.MESSAGE_AUTH_REQ))) {
-			System.out.println(strArray.length);
 			final String password = strArray[1];
 			final String remoteAddress = strArray[2];
-			final String connectivityType = strArray[3];
+			final String remoteName = strArray[3];
 
 			mSharedPrefs.setRemoteAdress(remoteAddress);
 
 			if (mSharedPrefs.getPassword().equals(password)) {
-				mSharedPrefs.setConnectivityType(Integer.parseInt(connectivityType));
+				mSharedPrefs.setRemoteName(remoteName);
+				mSharedPrefs.setRemoteOnlineState(true);
 				int numberOfConnections = mSharedPrefs.getNumberOfConnections() + 1;
-				
-				send(mContext.getString(R.string.MESSAGE_AUTH_CONFIRMED));
-				
-				mSharedPrefs.setNumberOfConnections(numberOfConnections);
-				if (mSharedPrefs.getNumberOfAllowedConnections() < numberOfConnections) {
 
-				} else {
-					mModuleHandler.stopUDPReceiver();
-				}
+				send(mContext.getString(R.string.MESSAGE_AUTH_CONFIRMED));
+
+				mSharedPrefs.setNumberOfConnections(numberOfConnections);
+
+				mModuleHandler.stopUDPReceiver();
 				mModuleHandler.registerBattery();
+				
+				//TODO Funktioniert nicht, der Name wird nicht im Baby Overview aktualisier.
+//				((MainActivity) mContext).runOnUiThread(new Runnable() {
+//					@Override
+//					public void run() {
+//						Fragment fragment = ((MainActivity) mContext).getFragmentById("OverviewFragmentBaby");
+//						((OverviewBabyFragment) fragment).updateUI();
+//					}
+//				});
 			} else {
 				send(mContext.getString(R.string.MESSAGE_AUTH_DENIED));
 			}

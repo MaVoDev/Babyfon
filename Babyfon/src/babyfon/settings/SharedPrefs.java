@@ -24,6 +24,27 @@ public class SharedPrefs {
 	 * == Network settings =====================================
 	 */
 
+	// == Remote state ====================================
+
+	/**
+	 * Get the remote online state.
+	 * 
+	 * @return Boolean: remote state
+	 */
+	public Boolean isRemoteOnline() {
+		return mSharedPreferences.getBoolean("remote_online_state", false);
+	}
+
+	/**
+	 * Set the remote online state.
+	 * 
+	 * @param Boolean
+	 *            remote state
+	 */
+	public void setRemoteOnlineState(Boolean state) {
+		editor.putBoolean("remote_online_state", state).commit();
+	}
+
 	// == Remote address ====================================
 
 	/**
@@ -193,6 +214,26 @@ public class SharedPrefs {
 		editor.putBoolean("notification_vibrate_state", isEnabled).commit();
 	}
 
+	// == Baby mode active state =======================
+
+	/**
+	 * Get the state of baby
+	 * 
+	 * @return boolean: true = mode is enabled, false = mode is disabled
+	 */
+	public boolean getActiveStateBabyMode() {
+		return mSharedPreferences.getBoolean("active_state_baby_mode", false);
+	}
+
+	/**
+	 * Set the state of baby
+	 * 
+	 * @param boolean isEnabled: mode is enabled
+	 */
+	public void setActiveStateBabyMode(boolean isEnabled) {
+		editor.putBoolean("active_state_baby_mode", isEnabled).commit();
+	}
+
 	/*
 	 * == Setup settings =====================================
 	 */
@@ -233,120 +274,6 @@ public class SharedPrefs {
 	 */
 	public void setDeviceModeTemp(int mode) {
 		editor.putInt("device_mode_temp", mode).commit();
-	}
-
-	// == Bluetooth shared state =================================
-
-	/**
-	 * Get the shared state of Bluetooth.
-	 * 
-	 * @return boolean: false = not shared, true = shared
-	 */
-	public boolean getBluetoothSharedState() {
-		return mSharedPreferences.getBoolean("bluetooth_shared_state", false);
-	}
-
-	/**
-	 * Set the shared state of Bluetooth.
-	 * 
-	 * @param boolean state: false = not shared, true = shared
-	 */
-	public void setBluetoothSharedState(boolean state) {
-		editor.putBoolean("bluetooth_shared_state", state).commit();
-	}
-
-	/**
-	 * Get the temporary shared state of Bluetooth.
-	 * 
-	 * @return int: false = not shared, true = shared
-	 */
-	public boolean getBluetoothSharedStateTemp() {
-		return mSharedPreferences.getBoolean("bluetooth_shared_state_temp", false);
-	}
-
-	/**
-	 * Set the temporary shared state of Bluetooth.
-	 * 
-	 * @param boolean temporary state: false = not shared, true = shared
-	 */
-	public void setBluetoothSharedStateTemp(boolean state) {
-		editor.putBoolean("bluetooth_shared_state_temp", state).commit();
-	}
-
-	// == Wi-Fi shared state =================================
-
-	/**
-	 * Get the shared state of Wi-Fi.
-	 * 
-	 * @return boolean: false = not shared, true = shared
-	 */
-	public boolean getWiFiSharedState() {
-		return mSharedPreferences.getBoolean("wifi_shared_state", false);
-	}
-
-	/**
-	 * Set the shared state of Wi-Fi.
-	 * 
-	 * @param boolean state: false = not shared, true = shared
-	 */
-	public void setWiFiSharedState(boolean state) {
-		editor.putBoolean("wifi_shared_state", state).commit();
-	}
-
-	/**
-	 * Get the temporary shared state of Wi-Fi.
-	 * 
-	 * @return boolean: false = not shared, true = shared
-	 */
-	public boolean getWiFiSharedStateTemp() {
-		return mSharedPreferences.getBoolean("wifi_shared_state_temp", false);
-	}
-
-	/**
-	 * Set the temporary shared state of Wi-Fi.
-	 * 
-	 * @param boolean temporary state: false = not shared, true = shared
-	 */
-	public void setWiFiSharedStateTemp(boolean state) {
-		editor.putBoolean("wifi_shared_state_temp", state).commit();
-	}
-
-	// == Wi-Fi Direct shared state =================================
-
-	/**
-	 * Get the shared state of Wi-Fi Direct.
-	 * 
-	 * @return boolean: false = not shared, true = shared
-	 */
-	public boolean getWiFiDirectSharedState() {
-		return mSharedPreferences.getBoolean("wifi_direct_shared_state", false);
-	}
-
-	/**
-	 * Set the shared state of Wi-Fi Direct.
-	 * 
-	 * @param boolean state: false = not shared, true = shared
-	 */
-	public void setWiFiDirectSharedState(boolean state) {
-		editor.putBoolean("wifi_direct_shared_state", state).commit();
-	}
-
-	/**
-	 * Get the temporary shared state of Wi-Fi Direct.
-	 * 
-	 * @return boolean: false = not shared, true = shared
-	 */
-	public boolean getWiFiDirectSharedStateTemp() {
-		return mSharedPreferences.getBoolean("wifi_direct_shared_state_temp", false);
-	}
-
-	/**
-	 * Set the temporary shared state of Wi-Fi Direct.
-	 * 
-	 * @param boolean temporary state: false = not shared, true = shared
-	 */
-	public void setWiFiDirectSharedStateTemp(boolean state) {
-		editor.putBoolean("wifi_direct_shared_state_temp", state).commit();
 	}
 
 	// == Forwarding: Call =================================

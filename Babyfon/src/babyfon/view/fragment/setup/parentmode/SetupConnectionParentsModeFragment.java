@@ -3,6 +3,7 @@ package babyfon.view.fragment.setup.parentmode;
 import babyfon.connectivity.bluetooth.BluetoothHandler;
 import babyfon.connectivity.wifi.WifiHandler;
 import babyfon.init.R;
+import babyfon.settings.ModuleHandler;
 import babyfon.settings.SharedPrefs;
 import babyfon.view.fragment.overview.OverviewBabyFragment;
 import babyfon.view.fragment.overview.OverviewParentsFragment;
@@ -14,6 +15,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -28,32 +30,36 @@ import android.widget.RadioGroup.OnCheckedChangeListener;
 public class SetupConnectionParentsModeFragment extends Fragment {
 
 	// Define UI elements
-	private Button btnBackward;
 	private Button btnForward;
-	private RadioGroup rgConnectivity;
-	private RadioButton rbBluetooth;
-	private RadioButton rbWifi;
-	private RadioButton rbWifiDirect;
+	private Button btnBackward;
+	private RadioGroup radioGrpConnectivity;
+	private RadioButton radioBluetooth;
+	private RadioButton radioWifi;
+	private RadioButton radioWifiDirect;
 	private TextView title;
+	private TextView infoText;
 
 	private BluetoothHandler mBluetoothHandler;
 	private WifiHandler mWifiHandler;
 
 	private SetupSearchDevicesFragment nextFragment;
 
-	private boolean isBluetoothAvailable = false;
-	
-	private boolean isWifiAvailable = false;
-	private boolean isWifiDirectAvailable = false;
+	private boolean isBluetoothAvailable;
+	private boolean isWifiAvailable;
+	private boolean isWifiDirectAvailable;
 
 	private int connectivityType;
 
+	private ModuleHandler mModuleHandler;
 	private SharedPrefs mSharedPrefs;
 
 	private Context mContext;
+	
+	private static final String TAG = SetupConnectionParentsModeFragment.class.getCanonicalName();
 
 	// Constructor
 	public SetupConnectionParentsModeFragment(Context mContext) {
+		mModuleHandler = new ModuleHandler(mContext);
 		mSharedPrefs = new SharedPrefs(mContext);
 		nextFragment = new SetupSearchDevicesFragment(mContext);
 		mBluetoothHandler = new BluetoothHandler();
@@ -65,11 +71,16 @@ public class SetupConnectionParentsModeFragment extends Fragment {
 	public void getAvailability() {
 		if (mBluetoothHandler.getBluetoothState() != -1) {
 			isBluetoothAvailable = true;
+		} else {
+			isBluetoothAvailable = false;
 		}
 
 		if (mWifiHandler.getWifiState() != -1) {
 			isWifiAvailable = true;
 			isWifiDirectAvailable = true;
+		} else {
+			isWifiAvailable = false;
+			isWifiDirectAvailable = false;
 		}
 	}
 
@@ -81,17 +92,17 @@ public class SetupConnectionParentsModeFragment extends Fragment {
 	 */
 	private void getConnectivityType(int checkedId) {
 		switch (checkedId) {
-		case R.id.radioConnectivityBluetooth:
-			// Bluetooth ausgewählt
-			connectivityType = 1;
-			break;
-		case R.id.radioConnectivityWifi:
+		case R.id.radio_wifi_parents:
 			// Wi-Fi ausgewählt
 			connectivityType = 2;
 			break;
-		case R.id.radioConnectivityWifiDirect:
+		case R.id.radio_wifi_direct_parents:
 			// Wi-Fi Direct ausgewählt
 			connectivityType = 3;
+			break;
+		case R.id.radio_bluetooth_parents:
+			// Bluetooth ausgewählt
+			connectivityType = 1;
 			break;
 		}
 	}
@@ -118,22 +129,27 @@ public class SetupConnectionParentsModeFragment extends Fragment {
 		Typeface mTypeface_i = Typeface.createFromAsset(mContext.getAssets(), "fonts/BOOKOSI.TTF");
 
 		// Initialize Buttons
-		btnBackward = (Button) view.findViewById(R.id.btn_backwardSetupConnectionParentsMode);
+		btnBackward = (Button) view.findViewById(R.id.btn_backward_connection_parents);
 		btnBackward.setTypeface(mTypeface_i);
-		btnForward = (Button) view.findViewById(R.id.btn_forwardSetupConnectionParentsMode);
+		btnForward = (Button) view.findViewById(R.id.btn_forward_connection_parents);
 		btnForward.setTypeface(mTypeface_i);
 
 		// Initialize RadioGroups
-		rgConnectivity = (RadioGroup) view.findViewById(R.id.radioConnectivity);
+		radioGrpConnectivity = (RadioGroup) view.findViewById(R.id.radio_group_connection_parents);
 
 		// Initialize RadioButtons
-		rbBluetooth = (RadioButton) view.findViewById(R.id.radioConnectivityBluetooth);
-		rbWifi = (RadioButton) view.findViewById(R.id.radioConnectivityWifi);
-		rbWifiDirect = (RadioButton) view.findViewById(R.id.radioConnectivityWifiDirect);
+		radioBluetooth = (RadioButton) view.findViewById(R.id.radio_bluetooth_parents);
+		radioBluetooth.setTypeface(mTypeface_i);
+		radioWifi = (RadioButton) view.findViewById(R.id.radio_wifi_parents);
+		radioWifi.setTypeface(mTypeface_i);
+		radioWifiDirect = (RadioButton) view.findViewById(R.id.radio_wifi_direct_parents);
+		radioWifiDirect.setTypeface(mTypeface_i);
 
 		// Initialize TextViews
-		title = (TextView) view.findViewById(R.id.title_connection_parentsmode);
+		title = (TextView) view.findViewById(R.id.title_connection_parents);
 		title.setTypeface(mTypeface_bi);
+		infoText = (TextView) view.findViewById(R.id.text_connection_parents);
+		infoText.setTypeface(mTypeface_i);
 
 		updateUI();
 	}
@@ -148,29 +164,29 @@ public class SetupConnectionParentsModeFragment extends Fragment {
 		initUiElements(view);
 		getAvailability();
 
-		getConnectivityType(rgConnectivity.getCheckedRadioButtonId());
+		getConnectivityType(radioGrpConnectivity.getCheckedRadioButtonId());
 
 		// Set Bluetooth availability
-		rbBluetooth.setEnabled(isBluetoothAvailable);
+		radioBluetooth.setEnabled(isBluetoothAvailable);
 
 		// Set Wi-Fi availability
-		rbWifi.setEnabled(isWifiAvailable);
+		radioWifi.setEnabled(isWifiAvailable);
 
 		// Set Wi-Fi Direct availability
-		rbWifiDirect.setEnabled(isWifiDirectAvailable);
+		radioWifiDirect.setEnabled(isWifiDirectAvailable);
 
 		// Check the next available connectivity
 		if (!isBluetoothAvailable) {
 			if (!isWifiAvailable) {
 				if (!isWifiDirectAvailable) {
-					rgConnectivity.clearCheck();
+					radioGrpConnectivity.clearCheck();
 				}
 			} else {
-				rbWifi.setChecked(true);
+				radioWifi.setChecked(true);
 			}
 		}
 
-		rgConnectivity.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+		radioGrpConnectivity.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 			public void onCheckedChanged(RadioGroup group, int checkedId) {
 				// checkedId repräsentiert die ausgewählte Option.
 				getConnectivityType(checkedId);
@@ -190,16 +206,21 @@ public class SetupConnectionParentsModeFragment extends Fragment {
 			@Override
 			public void onClick(View v) {
 				mSharedPrefs.setConnectivityTypeTemp(connectivityType);
+				
+				if(connectivityType == 2) {
+					mModuleHandler.startTCPReceiver();
+				}
+				Log.d(TAG, "Temporary connectivity: " + mSharedPrefs.getConnectivityTypeTemp());
 				mFragmentManager.beginTransaction().replace(R.id.frame_container, nextFragment, null)
 						.addToBackStack(null).commit();
 			}
 		});
-		
+
 		onBackPressed(view, mFragmentManager);
 
 		return view;
 	}
-	
+
 	public void onBackPressed(View view, final FragmentManager mFragmentManager) {
 		view.setFocusableInTouchMode(true);
 		view.requestFocus();
