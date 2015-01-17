@@ -101,6 +101,8 @@
     <string name="call_name_unknown">Unbekannter Anrufer</string>
     <string name="call_number_unknown">Die Telefonnummer wurde unterdrückt</string>
     <string name="yes">Ja</string>
+    <string name="close">Schließen</string>
+    
 
     <!-- Error Types -->
     <string name="WIFI_STATE_ERROR">WIFI_STATE_ERROR</string>

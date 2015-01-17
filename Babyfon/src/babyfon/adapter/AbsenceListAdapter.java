@@ -6,11 +6,13 @@ import babyfon.init.R;
 import babyfon.model.AbsenceListItemModel;
 import android.app.Activity;
 import android.content.Context;
+import android.database.AbstractWindowedCursor;
 import android.graphics.Typeface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 public class AbsenceListAdapter extends BaseAdapter {
@@ -43,6 +45,13 @@ public class AbsenceListAdapter extends BaseAdapter {
 		if (convertView == null) {
 			LayoutInflater mInflater = (LayoutInflater) mContext.getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
 			convertView = mInflater.inflate(R.layout.listview_absence, null);
+		}
+
+		ImageView type = (ImageView) convertView.findViewById(R.id.absence_type);
+		if (absenceItems.get(position).getType() == 0) {
+			type.setImageResource(android.R.drawable.sym_call_missed);
+		} else {
+			type.setImageResource(android.R.drawable.sym_action_email);
 		}
 
 		TextView numberName = (TextView) convertView.findViewById(R.id.absence_number_name);

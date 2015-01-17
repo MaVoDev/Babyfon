@@ -1,18 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- Navigation Drawer Items -->
-    <string-array name="navigation_drawer_items">
+
+    <!-- Navigation Drawer Items -->
+    <string-array name="navigation_drawer_items_baby_mode">
         <item>@string/title_overview</item>
+        <item>@string/title_setup</item>
+    </string-array>
+    <string-array name="navigation_drawer_items_parents_mode">
         <item>@string/title_baby_monitor</item>
         <item>@string/title_absence</item>
         <item>@string/title_setup</item>
     </string-array>
+    <string-array name="navigation_drawer_items_no_mode">
+        <item>@string/title_setup</item>
+    </string-array>
 
     <!-- Navigation Drawer Icons -->
-    <array name="navigation_drawer_icons">
+    <array name="navigation_drawer_icons_baby_mode">
         <item>@drawable/overview</item>
+        <item>@drawable/setup</item>
+    </array>
+    <array name="navigation_drawer_icons_parents_mode">
         <item>@drawable/babymonitor</item>
         <item>@drawable/absence</item>
+        <item>@drawable/setup</item>
+    </array>
+    <array name="navigation_drawer_icons_no_mode">
         <item>@drawable/setup</item>
     </array>
 

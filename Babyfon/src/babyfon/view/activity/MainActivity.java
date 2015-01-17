@@ -5,6 +5,8 @@ import babyfon.init.R;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import babyfon.adapter.NavigationDrawerListAdapter;
 import babyfon.connectivity.sms.SMSReceiver;
@@ -18,7 +20,6 @@ import babyfon.settings.SharedPrefs;
 import babyfon.view.fragment.AbsenceFragment;
 import babyfon.view.fragment.BabyMonitorFragment;
 import babyfon.view.fragment.overview.OverviewBabyFragment;
-import babyfon.view.fragment.overview.OverviewParentsFragment;
 import babyfon.view.fragment.setup.SetupDeviceModeFragment;
 import babyfon.view.fragment.setup.SetupStartFragment;
 import android.app.ActionBar;
@@ -70,6 +71,9 @@ public class MainActivity extends FragmentActivity {
 	private String[] navMenuTitles;
 	private TypedArray navMenuIcons;
 
+	// Timer
+	private Timer timer;
+
 	private ArrayList<NavigationDrawerItemModel> items;
 	private NavigationDrawerListAdapter adapter;
 
@@ -101,73 +105,22 @@ public class MainActivity extends FragmentActivity {
 		mModuleHandler = new ModuleHandler(this);
 
 		handleModules();
+		
+		initNavigationDrawer();
 
-		appTitle = drawerTitle = getTitle();
+		startUiUpdateThread();
 
-		// load slide menu items
-		navMenuTitles = getResources().getStringArray(R.array.navigation_drawer_items);
-
-		// nav drawer icons from resources
-		navMenuIcons = getResources().obtainTypedArray(R.array.navigation_drawer_icons);
-
-		mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-		mDrawerList = (ListView) findViewById(R.id.list_slidermenu);
-
-		items = new ArrayList<NavigationDrawerItemModel>();
-
-		// Listenelement: Übersicht
-		items.add(new NavigationDrawerItemModel(navMenuTitles[0], navMenuIcons.getResourceId(0, -1)));
-		// Listenelement: Babymonitor
-		items.add(new NavigationDrawerItemModel(navMenuTitles[1], navMenuIcons.getResourceId(1, -1)));
-		// Listenelement: Anrufe und Nachrichten in Abwesenheit
-		items.add(new NavigationDrawerItemModel(navMenuTitles[2], navMenuIcons.getResourceId(2, -1), true, "0"));
-		// Listenelement: Einrichtungsassistent
-		items.add(new NavigationDrawerItemModel(navMenuTitles[3], navMenuIcons.getResourceId(3, -1)));
-
-		// Recycle the typed array
-		navMenuIcons.recycle();
-
-		mDrawerList.setOnItemClickListener(new SlideMenuClickListener());
-
-		// setting the nav drawer list adapter
-		adapter = new NavigationDrawerListAdapter(getApplicationContext(), items);
-		mDrawerList.setAdapter(adapter);
-
-		// enabling action bar app icon and behaving it as toggle button
-		getActionBar().setDisplayHomeAsUpEnabled(true);
-		getActionBar().setHomeButtonEnabled(true);
-
-		// Drawer Layout, Drawer Icon, Drawer Name (Drawer open, close)
-		mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, R.drawable.ic_drawer, R.string.app_name,
-				R.string.app_name) {
-			public void onDrawerClosed(View view) {
-				getActionBar().setTitle(appTitle);
-				// calling onPrepareOptionsMenu() to show action bar icons
-				invalidateOptionsMenu();
-			}
-
-			public void onDrawerOpened(View drawerView) {
-				// Set Typeface
-				getActionBar().setTitle(drawerTitle);
-				// calling onPrepareOptionsMenu() to hide action bar icons
-				invalidateOptionsMenu();
-			}
-		};
-		mDrawerLayout.setDrawerListener(mDrawerToggle);
-
-		// Checke the mode
-		if (mSharedPrefs.getDeviceMode() != -1) {
-			// Show first fragment view: OverviewFragment
-			displayView(0);
-		} else {
-			// Show first fragment view: SetupFragment
-			displayView(3);
-		}
+		displayView(0);
 	}
 
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
+
+		if (timer != null) {
+			timer.cancel();
+			timer = null;
+		}
 
 		if (mSharedPrefs.getRemoteAddress() != null) {
 			new babyfon.Message(this).send(this.getString(R.string.BABYFON_MSG_SYSTEM_AWAY));
@@ -194,6 +147,11 @@ public class MainActivity extends FragmentActivity {
 	protected void onStart() {
 		super.onStart();
 
+		if (timer == null) {
+			timer = new Timer();
+		}
+		initNavigationDrawer();
+
 		if (mSharedPrefs.getRemoteAddress() != null) {
 			new babyfon.Message(this).send(this.getString(R.string.BABYFON_MSG_SYSTEM_REJOIN));
 			if (mSharedPrefs.getDeviceMode() == 0) {
@@ -213,6 +171,11 @@ public class MainActivity extends FragmentActivity {
 	@Override
 	protected void onResume() {
 		super.onResume();
+
+		if (timer == null) {
+			timer = new Timer();
+		}
+		initNavigationDrawer();
 
 		ActionBar actionBar = getActionBar();
 		FrameLayout frameLayout = (FrameLayout) findViewById(R.id.frame_container);
@@ -313,13 +276,7 @@ public class MainActivity extends FragmentActivity {
 
 		if (id.equals("OverviewFragment")) {
 			// Open overview
-			if (mSharedPrefs.getDeviceMode() == 0) {
-				// Baby mode
-				fragment = new OverviewBabyFragment(this);
-			} else {
-				// Parents mode
-				fragment = new OverviewParentsFragment(this);
-			}
+			fragment = new OverviewBabyFragment(this);
 		} else if (id.equals("OverviewFragmentBaby")) {
 			// Baby mode
 			fragment = new OverviewBabyFragment(this);
@@ -354,16 +311,28 @@ public class MainActivity extends FragmentActivity {
 		String id = null;
 		switch (position) {
 		case 0:
-			id = "OverviewFragment";
+			if (mSharedPrefs.getDeviceMode() == -1) {
+				id = "SetupFragment";
+			}
+			if (mSharedPrefs.getDeviceMode() == 0) {
+				id = "OverviewFragment";
+			}
+			if (mSharedPrefs.getDeviceMode() == 1) {
+				id = "BabymonitorFragment";
+			}
 			break;
 		case 1:
-			id = "BabymonitorFragment";
+			if (mSharedPrefs.getDeviceMode() == 0) {
+				id = "SetupFragment";
+			}
+			if (mSharedPrefs.getDeviceMode() == 1) {
+				id = "AbsenceFragment";
+			}
 			break;
 		case 2:
-			id = "AbsenceFragment";
-			break;
-		case 3:
-			id = "SetupFragment";
+			if (mSharedPrefs.getDeviceMode() == 1) {
+				id = "SetupFragment";
+			}
 			break;
 
 		default:
@@ -412,5 +381,94 @@ public class MainActivity extends FragmentActivity {
 		super.onConfigurationChanged(newConfig);
 		// Pass any configuration change to the drawer toggls
 		mDrawerToggle.onConfigurationChanged(newConfig);
+	}
+
+	public void initNavigationDrawer() {
+		appTitle = drawerTitle = getTitle();
+
+		if (mSharedPrefs.getDeviceMode() == 0) {
+			// load slide menu items for baby mode
+			navMenuTitles = getResources().getStringArray(R.array.navigation_drawer_items_baby_mode);
+			// nav drawer icons from resources for baby mode
+			navMenuIcons = getResources().obtainTypedArray(R.array.navigation_drawer_icons_baby_mode);
+		} else if (mSharedPrefs.getDeviceMode() == 1) {
+			// load slide menu items for baby mode
+			navMenuTitles = getResources().getStringArray(R.array.navigation_drawer_items_parents_mode);
+			// nav drawer icons from resources for baby mode
+			navMenuIcons = getResources().obtainTypedArray(R.array.navigation_drawer_icons_parents_mode);
+		} else {
+			// load slide menu items for baby mode
+			navMenuTitles = getResources().getStringArray(R.array.navigation_drawer_items_no_mode);
+			// nav drawer icons from resources for baby mode
+			navMenuIcons = getResources().obtainTypedArray(R.array.navigation_drawer_icons_no_mode);
+		}
+
+		mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+		mDrawerList = (ListView) findViewById(R.id.list_slidermenu);
+
+		items = new ArrayList<NavigationDrawerItemModel>();
+
+		if (mSharedPrefs.getDeviceMode() == 0) {
+			// Listenelement: Übersicht
+			items.add(new NavigationDrawerItemModel(navMenuTitles[0], navMenuIcons.getResourceId(0, -1)));
+			// Listenelement: Einrichtungsassistent
+			items.add(new NavigationDrawerItemModel(navMenuTitles[1], navMenuIcons.getResourceId(1, -1)));
+		} else if (mSharedPrefs.getDeviceMode() == 1) {
+			// Listenelement: Babymonitor
+			items.add(new NavigationDrawerItemModel(navMenuTitles[0], navMenuIcons.getResourceId(0, -1)));
+			// Listenelement: Anrufe und Nachrichten in Abwesenheit
+			items.add(new NavigationDrawerItemModel(navMenuTitles[1], navMenuIcons.getResourceId(1, -1), true, "0"));
+			// Listenelement: Einrichtungsassistent
+			items.add(new NavigationDrawerItemModel(navMenuTitles[2], navMenuIcons.getResourceId(2, -1)));
+		} else {
+			// Listenelement: Einrichtungsassistent
+			items.add(new NavigationDrawerItemModel(navMenuTitles[0], navMenuIcons.getResourceId(0, -1)));
+		}
+
+		// Recycle the typed array
+		navMenuIcons.recycle();
+
+		mDrawerList.setOnItemClickListener(new SlideMenuClickListener());
+
+		// setting the nav drawer list adapter
+		adapter = new NavigationDrawerListAdapter(getApplicationContext(), items);
+		mDrawerList.setAdapter(adapter);
+
+		// enabling action bar app icon and behaving it as toggle button
+		getActionBar().setDisplayHomeAsUpEnabled(true);
+		getActionBar().setHomeButtonEnabled(true);
+
+		// Drawer Layout, Drawer Icon, Drawer Name (Drawer open, close)
+		mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, R.drawable.ic_drawer, R.string.app_name,
+				R.string.app_name) {
+			public void onDrawerClosed(View view) {
+				getActionBar().setTitle(appTitle);
+				// calling onPrepareOptionsMenu() to show action bar icons
+				invalidateOptionsMenu();
+			}
+
+			public void onDrawerOpened(View drawerView) {
+				// Set Typeface
+				getActionBar().setTitle(drawerTitle);
+				// calling onPrepareOptionsMenu() to hide action bar icons
+				invalidateOptionsMenu();
+			}
+		};
+		mDrawerLayout.setDrawerListener(mDrawerToggle);
+	}
+
+	public void startUiUpdateThread() {
+		if (timer == null) {
+			timer = new Timer();
+		}
+		timer.scheduleAtFixedRate(new TimerTask() {
+			public void run() {
+				runOnUiThread(new Runnable() {
+					public void run() {
+						initNavigationDrawer();
+					}
+				});
+			}
+		}, 0, 1000);
 	}
 }

@@ -60,7 +60,7 @@ public class Message {
 			((MainActivity) mContext).runOnUiThread(new Runnable() {
 				@Override
 				public void run() {
-					AbsenceFragment.setNewNessage(numberName, message);
+					AbsenceFragment.setNewMessage(1, numberName, message);
 				}
 			});
 		}
@@ -72,7 +72,7 @@ public class Message {
 			((MainActivity) mContext).runOnUiThread(new Runnable() {
 				@Override
 				public void run() {
-					AbsenceFragment.setNewNessage(numberName, "");;
+					AbsenceFragment.setNewMessage(1, numberName, "");;
 				}
 			});
 		}

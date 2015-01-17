@@ -1,14 +1,18 @@
 package babyfon.view.fragment;
 
+import java.net.SocketException;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 
 import babyfon.Message;
 import babyfon.adapter.AbsenceListAdapter;
 import babyfon.adapter.DeviceListAdapter;
+import babyfon.connectivity.wifi.WifiHandler;
 import babyfon.init.R;
 import babyfon.model.AbsenceListItemModel;
 import babyfon.model.DeviceListItemModel;
 import babyfon.settings.SharedPrefs;
+import babyfon.view.activity.MainActivity;
 import babyfon.view.fragment.setup.parentmode.SetupConnectionParentsModeFragment;
 import android.app.AlertDialog;
 import android.app.Fragment;
@@ -16,13 +20,17 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.text.InputFilter;
+import android.text.method.DigitsKeyListener;
 import android.util.Log;
+import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -70,6 +78,8 @@ public class AbsenceFragment extends Fragment {
 
 				String numberName = messages.get(position).getNumber();
 				String message = messages.get(position).getMessage();
+
+				openMessage(numberName, message);
 			}
 		});
 	}
@@ -127,16 +137,28 @@ public class AbsenceFragment extends Fragment {
 		return view;
 	}
 
+	public static void openMessage(final String numberName, String message) {
+		AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+		builder.setTitle(numberName).setMessage(message).setCancelable(false)
+				.setPositiveButton(mContext.getString(R.string.close), new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int id) {
+						// do nothing, just close dialog
+					}
+				});
+		AlertDialog alert = builder.create();
+		alert.show();
+	}
+
 	public void deleteList() {
 		messages.clear();
 		updateList();
 	}
 
-	public static void setNewNessage(String numberName, String message) {
+	public static void setNewMessage(int type, String numberName, String message) {
 		if (messages == null) {
 			messages = new ArrayList<AbsenceListItemModel>();
 		}
-		messages.add(new AbsenceListItemModel(numberName, message));
+		messages.add(new AbsenceListItemModel(type, numberName, message));
 
 		updateList();
 	}

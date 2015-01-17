@@ -19,6 +19,7 @@
             android:layout_weight="100"
             android:choiceMode="singleChoice"
             android:divider="@null"
+            android:background="@android:drawable/status_bar_item_app_background"
             android:dividerHeight="0dp" >
         </ListView>
     </LinearLayout>
