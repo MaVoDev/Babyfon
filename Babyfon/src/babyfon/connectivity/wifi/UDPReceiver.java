@@ -32,7 +32,7 @@ public class UDPReceiver {
 			try {
 
 				udpServerSocket = new DatagramSocket(mSharedPrefs.getUDPPort());
-				byte[] buffer = new byte[mContext.getString(R.string.MESSAGE_CONNECTION_SEARCH).length()];
+				byte[] buffer = new byte[mContext.getString(R.string.BABYFON_MSG_CONNECTION_SEARCH).length()];
 
 				DatagramPacket receivePacket = new DatagramPacket(buffer, buffer.length);
 
@@ -45,9 +45,9 @@ public class UDPReceiver {
 					// Cut the "/" from the InetAddress value
 					targetIP = targetIP.substring(1);
 
-					if (incomingUDPMessage.equals(mContext.getString(R.string.MESSAGE_CONNECTION_SEARCH))) {
+					if (incomingUDPMessage.equals(mContext.getString(R.string.BABYFON_MSG_CONNECTION_SEARCH))) {
 						new TCPSender(mContext).sendMessage(targetIP,
-								mContext.getString(R.string.MESSAGE_CONNECTION_FOUND) + ";"
+								mContext.getString(R.string.BABYFON_MSG_CONNECTION_FOUND) + ";"
 										+ new WifiHandler(mContext).getLocalIPv4Address() + ";"
 										+ android.os.Build.MODEL);
 					}

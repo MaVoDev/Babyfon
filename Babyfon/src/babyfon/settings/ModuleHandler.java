@@ -1,7 +1,9 @@
 package babyfon.settings;
 
 import android.content.Context;
+import android.content.IntentFilter;
 import android.util.Log;
+import babyfon.connectivity.sms.SMSReceiver;
 import babyfon.connectivity.wifi.TCPReceiver;
 import babyfon.connectivity.wifi.UDPReceiver;
 import babyfon.performance.Battery;
@@ -17,12 +19,15 @@ public class ModuleHandler {
 		this.mContext = mContext;
 	}
 
+	/**
+	 * Register battery receiver
+	 */
 	public void registerBattery() {
 		if (MainActivity.mBattery == null) {
-			Log.i(TAG, "Try to register battery receiver.");
+			Log.i(TAG, "Try to register battery receiver...");
 			MainActivity.mBattery = new Battery(mContext);
 			if (MainActivity.mBattery.register()) {
-				Log.i(TAG, "Battery receiver registered.");
+				Log.d(TAG, "Battery receiver registered.");
 			} else {
 				Log.e(TAG, "Error: Can't register battery receiver.");
 			}
@@ -31,17 +36,62 @@ public class ModuleHandler {
 		}
 	}
 
+	/**
+	 * Unregister battery receiver
+	 */
 	public void unregisterBattery() {
 		if (MainActivity.mBattery != null) {
 			Log.i(TAG, "Try to unregister battery receiver...");
 			if (MainActivity.mBattery.unregister()) {
 				MainActivity.mBattery = null;
-				Log.i(TAG, "Battery receiver unregistered.");
+				Log.d(TAG, "Battery receiver unregistered.");
 			} else {
 				Log.e(TAG, "Error: Can't unregister battery receiver.");
 			}
 		} else {
 			Log.e(TAG, "Can't unregister battery: The receiver wasn't registerd or has been unregisterd.");
+		}
+	}
+
+	/**
+	 * Register SMS receiver
+	 */
+	public void registerSMS() {
+		if (MainActivity.mIntentFilter == null) {
+			MainActivity.mIntentFilter = new IntentFilter();
+			MainActivity.mIntentFilter.addAction("android.provider.Telephony.SMS_RECEIVED");
+		}
+
+		if (MainActivity.mSmsReceiver == null) {
+			Log.i(TAG, "Try to register sms receiver...");
+			MainActivity.mSmsReceiver = new SMSReceiver(mContext);
+			try {
+				mContext.registerReceiver(MainActivity.mSmsReceiver, MainActivity.mIntentFilter);
+				Log.d(TAG, "SMS receiver registered.");
+			} catch (Exception e) {
+				Log.e(TAG, "Error: Can't register sms receiver.");
+			}
+		} else {
+			Log.e(TAG, "SMS receiver is still registered.");
+		}
+	}
+
+	/**
+	 * Unregister sms receiver
+	 */
+	public void unregisterSMS() {
+		if (MainActivity.mSmsReceiver != null) {
+			Log.i(TAG, "Try to unregister sms receiver...");
+			try {
+				mContext.unregisterReceiver(MainActivity.mSmsReceiver);
+				MainActivity.mSmsReceiver = null;
+				MainActivity.mIntentFilter = null;
+				Log.d(TAG, "SMS receiver unregistered.");
+			} catch (Exception e) {
+				Log.e(TAG, "Error: Can't unregister sms receiver.");
+			}
+		} else {
+			Log.e(TAG, "Can't unregister sms: The receiver wasn't registerd or has been unregisterd.");
 		}
 	}
 
@@ -53,7 +103,7 @@ public class ModuleHandler {
 			Log.i(TAG, "Try to start TCP receiver...");
 			MainActivity.mTCPReceiver = new TCPReceiver(mContext);
 			if (MainActivity.mTCPReceiver.start()) {
-				Log.i(TAG, "TCP receiver is running.");
+				Log.d(TAG, "TCP receiver is running.");
 			} else {
 				Log.e(TAG, "Error: Can't start TCP receiver.");
 			}
@@ -70,7 +120,7 @@ public class ModuleHandler {
 			Log.i(TAG, "Try to stop TCP receiver...");
 			if (MainActivity.mTCPReceiver.stop()) {
 				MainActivity.mTCPReceiver = null;
-				Log.i(TAG, "TCP receiver closed.");
+				Log.d(TAG, "TCP receiver closed.");
 			} else {
 				Log.e(TAG, "Error: Can't close TCP receiver.");
 			}
@@ -87,7 +137,7 @@ public class ModuleHandler {
 			Log.i(TAG, "Try to start UDP receiver...");
 			MainActivity.mUDPReceiver = new UDPReceiver(mContext);
 			if (MainActivity.mUDPReceiver.start()) {
-				Log.i(TAG, "UDP receiver is running.");
+				Log.d(TAG, "UDP receiver is running.");
 			} else {
 				Log.e(TAG, "Error: Can't start UDP receiver.");
 			}
@@ -104,7 +154,7 @@ public class ModuleHandler {
 			Log.i(TAG, "Try to stop UDP receiver...");
 			if (MainActivity.mUDPReceiver.stop()) {
 				MainActivity.mUDPReceiver = null;
-				Log.i(TAG, "UDP receiver closed.");
+				Log.d(TAG, "UDP receiver closed.");
 			} else {
 				Log.e(TAG, "Error: Can't close UDP receiver.");
 			}

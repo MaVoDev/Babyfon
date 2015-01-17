@@ -134,6 +134,12 @@ public class OverviewBabyFragment extends Fragment {
 			activeState.setImageResource(android.R.drawable.presence_invisible);
 		}
 
+		if (mSharedPrefs.isRemoteOnline()) {
+
+		} else {
+			remoteOnlineState.setImageResource(android.R.drawable.presence_away);
+		}
+
 		if (mSharedPrefs.getRemoteAddress() != null) {
 			// remote host is connected
 			kickRemote.setVisibility(View.VISIBLE);
@@ -211,8 +217,12 @@ public class OverviewBabyFragment extends Fragment {
 										mModuleHandler.unregisterBattery();
 										mModuleHandler.startUDPReceiver();
 
-										// TODO nachricht an das verbundene
-										// Gerät senden
+										if (mSharedPrefs.getForwardingSMS() || mSharedPrefs.getForwardingSMSInfo()) {
+											mModuleHandler.unregisterSMS();
+										}
+
+										new Message(mContext).send(mContext
+												.getString(R.string.BABYFON_MSG_SYSTEM_DISCONNECTED));
 										updateUI();
 									}
 								}).create().show();
@@ -316,14 +326,17 @@ public class OverviewBabyFragment extends Fragment {
 
 						switch (item) {
 						case 0:
+							mModuleHandler.unregisterSMS();
 							mSharedPrefs.setForwardingSMS(false);
 							mSharedPrefs.setForwardingSMSInfo(false);
 							break;
 						case 1:
+							mModuleHandler.registerSMS();
 							mSharedPrefs.setForwardingSMSInfo(true);
 							mSharedPrefs.setForwardingSMS(false);
 							break;
 						case 2:
+							mModuleHandler.registerSMS();
 							mSharedPrefs.setForwardingSMS(true);
 							mSharedPrefs.setForwardingSMSInfo(false);
 							break;
@@ -403,8 +416,12 @@ public class OverviewBabyFragment extends Fragment {
 											mSharedPrefs.setActiveStateBabyMode(false);
 											if (mSharedPrefs.getRemoteAddress() != null) {
 												new Message(mContext).send(mContext
-														.getString(R.string.MESSAGE_SYSTEM_AWAY));
+														.getString(R.string.BABYFON_MSG_SYSTEM_AWAY));
 												mModuleHandler.unregisterBattery();
+												if (mSharedPrefs.getForwardingSMS()
+														|| mSharedPrefs.getForwardingSMSInfo()) {
+													mModuleHandler.unregisterSMS();
+												}
 											} else {
 												mModuleHandler.stopUDPReceiver();
 											}
@@ -413,8 +430,12 @@ public class OverviewBabyFragment extends Fragment {
 											mSharedPrefs.setActiveStateBabyMode(true);
 											if (mSharedPrefs.getRemoteAddress() != null) {
 												mModuleHandler.registerBattery();
+												if (mSharedPrefs.getForwardingSMS()
+														|| mSharedPrefs.getForwardingSMSInfo()) {
+													mModuleHandler.registerSMS();
+												}
 												new Message(mContext).send(mContext
-														.getString(R.string.MESSAGE_SYSTEM_REJOIN));
+														.getString(R.string.BABYFON_MSG_SYSTEM_REJOIN));
 											} else {
 												mModuleHandler.startUDPReceiver();
 											}

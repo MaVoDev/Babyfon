@@ -3,16 +3,17 @@
 
     <!-- Message types -->
     <string name="BABYFON_MSG_BATTERY">BABYFON_MSG_BATTERY</string>
-    <string name="MESSAGE_CONNECTION_FOUND">BABYFON_MSG_CONNECTION_FOUND</string>
-    <string name="MESSAGE_CONNECTION_SEARCH">BABYFON_MSG_CONNECTION_SEARCH</string>
-    <string name="MESSAGE_SMS">BABYFON_MSG_SMS</string>
-    <string name="MESSAGE_CALL">BABYFON_MSG_CALL</string>
-    <string name="MESSAGE_AUTH_REQ">BABYFON_MSG_AUTH_REQ</string>
-    <string name="MESSAGE_AUTH_CONFIRMED">MESSAGE_AUTH_CONFIRMED</string>
-    <string name="MESSAGE_AUTH_DENIED">MESSAGE_AUTH_DENIED</string>
-    <string name="MESSAGE_SYSTEM_AWAY">MESSAGE_SYSTEM_AWAY</string>
-    <string name="MESSAGE_SYSTEM_DISCONNECTED">MESSAGE_SYSTEM_DISCONNECTED</string>
-    <string name="MESSAGE_SYSTEM_REJOIN">MESSAGE_SYSTEM_REJOIN</string>
+    <string name="BABYFON_MSG_CONNECTION_FOUND">BABYFON_MSG_CONNECTION_FOUND</string>
+    <string name="BABYFON_MSG_CONNECTION_SEARCH">BABYFON_MSG_CONNECTION_SEARCH</string>
+    <string name="BABYFON_MSG_SMS">BABYFON_MSG_SMS</string>
+    <string name="BABYFON_MSG_SMS_INFO">BABYFON_MSG_SMS_INFO</string>
+    <string name="BABYFON_MSG_CALL_INFO">BABYFON_MSG_CALL_INFO</string>
+    <string name="BABYFON_MSG_AUTH_REQ">BABYFON_MSG_AUTH_REQ</string>
+    <string name="BABYFON_MSG_AUTH_CONFIRMED">BABYFON_MSG_AUTH_CONFIRMED</string>
+    <string name="BABYFON_MSG_AUTH_DENIED">BABYFON_MSG_AUTH_DENIED</string>
+    <string name="BABYFON_MSG_SYSTEM_AWAY">BABYFON_MSG_SYSTEM_AWAY</string>
+    <string name="BABYFON_MSG_SYSTEM_DISCONNECTED">BABYFON_MSG_SYSTEM_DISCONNECTED</string>
+    <string name="BABYFON_MSG_SYSTEM_REJOIN">BABYFON_MSG_SYSTEM_REJOIN</string>
 
     <!-- Titles -->
     <string name="title_baby_monitor">Babymonitor</string>
@@ -26,6 +27,10 @@
     <string name="title_forwarding">Weiterleitung</string>
     <string name="title_setup_complete_baby_mode">Abschluss</string>
     <string name="title_setup_complete_parents_mode">Erfolgreich</string>
+
+    <!-- Subtitles -->
+    <string name="subtitle_baby_mode">- Babymodus -</string>
+    <string name="subtitle_parents_mode">- Elternmodus -</string>
 
     <!-- Dialogs -->
     <string name="dialog_button_yes">Ja</string>
@@ -45,6 +50,8 @@
     <string name="dialog_title_connectivity">Wähle deine neue aktive Verbindung</string>
     <string name="dialog_title_sms">Bei eingehenden SMS</string>
     <string name="dialog_title_call">Bei eingehenden Anrufen</string>
+    <string name="dialog_title_delete_list">Nachrichten löschen</string>
+    <string name="dialog_message_delete_list">Möchtest du alle Nachrichten aus der Liste entfernen?</string>
 
     <!-- Overview baby mode -->
     <string name="overview_baby_mode_state">Status des Gerätes</string>

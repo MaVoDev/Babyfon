@@ -10,6 +10,7 @@ import babyfon.init.R;
 import babyfon.settings.ModuleHandler;
 import babyfon.settings.SharedPrefs;
 import babyfon.view.activity.MainActivity;
+import babyfon.view.fragment.AbsenceFragment;
 import babyfon.view.fragment.BabyMonitorFragment;
 import babyfon.view.fragment.overview.OverviewBabyFragment;
 import babyfon.view.fragment.setup.parentmode.SetupCompleteParentsModeFragment;
@@ -51,7 +52,32 @@ public class Message {
 			});
 		}
 
-		if (strArray[0].equals(mContext.getString(R.string.MESSAGE_CONNECTION_FOUND))) {
+		if (strArray[0].equals(mContext.getString(R.string.BABYFON_MSG_SMS))) {
+			// SMS
+			final String numberName = strArray[1];
+			final String message = strArray[2];
+
+			((MainActivity) mContext).runOnUiThread(new Runnable() {
+				@Override
+				public void run() {
+					AbsenceFragment.setNewNessage(numberName, message);
+				}
+			});
+		}
+
+		if (strArray[0].equals(mContext.getString(R.string.BABYFON_MSG_SMS_INFO))) {
+			// SMS
+			final String numberName = strArray[1];
+			
+			((MainActivity) mContext).runOnUiThread(new Runnable() {
+				@Override
+				public void run() {
+					AbsenceFragment.setNewNessage(numberName, "");;
+				}
+			});
+		}
+
+		if (strArray[0].equals(mContext.getString(R.string.BABYFON_MSG_CONNECTION_FOUND))) {
 			final String ip = strArray[1];
 			final String name = strArray[2];
 
@@ -63,7 +89,7 @@ public class Message {
 			});
 		}
 
-		if (strArray[0].equals(mContext.getString(R.string.MESSAGE_AUTH_REQ))) {
+		if (strArray[0].equals(mContext.getString(R.string.BABYFON_MSG_AUTH_REQ))) {
 			final String password = strArray[1];
 			final String remoteAddress = strArray[2];
 			final String remoteName = strArray[3];
@@ -75,26 +101,29 @@ public class Message {
 				mSharedPrefs.setRemoteOnlineState(true);
 				int numberOfConnections = mSharedPrefs.getNumberOfConnections() + 1;
 
-				send(mContext.getString(R.string.MESSAGE_AUTH_CONFIRMED));
+				send(mContext.getString(R.string.BABYFON_MSG_AUTH_CONFIRMED));
 
 				mSharedPrefs.setNumberOfConnections(numberOfConnections);
 
 				mModuleHandler.stopUDPReceiver();
 				mModuleHandler.registerBattery();
 
+				if (mSharedPrefs.getForwardingSMS() || mSharedPrefs.getForwardingSMSInfo()) {
+					mModuleHandler.registerSMS();
+				}
 			} else {
-				send(mContext.getString(R.string.MESSAGE_AUTH_DENIED));
+				send(mContext.getString(R.string.BABYFON_MSG_AUTH_DENIED));
 			}
 		}
 
-		if (strArray[0].equals(mContext.getString(R.string.MESSAGE_AUTH_CONFIRMED))) {
+		if (strArray[0].equals(mContext.getString(R.string.BABYFON_MSG_AUTH_CONFIRMED))) {
 			FragmentManager mFragmentManager = ((Activity) mContext).getFragmentManager();
 			mFragmentManager.beginTransaction()
 					.replace(R.id.frame_container, new SetupCompleteParentsModeFragment(mContext), null)
 					.addToBackStack(null).commit();
 		}
 
-		if (strArray[0].equals(mContext.getString(R.string.MESSAGE_AUTH_DENIED))) {
+		if (strArray[0].equals(mContext.getString(R.string.BABYFON_MSG_AUTH_DENIED))) {
 			((MainActivity) mContext).runOnUiThread(new Runnable() {
 				@Override
 				public void run() {
@@ -104,25 +133,34 @@ public class Message {
 			});
 		}
 
-		if (strArray[0].equals(mContext.getString(R.string.MESSAGE_SYSTEM_AWAY))) {
+		if (strArray[0].equals(mContext.getString(R.string.BABYFON_MSG_SYSTEM_AWAY))) {
 			if (mSharedPrefs.getDeviceMode() == 0) {
 				mModuleHandler.unregisterBattery();
+				if (mSharedPrefs.getForwardingSMS() || mSharedPrefs.getForwardingSMSInfo()) {
+					mModuleHandler.unregisterSMS();
+				}
 			}
 			mSharedPrefs.setRemoteOnlineState(false);
 		}
-		
-		if (strArray[0].equals(mContext.getString(R.string.MESSAGE_SYSTEM_DISCONNECTED))) {
+
+		if (strArray[0].equals(mContext.getString(R.string.BABYFON_MSG_SYSTEM_DISCONNECTED))) {
 			if (mSharedPrefs.getDeviceMode() == 0) {
 				mModuleHandler.unregisterBattery();
+				if (mSharedPrefs.getForwardingSMS() || mSharedPrefs.getForwardingSMSInfo()) {
+					mModuleHandler.unregisterSMS();
+				}
 			}
 			mSharedPrefs.setRemoteOnlineState(false);
 			mSharedPrefs.setRemoteAdress(null);
 			mSharedPrefs.setRemoteName(null);
 		}
-		
-		if (strArray[0].equals(mContext.getString(R.string.MESSAGE_SYSTEM_REJOIN))) {
+
+		if (strArray[0].equals(mContext.getString(R.string.BABYFON_MSG_SYSTEM_REJOIN))) {
 			if (mSharedPrefs.getDeviceMode() == 0) {
 				mModuleHandler.registerBattery();
+				if (mSharedPrefs.getForwardingSMS() || mSharedPrefs.getForwardingSMSInfo()) {
+					mModuleHandler.registerSMS();
+				}
 			}
 			mSharedPrefs.setRemoteOnlineState(true);
 		}

@@ -35,6 +35,7 @@ public class SetupConnectionBabyModeFragment extends Fragment {
 	private RadioButton radioBluetooth;
 	private RadioButton radioWifi;
 	private RadioButton radioWifiDirect;
+	private TextView subtitle;
 	private TextView title;
 	private TextView infoText;
 
@@ -145,6 +146,8 @@ public class SetupConnectionBabyModeFragment extends Fragment {
 		radioWifiDirect.setTypeface(mTypeface_i);
 
 		// Initialize TextViews
+		subtitle = (TextView) view.findViewById(R.id.subtitle_setup_connection_baby);
+		subtitle.setTypeface(mTypeface_i);
 		title = (TextView) view.findViewById(R.id.text_titleConnectionBaby);
 		title.setTypeface(mTypeface_bi);
 		infoText = (TextView) view.findViewById(R.id.text_connection);

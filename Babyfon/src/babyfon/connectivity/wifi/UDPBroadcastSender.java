@@ -37,7 +37,7 @@ public class UDPBroadcastSender {
 
 		if (localIP != null) {
 			try {
-				byte[] message = mContext.getString(R.string.MESSAGE_CONNECTION_SEARCH).getBytes();
+				byte[] message = mContext.getString(R.string.BABYFON_MSG_CONNECTION_SEARCH).getBytes();
 				Log.d(TAG, "Send broadcast message...");
 				for (int i = 1; i < 255; i++) {
 					InetAddress address = InetAddress.getByName(ipRange + i);

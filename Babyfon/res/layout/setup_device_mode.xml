@@ -8,6 +8,11 @@
             style="@style/fragmentTitle"
             android:text="@string/title_device_mode" />
     </LinearLayout>
+    
+     <TextView
+        android:id="@+id/subtitle_setup_device_mode"
+        style="@style/fragmentSubtitle"
+        android:text="" />
 
     <LinearLayout style="@style/layout_body" >
 

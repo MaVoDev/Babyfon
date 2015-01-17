@@ -9,6 +9,11 @@
             android:text="@string/title_setup_complete_parents_mode" />
     </LinearLayout>
 
+    <TextView
+        android:id="@+id/subtitle_setup_complete_parents"
+        style="@style/fragmentSubtitle"
+        android:text="@string/subtitle_parents_mode" />
+
     <LinearLayout style="@style/layout_body" >
 
         <TextView
@@ -21,8 +26,8 @@
             android:id="@+id/image_connected"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
             android:layout_gravity="center_horizontal"
+            android:layout_marginTop="20dp"
             android:src="@drawable/success" />
     </LinearLayout>
 

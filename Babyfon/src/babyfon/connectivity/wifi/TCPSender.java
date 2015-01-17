@@ -42,8 +42,7 @@ public class TCPSender {
 							outSingle = new PrintWriter(socket.getOutputStream(), true);
 						}
 					} catch (IOException e) {
-						// TODO: Fehler auf dem Gerät anzeigen, wenn Senden
-						// fehlschlägt
+						mSharedPrefs.setRemoteOnlineState(false);
 						Log.e(TAG, "Send message failed!");
 					}
 

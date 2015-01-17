@@ -7,9 +7,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import babyfon.adapter.NavigationDrawerListAdapter;
-import babyfon.connectivity.call.CallReceiver;
 import babyfon.connectivity.sms.SMSReceiver;
-import babyfon.connectivity.wifi.StreamSender;
 import babyfon.connectivity.wifi.TCPReceiver;
 import babyfon.connectivity.wifi.UDPReceiver;
 import babyfon.model.NavigationDrawerItemModel;
@@ -29,6 +27,7 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.res.Configuration;
 import android.content.res.TypedArray;
 import android.os.Bundle;
@@ -53,6 +52,9 @@ public class MainActivity extends FragmentActivity {
 	public static Battery mBattery;
 	public static TCPReceiver mTCPReceiver;
 	public static UDPReceiver mUDPReceiver;
+	public static SMSReceiver mSmsReceiver;
+
+	public static IntentFilter mIntentFilter;
 
 	private ModuleHandler mModuleHandler;
 
@@ -67,8 +69,6 @@ public class MainActivity extends FragmentActivity {
 	// Slide menu items
 	private String[] navMenuTitles;
 	private TypedArray navMenuIcons;
-
-	private OverviewBabyFragment mOverviewBabyFragment;
 
 	private ArrayList<NavigationDrawerItemModel> items;
 	private NavigationDrawerListAdapter adapter;
@@ -97,18 +97,10 @@ public class MainActivity extends FragmentActivity {
 			StrictMode.setThreadPolicy(policy);
 		}
 
-		mOverviewBabyFragment = new OverviewBabyFragment(this);
-
-		new StreamSender(this);
-
 		mSharedPrefs = new SharedPrefs(this);
 		mModuleHandler = new ModuleHandler(this);
 
 		handleModules();
-
-		new CallReceiver(this).missedCalls();
-
-		new SMSReceiver(this); // TODO Only baby mode
 
 		appTitle = drawerTitle = getTitle();
 
@@ -178,16 +170,24 @@ public class MainActivity extends FragmentActivity {
 		super.onDestroy();
 
 		if (mSharedPrefs.getRemoteAddress() != null) {
-			new babyfon.Message(this).send(this.getString(R.string.MESSAGE_SYSTEM_AWAY));
+			new babyfon.Message(this).send(this.getString(R.string.BABYFON_MSG_SYSTEM_AWAY));
+		} else {
+			if (mSharedPrefs.getDeviceMode() == 0) {
+				mModuleHandler.stopUDPReceiver();
+			}
 		}
 
 		if (mSharedPrefs.getDeviceMode() == 0) {
 			new Sound(this).soundOn();
+			mModuleHandler.unregisterBattery();
+			if (mSharedPrefs.getForwardingSMS() || mSharedPrefs.getForwardingSMSInfo()) {
+				mModuleHandler.unregisterSMS();
+			}
 		}
 
-		mModuleHandler.unregisterBattery();
-		mModuleHandler.stopTCPReceiver();
-		mModuleHandler.stopUDPReceiver();
+		if (mSharedPrefs.getConnectivityType() == 2) {
+			mModuleHandler.stopTCPReceiver();
+		}
 	}
 
 	@Override
@@ -195,9 +195,12 @@ public class MainActivity extends FragmentActivity {
 		super.onStart();
 
 		if (mSharedPrefs.getRemoteAddress() != null) {
-			new babyfon.Message(this).send(this.getString(R.string.MESSAGE_SYSTEM_REJOIN));
+			new babyfon.Message(this).send(this.getString(R.string.BABYFON_MSG_SYSTEM_REJOIN));
 			if (mSharedPrefs.getDeviceMode() == 0) {
 				mModuleHandler.registerBattery();
+				if (mSharedPrefs.getForwardingSMS() || mSharedPrefs.getForwardingSMSInfo()) {
+					mModuleHandler.registerSMS();
+				}
 			}
 		} else {
 			if (mSharedPrefs.getDeviceMode() == 0) {

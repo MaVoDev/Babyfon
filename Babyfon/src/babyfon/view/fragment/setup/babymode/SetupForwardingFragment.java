@@ -20,7 +20,6 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.RadioButton;
-import android.widget.RadioGroup;
 import android.widget.TextView;
 
 public class SetupForwardingFragment extends Fragment {
@@ -30,6 +29,7 @@ public class SetupForwardingFragment extends Fragment {
 	private Button btnForward;
 	private CheckBox chkboxCall;
 	private CheckBox chkboxSMS;
+	private TextView subtitle;
 	private TextView title;
 	private TextView infoText;
 	private RadioButton radioForwardSMS;
@@ -90,6 +90,8 @@ public class SetupForwardingFragment extends Fragment {
 		radioInfoSMS.setTypeface(mTypeface_i);
 
 		// Initialize TextViews
+		subtitle = (TextView) view.findViewById(R.id.subtitle_setup_forward);
+		subtitle.setTypeface(mTypeface_i);
 		title = (TextView) view.findViewById(R.id.title_forwarding);
 		title.setTypeface(mTypeface_bi);
 		infoText = (TextView) view.findViewById(R.id.text_forwarding);

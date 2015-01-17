@@ -9,7 +9,11 @@
             android:text="@string/title_connection" />
     </LinearLayout>
 
-    <LinearLayout style="@style/layout_body" >
+    <TextView
+        android:id="@+id/subtitle_setup_connection_parents"
+        style="@style/fragmentSubtitle"
+        android:text="@string/subtitle_parents_mode" />
+    <LinearLayout style="@style/layout_body" >
 
         <TextView
             android:id="@+id/text_connection_parents"

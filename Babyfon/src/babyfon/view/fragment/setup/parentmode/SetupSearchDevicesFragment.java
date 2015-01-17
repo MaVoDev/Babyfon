@@ -6,11 +6,9 @@ import java.util.ArrayList;
 
 import babyfon.Message;
 import babyfon.adapter.DeviceListAdapter;
-import babyfon.adapter.NavigationDrawerListAdapter;
 import babyfon.connectivity.ConnectionInterface;
 import babyfon.connectivity.bluetooth.BluetoothConnection;
 import babyfon.connectivity.bluetooth.BluetoothListAdapter;
-import babyfon.connectivity.wifi.TCPReceiver;
 import babyfon.connectivity.wifi.UDPBroadcastSender;
 import babyfon.connectivity.wifi.WifiHandler;
 import babyfon.init.R;
@@ -18,10 +16,8 @@ import babyfon.model.DeviceListItemModel;
 import babyfon.settings.ModuleHandler;
 import babyfon.settings.SharedPrefs;
 import babyfon.view.activity.MainActivity;
-import babyfon.view.fragment.BabyMonitorFragment;
 import babyfon.view.fragment.overview.OverviewBabyFragment;
 import babyfon.view.fragment.overview.OverviewParentsFragment;
-import babyfon.view.fragment.setup.SetupDeviceModeFragment;
 import babyfon.view.fragment.setup.SetupStartFragment;
 import android.app.AlertDialog;
 import android.app.Fragment;
@@ -32,7 +28,6 @@ import android.graphics.Typeface;
 import android.os.Bundle;
 import android.text.InputFilter;
 import android.text.method.DigitsKeyListener;
-import android.text.style.UpdateLayout;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -41,12 +36,10 @@ import android.view.ViewGroup;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 public class SetupSearchDevicesFragment extends Fragment {
 
@@ -54,6 +47,7 @@ public class SetupSearchDevicesFragment extends Fragment {
 	private Button btnBackward;
 	private Button btnRefresh;
 	private static ListView listViewDevices;
+	private TextView subtitle;
 	private TextView title;
 
 	private static ArrayList<DeviceListItemModel> devices;
@@ -135,6 +129,8 @@ public class SetupSearchDevicesFragment extends Fragment {
 		btnBackward.setTypeface(mTypeface_i);
 
 		// Initialize TextViews
+		subtitle = (TextView) view.findViewById(R.id.subtitle_setup_search);
+		subtitle.setTypeface(mTypeface_i);
 		title = (TextView) view.findViewById(R.id.title_search);
 		title.setTypeface(mTypeface_bi);
 
@@ -311,7 +307,7 @@ public class SetupSearchDevicesFragment extends Fragment {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
 						}
-						new Message(mContext).send(mContext.getString(R.string.MESSAGE_AUTH_REQ) + ";" + password + ";"
+						new Message(mContext).send(mContext.getString(R.string.BABYFON_MSG_AUTH_REQ) + ";" + password + ";"
 								+ localIP + ";" + android.os.Build.MODEL);
 					}
 				});

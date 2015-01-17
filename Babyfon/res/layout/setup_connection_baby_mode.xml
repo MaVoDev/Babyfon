@@ -9,6 +9,11 @@
             android:text="@string/title_connection" />
     </LinearLayout>
 
+    <TextView
+        android:id="@+id/subtitle_setup_connection_baby"
+        style="@style/fragmentSubtitle"
+        android:text="@string/subtitle_baby_mode" />
+
     <LinearLayout style="@style/layout_body" >
 
         <TextView

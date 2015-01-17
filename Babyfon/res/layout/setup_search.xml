@@ -8,6 +8,11 @@
             style="@style/fragmentTitle"
             android:text="@string/title_search" />
     </LinearLayout>
+    
+     <TextView
+        android:id="@+id/subtitle_setup_search"
+        style="@style/fragmentSubtitle"
+        android:text="@string/subtitle_parents_mode" />
 
     <LinearLayout style="@style/layout_body" >
 

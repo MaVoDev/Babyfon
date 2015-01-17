@@ -27,6 +27,7 @@ public class SetupCompleteParentsModeFragment extends Fragment {
 
 	// Define UI elements
 	private Button btnForward;
+	private TextView subtitle;
 	private TextView title;
 	private TextView info;
 
@@ -71,6 +72,8 @@ public class SetupCompleteParentsModeFragment extends Fragment {
 		btnForward.setTypeface(mTypeface_i);
 
 		// Initialize TextViews
+		subtitle = (TextView) view.findViewById(R.id.subtitle_setup_complete_parents);
+		subtitle.setTypeface(mTypeface_i);
 		title = (TextView) view.findViewById(R.id.title_setup_complete_parents_mode);
 		title.setTypeface(mTypeface_bi);
 		info = (TextView) view.findViewById(R.id.text_connection_complete);

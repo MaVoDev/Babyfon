@@ -24,6 +24,7 @@ public class SetupCompleteBabyModeFragment extends Fragment {
 	// Define UI elements
 	private Button btnForward;
 	private TextView tvPassword;
+	private TextView subtitle;
 	private TextView title;
 	private TextView infoText;
 
@@ -68,6 +69,8 @@ public class SetupCompleteBabyModeFragment extends Fragment {
 		btnForward.setTypeface(mTypeface_i);
 
 		// Initialize TextViews
+		subtitle = (TextView) view.findViewById(R.id.subtitle_setup_complete_baby);
+		subtitle.setTypeface(mTypeface_i);
 		title = (TextView) view.findViewById(R.id.title_setup_complete_baby_mode);
 		title.setTypeface(mTypeface_bi);
 		tvPassword = (TextView) view.findViewById(R.id.tv_password);

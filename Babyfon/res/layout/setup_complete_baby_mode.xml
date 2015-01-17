@@ -8,6 +8,11 @@
             style="@style/fragmentTitle"
             android:text="@string/title_setup_complete_baby_mode" />
     </LinearLayout>
+    
+    <TextView
+        android:id="@+id/subtitle_setup_complete_baby"
+        style="@style/fragmentSubtitle"
+        android:text="@string/subtitle_baby_mode" />
 
     <LinearLayout style="@style/layout_body" >
 

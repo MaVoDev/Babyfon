@@ -8,6 +8,11 @@
             style="@style/fragmentTitle"
             android:text="@string/title_forwarding" />
     </LinearLayout>
+    
+    <TextView
+        android:id="@+id/subtitle_setup_forward"
+        style="@style/fragmentSubtitle"
+        android:text="@string/subtitle_baby_mode" />
 
     <LinearLayout style="@style/layout_body" >
 
