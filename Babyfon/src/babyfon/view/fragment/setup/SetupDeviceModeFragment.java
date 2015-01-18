@@ -2,9 +2,6 @@ package babyfon.view.fragment.setup;
 
 import babyfon.init.R;
 import babyfon.settings.SharedPrefs;
-import babyfon.view.fragment.setup.babymode.SetupConnectionBabyModeFragment;
-import babyfon.view.fragment.setup.babymode.SetupForwardingFragment;
-import babyfon.view.fragment.setup.parentmode.SetupConnectionParentsModeFragment;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.Context;
@@ -15,11 +12,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.View.OnClickListener;
 import android.widget.Button;
-import android.widget.CheckBox;
-import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.TextView;
-import android.widget.Toast;
 
 public class SetupDeviceModeFragment extends Fragment {
 
@@ -32,16 +26,14 @@ public class SetupDeviceModeFragment extends Fragment {
 
 	private SharedPrefs mSharedPrefs;
 
-	private SetupConnectionBabyModeFragment nextFragmentBaby;
-	private SetupConnectionParentsModeFragment nextFragmentParents;
+	private SetupConnectionFragment nextFragment;
 
 	private Context mContext;
 
 	// Constructor
 	public SetupDeviceModeFragment(Context mContext) {
 		mSharedPrefs = new SharedPrefs(mContext);
-		nextFragmentBaby = new SetupConnectionBabyModeFragment(mContext);
-		nextFragmentParents = new SetupConnectionParentsModeFragment(mContext);
+		nextFragment = new SetupConnectionFragment(mContext);
 
 		this.mContext = mContext;
 	}
@@ -52,6 +44,15 @@ public class SetupDeviceModeFragment extends Fragment {
 			btnForward.setBackgroundResource(R.drawable.btn_selector_male);
 		} else {
 			btnForward.setBackgroundResource(R.drawable.btn_selector_female);
+		}
+
+		// Update radio buttons
+		if (mSharedPrefs.getDeviceModeTemp() == 0) {
+			radioBaby.setChecked(true);
+			radioParents.setChecked(false);
+		} else {
+			radioBaby.setChecked(false);
+			radioParents.setChecked(true);
 		}
 	}
 
@@ -98,13 +99,11 @@ public class SetupDeviceModeFragment extends Fragment {
 			public void onClick(View v) {
 				if (radioBaby.isChecked()) {
 					mSharedPrefs.setDeviceModeTemp(0);
-					mFragmentManager.beginTransaction().replace(R.id.frame_container, nextFragmentBaby, null)
-							.addToBackStack(null).commit();
 				} else {
 					mSharedPrefs.setDeviceModeTemp(1);
-					mFragmentManager.beginTransaction().replace(R.id.frame_container, nextFragmentParents, null)
-							.addToBackStack(null).commit();
 				}
+				mFragmentManager.beginTransaction().replace(R.id.frame_container, nextFragment, null)
+						.addToBackStack(null).commit();
 			}
 		});
 

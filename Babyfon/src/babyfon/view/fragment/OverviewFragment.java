@@ -1,4 +1,4 @@
-package babyfon.view.fragment.overview;
+package babyfon.view.fragment;
 
 import java.util.Timer;
 import java.util.TimerTask;
@@ -20,7 +20,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-public class OverviewBabyFragment extends Fragment {
+public class OverviewFragment extends Fragment {
 
 	// Define UI elements
 	private ImageView activeState;
@@ -61,7 +61,7 @@ public class OverviewBabyFragment extends Fragment {
 	private Context mContext;
 
 	// Constructor
-	public OverviewBabyFragment(Context mContext) {
+	public OverviewFragment(Context mContext) {
 		mModuleHandler = new ModuleHandler(mContext);
 		mSharedPrefs = new SharedPrefs(mContext);
 
@@ -192,7 +192,7 @@ public class OverviewBabyFragment extends Fragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-		View view = inflater.inflate(R.layout.main_overview_baby_mode, container, false);
+		View view = inflater.inflate(R.layout.main_overview, container, false);
 
 		initUiElements(view);
 

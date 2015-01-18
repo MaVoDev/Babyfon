@@ -1,9 +1,9 @@
-package babyfon.view.fragment.setup.babymode;
+package babyfon.view.fragment.setup;
 
 import babyfon.init.R;
 import babyfon.settings.SharedPrefs;
-import babyfon.view.fragment.overview.OverviewBabyFragment;
-import babyfon.view.fragment.overview.OverviewParentsFragment;
+import babyfon.view.fragment.BabyMonitorFragment;
+import babyfon.view.fragment.OverviewFragment;
 import android.app.AlertDialog;
 import android.app.Fragment;
 import android.app.FragmentManager;
@@ -58,6 +58,18 @@ public class SetupForwardingFragment extends Fragment {
 		} else {
 			btnBackward.setBackgroundResource(R.drawable.btn_selector_female);
 			btnForward.setBackgroundResource(R.drawable.btn_selector_female);
+		}
+
+		if (mSharedPrefs.getForwardingSMSInfoTemp() || mSharedPrefs.getForwardingSMSTemp()) {
+			chkboxSMS.setChecked(true);
+			radioForwardSMS.setEnabled(true);
+			radioInfoSMS.setEnabled(true);
+		} else {
+			chkboxSMS.setChecked(false);
+			radioForwardSMS.setEnabled(false);
+			radioInfoSMS.setEnabled(false);
+			radioForwardSMS.setChecked(false);
+			radioInfoSMS.setChecked(true);
 		}
 	}
 
@@ -114,7 +126,7 @@ public class SetupForwardingFragment extends Fragment {
 			public void onClick(View v) {
 
 				mFragmentManager.beginTransaction()
-						.replace(R.id.frame_container, new SetupConnectionBabyModeFragment(mContext), null)
+						.replace(R.id.frame_container, new SetupConnectionFragment(mContext), null)
 						.addToBackStack(null).commit();
 			}
 		});
@@ -189,14 +201,19 @@ public class SetupForwardingFragment extends Fragment {
 											if (mSharedPrefs.getDeviceMode() == 0) {
 												mFragmentManager
 														.beginTransaction()
+														.replace(R.id.frame_container, new OverviewFragment(mContext),
+																null).addToBackStack(null).commit();
+											} else if (mSharedPrefs.getDeviceMode() == 1) {
+												mFragmentManager
+														.beginTransaction()
 														.replace(R.id.frame_container,
-																new OverviewBabyFragment(mContext), null)
+																new BabyMonitorFragment(mContext), null)
 														.addToBackStack(null).commit();
 											} else {
 												mFragmentManager
 														.beginTransaction()
 														.replace(R.id.frame_container,
-																new OverviewParentsFragment(mContext), null)
+																new SetupStartFragment(mContext), null)
 														.addToBackStack(null).commit();
 											}
 										}

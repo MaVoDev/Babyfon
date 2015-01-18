@@ -16,12 +16,12 @@ import android.net.wifi.WifiManager;
 public class WifiHandler {
 
 	private WifiManager mWifiManager;
-	
+
 	private Context mContext;
 
 	public WifiHandler(Context mContext) {
 		mWifiManager = (WifiManager) mContext.getSystemService(Context.WIFI_SERVICE);
-		
+
 		this.mContext = mContext;
 	}
 
@@ -45,7 +45,7 @@ public class WifiHandler {
 			return 1;
 		}
 	}
-	
+
 	public void startWiFi() {
 		mWifiManager.setWifiEnabled(true);
 	}
@@ -90,10 +90,10 @@ public class WifiHandler {
 
 		if (getWifiState() == 0) {
 			// Wi-Fi ist inaktiv.
-			return mContext.getString(R.string.WIFI_STATE_ERROR);
+			// TODO return mContext.getString(R.string.WIFI_STATE_ERROR);
 		} else if (!isWifiConnected()) {
 			// Wi-Fi ist mir keinem Netzwerk verbunden
-			return mContext.getString(R.string.WIFI_CONNECTION_ERROR);
+			// TODO return mContext.getString(R.string.WIFI_CONNECTION_ERROR);
 		} else {
 
 			InetAddress localIPv4Address;

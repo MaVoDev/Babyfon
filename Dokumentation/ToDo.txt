@@ -1,46 +1,46 @@
 ToDo:
 =============================================================================================================
 Interface/Navigation:
-- Mikrofonsensibilität einstellen können im BabyOverview
-1 Babymonitor: eingehenden Audiostream (Button On/Off), Ausgehender Stream, Batterie, Geräuschpegel, Signalisierungsalarm, SMS/Call, Verbunden mit (Kickfunktion)
-1 Wenn Babymode deaktiviert oder Remote gekickt wird, Remote Bescheid geben. Vom Babygerät disconnecten können.
-1 Die gewählten Setupoptionen zwischenspeichern und anzeigen- Im Babymodus Navigation Drawer auf Übersicht und Setup beschränken
-1 Alte Fragments löschen bzw. anpassen
+- Mikrofonsensibilität einstellen können im Babymonitor
+# Babymonitor: eingehenden Audiostream (Button On/Off), Ausgehender Stream, Batterie, Geräuschpegel, Signalisierungsalarm, SMS/Call, Verbunden mit (Kickfunktion)
+# Wenn Babymode deaktiviert oder Remote gekickt wird, Remote Bescheid geben. Vom Babygerät disconnecten können. Oder wenn einer den Modus ändert
 
 System:
-- Thread in der Main, checken ob die gewählte Verbindung ordnungsgemäß läuft, wenn nicht dialog zum hinweis oder aktivieren, währenddessen stop thread, nach ok wieder thread start
 - Service
-# Geräusch erkennen
+!!! Geräusch erkennen
 
 Netzwerk:
-# Bluetooth Verbindung
-# Audiostreaming Wi-Fi
-# Audiostreaming Bluetooth
-- Alle 5 Sek testen, ob Remote noch da ist.
-- Beim senden die Connectivity prüfen (Typ, an/aus, verbunden/nicht verbunden, ist ein remote vorhanden) Vielleicht eine extra Klasse für den Test
+!!! Bluetooth Verbindung
+!!! Audiostreaming Wi-Fi
+!!! Audiostreaming Bluetooth
+## Alle 5 Sek testen, ob Remote noch da ist.
+## Beim senden die Connectivity prüfen (Typ, an/aus, verbunden/nicht verbunden, ist ein remote vorhanden) Vielleicht eine extra Klasse für den Test (Beim Setup extra prüfen)
+		Thread in der Main, checken ob die gewählte Verbindung ordnungsgemäß läuft, wenn nicht dialog zum hinweis oder aktivieren, währenddessen stop thread, nach ok wieder thread start
 
 SMS/Call:
 - Anzahl der SMS im Drawer anzeigen
 - Nachrichten (Call/SMS) zwischenspeichern
 - Wenn SMS gelesen, dann nicht mehr bold und setze Zahl im Drawer runter
+- Namen von SMS Sender auslesen
 - Verpasste Anrufe anzeigen
 - Verpasste Anrufe weiterleiten
 - Call als Receiver laufen lassen
 
 Bugs:
 =============================================================================================================
-- Batteriestatus wird im Babymonitor nicht mehr aktualisiert. Richtig empfangen wird es. Auch die Methode wird aufgerufen. Aber anscheinend nur nach dem Setup, sonst gehts.
-- MainActivity: Wenn ein Modus gewählt ist, soll SetupStartFragment übersprungen werden. Das geht zurzeit nur, wenn die App geschlossen und neu gestartet wird. Soll aber gleich nach dem beenden eines Setup-Modus geschehen.  
-- Bluetooth: Wenn im Elternmode Bluetooth gewählt ist und die App beendet wird, gibts nen Absturz    
-- Wenn man das Setup beendet, aktualisiert sich der NavigationDrawer nicht. Der Einrichtungsassistent bleibt selected.
-- App wird nicht richtig beendet
-- Absturz bei SMS Empfang wenn nciht das passende Fragment offen ist
-- Aktives Item im NavigationDrawer wird nicht mehr markiert.
-- Navigationdrawer zeigt als Titel dauerhaft Babyfon an wenn man ein Menü wechselt
+1 Batteriestatus wird im Babymonitor nicht mehr aktualisiert. Richtig empfangen wird es. Auch die Methode wird aufgerufen. Aber anscheinend nur nach dem Setup, sonst gehts. Vll hier auch nen Thread laufen lassen
+2 Wenn ein Modus gewählt ist, soll SetupStartFragment übersprungen werden. Das geht zurzeit nur, wenn die App geschlossen und neu gestartet wird. Soll aber gleich nach dem beenden eines Setup-Modus geschehen.  
+3 Bluetooth: Wenn im Elternmode Bluetooth gewählt ist und die App beendet wird, gibts nen Absturz    
+4 Wenn man das Setup beendet, aktualisiert sich der NavigationDrawer nicht. Der Einrichtungsassistent bleibt selected.
+5 App wird nicht richtig beendet
+6 Absturz bei SMS Empfang wenn nciht das passende Fragment offen ist
+7 Aktives Item im NavigationDrawer wird nicht mehr markiert.
+8 Navigationdrawer zeigt als Titel dauerhaft Babyfon an wenn man ein Menü wechselt, liegt wohl am Thread
 
 
 Optional:
 =============================================================================================================
+- Navigation Drawer schöner gestalten, mit Image über der Itemliste
 - WiFi Direct Verbindung (Wenn keine Zeit ist, rausnehmen aus der App)
 - WiFi Direct State
 - Nachrichten zwischenpuffern, die nicht versendet werden konnten(SMS, Anrufe)

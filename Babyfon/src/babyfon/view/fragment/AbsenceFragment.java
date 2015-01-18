@@ -1,36 +1,23 @@
 package babyfon.view.fragment;
 
-import java.net.SocketException;
-import java.net.UnknownHostException;
 import java.util.ArrayList;
 
-import babyfon.Message;
 import babyfon.adapter.AbsenceListAdapter;
-import babyfon.adapter.DeviceListAdapter;
-import babyfon.connectivity.wifi.WifiHandler;
 import babyfon.init.R;
 import babyfon.model.AbsenceListItemModel;
-import babyfon.model.DeviceListItemModel;
 import babyfon.settings.SharedPrefs;
-import babyfon.view.activity.MainActivity;
-import babyfon.view.fragment.setup.parentmode.SetupConnectionParentsModeFragment;
 import android.app.AlertDialog;
 import android.app.Fragment;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Typeface;
 import android.os.Bundle;
-import android.text.InputFilter;
-import android.text.method.DigitsKeyListener;
-import android.util.Log;
-import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -59,8 +46,10 @@ public class AbsenceFragment extends Fragment {
 		// Update buttons
 		if (mSharedPrefs.getGender() == 0) {
 			btnDeleteList.setBackgroundResource(R.drawable.btn_selector_male);
+			listViewAbsence.setBackgroundResource(R.drawable.listview_male);
 		} else {
 			btnDeleteList.setBackgroundResource(R.drawable.btn_selector_female);
+			listViewAbsence.setBackgroundResource(R.drawable.listview_female);
 		}
 	}
 
@@ -171,7 +160,7 @@ public class AbsenceFragment extends Fragment {
 			messages = new ArrayList<AbsenceListItemModel>();
 		}
 
-		if (btnDeleteList != null) {
+		if (btnDeleteList != null && listViewAbsence != null) {
 			updateUI();
 		}
 	}

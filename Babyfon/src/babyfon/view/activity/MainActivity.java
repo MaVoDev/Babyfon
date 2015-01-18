@@ -14,12 +14,13 @@ import babyfon.connectivity.wifi.TCPReceiver;
 import babyfon.connectivity.wifi.UDPReceiver;
 import babyfon.model.NavigationDrawerItemModel;
 import babyfon.performance.Battery;
+import babyfon.performance.ConnectivityStateCheck;
 import babyfon.performance.Sound;
 import babyfon.settings.ModuleHandler;
 import babyfon.settings.SharedPrefs;
 import babyfon.view.fragment.AbsenceFragment;
 import babyfon.view.fragment.BabyMonitorFragment;
-import babyfon.view.fragment.overview.OverviewBabyFragment;
+import babyfon.view.fragment.OverviewFragment;
 import babyfon.view.fragment.setup.SetupDeviceModeFragment;
 import babyfon.view.fragment.setup.SetupStartFragment;
 import android.app.ActionBar;
@@ -57,7 +58,9 @@ public class MainActivity extends FragmentActivity {
 
 	public static IntentFilter mIntentFilter;
 
+	private ConnectivityStateCheck mConnectivityStateCheck;
 	private ModuleHandler mModuleHandler;
+	private SharedPrefs mSharedPrefs;
 
 	Map<String, Fragment> mFragmentMap = new HashMap<String, Fragment>();
 
@@ -72,12 +75,11 @@ public class MainActivity extends FragmentActivity {
 	private TypedArray navMenuIcons;
 
 	// Timer
-	private Timer timer;
+	private Timer timerNavigationDrawer;
+	private Timer timerConnectivityState;
 
 	private ArrayList<NavigationDrawerItemModel> items;
 	private NavigationDrawerListAdapter adapter;
-
-	private SharedPrefs mSharedPrefs;
 
 	public void handleModules() {
 		if (mSharedPrefs.getDeviceMode() != -1) {
@@ -101,14 +103,15 @@ public class MainActivity extends FragmentActivity {
 			StrictMode.setThreadPolicy(policy);
 		}
 
-		mSharedPrefs = new SharedPrefs(this);
+		mConnectivityStateCheck = new ConnectivityStateCheck(this);
 		mModuleHandler = new ModuleHandler(this);
+		mSharedPrefs = new SharedPrefs(this);
 
 		handleModules();
-		
+
 		initNavigationDrawer();
 
-		startUiUpdateThread();
+		startNavigationDrawerUpdateThread();
 
 		displayView(0);
 	}
@@ -117,9 +120,14 @@ public class MainActivity extends FragmentActivity {
 	protected void onDestroy() {
 		super.onDestroy();
 
-		if (timer != null) {
-			timer.cancel();
-			timer = null;
+		if (timerNavigationDrawer != null) {
+			timerNavigationDrawer.cancel();
+			timerNavigationDrawer = null;
+		}
+
+		if (timerConnectivityState != null) {
+			timerConnectivityState.cancel();
+			timerConnectivityState = null;
 		}
 
 		if (mSharedPrefs.getRemoteAddress() != null) {
@@ -147,10 +155,15 @@ public class MainActivity extends FragmentActivity {
 	protected void onStart() {
 		super.onStart();
 
-		if (timer == null) {
-			timer = new Timer();
+		if (timerNavigationDrawer == null) {
+			timerNavigationDrawer = new Timer();
 		}
 		initNavigationDrawer();
+
+		if (timerConnectivityState == null) {
+			timerConnectivityState = new Timer();
+			startConnectivityStateThread();
+		}
 
 		if (mSharedPrefs.getRemoteAddress() != null) {
 			new babyfon.Message(this).send(this.getString(R.string.BABYFON_MSG_SYSTEM_REJOIN));
@@ -172,10 +185,15 @@ public class MainActivity extends FragmentActivity {
 	protected void onResume() {
 		super.onResume();
 
-		if (timer == null) {
-			timer = new Timer();
+		if (timerNavigationDrawer == null) {
+			timerNavigationDrawer = new Timer();
 		}
 		initNavigationDrawer();
+
+		if (timerConnectivityState == null) {
+			timerConnectivityState = new Timer();
+			startConnectivityStateThread();
+		}
 
 		ActionBar actionBar = getActionBar();
 		FrameLayout frameLayout = (FrameLayout) findViewById(R.id.frame_container);
@@ -221,6 +239,7 @@ public class MainActivity extends FragmentActivity {
 	private class SlideMenuClickListener implements ListView.OnItemClickListener {
 		@Override
 		public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
 			// display view for selected nav drawer item
 			displayView(position);
 		}
@@ -276,10 +295,10 @@ public class MainActivity extends FragmentActivity {
 
 		if (id.equals("OverviewFragment")) {
 			// Open overview
-			fragment = new OverviewBabyFragment(this);
+			fragment = new OverviewFragment(this);
 		} else if (id.equals("OverviewFragmentBaby")) {
 			// Baby mode
-			fragment = new OverviewBabyFragment(this);
+			fragment = new OverviewFragment(this);
 		} else if (id.equals("BabymonitorFragment")) {
 			// Open babymonitor
 			fragment = new BabyMonitorFragment(this);
@@ -288,6 +307,7 @@ public class MainActivity extends FragmentActivity {
 			fragment = new AbsenceFragment(this);
 		} else if (id.equals("SetupFragment")) {
 			// Open setup
+			// TODO Bug #2
 			if (mSharedPrefs.getDeviceMode() != -1) {
 				// Baby or parents mode is active
 				fragment = new SetupDeviceModeFragment(this);
@@ -300,6 +320,14 @@ public class MainActivity extends FragmentActivity {
 		mFragmentMap.put(id, fragment);
 
 		return fragment;
+	}
+
+	public void loadStoredSetupOptions() {
+		mSharedPrefs.setDeviceModeTemp(mSharedPrefs.getDeviceMode());
+		mSharedPrefs.setConnectivityTypeTemp(mSharedPrefs.getConnectivityType());
+		mSharedPrefs.setForwardingSMSInfoTemp(mSharedPrefs.getForwardingSMSInfo());
+		mSharedPrefs.setForwardingSMSTemp(mSharedPrefs.getForwardingSMS());
+		mSharedPrefs.setForwardingCallInfoTemp(mSharedPrefs.getForwardingCallInfo());
 	}
 
 	/**
@@ -323,6 +351,7 @@ public class MainActivity extends FragmentActivity {
 			break;
 		case 1:
 			if (mSharedPrefs.getDeviceMode() == 0) {
+				loadStoredSetupOptions();
 				id = "SetupFragment";
 			}
 			if (mSharedPrefs.getDeviceMode() == 1) {
@@ -331,6 +360,7 @@ public class MainActivity extends FragmentActivity {
 			break;
 		case 2:
 			if (mSharedPrefs.getDeviceMode() == 1) {
+				loadStoredSetupOptions();
 				id = "SetupFragment";
 			}
 			break;
@@ -343,7 +373,7 @@ public class MainActivity extends FragmentActivity {
 		if (fragment == null) {
 			fragment = createFragmentById(id);
 		}
-		// TODO hier ist der Fehler beim Abschlieﬂen des Setups
+
 		if (fragment != null) {
 			FragmentManager fragmentManager = getFragmentManager();
 			fragmentManager.beginTransaction().replace(R.id.frame_container, fragment).commit();
@@ -457,11 +487,11 @@ public class MainActivity extends FragmentActivity {
 		mDrawerLayout.setDrawerListener(mDrawerToggle);
 	}
 
-	public void startUiUpdateThread() {
-		if (timer == null) {
-			timer = new Timer();
+	public void startNavigationDrawerUpdateThread() {
+		if (timerNavigationDrawer == null) {
+			timerNavigationDrawer = new Timer();
 		}
-		timer.scheduleAtFixedRate(new TimerTask() {
+		timerNavigationDrawer.scheduleAtFixedRate(new TimerTask() {
 			public void run() {
 				runOnUiThread(new Runnable() {
 					public void run() {
@@ -470,5 +500,20 @@ public class MainActivity extends FragmentActivity {
 				});
 			}
 		}, 0, 1000);
+	}
+
+	public void startConnectivityStateThread() {
+		if (timerConnectivityState == null) {
+			timerConnectivityState = new Timer();
+		}
+		timerConnectivityState.scheduleAtFixedRate(new TimerTask() {
+			public void run() {
+				runOnUiThread(new Runnable() {
+					public void run() {
+						mConnectivityStateCheck.getConnectivityState();
+					}
+				});
+			}
+		}, 5000, 1000);
 	}
 }

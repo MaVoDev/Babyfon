@@ -12,9 +12,9 @@ import babyfon.settings.SharedPrefs;
 import babyfon.view.activity.MainActivity;
 import babyfon.view.fragment.AbsenceFragment;
 import babyfon.view.fragment.BabyMonitorFragment;
-import babyfon.view.fragment.overview.OverviewBabyFragment;
-import babyfon.view.fragment.setup.parentmode.SetupCompleteParentsModeFragment;
-import babyfon.view.fragment.setup.parentmode.SetupSearchDevicesFragment;
+import babyfon.view.fragment.OverviewFragment;
+import babyfon.view.fragment.setup.SetupCompleteParentsModeFragment;
+import babyfon.view.fragment.setup.SetupSearchDevicesFragment;
 
 public class Message {
 
@@ -166,18 +166,18 @@ public class Message {
 		}
 	}
 
-	public void getError(String errMsg) {
-		String errorMessage;
-		if (errMsg.equals(mContext.getString(R.string.WIFI_STATE_ERROR))) {
-			// Wi-Fi ist inaktiv
-			errorMessage = mContext.getString(R.string.ERRMSG_WIFI_STATE_ERROR);
-		} else if (errMsg.equals(mContext.getString(R.string.WIFI_CONNECTION_ERROR))) {
-			// Wi-Fi ist mit keinem Netzwerk verbunden
-			errorMessage = mContext.getString(R.string.ERRMSG_WIFI_CONNECTION_ERROR);
-		} else {
-			// Unbekannter Fehler
-			errorMessage = mContext.getString(R.string.ERRMSG_UNKNOWN_ERROR);
-		}
-		Toast.makeText(mContext, errorMessage, Toast.LENGTH_SHORT).show();
-	}
+//	public void getError(String errMsg) {
+//		String errorMessage;
+//		if (errMsg.equals(mContext.getString(R.string.WIFI_STATE_ERROR))) {
+//			// Wi-Fi ist inaktiv
+//			errorMessage = mContext.getString(R.string.ERRMSG_WIFI_STATE_ERROR);
+//		} else if (errMsg.equals(mContext.getString(R.string.WIFI_CONNECTION_ERROR))) {
+//			// Wi-Fi ist mit keinem Netzwerk verbunden
+//			errorMessage = mContext.getString(R.string.ERRMSG_WIFI_CONNECTION_ERROR);
+//		} else {
+//			// Unbekannter Fehler
+//			errorMessage = mContext.getString(R.string.ERRMSG_UNKNOWN_ERROR);
+//		}
+//		Toast.makeText(mContext, errorMessage, Toast.LENGTH_SHORT).show();
+//	}
 }

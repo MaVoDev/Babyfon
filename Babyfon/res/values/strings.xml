@@ -65,6 +65,8 @@
     <string name="btn_backward">Zurück</string>
     <string name="btn_refresh">Aktualisieren</string>
     <string name="btn_start">Los geht\&apos;s</string>
+    <string name="btn_complete_setup">Einrichtung abschließen</string>
+    <string name="btn_delete_list">Liste löschen</string>
 
     <!-- Checkboxes -->
     <string name="chkbox_incoming_calls">Infos zu verpassten Anrufen</string>
@@ -77,16 +79,27 @@
 
     <!-- Fragment info texts -->
     <string name="text_forwarding">Du kannst Anrufe und SMS an das verbundene Mobilgerät weiterleiten lassen. Wähle dazu die gewünschte Option aus.</string>
-    <string name="text_connection_baby">Wähle eine Verbindung, über die du mit dem Mobilgerät über das Babyfon kommunizieren möchtest.</string>
+    <string name="text_connection">Wähle eine Verbindung aus, über die du mit dem anderen Mobilgerät kommunizieren möchtest.</string>
     <string name="text_device_mode">Entscheide zwischen dem Baby- und dem Elternmodus. Bei wem wird das Mobilgerät später liegen?</string>
     <string name="text_complete_baby">Die Einrichtung ist abgeschlossen und der Babymodus ist jetzt aktiv. Mit dem unten stehenden Passwort kannst du dich mit diesem Gerät verbinden.</string>
     <string name="text_setup_start">Dieser Einrichtungsassistent hilft dir dabei dein Babyfon einzurichten.</string>
-    <string name="text_connection_parents">Wie möchtest du dich mit dem anderen Mobilgerät verbinden? Diese gewählte Verbindung muss bei dem anderen Mobilgerät mit Babymodus freigegeben sein.</string>
 
-    <!-- # -->
+    <!-- Error messages -->
+    <string name="dialog_title_err_wifi_disabled">Einrichtung abbrechen</string>
+    <string name="dialog_message_err_wifi_disabled">Soll die App wirklich beendet werden? Alle bestehenden Verbindungen werden getrennt.</string>
+    <string name="dialog_title_err_wifi_disconnected">Einrichtung abbrechen</string>
+    <string name="dialog_message_err_wifi_disconnected">Soll die App wirklich beendet werden? Alle bestehenden Verbindungen werden getrennt.</string>
+
+    <!-- Error types -->
+    <string name="ERR_BLUETOOTH_DISABLED">ERR_BLUETOOTH_DISABLED</string>
+    <string name="ERR_BLUETOOTH_DISCONNECTED">ERR_BLUETOOTH_DISCONNECTED</string>
+    <string name="ERR_WIFI_DISABLED">ERR_WIFI_DISABLED</string>
+    <string name="ERR_WIFI_DISCONNECTED">ERR_WIFI_DISCONNECTED</string>
+    <string name="ERR_WIFIP2P_DISABLED">ERR_WIFIP2P_DISABLED</string>
+    <string name="ERR_WIFIP2P_DISCONNECTED">ERR_WIFIP2P_DISCONNECTED</string>
+
+    <!-- Other strings -->
     <string name="ip_localhost">127.0.0.1</string>
-    <string name="btn_complete_setup">Einrichtung abschließen</string>
-    <string name="btn_delete_list">Liste löschen</string>
     <string name="app_name">Babyfon</string>
     <string name="bluetooth">Bluetooth</string>
     <string name="wifi">Wi-Fi (W-LAN)</string>
@@ -102,16 +115,6 @@
     <string name="call_number_unknown">Die Telefonnummer wurde unterdrückt</string>
     <string name="yes">Ja</string>
     <string name="close">Schließen</string>
-    
-
-    <!-- Error Types -->
-    <string name="WIFI_STATE_ERROR">WIFI_STATE_ERROR</string>
-    <string name="WIFI_CONNECTION_ERROR">WIFI_CONNECTION_ERROR</string>
-
-    <!-- Error Messages -->
-    <string name="ERRMSG_UNKNOWN_ERROR">Es ist ein unbekannter Fehler aufgetreten.</string>
-    <string name="ERRMSG_WIFI_STATE_ERROR">Wi-Fi ist nicht eingeschaltet.</string>
-    <string name="ERRMSG_WIFI_CONNECTION_ERROR">Keine Netzwerkverbindung gefunden.</string>
 
     <!-- Content Description -->
     <string name="desc_img_default">Image default description</string>

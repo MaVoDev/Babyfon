@@ -1,4 +1,4 @@
-package babyfon.view.fragment.setup.parentmode;
+package babyfon.view.fragment.setup;
 
 import java.net.SocketException;
 import java.net.UnknownHostException;
@@ -16,9 +16,8 @@ import babyfon.model.DeviceListItemModel;
 import babyfon.settings.ModuleHandler;
 import babyfon.settings.SharedPrefs;
 import babyfon.view.activity.MainActivity;
-import babyfon.view.fragment.overview.OverviewBabyFragment;
-import babyfon.view.fragment.overview.OverviewParentsFragment;
-import babyfon.view.fragment.setup.SetupStartFragment;
+import babyfon.view.fragment.BabyMonitorFragment;
+import babyfon.view.fragment.OverviewFragment;
 import android.app.AlertDialog;
 import android.app.Fragment;
 import android.app.FragmentManager;
@@ -76,12 +75,13 @@ public class SetupSearchDevicesFragment extends Fragment {
 		if (mSharedPrefs.getGender() == 0) {
 			btnRefresh.setBackgroundResource(R.drawable.btn_selector_male);
 			btnBackward.setBackgroundResource(R.drawable.btn_selector_male);
+			listViewDevices.setBackgroundResource(R.drawable.listview_male);
 		} else {
 			btnRefresh.setBackgroundResource(R.drawable.btn_selector_female);
 			btnBackward.setBackgroundResource(R.drawable.btn_selector_female);
+			listViewDevices.setBackgroundResource(R.drawable.listview_female);
 		}
-		
-		
+
 	}
 
 	public static void updateList() {
@@ -167,7 +167,7 @@ public class SetupSearchDevicesFragment extends Fragment {
 			@Override
 			public void onClick(View v) {
 				mFragmentManager.beginTransaction()
-						.replace(R.id.frame_container, new SetupConnectionParentsModeFragment(mContext), null)
+						.replace(R.id.frame_container, new SetupConnectionFragment(mContext), null)
 						.addToBackStack(null).commit();
 			}
 		});
@@ -204,23 +204,18 @@ public class SetupSearchDevicesFragment extends Fragment {
 									new DialogInterface.OnClickListener() {
 										@Override
 										public void onClick(DialogInterface dialog, int id) {
-											if (mSharedPrefs.getDeviceMode() != -1) {
-												if (mSharedPrefs.getDeviceMode() == 0) {
-													mModuleHandler.registerBattery();
-													mFragmentManager
-															.beginTransaction()
-															.replace(R.id.frame_container,
-																	new OverviewBabyFragment(mContext), null)
-															.addToBackStack(null).commit();
-												} else {
-													mFragmentManager
-															.beginTransaction()
-															.replace(R.id.frame_container,
-																	new OverviewParentsFragment(mContext), null)
-															.addToBackStack(null).commit();
-												}
+											if (mSharedPrefs.getDeviceMode() == 0) {
+												mFragmentManager
+														.beginTransaction()
+														.replace(R.id.frame_container, new OverviewFragment(mContext),
+																null).addToBackStack(null).commit();
+											} else if (mSharedPrefs.getDeviceMode() == 1) {
+												mFragmentManager
+														.beginTransaction()
+														.replace(R.id.frame_container,
+																new BabyMonitorFragment(mContext), null)
+														.addToBackStack(null).commit();
 											} else {
-												mModuleHandler.stopTCPReceiver();
 												mFragmentManager
 														.beginTransaction()
 														.replace(R.id.frame_container,
@@ -307,8 +302,8 @@ public class SetupSearchDevicesFragment extends Fragment {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
 						}
-						new Message(mContext).send(mContext.getString(R.string.BABYFON_MSG_AUTH_REQ) + ";" + password + ";"
-								+ localIP + ";" + android.os.Build.MODEL);
+						new Message(mContext).send(mContext.getString(R.string.BABYFON_MSG_AUTH_REQ) + ";" + password
+								+ ";" + localIP + ";" + android.os.Build.MODEL);
 					}
 				});
 
@@ -331,7 +326,7 @@ public class SetupSearchDevicesFragment extends Fragment {
 			devices = new ArrayList<DeviceListItemModel>();
 		}
 
-		if (btnRefresh != null) {
+		if (btnRefresh != null && listViewDevices != null) {
 			updateUI();
 		}
 	}

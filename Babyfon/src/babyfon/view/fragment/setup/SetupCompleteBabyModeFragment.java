@@ -1,21 +1,17 @@
-package babyfon.view.fragment.setup.parentmode;
+package babyfon.view.fragment.setup;
 
+import babyfon.Generator;
 import babyfon.init.R;
 import babyfon.performance.Sound;
 import babyfon.settings.ModuleHandler;
 import babyfon.settings.SharedPrefs;
-import babyfon.view.fragment.BabyMonitorFragment;
-import babyfon.view.fragment.overview.OverviewBabyFragment;
-import babyfon.view.fragment.overview.OverviewParentsFragment;
-import android.app.AlertDialog;
+import babyfon.view.fragment.OverviewFragment;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,13 +19,14 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.TextView;
 
-public class SetupCompleteParentsModeFragment extends Fragment {
+public class SetupCompleteBabyModeFragment extends Fragment {
 
 	// Define UI elements
 	private Button btnForward;
+	private TextView tvPassword;
 	private TextView subtitle;
 	private TextView title;
-	private TextView info;
+	private TextView infoText;
 
 	private ModuleHandler mModuleHandler;
 	private SharedPrefs mSharedPrefs;
@@ -37,10 +34,10 @@ public class SetupCompleteParentsModeFragment extends Fragment {
 
 	private Context mContext;
 
-	private static final String TAG = SetupCompleteParentsModeFragment.class.getCanonicalName();
+	private static final String TAG = SetupCompleteBabyModeFragment.class.getCanonicalName();
 
 	// Constructor
-	public SetupCompleteParentsModeFragment(Context mContext) {
+	public SetupCompleteBabyModeFragment(Context mContext) {
 		mModuleHandler = new ModuleHandler(mContext);
 		mSharedPrefs = new SharedPrefs(mContext);
 		mSound = new Sound(mContext);
@@ -68,50 +65,70 @@ public class SetupCompleteParentsModeFragment extends Fragment {
 		Typeface mTypeface_i = Typeface.createFromAsset(mContext.getAssets(), "fonts/BOOKOSI.TTF");
 
 		// Initialize Button
-		btnForward = (Button) view.findViewById(R.id.btn_forward_complete_parents_mode);
+		btnForward = (Button) view.findViewById(R.id.btn_forward_complete_baby_mode);
 		btnForward.setTypeface(mTypeface_i);
 
 		// Initialize TextViews
-		subtitle = (TextView) view.findViewById(R.id.subtitle_setup_complete_parents);
+		subtitle = (TextView) view.findViewById(R.id.subtitle_setup_complete_baby);
 		subtitle.setTypeface(mTypeface_i);
-		title = (TextView) view.findViewById(R.id.title_setup_complete_parents_mode);
+		title = (TextView) view.findViewById(R.id.title_setup_complete_baby_mode);
 		title.setTypeface(mTypeface_bi);
-		info = (TextView) view.findViewById(R.id.text_connection_complete);
-		info.setText("Du bist nun mit '" + mSharedPrefs.getRemoteName() + "' verbunden.");
-		info.setTypeface(mTypeface_i);
+		tvPassword = (TextView) view.findViewById(R.id.tv_password);
+		tvPassword.setTypeface(mTypeface_i);
+		infoText = (TextView) view.findViewById(R.id.text_complete_baby);
+		infoText.setTypeface(mTypeface_i);
 
 		updateUI();
 	}
 
 	public void handleModules() {
-		mModuleHandler.stopUDPReceiver();
-		mModuleHandler.unregisterBattery();
+		if (mSharedPrefs.getConnectivityTypeTemp() == 2) {
+			mModuleHandler.startTCPReceiver();
+			mModuleHandler.startUDPReceiver();
+		} else {
+			mModuleHandler.stopTCPReceiver();
+			mModuleHandler.stopUDPReceiver();
+		}
+
+		mSharedPrefs.setRemoteAdress(null);
+		mSharedPrefs.setRemoteName(null);
 	}
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-		Log.i(TAG, "Starting parents mode...");
+		Log.i(TAG, "Starting baby mode...");
 
-		View view = inflater.inflate(R.layout.setup_complete_parents_mode, container, false);
+		View view = inflater.inflate(R.layout.setup_complete_baby_mode, container, false);
 
 		final FragmentManager mFragmentManager = getFragmentManager();
 
-		if (mSharedPrefs.getDeviceMode() != 1) {
-			// Turn the sound on if the baby mode or no mode was previously
-			// active.
-			mSound.soundOn();
-		}
+		initUiElements(view);
+		handleModules();
+
+		String password = new Generator().getRandomPassword();
+		tvPassword.setText(password);
 
 		// Store values in the shared preferences
-		mSharedPrefs.setActiveStateBabyMode(false);
+		mSharedPrefs.setActiveStateBabyMode(true);
 		mSharedPrefs.setDeviceMode(mSharedPrefs.getDeviceModeTemp());
 		Log.d(TAG, "Device mode: " + mSharedPrefs.getDeviceMode());
 		mSharedPrefs.setConnectivityType(mSharedPrefs.getConnectivityTypeTemp());
 		Log.d(TAG, "Connectivity type: " + mSharedPrefs.getConnectivityType());
+		mSharedPrefs.setForwardingCallInfo(mSharedPrefs.getForwardingCallInfoTemp());
+		Log.d(TAG, "Forwarding Call info: " + mSharedPrefs.getForwardingCallInfo());
+		mSharedPrefs.setForwardingSMS(mSharedPrefs.getForwardingSMSTemp());
+		Log.d(TAG, "Forwarding SMS: " + mSharedPrefs.getForwardingSMS());
+		mSharedPrefs.setForwardingSMSInfo(mSharedPrefs.getForwardingSMSInfoTemp());
+		Log.d(TAG, "Forwarding SMS info: " + mSharedPrefs.getForwardingSMSInfo());
+		mSharedPrefs.setPassword(password);
+		Log.d(TAG, "Password: " + mSharedPrefs.getPassword());
+		mSharedPrefs.setNumberOfAllowedConnections(mSharedPrefs.getNumberOfAllowedConnectionsTemp());
+		Log.d(TAG, "Number of allowed connections: " + mSharedPrefs.getNumberOfAllowedConnections());
+		mSharedPrefs.setNumberOfConnections(0);
+		Log.d(TAG, "Number of connections: " + mSharedPrefs.getNumberOfConnections());
 
-		initUiElements(view);
-		handleModules();
+		mSound.mute();
 
 		// OnClickListener for the Button btnCompleteSetup
 		btnForward.setOnClickListener(new OnClickListener() {
@@ -119,15 +136,13 @@ public class SetupCompleteParentsModeFragment extends Fragment {
 			public void onClick(View v) {
 
 				mFragmentManager.beginTransaction()
-						.replace(R.id.frame_container, new BabyMonitorFragment(mContext), null).addToBackStack(null)
+						.replace(R.id.frame_container, new OverviewFragment(mContext), null).addToBackStack(null)
 						.commit();
 			}
 		});
 
 		return view;
 	}
-
-	
 
 	@Override
 	public void onResume() {
