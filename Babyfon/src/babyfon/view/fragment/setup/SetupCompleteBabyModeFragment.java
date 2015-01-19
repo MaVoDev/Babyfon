@@ -123,10 +123,6 @@ public class SetupCompleteBabyModeFragment extends Fragment {
 		Log.d(TAG, "Forwarding SMS info: " + mSharedPrefs.getForwardingSMSInfo());
 		mSharedPrefs.setPassword(password);
 		Log.d(TAG, "Password: " + mSharedPrefs.getPassword());
-		mSharedPrefs.setNumberOfAllowedConnections(mSharedPrefs.getNumberOfAllowedConnectionsTemp());
-		Log.d(TAG, "Number of allowed connections: " + mSharedPrefs.getNumberOfAllowedConnections());
-		mSharedPrefs.setNumberOfConnections(0);
-		Log.d(TAG, "Number of connections: " + mSharedPrefs.getNumberOfConnections());
 
 		mSound.mute();
 

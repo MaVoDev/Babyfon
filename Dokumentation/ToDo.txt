@@ -2,8 +2,6 @@ ToDo:
 =============================================================================================================
 Interface/Navigation:
 - Mikrofonsensibilität einstellen können im Babymonitor
-# Babymonitor: eingehenden Audiostream (Button On/Off), Ausgehender Stream, Batterie, Geräuschpegel, Signalisierungsalarm, SMS/Call, Verbunden mit (Kickfunktion)
-# Wenn Babymode deaktiviert oder Remote gekickt wird, Remote Bescheid geben. Vom Babygerät disconnecten können. Oder wenn einer den Modus ändert
 
 System:
 - Service
@@ -13,9 +11,6 @@ Netzwerk:
 !!! Bluetooth Verbindung
 !!! Audiostreaming Wi-Fi
 !!! Audiostreaming Bluetooth
-## Alle 5 Sek testen, ob Remote noch da ist.
-## Beim senden die Connectivity prüfen (Typ, an/aus, verbunden/nicht verbunden, ist ein remote vorhanden) Vielleicht eine extra Klasse für den Test (Beim Setup extra prüfen)
-		Thread in der Main, checken ob die gewählte Verbindung ordnungsgemäß läuft, wenn nicht dialog zum hinweis oder aktivieren, währenddessen stop thread, nach ok wieder thread start
 
 SMS/Call:
 - Anzahl der SMS im Drawer anzeigen
@@ -34,12 +29,12 @@ Bugs:
 4 Wenn man das Setup beendet, aktualisiert sich der NavigationDrawer nicht. Der Einrichtungsassistent bleibt selected.
 5 App wird nicht richtig beendet
 6 Absturz bei SMS Empfang wenn nciht das passende Fragment offen ist
-7 Aktives Item im NavigationDrawer wird nicht mehr markiert.
-8 Navigationdrawer zeigt als Titel dauerhaft Babyfon an wenn man ein Menü wechselt, liegt wohl am Thread
+7 App geht nach ner Zeit einfach aus
 
 
 Optional:
 =============================================================================================================
+- App Logo
 - Navigation Drawer schöner gestalten, mit Image über der Itemliste
 - WiFi Direct Verbindung (Wenn keine Zeit ist, rausnehmen aus der App)
 - WiFi Direct State
@@ -50,3 +45,19 @@ Optional:
 
 Änderungen
 ------------------
+
+
+
+Netzwerk:
+- Die Onlineaktivität des anderen Mobilgerätes wird überprüft. Ist das zweite Gerät nach einer erfolgreichen Verbindung nicht mehr erreichbar, wird dieses als inaktiv gekennzeichnet.
+
+## Alle 5 Sek testen, ob Remote noch da ist.
+	Wenn neuer Mode dann lösche RemoteAddress wenn verbunden und sende nachricht ans andere und onlinestatus auf false
+	wenn gerät währenddessen nicht da dann...?
+	isReachable 
+
+## Beim senden die Connectivity prüfen (Typ, an/aus, verbunden/nicht verbunden, ist ein remote vorhanden) Vielleicht eine extra Klasse für den Test (Beim Setup extra prüfen)
+		Thread in der Main, checken ob die gewählte Verbindung ordnungsgemäß läuft, wenn nicht dialog zum hinweis oder aktivieren, währenddessen stop thread, nach ok wieder thread start
+
+# Babymonitor: eingehenden Audiostream (Button On/Off), Ausgehender Stream, Batterie, Geräuschpegel, Signalisierungsalarm, SMS/Call, Verbunden mit (Kickfunktion)
+# Wenn Babymode deaktiviert oder Remote gekickt wird, Remote Bescheid geben. Vom Babygerät disconnecten können. Oder wenn einer den Modus ändert

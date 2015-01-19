@@ -47,12 +47,12 @@ public class SetupDeviceModeFragment extends Fragment {
 		}
 
 		// Update radio buttons
-		if (mSharedPrefs.getDeviceModeTemp() == 0) {
-			radioBaby.setChecked(true);
-			radioParents.setChecked(false);
-		} else {
+		if (mSharedPrefs.getDeviceModeTemp() == 1) {
 			radioBaby.setChecked(false);
 			radioParents.setChecked(true);
+		} else {
+			radioBaby.setChecked(true);
+			radioParents.setChecked(false);
 		}
 	}
 

@@ -38,12 +38,10 @@ public class WelcomeScreen extends Activity {
 			public void run() {
 
 				try {
-					sleep(10);
+					sleep(3000);
 
 					Intent intent = new Intent(getBaseContext(), MainActivity.class);
 					startActivity(intent);
-
-					finish();
 
 				} catch (Exception e) {
 
@@ -51,5 +49,12 @@ public class WelcomeScreen extends Activity {
 			}
 		};
 		background.start();
+	}
+	
+	@Override
+	protected void onPause() {
+		super.onPause();
+		
+		finish();
 	}
 }

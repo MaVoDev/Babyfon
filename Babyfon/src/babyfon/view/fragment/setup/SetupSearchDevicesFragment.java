@@ -116,23 +116,23 @@ public class SetupSearchDevicesFragment extends Fragment {
 	 */
 	private void initUiElements(View view) {
 		// Set Typeface
-		Typeface mTypeface_bi = Typeface.createFromAsset(mContext.getAssets(), "fonts/BOOKOSBI.TTF");
-		Typeface mTypeface_i = Typeface.createFromAsset(mContext.getAssets(), "fonts/BOOKOSI.TTF");
+//		Typeface mTypeface_bi = Typeface.createFromAsset(mContext.getAssets(), "fonts/BOOKOSBI.TTF");
+//		Typeface mTypeface_i = Typeface.createFromAsset(mContext.getAssets(), "fonts/BOOKOSI.TTF");
 
 		// Initialize ListView
 		listViewDevices = (ListView) view.findViewById(R.id.listView_devices);
 
 		// Initialize Buttons
 		btnRefresh = (Button) view.findViewById(R.id.btn_refresh_list);
-		btnRefresh.setTypeface(mTypeface_i);
+//		btnRefresh.setTypeface(mTypeface_i);
 		btnBackward = (Button) view.findViewById(R.id.btn_backwardSetupSearch);
-		btnBackward.setTypeface(mTypeface_i);
+//		btnBackward.setTypeface(mTypeface_i);
 
 		// Initialize TextViews
 		subtitle = (TextView) view.findViewById(R.id.subtitle_setup_search);
-		subtitle.setTypeface(mTypeface_i);
+//		subtitle.setTypeface(mTypeface_i);
 		title = (TextView) view.findViewById(R.id.title_search);
-		title.setTypeface(mTypeface_bi);
+//		title.setTypeface(mTypeface_bi);
 
 		updateUI();
 	}

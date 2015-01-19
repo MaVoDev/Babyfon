@@ -21,6 +21,7 @@ import babyfon.settings.SharedPrefs;
 import babyfon.view.fragment.AbsenceFragment;
 import babyfon.view.fragment.BabyMonitorFragment;
 import babyfon.view.fragment.OverviewFragment;
+import babyfon.view.fragment.setup.SetupCompleteBabyModeFragment;
 import babyfon.view.fragment.setup.SetupDeviceModeFragment;
 import babyfon.view.fragment.setup.SetupStartFragment;
 import android.app.ActionBar;
@@ -37,6 +38,7 @@ import android.os.StrictMode;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.widget.DrawerLayout;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -80,6 +82,8 @@ public class MainActivity extends FragmentActivity {
 
 	private ArrayList<NavigationDrawerItemModel> items;
 	private NavigationDrawerListAdapter adapter;
+	
+	private static final String TAG = MainActivity.class.getCanonicalName();
 
 	public void handleModules() {
 		if (mSharedPrefs.getDeviceMode() != -1) {
@@ -175,10 +179,19 @@ public class MainActivity extends FragmentActivity {
 			}
 		} else {
 			if (mSharedPrefs.getDeviceMode() == 0) {
+				mSharedPrefs.setRemoteOnlineState(false);
 				mModuleHandler.startUDPReceiver();
 			}
 		}
 		new Sound(this).mute();
+	}
+
+	@Override
+	protected void onPause() {
+		super.onPause();
+
+		timerNavigationDrawer.cancel();
+		timerNavigationDrawer = null;
 	}
 
 	@Override
@@ -188,7 +201,7 @@ public class MainActivity extends FragmentActivity {
 		if (timerNavigationDrawer == null) {
 			timerNavigationDrawer = new Timer();
 		}
-		initNavigationDrawer();
+		startNavigationDrawerUpdateThread();
 
 		if (timerConnectivityState == null) {
 			timerConnectivityState = new Timer();
@@ -495,7 +508,11 @@ public class MainActivity extends FragmentActivity {
 			public void run() {
 				runOnUiThread(new Runnable() {
 					public void run() {
-						initNavigationDrawer();
+						if (mSharedPrefs.getTempMode() != mSharedPrefs.getDeviceMode()) {
+							mSharedPrefs.setTempMode(mSharedPrefs.getDeviceMode());
+							initNavigationDrawer();
+							Log.d(TAG, "Navigation Drawer changed.");
+						}
 					}
 				});
 			}

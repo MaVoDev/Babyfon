@@ -68,11 +68,12 @@ public class Message {
 		if (strArray[0].equals(mContext.getString(R.string.BABYFON_MSG_SMS_INFO))) {
 			// SMS
 			final String numberName = strArray[1];
-			
+
 			((MainActivity) mContext).runOnUiThread(new Runnable() {
 				@Override
 				public void run() {
-					AbsenceFragment.setNewMessage(1, numberName, "");;
+					AbsenceFragment.setNewMessage(1, numberName, "");
+					;
 				}
 			});
 		}
@@ -99,11 +100,8 @@ public class Message {
 			if (mSharedPrefs.getPassword().equals(password)) {
 				mSharedPrefs.setRemoteName(remoteName);
 				mSharedPrefs.setRemoteOnlineState(true);
-				int numberOfConnections = mSharedPrefs.getNumberOfConnections() + 1;
 
 				send(mContext.getString(R.string.BABYFON_MSG_AUTH_CONFIRMED));
-
-				mSharedPrefs.setNumberOfConnections(numberOfConnections);
 
 				mModuleHandler.stopUDPReceiver();
 				mModuleHandler.registerBattery();
@@ -164,20 +162,10 @@ public class Message {
 			}
 			mSharedPrefs.setRemoteOnlineState(true);
 		}
-	}
 
-//	public void getError(String errMsg) {
-//		String errorMessage;
-//		if (errMsg.equals(mContext.getString(R.string.WIFI_STATE_ERROR))) {
-//			// Wi-Fi ist inaktiv
-//			errorMessage = mContext.getString(R.string.ERRMSG_WIFI_STATE_ERROR);
-//		} else if (errMsg.equals(mContext.getString(R.string.WIFI_CONNECTION_ERROR))) {
-//			// Wi-Fi ist mit keinem Netzwerk verbunden
-//			errorMessage = mContext.getString(R.string.ERRMSG_WIFI_CONNECTION_ERROR);
-//		} else {
-//			// Unbekannter Fehler
-//			errorMessage = mContext.getString(R.string.ERRMSG_UNKNOWN_ERROR);
-//		}
-//		Toast.makeText(mContext, errorMessage, Toast.LENGTH_SHORT).show();
-//	}
+		if (strArray[0].equals(mContext.getString(R.string.BABYFON_MSG_CONNECTION_HELLO))) {
+			// Hello
+			mSharedPrefs.setRemoteOnlineState(true);
+		}
+	}
 }

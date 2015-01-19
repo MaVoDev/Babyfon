@@ -451,61 +451,27 @@ public class SharedPrefs {
 		editor.putInt("connectivity_type_temp", type).commit();
 	}
 
-	// == Number of connections =================================
+	/*
+	 * General
+	 */
+
+	// == Mode temp =================================
 
 	/**
-	 * Get the number of connections.
+	 * Get the latest mode.
 	 * 
-	 * @return int: 0 = no clients, 1 - n clients
+	 * @return int: -1 = no mode, 0 = baby mode, 1 = parents mode
 	 */
-	public int getNumberOfConnections() {
-		return mSharedPreferences.getInt("number_of_connections", 0);
+	public int getTempMode() {
+		return mSharedPreferences.getInt("temp_mode", -1);
 	}
 
 	/**
-	 * Set the number of connections.
+	 * Set the latest mode.
 	 * 
-	 * @param int mode: 0 = no clients, 1 - n clients
+	 * @param int temp mode: -1 = no mode, 0 = baby mode, 1 = parents mode
 	 */
-	public void setNumberOfConnections(int num) {
-		editor.putInt("number_of_connections", num).commit();
-	}
-
-	// == Number of allowed connections =================================
-
-	/**
-	 * Get the number of allowed connections.
-	 * 
-	 * @return int: 0 = no clients, 1 - n clients
-	 */
-	public int getNumberOfAllowedConnections() {
-		return mSharedPreferences.getInt("number_of_allowed_connections", 0);
-	}
-
-	/**
-	 * Set the number of allowed connections.
-	 * 
-	 * @param int mode: 0 = no clients, 1 - n clients
-	 */
-	public void setNumberOfAllowedConnections(int num) {
-		editor.putInt("number_of_allowed_connections", num).commit();
-	}
-
-	/**
-	 * Get the temporary number of allowed connections.
-	 * 
-	 * @return int: 0 = no clients, 1 - n clients
-	 */
-	public int getNumberOfAllowedConnectionsTemp() {
-		return mSharedPreferences.getInt("number_of_allowed_connections_temp", 1);
-	}
-
-	/**
-	 * Set the temporary number of allowed connections.
-	 * 
-	 * @param int temporary mode: 0 = no clients, 1 - n clients
-	 */
-	public void setNumberOfAllowedConnectionsTemp(int num) {
-		editor.putInt("number_of_allowed_connections_temp", num).commit();
+	public void setTempMode(int mode) {
+		editor.putInt("temp_mode", mode).commit();
 	}
 }

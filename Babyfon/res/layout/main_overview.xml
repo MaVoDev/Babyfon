@@ -34,7 +34,8 @@
                     android:id="@+id/overview_text_mode"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/overview_baby_mode_state" />
+                    android:text="@string/overview_baby_mode_state"
+                    android:textStyle="bold" />
 
                 <LinearLayout
                     android:layout_width="wrap_content"
@@ -87,7 +88,8 @@
                     android:id="@+id/overview_text_remote"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/overview_connected_device" />
+                    android:text="@string/overview_connected_device"
+                    android:textStyle="bold" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -141,7 +143,8 @@
                     android:id="@+id/overview_text_connectivity"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/overview_text_connectivity" />
+                    android:text="@string/overview_text_connectivity"
+                    android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/overview_connectivity"
@@ -181,13 +184,13 @@
                     android:id="@+id/overview_text_call"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/dialog_title_call" />
+                    android:text="@string/dialog_title_call"
+                    android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/overview_call"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="nicht informieren" />
+                    android:layout_height="wrap_content" />
             </LinearLayout>
 
             <LinearLayout style="@style/overview_edit" >
@@ -222,13 +225,13 @@
                     android:id="@+id/overview_text_sms"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/dialog_title_sms" />
+                    android:text="@string/dialog_title_sms"
+                    android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/overview_sms"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="weiterleiten" />
+                    android:layout_height="wrap_content" />
             </LinearLayout>
 
             <LinearLayout style="@style/overview_edit" >
@@ -263,7 +266,8 @@
                     android:id="@+id/overview_text_password"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/overview_password" />
+                    android:text="@string/overview_password"
+                    android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/overview_password"
