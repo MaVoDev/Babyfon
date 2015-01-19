@@ -27,8 +27,6 @@ public class ConnectivityStateCheck {
 		mSharedPrefs = new SharedPrefs(mContext);
 
 		this.mContext = mContext;
-
-		startConnectivityStateThread();
 	}
 
 	public int getConnectivityType() {
@@ -64,34 +62,59 @@ public class ConnectivityStateCheck {
 
 	}
 
-	public void startConnectivityStateThread() {
-		if (timerRemoteCheck == null) {
-			timerRemoteCheck = new Timer();
-		}
+	public boolean startConnectivityStateThread() {
 		try {
-			remoteAddress = InetAddress.getByName(mSharedPrefs.getRemoteAddress());
-		} catch (UnknownHostException e1) {
+			if (timerRemoteCheck == null) {
+				timerRemoteCheck = new Timer();
 
-		}
+				try {
+					remoteAddress = InetAddress.getByName(mSharedPrefs.getRemoteAddress());
+				} catch (UnknownHostException e1) {
 
-		timerRemoteCheck.scheduleAtFixedRate(new TimerTask() {
-			public void run() {
-				((MainActivity) mContext).runOnUiThread(new Runnable() {
+				}
+
+				timerRemoteCheck.scheduleAtFixedRate(new TimerTask() {
 					public void run() {
-						if (mSharedPrefs.getRemoteAddress() != null && mSharedPrefs.isRemoteOnline()) {
-							try {
-								if (remoteAddress.isReachable(4000)) {
-									System.out.println("+++");
-								} else {
-									System.out.println("---");
-								}
-							} catch (IOException e) {
+						((MainActivity) mContext).runOnUiThread(new Runnable() {
+							public void run() {
+								if (mSharedPrefs.getConnectivityType() == 2) {
+									// wi-fi
+									if (mSharedPrefs.getRemoteAddress() != null) {
+										// remote address is available
+										try {
+											if (remoteAddress.isReachable(4000)) {
+												new Message(mContext).send(mContext
+														.getString(R.string.BABYFON_MSG_CONNECTION_HELLO)
+														+ ";"
+														+ mSharedPrefs.getHostAddress()
+														+ ";"
+														+ mSharedPrefs.getPassword());
+											} else {
+												mSharedPrefs.setRemoteOnlineState(false);
+											}
+										} catch (IOException e) {
 
+										}
+									}
+								}
 							}
-						}
+						});
 					}
-				});
+				}, 5000, 5000);
 			}
-		}, 0, 5000);
+			return true;
+		} catch (Exception e) {
+			return false;
+		}
+	}
+
+	public boolean stopConnectivityStateThread() {
+		try {
+//			timerRemoteCheck.cancel();
+			timerRemoteCheck = null;
+			return true;
+		} catch (Exception e) {
+			return false;
+		}
 	}
 }

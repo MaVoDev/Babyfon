@@ -9,6 +9,7 @@ import babyfon.adapter.DeviceListAdapter;
 import babyfon.connectivity.ConnectionInterface;
 import babyfon.connectivity.bluetooth.BluetoothConnection;
 import babyfon.connectivity.bluetooth.BluetoothListAdapter;
+import babyfon.connectivity.wifi.TCPSender;
 import babyfon.connectivity.wifi.UDPBroadcastSender;
 import babyfon.connectivity.wifi.WifiHandler;
 import babyfon.init.R;
@@ -81,7 +82,6 @@ public class SetupSearchDevicesFragment extends Fragment {
 			btnBackward.setBackgroundResource(R.drawable.btn_selector_female);
 			listViewDevices.setBackgroundResource(R.drawable.listview_female);
 		}
-
 	}
 
 	public static void updateList() {
@@ -101,8 +101,12 @@ public class SetupSearchDevicesFragment extends Fragment {
 
 				Log.d(TAG, "Selected item: " + deviceName + " (" + deviceIP + ")");
 
-				mSharedPrefs.setRemoteAdress(deviceIP);
-				mSharedPrefs.setRemoteName(deviceName);
+				if (mSharedPrefs.getConnectivityTypeTemp() == 2) {
+					mSharedPrefs.setRemoteAddressTemp(deviceIP);
+					mSharedPrefs.setRemoteName(deviceName);
+				} else {
+					// Bluetooth
+				}
 
 				openAuthDialog(deviceName, deviceIP);
 			}
@@ -116,23 +120,23 @@ public class SetupSearchDevicesFragment extends Fragment {
 	 */
 	private void initUiElements(View view) {
 		// Set Typeface
-//		Typeface mTypeface_bi = Typeface.createFromAsset(mContext.getAssets(), "fonts/BOOKOSBI.TTF");
-//		Typeface mTypeface_i = Typeface.createFromAsset(mContext.getAssets(), "fonts/BOOKOSI.TTF");
+		Typeface mTypeface_bi = Typeface.createFromAsset(mContext.getAssets(), "fonts/BOOKOSBI.TTF");
+		Typeface mTypeface_i = Typeface.createFromAsset(mContext.getAssets(), "fonts/BOOKOSI.TTF");
 
 		// Initialize ListView
 		listViewDevices = (ListView) view.findViewById(R.id.listView_devices);
 
 		// Initialize Buttons
 		btnRefresh = (Button) view.findViewById(R.id.btn_refresh_list);
-//		btnRefresh.setTypeface(mTypeface_i);
+		btnRefresh.setTypeface(mTypeface_i);
 		btnBackward = (Button) view.findViewById(R.id.btn_backwardSetupSearch);
-//		btnBackward.setTypeface(mTypeface_i);
+		btnBackward.setTypeface(mTypeface_i);
 
 		// Initialize TextViews
 		subtitle = (TextView) view.findViewById(R.id.subtitle_setup_search);
-//		subtitle.setTypeface(mTypeface_i);
+		subtitle.setTypeface(mTypeface_i);
 		title = (TextView) view.findViewById(R.id.title_search);
-//		title.setTypeface(mTypeface_bi);
+		title.setTypeface(mTypeface_bi);
 
 		updateUI();
 	}
@@ -204,6 +208,9 @@ public class SetupSearchDevicesFragment extends Fragment {
 									new DialogInterface.OnClickListener() {
 										@Override
 										public void onClick(DialogInterface dialog, int id) {
+											if (mSharedPrefs.getConnectivityType() != 2) {
+												mModuleHandler.stopTCPReceiver();
+											}
 											if (mSharedPrefs.getDeviceMode() == 0) {
 												mFragmentManager
 														.beginTransaction()
@@ -232,7 +239,7 @@ public class SetupSearchDevicesFragment extends Fragment {
 	}
 
 	public void refreshDeviceList() {
-		if (mSharedPrefs.getConnectivityType() == 2) {
+		if (mSharedPrefs.getConnectivityTypeTemp() == 2) {
 			devices.clear();
 			updateList();
 			initViewBWifi();
@@ -240,13 +247,14 @@ public class SetupSearchDevicesFragment extends Fragment {
 	}
 
 	public void initViewBluetooth() {
+		mModuleHandler.stopTCPReceiver();
 		BluetoothListAdapter deviceListAdapter = new BluetoothListAdapter(mContext, R.layout.bluetooth_row_element);
 		mConnection = new BluetoothConnection(mContext, deviceListAdapter);
-
 		listViewDevices.setAdapter(deviceListAdapter);
 	}
 
 	public void initViewBWifi() {
+		mModuleHandler.startTCPReceiver();
 		new UDPBroadcastSender(mContext).sendUDPMessage(new WifiHandler(mContext).getNetworkAddressClassC());
 	}
 
@@ -302,8 +310,9 @@ public class SetupSearchDevicesFragment extends Fragment {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
 						}
-						new Message(mContext).send(mContext.getString(R.string.BABYFON_MSG_AUTH_REQ) + ";" + password
-								+ ";" + localIP + ";" + android.os.Build.MODEL);
+						new TCPSender(mContext).sendMessage(mSharedPrefs.getRemoteAddressTemp(),
+								mContext.getString(R.string.BABYFON_MSG_AUTH_REQ) + ";" + password + ";" + localIP
+										+ ";" + android.os.Build.MODEL);
 					}
 				});
 

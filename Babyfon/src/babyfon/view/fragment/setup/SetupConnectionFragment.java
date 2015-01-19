@@ -1,5 +1,8 @@
 package babyfon.view.fragment.setup;
 
+import java.net.SocketException;
+import java.net.UnknownHostException;
+
 import babyfon.connectivity.bluetooth.BluetoothHandler;
 import babyfon.connectivity.wifi.WifiHandler;
 import babyfon.init.R;
@@ -231,6 +234,16 @@ public class SetupConnectionFragment extends Fragment {
 			@Override
 			public void onClick(View v) {
 				mSharedPrefs.setConnectivityTypeTemp(connectivityType);
+				
+				if(connectivityType == 2) {
+					try {
+						mSharedPrefs.setHostAdress(new WifiHandler(mContext).getLocalIPv4Address());
+					} catch (SocketException e) {
+						e.printStackTrace();
+					} catch (UnknownHostException e) {
+						e.printStackTrace();
+					}
+				}
 
 				if (mSharedPrefs.getDeviceModeTemp() == 0) {
 					mFragmentManager.beginTransaction().replace(R.id.frame_container, nextFragmentBaby, null)

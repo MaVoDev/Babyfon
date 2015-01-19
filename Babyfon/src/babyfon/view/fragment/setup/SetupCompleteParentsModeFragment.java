@@ -105,6 +105,11 @@ public class SetupCompleteParentsModeFragment extends Fragment {
 		mSharedPrefs.setConnectivityType(mSharedPrefs.getConnectivityTypeTemp());
 		Log.d(TAG, "Connectivity type: " + mSharedPrefs.getConnectivityType());
 
+		if (mSharedPrefs.getConnectivityType() == 2) {
+			mSharedPrefs.setRemoteAddress(mSharedPrefs.getRemoteAddressTemp());
+			Log.d(TAG, "Remote address: " + mSharedPrefs.getRemoteAddress());
+		}
+
 		initUiElements(view);
 		handleModules();
 
@@ -121,8 +126,6 @@ public class SetupCompleteParentsModeFragment extends Fragment {
 
 		return view;
 	}
-
-	
 
 	@Override
 	public void onResume() {

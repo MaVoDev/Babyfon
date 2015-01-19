@@ -210,7 +210,7 @@ public class OverviewFragment extends Fragment {
 								new DialogInterface.OnClickListener() {
 									@Override
 									public void onClick(DialogInterface dialog, int id) {
-										mSharedPrefs.setRemoteAdress(null);
+										mSharedPrefs.setRemoteAddress(null);
 										mSharedPrefs.setRemoteName(null);
 										mSharedPrefs.setRemoteOnlineState(false);
 
@@ -244,6 +244,10 @@ public class OverviewFragment extends Fragment {
 										String password = new Generator().getRandomPassword();
 										mSharedPrefs.setPassword(password);
 										updateUI();
+										new Message(mContext).send(mContext
+												.getString(R.string.BABYFON_MSG_SYSTEM_PWCHANGED)
+												+ ";"
+												+ mSharedPrefs.getPassword());
 									}
 								}).create().show();
 			}

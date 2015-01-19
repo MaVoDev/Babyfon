@@ -90,7 +90,7 @@ public class SetupCompleteBabyModeFragment extends Fragment {
 			mModuleHandler.stopUDPReceiver();
 		}
 
-		mSharedPrefs.setRemoteAdress(null);
+		mSharedPrefs.setRemoteAddress(null);
 		mSharedPrefs.setRemoteName(null);
 	}
 

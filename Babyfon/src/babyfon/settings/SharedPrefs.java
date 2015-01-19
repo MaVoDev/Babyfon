@@ -45,6 +45,27 @@ public class SharedPrefs {
 		editor.putBoolean("remote_online_state", state).commit();
 	}
 
+	// == Host address ====================================
+
+	/**
+	 * Get the host address.
+	 * 
+	 * @return String: host address
+	 */
+	public String getHostAddress() {
+		return mSharedPreferences.getString("host_address", null);
+	}
+
+	/**
+	 * Set the host address.
+	 * 
+	 * @param String
+	 *            host address
+	 */
+	public void setHostAdress(String hostAddress) {
+		editor.putString("host_address", hostAddress).commit();
+	}
+
 	// == Remote address ====================================
 
 	/**
@@ -62,8 +83,29 @@ public class SharedPrefs {
 	 * @param String
 	 *            remote address
 	 */
-	public void setRemoteAdress(String remoteAddress) {
+	public void setRemoteAddress(String remoteAddress) {
 		editor.putString("remote_address", remoteAddress).commit();
+	}
+
+	// == Temporary remote address ====================================
+
+	/**
+	 * Get the temporary remote address.
+	 * 
+	 * @return String: temporary remote address
+	 */
+	public String getRemoteAddressTemp() {
+		return mSharedPreferences.getString("remote_address_temp", null);
+	}
+
+	/**
+	 * Set the temporary remote address.
+	 * 
+	 * @param String
+	 *            temporary remote address
+	 */
+	public void setRemoteAddressTemp(String remoteAddress) {
+		editor.putString("remote_address_temp", remoteAddress).commit();
 	}
 
 	// == Remote name ====================================

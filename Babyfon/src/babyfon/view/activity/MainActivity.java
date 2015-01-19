@@ -21,7 +21,6 @@ import babyfon.settings.SharedPrefs;
 import babyfon.view.fragment.AbsenceFragment;
 import babyfon.view.fragment.BabyMonitorFragment;
 import babyfon.view.fragment.OverviewFragment;
-import babyfon.view.fragment.setup.SetupCompleteBabyModeFragment;
 import babyfon.view.fragment.setup.SetupDeviceModeFragment;
 import babyfon.view.fragment.setup.SetupStartFragment;
 import android.app.ActionBar;
@@ -57,10 +56,10 @@ public class MainActivity extends FragmentActivity {
 	public static TCPReceiver mTCPReceiver;
 	public static UDPReceiver mUDPReceiver;
 	public static SMSReceiver mSmsReceiver;
+	public static ConnectivityStateCheck mConnectivityStateCheck;
 
 	public static IntentFilter mIntentFilter;
 
-	private ConnectivityStateCheck mConnectivityStateCheck;
 	private ModuleHandler mModuleHandler;
 	private SharedPrefs mSharedPrefs;
 
@@ -82,7 +81,7 @@ public class MainActivity extends FragmentActivity {
 
 	private ArrayList<NavigationDrawerItemModel> items;
 	private NavigationDrawerListAdapter adapter;
-	
+
 	private static final String TAG = MainActivity.class.getCanonicalName();
 
 	public void handleModules() {
@@ -107,7 +106,6 @@ public class MainActivity extends FragmentActivity {
 			StrictMode.setThreadPolicy(policy);
 		}
 
-		mConnectivityStateCheck = new ConnectivityStateCheck(this);
 		mModuleHandler = new ModuleHandler(this);
 		mSharedPrefs = new SharedPrefs(this);
 
@@ -153,6 +151,10 @@ public class MainActivity extends FragmentActivity {
 		if (mSharedPrefs.getConnectivityType() == 2) {
 			mModuleHandler.stopTCPReceiver();
 		}
+
+		if (mSharedPrefs.getRemoteAddress() != null) {
+			mModuleHandler.stopRemoteCheck();
+		}
 	}
 
 	@Override
@@ -164,13 +166,9 @@ public class MainActivity extends FragmentActivity {
 		}
 		initNavigationDrawer();
 
-		if (timerConnectivityState == null) {
-			timerConnectivityState = new Timer();
-			startConnectivityStateThread();
-		}
-
 		if (mSharedPrefs.getRemoteAddress() != null) {
-			new babyfon.Message(this).send(this.getString(R.string.BABYFON_MSG_SYSTEM_REJOIN));
+			new babyfon.Message(this).send(this.getString(R.string.BABYFON_MSG_SYSTEM_REJOIN) + ";"
+					+ mSharedPrefs.getHostAddress() + ";" + mSharedPrefs.getPassword());
 			if (mSharedPrefs.getDeviceMode() == 0) {
 				mModuleHandler.registerBattery();
 				if (mSharedPrefs.getForwardingSMS() || mSharedPrefs.getForwardingSMSInfo()) {
@@ -181,14 +179,22 @@ public class MainActivity extends FragmentActivity {
 			if (mSharedPrefs.getDeviceMode() == 0) {
 				mSharedPrefs.setRemoteOnlineState(false);
 				mModuleHandler.startUDPReceiver();
+				new Sound(this).mute();
 			}
 		}
-		new Sound(this).mute();
+
+		if (mSharedPrefs.getRemoteAddress() != null) {
+			mModuleHandler.startRemoteCheck();
+		}
 	}
 
 	@Override
 	protected void onPause() {
 		super.onPause();
+
+		if (mSharedPrefs.getRemoteAddress() != null) {
+			mModuleHandler.stopRemoteCheck();
+		}
 
 		timerNavigationDrawer.cancel();
 		timerNavigationDrawer = null;
@@ -202,11 +208,6 @@ public class MainActivity extends FragmentActivity {
 			timerNavigationDrawer = new Timer();
 		}
 		startNavigationDrawerUpdateThread();
-
-		if (timerConnectivityState == null) {
-			timerConnectivityState = new Timer();
-			startConnectivityStateThread();
-		}
 
 		ActionBar actionBar = getActionBar();
 		FrameLayout frameLayout = (FrameLayout) findViewById(R.id.frame_container);
@@ -226,6 +227,10 @@ public class MainActivity extends FragmentActivity {
 			frameLayout.setBackgroundResource(R.drawable.bg_female);
 			// Set navigation drawer background
 			mDrawerList.setBackgroundResource(R.drawable.bg_navigation_drawer_female);
+		}
+
+		if (mSharedPrefs.getRemoteAddress() != null) {
+			mModuleHandler.startRemoteCheck();
 		}
 	}
 
@@ -517,20 +522,5 @@ public class MainActivity extends FragmentActivity {
 				});
 			}
 		}, 0, 1000);
-	}
-
-	public void startConnectivityStateThread() {
-		if (timerConnectivityState == null) {
-			timerConnectivityState = new Timer();
-		}
-		timerConnectivityState.scheduleAtFixedRate(new TimerTask() {
-			public void run() {
-				runOnUiThread(new Runnable() {
-					public void run() {
-						mConnectivityStateCheck.getConnectivityState();
-					}
-				});
-			}
-		}, 5000, 1000);
 	}
 }
