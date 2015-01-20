@@ -32,7 +32,7 @@ public class Battery {
 				int level = intent.getIntExtra(BatteryManager.EXTRA_LEVEL, 0);
 
 				Log.i(TAG, "New battery level: " + level + "%");
-				new Message(mContext).send(mContext.getString(R.string.BABYFON_MSG_BATTERY) + ";" + level + "%");
+				new Message(mContext).send(mContext.getString(R.string.BABYFON_MSG_BATTERY) + ";" + level);
 			}
 
 			if (Intent.ACTION_BATTERY_LOW.equals(action)) {

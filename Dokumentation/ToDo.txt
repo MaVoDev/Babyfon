@@ -2,15 +2,18 @@ ToDo:
 =============================================================================================================
 Interface/Navigation:
 - Mikrofonsensibilität einstellen können im Babymonitor
+# Klingeln, Vibrieren, Anzeigen, wenn Geräusch erkannt
 
 System:
-- Service
+# Service
 !!! Geräusch erkennen
 
 Netzwerk:
 !!! Bluetooth Verbindung
-!!! Audiostreaming Wi-Fi
+# Audiostreaming Wi-Fi
 !!! Audiostreaming Bluetooth
+# Beim senden die Connectivity prüfen (Typ, an/aus, verbunden/nicht verbunden, ist ein remote vorhanden) Vielleicht eine extra Klasse für den Test (Beim Setup extra prüfen)
+		Thread in der Main, checken ob die gewählte Verbindung ordnungsgemäß läuft, wenn nicht dialog zum hinweis oder aktivieren, währenddessen stop thread, nach ok wieder thread start
 
 SMS/Call:
 - Anzahl der SMS im Drawer anzeigen
@@ -32,7 +35,6 @@ Bugs:
 7 Beim Start der App wird die Selektierung im Drawer nicht gesetzt
 8 Remote Checker Thread richtig starten und beenden
 
-
 Optional:
 =============================================================================================================
 - App Logo
@@ -40,26 +42,12 @@ Optional:
 - WiFi Direct Verbindung (Wenn keine Zeit ist, rausnehmen aus der App)
 - WiFi Direct State
 - Nachrichten zwischenpuffern, die nicht versendet werden konnten(SMS, Anrufe)
-- Vll nen Hintergrung bei den SMS listen
 - Nachrichten anders rum sortieren
 
 
 Änderungen
 ------------------
-Netzwerk:
-- Die Geräte senden alle 5 Sekunden eine "Hello"-Nachricht an das andere Gerät. Dies dient dazu, um zu testen, ob das andere Gerät online/verfügbar ist oder nicht. 
-Ist das andere Gerät nicht online, werden alle ausgehenden TCP Nachrichten, bis auf die "Hello"-Nachricht blockiert.
-- Die Onlineaktivität des anderen Mobilgerätes wird überprüft. Ist das zweite Gerät nach einer erfolgreichen Verbindung nicht mehr erreichbar, wird dieses als inaktiv gekennzeichnet.
-- Bei der Kommunikation wird die IP und das Passwort des anderen Gerätes überprüft. Stimmt eines nicht überein, wird eine "Verbindungsabsage" gesendet.
-- Beendet eine Seite die App, wird dieses Gerät auf der anderen Seite als abwesend markiert. 
-- Kommt ein bereits verbundener Partner wieder online, wird dieser als online markiert.
-- Wird das Passwort zwischenzeitig geändert während einer bestehenden Verbindung, so wird es dem Partner mitgeteilt.
 
 
-
-
-
-## Beim senden die Connectivity prüfen (Typ, an/aus, verbunden/nicht verbunden, ist ein remote vorhanden) Vielleicht eine extra Klasse für den Test (Beim Setup extra prüfen)
-		Thread in der Main, checken ob die gewählte Verbindung ordnungsgemäß läuft, wenn nicht dialog zum hinweis oder aktivieren, währenddessen stop thread, nach ok wieder thread start
-# Babymonitor: eingehenden Audiostream (Button On/Off), Ausgehender Stream, Batterie, Geräuschpegel, Signalisierungsalarm, SMS/Call, Verbunden mit (Kickfunktion)
-# Wenn Babymode deaktiviert oder Remote gekickt wird, Remote Bescheid geben. Vom Babygerät disconnecten können. Oder wenn einer den Modus ändert
+# Babymonitor: Signalisierungsalarm als Overlay
+# Babymonitor: Wenn Babymode deaktiviert oder Remote gekickt wird, Remote Bescheid geben. Vom Babygerät disconnecten können.

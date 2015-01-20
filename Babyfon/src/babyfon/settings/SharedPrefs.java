@@ -516,4 +516,24 @@ public class SharedPrefs {
 	public void setTempMode(int mode) {
 		editor.putInt("temp_mode", mode).commit();
 	}
+	
+	// == Battery =================================
+
+		/**
+		 * Get the battery level.
+		 * 
+		 * @return int: battery level
+		 */
+		public String getBatteryLevel() {
+			return mSharedPreferences.getString("battery_level", "n/a");
+		}
+
+		/**
+		 * Set the battery level.
+		 * 
+		 * @param int level: battery level.
+		 */
+		public void setBatteryLevel(String level) {
+			editor.putString("battery_level", level).commit();
+		}
 }
