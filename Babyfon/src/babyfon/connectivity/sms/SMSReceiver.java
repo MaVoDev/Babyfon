@@ -2,7 +2,7 @@ package babyfon.connectivity.sms;
 
 import babyfon.Message;
 import babyfon.init.R;
-import babyfon.view.activity.MainActivity;
+import babyfon.settings.SharedPrefs;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -13,24 +13,28 @@ import android.util.Log;
 
 public class SMSReceiver extends BroadcastReceiver {
 
-	private MainActivity mMainActivity;
-	
+	private SharedPrefs mSharedPrefs;
+
+	private Context mContext;
+
 	protected static final String TAG = SMSReceiver.class.getCanonicalName();
 
 	public SMSReceiver() {
 
 	}
-	
-	public SMSReceiver(MainActivity activity) {
-		this.mMainActivity = activity;
+
+	public SMSReceiver(Context mContext) {
+		mSharedPrefs = new SharedPrefs(mContext);
+
+		this.mContext = mContext;
 	}
 
 	final SmsManager mSmsManager = SmsManager.getDefault();
 
 	@Override
 	public void onReceive(Context context, Intent intent) {
-		
-		Log.i(TAG, "Receiving new SMS.");
+
+		Log.d(TAG, "Receiving new SMS.");
 
 		final Bundle bundle = intent.getExtras();
 
@@ -42,13 +46,19 @@ public class SMSReceiver extends BroadcastReceiver {
 					SmsMessage currentMessage = SmsMessage.createFromPdu((byte[]) pdusObj[i]);
 					String number = currentMessage.getDisplayOriginatingAddress();
 					String message = currentMessage.getDisplayMessageBody();
-					
+
 					Log.i(TAG, "Number: " + number);
 					Log.i(TAG, "Message: " + message);
-								
-					//TODO Diese Zeile will er nicht ausführen, zumindest wird nichts gesendet.
-					new Message(mMainActivity).send(mMainActivity.getString(R.string.MESSAGE_SMS) + ";"
-							+ number + ";" + message);
+
+					if (mSharedPrefs.getForwardingSMS()) {
+						new Message(mContext).send(mContext.getString(R.string.BABYFON_MSG_SMS) + ";" + number + ";"
+								+ message);
+					}
+
+					if (mSharedPrefs.getForwardingSMSInfo()) {
+						new Message(mContext).send(mContext.getString(R.string.BABYFON_MSG_SMS_INFO) + ";" + number);
+					}
+
 				}
 			}
 		} catch (Exception e) {

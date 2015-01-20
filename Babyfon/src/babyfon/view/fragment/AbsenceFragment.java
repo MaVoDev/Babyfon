@@ -1,26 +1,39 @@
 package babyfon.view.fragment;
 
+import java.util.ArrayList;
+
+import babyfon.adapter.AbsenceListAdapter;
 import babyfon.init.R;
+import babyfon.model.AbsenceListItemModel;
 import babyfon.settings.SharedPrefs;
+import android.app.AlertDialog;
+import android.support.v4.app.Fragment;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Typeface;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.View.OnClickListener;
+import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.AdapterView.OnItemClickListener;
 
 public class AbsenceFragment extends Fragment {
 
 	// Define UI elements
 	private TextView title;
 	private Button btnDeleteList;
+	private static ListView listViewAbsence;
+
+	private static ArrayList<AbsenceListItemModel> messages;
 
 	private SharedPrefs mSharedPrefs;
 
-	private Context mContext;
+	private static Context mContext;
 
 	// Constructor
 	public AbsenceFragment(Context mContext) {
@@ -33,9 +46,31 @@ public class AbsenceFragment extends Fragment {
 		// Update buttons
 		if (mSharedPrefs.getGender() == 0) {
 			btnDeleteList.setBackgroundResource(R.drawable.btn_selector_male);
+			listViewAbsence.setBackgroundResource(R.drawable.listview_male);
 		} else {
 			btnDeleteList.setBackgroundResource(R.drawable.btn_selector_female);
+			listViewAbsence.setBackgroundResource(R.drawable.listview_female);
 		}
+	}
+
+	public static void updateList() {
+		AbsenceListAdapter adapter = new AbsenceListAdapter(mContext.getApplicationContext(), messages);
+
+		// Assign adapter to ListView
+		listViewAbsence.setAdapter(adapter);
+
+		// ListView Item Click Listener
+		listViewAbsence.setOnItemClickListener(new OnItemClickListener() {
+
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+				String numberName = messages.get(position).getNumber();
+				String message = messages.get(position).getMessage();
+
+				openMessage(numberName, message);
+			}
+		});
 	}
 
 	/**
@@ -52,6 +87,9 @@ public class AbsenceFragment extends Fragment {
 		btnDeleteList = (Button) view.findViewById(R.id.btn_delete_list);
 		btnDeleteList.setTypeface(mTypeface_i);
 
+		// Initialize ListView
+		listViewAbsence = (ListView) view.findViewById(R.id.listView_absence);
+
 		// Initialize TextViews
 		title = (TextView) view.findViewById(R.id.title_absence);
 		title.setTypeface(mTypeface_bi);
@@ -66,13 +104,63 @@ public class AbsenceFragment extends Fragment {
 
 		initUiElements(view);
 
+		btnDeleteList.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				if (messages.size() > 0) {
+					new AlertDialog.Builder(getActivity())
+							.setTitle(mContext.getString(R.string.dialog_title_delete_list))
+							.setMessage(mContext.getString(R.string.dialog_message_delete_list))
+							.setNegativeButton(mContext.getString(R.string.dialog_button_no), null)
+							.setPositiveButton(mContext.getString(R.string.dialog_button_yes),
+									new DialogInterface.OnClickListener() {
+										@Override
+										public void onClick(DialogInterface dialog, int id) {
+											deleteList();
+										}
+									}).create().show();
+				}
+			}
+		});
+
 		return view;
+	}
+
+	public static void openMessage(final String numberName, String message) {
+		AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+		builder.setTitle(numberName).setMessage(message).setCancelable(false)
+				.setPositiveButton(mContext.getString(R.string.close), new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int id) {
+						// do nothing, just close dialog
+					}
+				});
+		AlertDialog alert = builder.create();
+		alert.show();
+	}
+
+	public void deleteList() {
+		messages.clear();
+		updateList();
+	}
+
+	public static void setNewMessage(int type, String numberName, String message) {
+		if (messages == null) {
+			messages = new ArrayList<AbsenceListItemModel>();
+		}
+		messages.add(new AbsenceListItemModel(type, numberName, message));
+
+		updateList();
 	}
 
 	@Override
 	public void onResume() {
 		super.onResume();
-		if (btnDeleteList != null) {
+
+		if (messages == null) {
+			messages = new ArrayList<AbsenceListItemModel>();
+		}
+
+		if (btnDeleteList != null && listViewAbsence != null) {
 			updateUI();
 		}
 	}

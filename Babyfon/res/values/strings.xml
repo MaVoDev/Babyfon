@@ -1,79 +1,122 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <!-- Dialog texts -->
-    <string name="DIALOG_MESSAGE_BABYMODE">Legen Sie das Gerät in die Nähe des Babys. Der Sound und das Display werden jetzt ausgeschaltet.</string>
-    <string name="DIALOG_TITLE_BABYMODE">Der Babymodus wird aktiviert&#8230;</string>
-
     <!-- Message types -->
-    <string name="MESSAGE_BATTERY">BABYFON_MSG_BATTERY</string>
-    <string name="MESSAGE_CONNECTION_CONFIRM">BABYFON_MSG_CONNECTION_CONFIRM</string>
-    <string name="MESSAGE_CONNECTION_REQUEST">BABYFON_MSG_CONNECTION_REQUEST</string>
-    <string name="MESSAGE_SMS">BABYFON_MSG_SMS</string>
-    <string name="MESSAGE_CALL">BABYFON_MSG_CALL</string>
+    <string name="BABYFON_MSG_BATTERY">BABYFON_MSG_BATTERY</string>
+    <string name="BABYFON_MSG_CONNECTION_FOUND">BABYFON_MSG_CONNECTION_FOUND</string>
+    <string name="BABYFON_MSG_CONNECTION_SEARCH">BABYFON_MSG_CONNECTION_SEARCH</string>
+    <string name="BABYFON_MSG_SMS">BABYFON_MSG_SMS</string>
+    <string name="BABYFON_MSG_SMS_INFO">BABYFON_MSG_SMS_INFO</string>
+    <string name="BABYFON_MSG_CALL_INFO">BABYFON_MSG_CALL_INFO</string>
+    <string name="BABYFON_MSG_AUTH_REQ">BABYFON_MSG_AUTH_REQ</string>
+    <string name="BABYFON_MSG_AUTH_CONFIRMED">BABYFON_MSG_AUTH_CONFIRMED</string>
+    <string name="BABYFON_MSG_AUTH_DENIED">BABYFON_MSG_AUTH_DENIED</string>
+    <string name="BABYFON_MSG_SYSTEM_AWAY">BABYFON_MSG_SYSTEM_AWAY</string>
+    <string name="BABYFON_MSG_SYSTEM_DISCONNECTED">BABYFON_MSG_SYSTEM_DISCONNECTED</string>
+    <string name="BABYFON_MSG_SYSTEM_REJOIN">BABYFON_MSG_SYSTEM_REJOIN</string>
+    <string name="BABYFON_MSG_CONNECTION_HELLO">BABYFON_MSG_CONNECTION_HELLO</string>
+    <string name="BABYFON_MSG_SYSTEM_PWCHANGED">BABYFON_MSG_SYSTEM_PWCHANGED</string>
 
     <!-- Titles -->
     <string name="title_baby_monitor">Babymonitor</string>
     <string name="title_overview">Übersicht</string>
     <string name="title_absence">Anrufe / SMS</string>
-    <string name="title_setup">Einrichtungsassisitent</string>
+    <string name="title_setup">Einrichtungsassistent</string>
+    <string name="title_setup_start">Willkommen</string>
     <string name="title_connection">Verbindung</string>
-    <string name="title_device_mode">Verbindung</string>
+    <string name="title_device_mode">Gerätemodus</string>
+    <string name="title_search">Geräte suchen</string>
+    <string name="title_forwarding">Weiterleitung</string>
+    <string name="title_setup_complete_baby_mode">Abschluss</string>
+    <string name="title_setup_complete_parents_mode">Erfolgreich</string>
 
-    <!-- # -->
-    <string name="ip_localhost">127.0.0.1</string>
+    <!-- Subtitles -->
+    <string name="subtitle_baby_mode">- Babymodus -</string>
+    <string name="subtitle_parents_mode">- Elternmodus -</string>
+
+    <!-- Dialogs -->
+    <string name="dialog_button_yes">Ja</string>
+    <string name="dialog_button_no">Nein</string>
+    <string name="dialog_message_cancel_setup">Soll die Einrichtung wirklich abgebrochen werden? Alle durchgeführten Änderungen werden verworfen.</string>
+    <string name="dialog_title_cancel_setup">Einrichtung abbrechen</string>
+    <string name="dialog_message_exit">Soll die App wirklich beendet werden? Alle bestehenden Verbindungen werden getrennt.</string>
+    <string name="dialog_title_exit">Babyfon beenden?</string>
+    <string name="dialog_title_refresh_password">Passwort erneuern</string>
+    <string name="dialog_message_refresh_password">Möchtest du wirklich ein neues Passwort erstellen?</string>
+    <string name="dialog_title_change_baby_mode_state_to_true">Babymodus aktivieren</string>
+    <string name="dialog_message_change_baby_mode_state_to_true">Möchtest du den Babymodus wieder aktivieren?</string>
+    <string name="dialog_title_change_baby_mode_state_to_false">Babymodus deaktivieren</string>
+    <string name="dialog_message_change_baby_mode_state_to_false">Möchtest du den Babymodus deaktivieren?</string>
+    <string name="dialog_title_kick_remote">Verbindung trennen</string>
+    <string name="dialog_message_kick_remote">Möchtest du die aktive Verbindung wirklich trennen?</string>
+    <string name="dialog_title_connectivity">Wähle deine neue aktive Verbindung</string>
+    <string name="dialog_title_sms">Bei eingehenden SMS</string>
+    <string name="dialog_title_call">Bei eingehenden Anrufen</string>
+    <string name="dialog_title_delete_list">Nachrichten löschen</string>
+    <string name="dialog_message_delete_list">Möchtest du alle Nachrichten aus der Liste entfernen?</string>
+
+    <!-- Overview baby mode -->
+    <string name="overview_baby_mode_state">Status des Gerätes</string>
+    <string name="overview_password">Passwort</string>
+    <string name="overview_connected_device">Verbundenes Mobilgerät</string>
+    <string name="overview_connected_device_false">nicht verbunden</string>
+    <string name="overview_text_connectivity">Gewählte Verbindung</string>
+
+    <!-- Buttons -->
+    <string name="btn_forward">Weiter</string>
+    <string name="btn_backward">Zurück</string>
+    <string name="btn_refresh">Aktualisieren</string>
+    <string name="btn_start">Los geht\&apos;s</string>
     <string name="btn_complete_setup">Einrichtung abschließen</string>
     <string name="btn_delete_list">Liste löschen</string>
 
-    <!-- A -->
+    <!-- Checkboxes -->
+    <string name="chkbox_incoming_calls">Infos zu verpassten Anrufen</string>
+    <string name="chkbox_incoming_sms">Bei eingehenden SMS</string>
+
+    <!-- Radio buttons -->
+    <string name="radio_only_notify">nur benachrichtigen</string>
+    <string name="radio_forward">weiterleiten</string>
+    <string name="radio_send_false">nichts unternehmen</string>
+
+    <!-- Fragment info texts -->
+    <string name="text_forwarding">Du kannst Anrufe und SMS an das verbundene Mobilgerät weiterleiten lassen. Wähle dazu die gewünschte Option aus.</string>
+    <string name="text_connection">Wähle eine Verbindung aus, über die du mit dem anderen Mobilgerät kommunizieren möchtest.</string>
+    <string name="text_device_mode">Entscheide zwischen dem Baby- und dem Elternmodus. Bei wem wird das Mobilgerät später liegen?</string>
+    <string name="text_complete_baby">Die Einrichtung ist abgeschlossen und der Babymodus ist jetzt aktiv. Mit dem unten stehenden Passwort kannst du dich mit diesem Gerät verbinden.</string>
+    <string name="text_setup_start">Dieser Einrichtungsassistent hilft dir dabei dein Babyfon einzurichten.</string>
+
+    <!-- Error messages -->
+    <string name="dialog_title_err_wifi_disabled">Einrichtung abbrechen</string>
+    <string name="dialog_message_err_wifi_disabled">Soll die App wirklich beendet werden? Alle bestehenden Verbindungen werden getrennt.</string>
+    <string name="dialog_title_err_wifi_disconnected">Einrichtung abbrechen</string>
+    <string name="dialog_message_err_wifi_disconnected">Soll die App wirklich beendet werden? Alle bestehenden Verbindungen werden getrennt.</string>
+
+    <!-- Error types -->
+    <string name="ERR_BLUETOOTH_DISABLED">ERR_BLUETOOTH_DISABLED</string>
+    <string name="ERR_BLUETOOTH_DISCONNECTED">ERR_BLUETOOTH_DISCONNECTED</string>
+    <string name="ERR_WIFI_DISABLED">ERR_WIFI_DISABLED</string>
+    <string name="ERR_WIFI_DISCONNECTED">ERR_WIFI_DISCONNECTED</string>
+    <string name="ERR_WIFIP2P_DISABLED">ERR_WIFIP2P_DISABLED</string>
+    <string name="ERR_WIFIP2P_DISCONNECTED">ERR_WIFIP2P_DISCONNECTED</string>
+
+    <!-- Other strings -->
+    <string name="ip_localhost">127.0.0.1</string>
     <string name="app_name">Babyfon</string>
-
-    <!-- B -->
-
     <string name="bluetooth">Bluetooth</string>
-    <string name="wifi">Wi-Fi</string>
+    <string name="wifi">Wi-Fi (W-LAN)</string>
     <string name="wifip2p">Wi-Fi Direct</string>
-    <string name="connect_null">-</string>
-
-    <!-- F -->
-    <string name="forward">Weiter</string>
-    <string name="backward">Zurück</string>
-
-    <!-- M -->
-    <string name="mode_baby">Babymodus</string>
-    <string name="mode_parents">Elternmodus</string>
-    <string name="mode_null">-</string>
-
-    <!-- O -->
+    <string name="at_baby">Bei dem Baby</string>
+    <string name="at_parents">Bei den Eltern</string>
+    <string name="enabled">aktiviert</string>
+    <string name="disabled">deaktiviert</string>
     <string name="ok">OK</string>
-
-    <!-- N -->
     <string name="no">Nein</string>
-
-    <!-- S -->
     <string name="settings">Einstellungen</string>
     <string name="call_name_unknown">Unbekannter Anrufer</string>
     <string name="call_number_unknown">Die Telefonnummer wurde unterdrückt</string>
-
-    <!-- Y -->
     <string name="yes">Ja</string>
-
-    <!-- Error Types -->
-    <string name="WIFI_STATE_ERROR">WIFI_STATE_ERROR</string>
-    <string name="WIFI_CONNECTION_ERROR">WIFI_CONNECTION_ERROR</string>
-
-    <!-- Error Messages -->
-    <string name="ERRMSG_UNKNOWN_ERROR">Es ist ein unbekannter Fehler aufgetreten.</string>
-    <string name="ERRMSG_WIFI_STATE_ERROR">Wi-Fi ist nicht eingeschaltet.</string>
-    <string name="ERRMSG_WIFI_CONNECTION_ERROR">Keine Netzwerkverbindung gefunden.</string>
-
-    <!-- Memos -->
-    <string name="dialog_exit_app_title">Babyfon beenden?</string>
-    <string name="dialog_exit_app_message">Die Verbindungen zu anderen Babyfon-Geräten wird getrennt.</string>
-    <string name="privacy_call_yes">Anrufe werden nicht weitergeleitet</string>
-    <string name="privacy_call_no">Anrufe werden weitergeleitet</string>
-    <string name="privacy_sms_yes">SMS werden nicht weitergeleitet</string>
-    <string name="privacy_sms_no">SMS werden weitergeleitet</string>
+    <string name="close">Schließen</string>
 
     <!-- Content Description -->
     <string name="desc_img_default">Image default description</string>

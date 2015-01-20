@@ -2,7 +2,6 @@ package babyfon.performance;
 
 import babyfon.Message;
 import babyfon.init.R;
-import babyfon.view.activity.MainActivity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -14,10 +13,10 @@ public class Battery {
 
 	private static final String TAG = Battery.class.getCanonicalName();
 
-	private MainActivity mMainActivity;
+	private Context mContext;
 
-	public Battery(MainActivity mMainActivity) {
-		this.mMainActivity = mMainActivity;
+	public Battery(Context mContext) {
+		this.mContext = mContext;
 
 		register();
 	}
@@ -32,8 +31,8 @@ public class Battery {
 				// Akkuladestand hat sich geändert
 				int level = intent.getIntExtra(BatteryManager.EXTRA_LEVEL, 0);
 
-				Log.i(TAG, "Try to send battery level (" + level + "%)...");
-				new Message(mMainActivity).send(mMainActivity.getString(R.string.MESSAGE_BATTERY) + ";" + level + "%");
+				Log.i(TAG, "New battery level: " + level + "%");
+				new Message(mContext).send(mContext.getString(R.string.BABYFON_MSG_BATTERY) + ";" + level + "%");
 			}
 
 			if (Intent.ACTION_BATTERY_LOW.equals(action)) {
@@ -42,24 +41,28 @@ public class Battery {
 		}
 	};
 
-	public void unregister() {
-		mMainActivity.unregisterReceiver(this.mBatInfoReceiver);
-		Log.i(TAG, "Battery receiver unregistered.");
+	public boolean unregister() {
+		try {
+			mContext.unregisterReceiver(this.mBatInfoReceiver);
+			return true;
+		} catch (Exception e) {
+			return false;
+		}
 	}
 
-	public void register() {
+	public boolean register() {
+		try {
+			// Änderung des Akkulevels
+			mContext.registerReceiver(this.mBatInfoReceiver, new IntentFilter(Intent.ACTION_BATTERY_CHANGED));
 
-		Log.i(TAG, "Try to register battery receiver...");
+			// Schwacher Akkustand
+			mContext.registerReceiver(this.mBatInfoReceiver, new IntentFilter(Intent.ACTION_BATTERY_LOW));
 
-		// Änderung des Akkulevels
-		mMainActivity.registerReceiver(this.mBatInfoReceiver, new IntentFilter(Intent.ACTION_BATTERY_CHANGED));
-
-		// Schwacher Akkustand
-		mMainActivity.registerReceiver(this.mBatInfoReceiver, new IntentFilter(Intent.ACTION_BATTERY_LOW));
-
-		// Akku wechselt vom schwachen in den normalen Levelbereich
-		mMainActivity.registerReceiver(this.mBatInfoReceiver, new IntentFilter(Intent.ACTION_BATTERY_OKAY));
-
-		Log.i(TAG, "Battery receiver is registered.");
+			// Akku wechselt vom schwachen in den normalen Levelbereich
+			mContext.registerReceiver(this.mBatInfoReceiver, new IntentFilter(Intent.ACTION_BATTERY_OKAY));
+			return true;
+		} catch (Exception e) {
+			return false;
+		}
 	}
 }

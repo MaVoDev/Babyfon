@@ -1,0 +1,42 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/layout_content" >
+
+    <LinearLayout style="@style/layout_header" >
+
+        <TextView
+            android:id="@+id/title_setup_complete_parents_mode"
+            style="@style/fragmentTitle"
+            android:text="@string/title_setup_complete_parents_mode" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/subtitle_setup_complete_parents"
+        style="@style/fragmentSubtitle"
+        android:text="@string/subtitle_parents_mode" />
+
+    <LinearLayout style="@style/layout_body" >
+
+        <TextView
+            android:id="@+id/text_connection_complete"
+            style="@style/info_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <ImageView
+            android:id="@+id/image_connected"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="20dp"
+            android:src="@drawable/success" />
+    </LinearLayout>
+
+    <LinearLayout style="@style/layout_footer" >
+
+        <Button
+            android:id="@+id/btn_forward_complete_parents_mode"
+            style="@style/button_footer_single"
+            android:text="@string/btn_complete_setup" />
+    </LinearLayout>
+
+</LinearLayout>

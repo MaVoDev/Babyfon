@@ -1,0 +1,44 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/layout_content" >
+
+    <LinearLayout style="@style/layout_header" >
+
+        <TextView
+            android:id="@+id/title_setup_complete_baby_mode"
+            style="@style/fragmentTitle"
+            android:text="@string/title_setup_complete_baby_mode" />
+    </LinearLayout>
+    
+    <TextView
+        android:id="@+id/subtitle_setup_complete_baby"
+        style="@style/fragmentSubtitle"
+        android:text="@string/subtitle_baby_mode" />
+
+    <LinearLayout style="@style/layout_body" >
+
+        <TextView
+            android:id="@+id/text_complete_baby"
+            style="@style/info_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/text_complete_baby" />
+
+        <TextView
+            android:id="@+id/tv_password"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginRight="8dp"
+            android:layout_marginTop="20dp"
+            android:textSize="64sp" />
+    </LinearLayout>
+
+    <LinearLayout style="@style/layout_footer" >
+
+        <Button
+            android:id="@+id/btn_forward_complete_baby_mode"
+            style="@style/button_footer_single"
+            android:text="@string/btn_complete_setup" />
+    </LinearLayout>
+
+</LinearLayout>

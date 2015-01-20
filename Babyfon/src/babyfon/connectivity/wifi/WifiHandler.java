@@ -15,12 +15,14 @@ import android.net.wifi.WifiManager;
 
 public class WifiHandler {
 
-	Context context;
-	WifiManager wifiManager;
+	private WifiManager mWifiManager;
 
-	public WifiHandler(Context context) {
-		this.context = context;
-		this.wifiManager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
+	private Context mContext;
+
+	public WifiHandler(Context mContext) {
+		mWifiManager = (WifiManager) mContext.getSystemService(Context.WIFI_SERVICE);
+
+		this.mContext = mContext;
 	}
 
 	/**
@@ -30,12 +32,12 @@ public class WifiHandler {
 	 * @return int: Wi-Fi Status
 	 */
 	public int getWifiState() {
-		if (wifiManager == null) {
+		if (mWifiManager == null) {
 			// Wi-Fi wird nicht unterstützt.
 			return -1;
 		} else {
 			// Wi-Fi wird unterstützt.
-			if (!wifiManager.isWifiEnabled()) {
+			if (!mWifiManager.isWifiEnabled()) {
 				// Wi-Fi ist inaktiv.
 				return 0;
 			}
@@ -44,13 +46,17 @@ public class WifiHandler {
 		}
 	}
 
+	public void startWiFi() {
+		mWifiManager.setWifiEnabled(true);
+	}
+
 	/**
 	 * Gibt die SSID des verbundenen Netzwerks zurück.
 	 * 
 	 * @return String: SSID
 	 */
 	public String getSSID() {
-		WifiInfo wifiInfo = wifiManager.getConnectionInfo();
+		WifiInfo wifiInfo = mWifiManager.getConnectionInfo();
 		return wifiInfo.getSSID();
 	}
 
@@ -62,7 +68,7 @@ public class WifiHandler {
 	 *         verbunden.
 	 */
 	public boolean isWifiConnected() {
-		ConnectivityManager conManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+		ConnectivityManager conManager = (ConnectivityManager) mContext.getSystemService(Context.CONNECTIVITY_SERVICE);
 		NetworkInfo networkInfo = conManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
 		if (networkInfo.isConnected()) {
 			// Wi-Fi ist mir einem Netzwerk verbunden
@@ -84,15 +90,15 @@ public class WifiHandler {
 
 		if (getWifiState() == 0) {
 			// Wi-Fi ist inaktiv.
-			return context.getString(R.string.WIFI_STATE_ERROR);
+			// TODO return mContext.getString(R.string.WIFI_STATE_ERROR);
 		} else if (!isWifiConnected()) {
 			// Wi-Fi ist mir keinem Netzwerk verbunden
-			return context.getString(R.string.WIFI_CONNECTION_ERROR);
+			// TODO return mContext.getString(R.string.WIFI_CONNECTION_ERROR);
 		} else {
 
 			InetAddress localIPv4Address;
 			localIPv4Address = InetAddress.getLocalHost();
-			if (localIPv4Address.getHostAddress().equals(context.getString(R.string.ip_localhost))) {
+			if (localIPv4Address.getHostAddress().equals(mContext.getString(R.string.ip_localhost))) {
 				Enumeration<NetworkInterface> ifaces = NetworkInterface.getNetworkInterfaces();
 				while (ifaces.hasMoreElements()) {
 					NetworkInterface iface = ifaces.nextElement();

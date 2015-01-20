@@ -21,8 +21,8 @@ public class CallReceiver extends CallLog {
 		final String sortOrder = android.provider.CallLog.Calls.DATE + " DESC";
 		Cursor cursor = null;
 		try {
-			cursor = mContext.getContentResolver().query(Uri.parse("content://call_log/calls"), projection, selection, selectionArgs,
-					sortOrder);
+			cursor = mContext.getContentResolver().query(Uri.parse("content://call_log/calls"), projection, selection,
+					selectionArgs, sortOrder);
 			while (cursor.moveToNext()) {
 				String callName = cursor.getString(cursor.getColumnIndex(android.provider.CallLog.Calls.CACHED_NAME));
 				String callNumber = cursor.getString(cursor.getColumnIndex(android.provider.CallLog.Calls.NUMBER));
@@ -54,8 +54,7 @@ public class CallReceiver extends CallLog {
 		} catch (Exception ex) {
 
 		} finally {
-			if (cursor != null)
-				cursor.close();
+			cursor.close();
 		}
 	}
 }

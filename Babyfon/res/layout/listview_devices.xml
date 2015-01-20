@@ -1,0 +1,26 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal" 
+    android:background="@android:drawable/dialog_holo_light_frame">
+
+    <ImageView
+        android:id="@+id/status_online"
+        android:layout_width="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="8dp"
+        android:layout_marginLeft="8dp"
+        android:src="@android:drawable/presence_online" />
+
+    <TextView
+        android:id="@+id/device_name"
+        android:layout_width="fill_parent"
+        android:layout_gravity="center_vertical"
+        android:gravity="center_vertical"
+        android:layout_height="42dp"
+        android:layout_marginRight="8dp"
+        android:textColor="#000"
+        android:textSize="16sp" />
+
+</LinearLayout>

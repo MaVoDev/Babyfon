@@ -3,6 +3,7 @@ package babyfon.view.activity;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.res.Configuration;
+import android.graphics.Typeface;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
@@ -28,6 +29,10 @@ public class SettingsActivity extends PreferenceActivity {
 
 	private SharedPrefs mSharedPrefs;
 
+	// Typeface
+	Typeface mTypeface_b;
+	Typeface mTypeface_n;
+
 	/**
 	 * Determines whether to always show the simplified settings UI, where
 	 * settings are presented in a single list. When false, settings are shown
@@ -39,6 +44,9 @@ public class SettingsActivity extends PreferenceActivity {
 	@Override
 	protected void onPostCreate(Bundle savedInstanceState) {
 		super.onPostCreate(savedInstanceState);
+
+		mTypeface_b = Typeface.createFromAsset(this.getAssets(), "fonts/BOOKOSBI.TTF");
+		mTypeface_n = Typeface.createFromAsset(this.getAssets(), "fonts/BOOKOSI.TTF");
 
 		mSharedPrefs = new SharedPrefs(this);
 		setupSimplePreferencesScreen();

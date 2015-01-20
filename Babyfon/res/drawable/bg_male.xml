@@ -7,6 +7,4 @@
         android:endColor="#8899D9EA"
         android:startColor="#AA5E8CE3" />
 
-    <corners android:radius="2dp" />
-
 </shape>

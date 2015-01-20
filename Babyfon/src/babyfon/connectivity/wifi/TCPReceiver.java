@@ -7,17 +7,17 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketTimeoutException;
 
+import android.content.Context;
 import android.util.Log;
 import babyfon.Message;
 import babyfon.settings.SharedPrefs;
-import babyfon.view.activity.MainActivity;
 
 /**
  * Zuständig für den Empfang eines Strings über Wi-Fi.
  */
 public class TCPReceiver {
 
-	private MainActivity mMainActivity;
+	private Context mContext;
 	private ServerSocket mServerSocket;
 
 	private boolean isRunning = false;
@@ -26,15 +26,14 @@ public class TCPReceiver {
 
 	private static final String TAG = TCPReceiver.class.getCanonicalName();
 
-	public TCPReceiver(MainActivity activity) {
-		this.mMainActivity = activity;
-		this.tcpPort = new SharedPrefs(activity).getTCPPort();
+	public TCPReceiver(Context mContext) {
+		this.mContext = mContext;
+		this.tcpPort = new SharedPrefs(mContext).getTCPPort();
 	}
 
 	private class TCPReceiverThread extends Thread {
 
 		public void run() {
-			Log.i(TAG, "TCP receiver is running.");
 
 			String incomingTCPmessage;
 			isRunning = true;
@@ -52,7 +51,7 @@ public class TCPReceiver {
 						// Eingehende Nachricht lesen und weiterleiten.
 						incomingTCPmessage = in.readLine();
 						Log.i(TAG, "Incoming TCP message: " + incomingTCPmessage);
-						new Message(mMainActivity).handleIncomingMessage(incomingTCPmessage);
+						new Message(mContext).handleIncomingMessage(incomingTCPmessage);
 					}
 
 					mServerSocket.close();
@@ -64,19 +63,24 @@ public class TCPReceiver {
 			}
 		}
 	}
-	
-	public void start() {
-		TCPReceiverThread tcpReceiverThread = new TCPReceiverThread();
-		tcpReceiverThread.start();
+
+	public boolean start() {
+		try {
+			TCPReceiverThread tcpReceiverThread = new TCPReceiverThread();
+			tcpReceiverThread.start();
+			return true;
+		} catch (Exception e) {
+			return false;
+		}
 	}
 
-	public void stop() {
+	public boolean stop() {
 		isRunning = false;
 		try {
 			mServerSocket.close();
-			Log.i(TAG, "TCP receiver closed.");
+			return true;
 		} catch (IOException e) {
-			Log.e(TAG, "Can't close TCP receiver.");
+			return false;
 		}
 	}
 }

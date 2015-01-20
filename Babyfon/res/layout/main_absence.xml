@@ -11,6 +11,16 @@
     </LinearLayout>
 
     <LinearLayout style="@style/layout_body" >
+
+        <ListView
+            android:id="@+id/listView_absence"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="100"
+            android:choiceMode="singleChoice"
+            android:divider="@null"
+            android:dividerHeight="0dp" >
+        </ListView>
     </LinearLayout>
 
     <LinearLayout style="@style/layout_footer" >

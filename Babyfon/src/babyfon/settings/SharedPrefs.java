@@ -21,69 +21,112 @@ public class SharedPrefs {
 	}
 
 	/*
-	 * == General =====================================
+	 * == Network settings =====================================
 	 */
 
-	// == Connectivity =================================
+	// == Remote state ====================================
 
 	/**
-	 * Get the active connectivity type.
+	 * Get the remote online state.
 	 * 
-	 * @return int: -1 = no type, 0 = auto, 1 = Bluetooth, 2 = Wi-Fi, 3 = Wi-Fi
-	 *         Direct
+	 * @return Boolean: remote state
 	 */
-	public int getConnectivityType() {
-		return mSharedPreferences.getInt("connectivity_type", -1);
+	public Boolean isRemoteOnline() {
+		return mSharedPreferences.getBoolean("remote_online_state", false);
 	}
 
 	/**
-	 * Set the active connectivity type.
+	 * Set the remote online state.
 	 * 
-	 * @param int type: -1 = no type, 0 = auto, 1 = Bluetooth, 2 = Wi-Fi, 3 =
-	 *        Wi-Fi Direct
+	 * @param Boolean
+	 *            remote state
 	 */
-	public void setConnectivityType(int type) {
-		editor.putInt("connectivity_type", type).commit();
+	public void setRemoteOnlineState(Boolean state) {
+		editor.putBoolean("remote_online_state", state).commit();
 	}
 
-	// == Device mode =================================
+	// == Host address ====================================
 
 	/**
-	 * Get the mode of the device.
+	 * Get the host address.
 	 * 
-	 * @return int: -1 = no mode, 0 = baby mode, 1 = parent mode
+	 * @return String: host address
 	 */
-	public int getDeviceMode() {
-		return mSharedPreferences.getInt("device_mode", -1);
-	}
-
-	/**
-	 * Set the mode of the device.
-	 * 
-	 * @param int mode: -1 = no mode, 0 = baby mode, 1 = parent mode
-	 */
-	public void setDeviceMode(int mode) {
-		editor.putInt("device_mode", mode).commit();
-	}
-
-	// == Password =================================
-
-	/**
-	 * Get the password for the connection.
-	 * 
-	 * @return int: -1 = no password
-	 */
-	public int getPassword() {
-		return mSharedPreferences.getInt("password", -1);
+	public String getHostAddress() {
+		return mSharedPreferences.getString("host_address", null);
 	}
 
 	/**
-	 * Set the password for the connection.
+	 * Set the host address.
 	 * 
-	 * @param int password: -1 = no password
+	 * @param String
+	 *            host address
 	 */
-	public void setPassword(int password) {
-		editor.putInt("password", password).commit();
+	public void setHostAdress(String hostAddress) {
+		editor.putString("host_address", hostAddress).commit();
+	}
+
+	// == Remote address ====================================
+
+	/**
+	 * Get the remote address.
+	 * 
+	 * @return String: remote address
+	 */
+	public String getRemoteAddress() {
+		return mSharedPreferences.getString("remote_address", null);
+	}
+
+	/**
+	 * Set the remote address.
+	 * 
+	 * @param String
+	 *            remote address
+	 */
+	public void setRemoteAddress(String remoteAddress) {
+		editor.putString("remote_address", remoteAddress).commit();
+	}
+
+	// == Temporary remote address ====================================
+
+	/**
+	 * Get the temporary remote address.
+	 * 
+	 * @return String: temporary remote address
+	 */
+	public String getRemoteAddressTemp() {
+		return mSharedPreferences.getString("remote_address_temp", null);
+	}
+
+	/**
+	 * Set the temporary remote address.
+	 * 
+	 * @param String
+	 *            temporary remote address
+	 */
+	public void setRemoteAddressTemp(String remoteAddress) {
+		editor.putString("remote_address_temp", remoteAddress).commit();
+	}
+
+	// == Remote name ====================================
+
+	/**
+	 * Get the remote name.
+	 * 
+	 * @return String: remote name
+	 */
+	public String getRemoteName() {
+		return mSharedPreferences.getString("remote_name", null);
+	}
+
+	/**
+	 * Set the remote name.
+	 * 
+	 * @param String
+	 *            remote name
+	 */
+	public void setRemoteName(String remoteName) {
+		editor.putString("remote_name", remoteName).commit();
 	}
 
 	// == Port TCP ====================================
@@ -213,47 +256,264 @@ public class SharedPrefs {
 		editor.putBoolean("notification_vibrate_state", isEnabled).commit();
 	}
 
+	// == Baby mode active state =======================
+
+	/**
+	 * Get the state of baby
+	 * 
+	 * @return boolean: true = mode is enabled, false = mode is disabled
+	 */
+	public boolean getActiveStateBabyMode() {
+		return mSharedPreferences.getBoolean("active_state_baby_mode", false);
+	}
+
+	/**
+	 * Set the state of baby
+	 * 
+	 * @param boolean isEnabled: mode is enabled
+	 */
+	public void setActiveStateBabyMode(boolean isEnabled) {
+		editor.putBoolean("active_state_baby_mode", isEnabled).commit();
+	}
+
 	/*
-	 * == Setup =====================================
+	 * == Setup settings =====================================
 	 */
 
-	// == Privacy: Call =================================
+	// == Device mode =================================
 
 	/**
-	 * Get the state of call privacy.
+	 * Get the mode of the device.
 	 * 
-	 * @return boolean: true = send forward, false = don't send forward
+	 * @return int: -1 = no mode, 0 = baby mode, 1 = parent mode
 	 */
-	public boolean getPrivacyCall() {
-		return mSharedPreferences.getBoolean("privacy_call", false);
+	public int getDeviceMode() {
+		return mSharedPreferences.getInt("device_mode", -1);
 	}
 
 	/**
-	 * Set the state of call privacy.
+	 * Set the mode of the device.
 	 * 
-	 * @param boolean state: state of call privacy
+	 * @param int mode: -1 = no mode, 0 = baby mode, 1 = parent mode
 	 */
-	public void setPrivacyCall(boolean state) {
-		editor.putBoolean("privacy_call", state).commit();
-	}
-
-	// == Privacy: sms =================================
-
-	/**
-	 * Get the state of sms privacy.
-	 * 
-	 * @return boolean: true = send forward, false = don't send forward
-	 */
-	public boolean getPrivacySMS() {
-		return mSharedPreferences.getBoolean("privacy_sms", false);
+	public void setDeviceMode(int mode) {
+		editor.putInt("device_mode", mode).commit();
 	}
 
 	/**
-	 * Set the state of sms privacy.
+	 * Get the temporary mode of the device.
 	 * 
-	 * @param boolean state: state of call privacy
+	 * @return int: -1 = no mode, 0 = baby mode, 1 = parent mode
 	 */
-	public void setPrivacySMS(boolean state) {
-		editor.putBoolean("privacy_sms", state).commit();
+	public int getDeviceModeTemp() {
+		return mSharedPreferences.getInt("device_mode_temp", -1);
+	}
+
+	/**
+	 * Set the temporary mode of the device.
+	 * 
+	 * @param int temporary mode: -1 = no mode, 0 = baby mode, 1 = parent mode
+	 */
+	public void setDeviceModeTemp(int mode) {
+		editor.putInt("device_mode_temp", mode).commit();
+	}
+
+	// == Forwarding: Call =================================
+
+	/**
+	 * Get the state of call info.
+	 * 
+	 * @return boolean: true = send , false = don't send
+	 */
+	public boolean getForwardingCallInfo() {
+		return mSharedPreferences.getBoolean("forwarding_call_info", false);
+	}
+
+	/**
+	 * Set the state of call info.
+	 * 
+	 * @param boolean state: state of call forwarding
+	 */
+	public void setForwardingCallInfo(boolean state) {
+		editor.putBoolean("forwarding_call_info", state).commit();
+	}
+
+	/**
+	 * Get the temporary state of call info.
+	 * 
+	 * @return boolean: true = send forward, false = don't send
+	 */
+	public boolean getForwardingCallInfoTemp() {
+		return mSharedPreferences.getBoolean("forwarding_call_info_temp", false);
+	}
+
+	/**
+	 * Set the temporary state of call info.
+	 * 
+	 * @param boolean state: temporary state of call
+	 */
+	public void setForwardingCallInfoTemp(boolean state) {
+		editor.putBoolean("forwarding_call_info_temp", state).commit();
+	}
+
+	// == Forwarding: sms =================================
+
+	/**
+	 * Get the state of sms forwarding.
+	 * 
+	 * @return boolean: true = send , false = don't send
+	 */
+	public boolean getForwardingSMS() {
+		return mSharedPreferences.getBoolean("forwarding_sms", false);
+	}
+
+	/**
+	 * Set the state of sms forwarding.
+	 * 
+	 * @param boolean state: state of call forwarding
+	 */
+	public void setForwardingSMS(boolean state) {
+		editor.putBoolean("forwarding_sms", state).commit();
+	}
+
+	/**
+	 * Get the temporary state of sms forwarding.
+	 * 
+	 * @return boolean: true = send , false = don't send
+	 */
+	public boolean getForwardingSMSTemp() {
+		return mSharedPreferences.getBoolean("forwarding_sms_temp", false);
+	}
+
+	/**
+	 * Set the temporary state of sms forwarding.
+	 * 
+	 * @param boolean temporary state: temporary state of sms forwarding
+	 */
+	public void setForwardingSMSTemp(boolean state) {
+		editor.putBoolean("forwarding_sms_temp", state).commit();
+	}
+
+	/**
+	 * Get the state of sms forwarding info.
+	 * 
+	 * @return boolean: true = send, false = don't send
+	 */
+	public boolean getForwardingSMSInfo() {
+		return mSharedPreferences.getBoolean("forwarding_sms_info", false);
+	}
+
+	/**
+	 * Set the state of sms info forwarding.
+	 * 
+	 * @param boolean state: state of call forwarding
+	 */
+	public void setForwardingSMSInfo(boolean state) {
+		editor.putBoolean("forwarding_sms_info", state).commit();
+	}
+
+	/**
+	 * Get the temporary state of sms info forwarding.
+	 * 
+	 * @return boolean: true = send, false = don't send
+	 */
+	public boolean getForwardingSMSInfoTemp() {
+		return mSharedPreferences.getBoolean("forwarding_sms_info_temp", false);
+	}
+
+	/**
+	 * Set the temporary state of sms info forwarding.
+	 * 
+	 * @param boolean temporary state: temporary state of sms info forwarding
+	 */
+	public void setForwardingSMSInfoTemp(boolean state) {
+		editor.putBoolean("forwarding_sms_info_temp", state).commit();
+	}
+
+	// == Password =================================
+
+	/**
+	 * Get the password for the connection.
+	 * 
+	 * @return String: -1 = no password
+	 */
+	public String getPassword() {
+		return mSharedPreferences.getString("password", null);
+	}
+
+	/**
+	 * Set the password for the connection.
+	 * 
+	 * @param String
+	 *            password: -1 = no password
+	 */
+	public void setPassword(String password) {
+		editor.putString("password", password).commit();
+	}
+
+	// == Connectivity =================================
+
+	/**
+	 * Get the active connectivity type.
+	 * 
+	 * @return int: -1 = no type, 0 = auto, 1 = Bluetooth, 2 = Wi-Fi, 3 = Wi-Fi
+	 *         Direct
+	 */
+	public int getConnectivityType() {
+		return mSharedPreferences.getInt("connectivity_type", -1);
+	}
+
+	/**
+	 * Set the active connectivity type.
+	 * 
+	 * @param int type: -1 = no type, 0 = auto, 1 = Bluetooth, 2 = Wi-Fi, 3 =
+	 *        Wi-Fi Direct
+	 */
+	public void setConnectivityType(int type) {
+		editor.putInt("connectivity_type", type).commit();
+	}
+
+	/**
+	 * Get the temporary connectivity type.
+	 * 
+	 * @return int: -1 = no type, 0 = auto, 1 = Bluetooth, 2 = Wi-Fi, 3 = Wi-Fi
+	 *         Direct
+	 */
+	public int getConnectivityTypeTemp() {
+		return mSharedPreferences.getInt("connectivity_type_temp", -1);
+	}
+
+	/**
+	 * Set the temporary connectivity type.
+	 * 
+	 * @param int temporary type: -1 = no type, 0 = auto, 1 = Bluetooth, 2 =
+	 *        Wi-Fi, 3 = Wi-Fi Direct
+	 */
+	public void setConnectivityTypeTemp(int type) {
+		editor.putInt("connectivity_type_temp", type).commit();
+	}
+
+	/*
+	 * General
+	 */
+
+	// == Mode temp =================================
+
+	/**
+	 * Get the latest mode.
+	 * 
+	 * @return int: -1 = no mode, 0 = baby mode, 1 = parents mode
+	 */
+	public int getTempMode() {
+		return mSharedPreferences.getInt("temp_mode", -1);
+	}
+
+	/**
+	 * Set the latest mode.
+	 * 
+	 * @param int temp mode: -1 = no mode, 0 = baby mode, 1 = parents mode
+	 */
+	public void setTempMode(int mode) {
+		editor.putInt("temp_mode", mode).commit();
 	}
 }

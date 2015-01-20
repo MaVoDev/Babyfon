@@ -6,8 +6,8 @@
 
     <ImageView
         android:id="@+id/icon"
-        android:layout_width="25dp"
-        android:layout_height="wrap_content"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
         android:layout_alignParentLeft="true"
         android:layout_centerVertical="true"
         android:layout_marginLeft="12dp"
@@ -21,19 +21,20 @@
         android:layout_height="match_parent"
         android:layout_toRightOf="@id/icon"
         android:gravity="center_vertical"
+        android:minHeight="?android:attr/listPreferredItemHeightSmall"
         android:paddingRight="40dp"
+        android:textAppearance="?android:attr/textAppearanceListItemSmall"
         android:textColor="@color/list_item_title" />
-    <!-- android:minHeight="?android:attr/listPreferredItemHeightSmall" -->
-    <!-- android:textAppearance="?android:attr/textAppearanceListItemSmall" -->
 
     <TextView
         android:id="@+id/counter"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
-        android:layout_centerVertical="true"
-        android:layout_marginRight="8dp"
-        android:background="@drawable/counter_bg"
-        android:textColor="@color/counter_text_color" />
+        android:layout_marginRight="16dp"
+        android:gravity="center_vertical"
+        android:minHeight="?android:attr/listPreferredItemHeightSmall"
+        android:textAppearance="?android:attr/textAppearanceListItemSmall"
+        android:textColor="@color/list_item_title" />
 
 </RelativeLayout>
