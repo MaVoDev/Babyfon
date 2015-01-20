@@ -1,28 +1,11 @@
 package babyfon.view.activity;
 
-import babyfon.init.R;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import babyfon.adapter.NavigationDrawerListAdapter;
-import babyfon.connectivity.sms.SMSReceiver;
-import babyfon.connectivity.wifi.TCPReceiver;
-import babyfon.connectivity.wifi.UDPReceiver;
-import babyfon.model.NavigationDrawerItemModel;
-import babyfon.performance.Battery;
-import babyfon.performance.ConnectivityStateCheck;
-import babyfon.performance.Sound;
-import babyfon.settings.ModuleHandler;
-import babyfon.settings.SharedPrefs;
-import babyfon.view.fragment.AbsenceFragment;
-import babyfon.view.fragment.BabyMonitorFragment;
-import babyfon.view.fragment.OverviewFragment;
-import babyfon.view.fragment.setup.SetupDeviceModeFragment;
-import babyfon.view.fragment.setup.SetupStartFragment;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -32,7 +15,6 @@ import android.content.res.TypedArray;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
@@ -45,6 +27,22 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.FrameLayout;
 import android.widget.ListView;
+import babyfon.adapter.NavigationDrawerListAdapter;
+import babyfon.connectivity.sms.SMSReceiver;
+import babyfon.connectivity.wifi.TCPReceiver;
+import babyfon.connectivity.wifi.UDPReceiver;
+import babyfon.init.R;
+import babyfon.model.NavigationDrawerItemModel;
+import babyfon.performance.Battery;
+import babyfon.performance.ConnectivityStateCheck;
+import babyfon.performance.Sound;
+import babyfon.settings.ModuleHandler;
+import babyfon.settings.SharedPrefs;
+import babyfon.view.fragment.AbsenceFragment;
+import babyfon.view.fragment.BabyMonitorFragment;
+import babyfon.view.fragment.OverviewFragment;
+import babyfon.view.fragment.setup.SetupDeviceModeFragment;
+import babyfon.view.fragment.setup.SetupStartFragment;
 
 public class MainActivity extends ActionBarActivity {
 
@@ -489,23 +487,23 @@ public class MainActivity extends ActionBarActivity {
 
 		// TODO: WORKAROUND UM DRAWER ERRORS ZU FIXEN, ALTER ERSTMAL AUSKOMMENTIERT; VS!
 		mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, android.R.string.ok, android.R.string.no);
-		
+
 		// Drawer Layout, Drawer Icon, Drawer Name (Drawer open, close)
-//		mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, R.drawable.ic_drawer, R.string.app_name, R.string.app_name) {
-//			public void onDrawerClosed(View view) {
-//				getActionBar().setTitle(appTitle);
-//				// calling onPrepareOptionsMenu() to show action bar icons
-//				invalidateOptionsMenu();
-//			}
-//
-//			public void onDrawerOpened(View drawerView) {
-//				// Set Typeface
-//				getActionBar().setTitle(drawerTitle);
-//				// calling onPrepareOptionsMenu() to hide action bar icons
-//				invalidateOptionsMenu();
-//			}
-//		};
-		
+		// mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, R.drawable.ic_drawer, R.string.app_name, R.string.app_name) {
+		// public void onDrawerClosed(View view) {
+		// getActionBar().setTitle(appTitle);
+		// // calling onPrepareOptionsMenu() to show action bar icons
+		// invalidateOptionsMenu();
+		// }
+		//
+		// public void onDrawerOpened(View drawerView) {
+		// // Set Typeface
+		// getActionBar().setTitle(drawerTitle);
+		// // calling onPrepareOptionsMenu() to hide action bar icons
+		// invalidateOptionsMenu();
+		// }
+		// };
+
 		mDrawerLayout.setDrawerListener(mDrawerToggle);
 	}
 

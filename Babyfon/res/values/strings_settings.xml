@@ -2,7 +2,7 @@
 
     <!-- Strings related to Shared Preferences -->
     <!-- Default values -->
-    <string name="pref_default_baby_name">Mein Baby</string>
+    <string name="pref_default_baby_name">Baby</string>
 
     <!-- Summaries -->
     <string name="summary_display_off">Displayalarm ist deaktiviert</string>

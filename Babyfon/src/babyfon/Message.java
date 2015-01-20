@@ -46,13 +46,14 @@ public class Message {
 
 		if (strArray[0].equals(mContext.getString(R.string.BABYFON_MSG_BATTERY))) {
 			// Batterie
-			((MainActivity) mContext).runOnUiThread(new Runnable() {
-				@Override
-				public void run() {
-					Fragment fragment = ((MainActivity) mContext).getFragmentById("BabymonitorFragment");
-					((BabyMonitorFragment) fragment).setBatteryLevel(strArray[1]);
-				}
-			});
+			mSharedPrefs.setBatteryLevel(strArray[1]);
+//			((MainActivity) mContext).runOnUiThread(new Runnable() {
+//				@Override
+//				public void run() {
+//					Fragment fragment = ((MainActivity) mContext).getFragmentById("BabymonitorFragment");
+//					((BabyMonitorFragment) fragment).setBatteryLevel(strArray[1]);
+//				}
+//			});
 		}
 
 		if (strArray[0].equals(mContext.getString(R.string.BABYFON_MSG_SMS))) {
@@ -112,7 +113,6 @@ public class Message {
 				if (mSharedPrefs.getForwardingSMS() || mSharedPrefs.getForwardingSMSInfo()) {
 					mModuleHandler.registerSMS();
 				}
-
 				mModuleHandler.startRemoteCheck();
 			} else {
 				send(mContext.getString(R.string.BABYFON_MSG_AUTH_DENIED));
@@ -125,7 +125,6 @@ public class Message {
 
 			mModuleHandler.startRemoteCheck();
 
-//			FragmentManager mFragmentManager = ((Activity) mContext).getFragmentManager();
 			FragmentManager mFragmentManager = ((MainActivity) mContext).getSupportFragmentManager();
 			mFragmentManager.beginTransaction()
 					.replace(R.id.frame_container, new SetupCompleteParentsModeFragment(mContext), null)

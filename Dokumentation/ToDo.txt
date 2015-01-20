@@ -1,40 +1,53 @@
 ToDo:
 =============================================================================================================
-- Babymodus: Verbindungen aktivieren (wenn aus), die gewählt wurden
-- Elternmodus: Verbindung aktivieren (wenn aus), die gewählt wurde
+Interface/Navigation:
+- Mikrofonsensibilität einstellen können im Babymonitor
+# Klingeln, Vibrieren, Anzeigen, wenn Geräusch erkannt
 
-- Setup: Wenn die Suche im Elternmodus geöffnet wird, soll UDP Receiver stoppen, wenn an
-- Verpasste Anrufe weiterleiten
+System:
+# Service
+!!! Geräusch erkennen
+
+Netzwerk:
+!!! Bluetooth Verbindung
+# Audiostreaming Wi-Fi
+!!! Audiostreaming Bluetooth
+# Beim senden die Connectivity prüfen (Typ, an/aus, verbunden/nicht verbunden, ist ein remote vorhanden) Vielleicht eine extra Klasse für den Test (Beim Setup extra prüfen)
+		Thread in der Main, checken ob die gewählte Verbindung ordnungsgemäß läuft, wenn nicht dialog zum hinweis oder aktivieren, währenddessen stop thread, nach ok wieder thread start
+
+SMS/Call:
+- Anzahl der SMS im Drawer anzeigen
+- Nachrichten (Call/SMS) zwischenspeichern
+- Wenn SMS gelesen, dann nicht mehr bold und setze Zahl im Drawer runter
+- Namen von SMS Sender auslesen
 - Verpasste Anrufe anzeigen
-- Eingehende SMS weiterleiten
-- Eingehende SMS anzeigen
-- Gefundene Geräte anzeigen
-- Wenn Setup nicht vollständig beendet wird oder abgebrochen wird, müssen andere/vorherigen Werte geladen werden
-- Passwortauthorisierung über WiFi anfragen (Kann man das auch fürsBluetooth verwenden?)
-- Wenn maximale Anzahl erlaubter Geräte sich auf dem Babymode verbunden haben (erstmal nur 1), dann stopp UDP Receiver, sonst start (wenn inaktiv)
-- Audiostreaming
-- Mikrofonsensibilität einstellen können
-- Geräusch erkennen
-- WiFi Direct State
-- WiFi Direct Verbindung
-- Bluetooth Verbindung
-- Im Babymodus Navigation Drawer auf Übersicht und Setup beschränken
-- Service
-- Display bei den Eltern einschalten (wenn aus), wenn Signal eingeht
+- Verpasste Anrufe weiterleiten
 - Call als Receiver laufen lassen
-- Module für den passenden Modus im Welcome laden
-- Übersichtsseite Baby: Babymodus on/off (Wenn off, dann nachricht an Elternmode), Passwort anzeigen, Freigegebene Verbindungen, Verbundene Geräte
-- Babymonitor: eingehenden Audiostream (Button On/Off), batterie vom Babygerät, Geräuschpegel, Signalisierungsalarm
-
-
-Design:
-=============================================================================================================
-- ListView für Verpasste Anrufe/SMS und gefundene Geräte erstellen
-- Buttons (Elternmodus, Babymodus, Weiter, Suche, ...)
-- Navigation Drawer
 
 Bugs:
 =============================================================================================================
-- SetupSearchDevicesFragment: Die ArrayListe device wird beim Starten des Fragments nicht zurückgesetzt. Die Liste soll vor der Suche immer geleert sein, also beim Starten des Fragments. Aktuell füllt sie sich weiter.
-- MainActivity: Wenn ein Modus gewählt ist, soll SetupStartFragment übersprungen werden. Das geht zurzeit nur, wenn die App geschlossen und neu gestartet wird. Soll aber gleich nach dem beenden eines Setup-Modus geschehen.
-- SMSReceiver: SMS wird nicht gesendet (Zeile 51 wird nicht ausgeführt)      
+1 Batteriestatus wird im Babymonitor nicht mehr aktualisiert. Richtig empfangen wird es. Auch die Methode wird aufgerufen. Aber anscheinend nur nach dem Setup, sonst gehts. Vll hier auch nen Thread laufen lassen
+2 Wenn ein Modus gewählt ist, soll SetupStartFragment übersprungen werden. Das geht zurzeit nur, wenn die App geschlossen und neu gestartet wird. Soll aber gleich nach dem beenden eines Setup-Modus geschehen.  
+3 Bluetooth: Wenn im Elternmode Bluetooth gewählt ist und die App beendet wird, gibts nen Absturz    
+4 Wenn man das Setup beendet, aktualisiert sich der NavigationDrawer nicht. Der Einrichtungsassistent bleibt selected.
+5 App wird nicht richtig beendet
+6 Absturz bei SMS Empfang wenn nciht das passende Fragment offen ist
+7 Beim Start der App wird die Selektierung im Drawer nicht gesetzt
+8 Remote Checker Thread richtig starten und beenden
+
+Optional:
+=============================================================================================================
+- App Logo
+- Navigation Drawer schöner gestalten, mit Image über der Itemliste
+- WiFi Direct Verbindung (Wenn keine Zeit ist, rausnehmen aus der App)
+- WiFi Direct State
+- Nachrichten zwischenpuffern, die nicht versendet werden konnten(SMS, Anrufe)
+- Nachrichten anders rum sortieren
+
+
+Änderungen
+------------------
+
+
+# Babymonitor: Signalisierungsalarm als Overlay
+# Babymonitor: Wenn Babymode deaktiviert oder Remote gekickt wird, Remote Bescheid geben. Vom Babygerät disconnecten können.

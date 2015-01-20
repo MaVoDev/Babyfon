@@ -210,6 +210,7 @@ public class OverviewFragment extends Fragment {
 								new DialogInterface.OnClickListener() {
 									@Override
 									public void onClick(DialogInterface dialog, int id) {
+										mModuleHandler.stopRemoteCheck();
 										mSharedPrefs.setRemoteAddress(null);
 										mSharedPrefs.setRemoteName(null);
 										mSharedPrefs.setRemoteOnlineState(false);

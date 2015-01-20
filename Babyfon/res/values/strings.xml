@@ -55,7 +55,14 @@
     <string name="dialog_title_delete_list">Nachrichten löschen</string>
     <string name="dialog_message_delete_list">Möchtest du alle Nachrichten aus der Liste entfernen?</string>
 
-    <!-- Overview baby mode -->
+    <!-- Babymonitor -->
+    <string name="babymonitor_connected_device">Verbundenes Mobilgerät</string>
+    <string name="babymonitor_connected_device_false">nicht verbunden</string>
+    <string name="babymonitor_text_battery">Akkustand</string>
+    <string name="babymonitor_text_noise">Lautstärke im Zimmer</string>
+
+    
+    <!-- Overview -->
     <string name="overview_baby_mode_state">Status des Gerätes</string>
     <string name="overview_password">Passwort</string>
     <string name="overview_connected_device">Verbundenes Mobilgerät</string>
