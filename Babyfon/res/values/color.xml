@@ -3,7 +3,8 @@
 
     <!-- Navigation Drawer -->
     <color name="list_item_title">#000000</color>
-    <color name="title">#444444</color>
+    <color name="title">#404040</color>
+    <color name="text">#404040</color>
     <color name="list_divider">#272727</color>
     
 </resources>
