@@ -104,9 +104,9 @@ public class BabyMonitorFragment extends Fragment {
 						batteryLevelInt = Integer.parseInt(batteryLevelString);
 						if (batteryLevelInt > 75) {
 							batteryEdit.setImageResource(R.drawable.batt100);
-						} else if (batteryLevelInt > 50) {
+						} else if (batteryLevelInt > 45) {
 							batteryEdit.setImageResource(R.drawable.batt75);
-						} else if (batteryLevelInt > 25) {
+						} else if (batteryLevelInt > 15) {
 							batteryEdit.setImageResource(R.drawable.batt45);
 						} else if (batteryLevelInt > 5) {
 							batteryEdit.setImageResource(R.drawable.batt15);
