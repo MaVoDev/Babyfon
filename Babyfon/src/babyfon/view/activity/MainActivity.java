@@ -1,17 +1,37 @@
 package babyfon.view.activity;
 
-import babyfon.init.R;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.res.Configuration;
+import android.content.res.TypedArray;
+import android.os.Bundle;
+import android.os.StrictMode;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.ActionBarDrawerToggle;
+import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.FrameLayout;
+import android.widget.ListView;
 import babyfon.adapter.NavigationDrawerListAdapter;
 import babyfon.connectivity.sms.SMSReceiver;
 import babyfon.connectivity.wifi.TCPReceiver;
 import babyfon.connectivity.wifi.UDPReceiver;
+import babyfon.init.R;
 import babyfon.model.NavigationDrawerItemModel;
 import babyfon.performance.Battery;
 import babyfon.performance.ConnectivityStateCheck;
@@ -23,29 +43,8 @@ import babyfon.view.fragment.BabyMonitorFragment;
 import babyfon.view.fragment.OverviewFragment;
 import babyfon.view.fragment.setup.SetupDeviceModeFragment;
 import babyfon.view.fragment.setup.SetupStartFragment;
-import android.app.ActionBar;
-import android.app.AlertDialog;
-import android.app.Fragment;
-import android.app.FragmentManager;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.content.IntentFilter;
-import android.content.res.Configuration;
-import android.content.res.TypedArray;
-import android.os.Bundle;
-import android.os.StrictMode;
-import android.support.v4.app.ActionBarDrawerToggle;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.widget.DrawerLayout;
-import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.FrameLayout;
-import android.widget.ListView;
 
-public class MainActivity extends FragmentActivity {
+public class MainActivity extends ActionBarActivity {
 
 	private DrawerLayout mDrawerLayout;
 	private ListView mDrawerList;
@@ -167,8 +166,8 @@ public class MainActivity extends FragmentActivity {
 		initNavigationDrawer();
 
 		if (mSharedPrefs.getRemoteAddress() != null) {
-			new babyfon.Message(this).send(this.getString(R.string.BABYFON_MSG_SYSTEM_REJOIN) + ";"
-					+ mSharedPrefs.getHostAddress() + ";" + mSharedPrefs.getPassword());
+			new babyfon.Message(this).send(this.getString(R.string.BABYFON_MSG_SYSTEM_REJOIN) + ";" + mSharedPrefs.getHostAddress() + ";"
+					+ mSharedPrefs.getPassword());
 			if (mSharedPrefs.getDeviceMode() == 0) {
 				mModuleHandler.registerBattery();
 				if (mSharedPrefs.getForwardingSMS() || mSharedPrefs.getForwardingSMSInfo()) {
@@ -209,7 +208,8 @@ public class MainActivity extends FragmentActivity {
 		}
 		startNavigationDrawerUpdateThread();
 
-		ActionBar actionBar = getActionBar();
+		ActionBar actionBar = getSupportActionBar();
+
 		FrameLayout frameLayout = (FrameLayout) findViewById(R.id.frame_container);
 
 		// Layout related to the gender of the baby
@@ -393,7 +393,7 @@ public class MainActivity extends FragmentActivity {
 		}
 
 		if (fragment != null) {
-			FragmentManager fragmentManager = getFragmentManager();
+			FragmentManager fragmentManager = getSupportFragmentManager();
 			fragmentManager.beginTransaction().replace(R.id.frame_container, fragment).commit();
 
 			// update selected item and title, then close the drawer
@@ -409,12 +409,11 @@ public class MainActivity extends FragmentActivity {
 	@Override
 	public void setTitle(CharSequence title) {
 		appTitle = title;
-		getActionBar().setTitle(appTitle);
+		getSupportActionBar().setTitle(appTitle);
 	}
 
 	/**
-	 * When using the ActionBarDrawerToggle, you must call it during
-	 * onPostCreate() and onConfigurationChanged()...
+	 * When using the ActionBarDrawerToggle, you must call it during onPostCreate() and onConfigurationChanged()...
 	 */
 
 	@Override
@@ -483,25 +482,28 @@ public class MainActivity extends FragmentActivity {
 		mDrawerList.setAdapter(adapter);
 
 		// enabling action bar app icon and behaving it as toggle button
-		getActionBar().setDisplayHomeAsUpEnabled(true);
-		getActionBar().setHomeButtonEnabled(true);
+		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+		getSupportActionBar().setHomeButtonEnabled(true);
+
+		// TODO: WORKAROUND UM DRAWER ERRORS ZU FIXEN, ALTER ERSTMAL AUSKOMMENTIERT; VS!
+		mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, android.R.string.ok, android.R.string.no);
 
 		// Drawer Layout, Drawer Icon, Drawer Name (Drawer open, close)
-		mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, R.drawable.ic_drawer, R.string.app_name,
-				R.string.app_name) {
-			public void onDrawerClosed(View view) {
-				getActionBar().setTitle(appTitle);
-				// calling onPrepareOptionsMenu() to show action bar icons
-				invalidateOptionsMenu();
-			}
+		// mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, R.drawable.ic_drawer, R.string.app_name, R.string.app_name) {
+		// public void onDrawerClosed(View view) {
+		// getActionBar().setTitle(appTitle);
+		// // calling onPrepareOptionsMenu() to show action bar icons
+		// invalidateOptionsMenu();
+		// }
+		//
+		// public void onDrawerOpened(View drawerView) {
+		// // Set Typeface
+		// getActionBar().setTitle(drawerTitle);
+		// // calling onPrepareOptionsMenu() to hide action bar icons
+		// invalidateOptionsMenu();
+		// }
+		// };
 
-			public void onDrawerOpened(View drawerView) {
-				// Set Typeface
-				getActionBar().setTitle(drawerTitle);
-				// calling onPrepareOptionsMenu() to hide action bar icons
-				invalidateOptionsMenu();
-			}
-		};
 		mDrawerLayout.setDrawerListener(mDrawerToggle);
 	}
 

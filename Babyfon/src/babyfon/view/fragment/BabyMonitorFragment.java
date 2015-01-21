@@ -8,7 +8,7 @@ import babyfon.init.R;
 import babyfon.settings.ModuleHandler;
 import babyfon.settings.SharedPrefs;
 import android.app.AlertDialog;
-import android.app.Fragment;
+import android.support.v4.app.Fragment;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Typeface;
@@ -31,8 +31,10 @@ public class BabyMonitorFragment extends Fragment {
 	private ImageView batteryEdit;
 	private ImageView baby;
 	private ProgressBar noiseLevel;
-	private Switch hearEdit;
-	private Switch talkEdit;
+//	private Switch hearEdit;
+//	private Switch talkEdit;
+	private CompoundButton hearEdit;
+	private CompoundButton talkEdit;
 	private TextView remoteText;
 	private TextView remoteState;
 	private TextView batteryText;
@@ -156,9 +158,11 @@ public class BabyMonitorFragment extends Fragment {
 		noiseLevel = (ProgressBar) view.findViewById(R.id.babymonitor_edit_noise_level);
 
 		// Initialize Switchen
-		hearEdit = (Switch) view.findViewById(R.id.babymonitor_hear_edit);
+//		hearEdit = (Switch) view.findViewById(R.id.babymonitor_hear_edit);
+		hearEdit = (CompoundButton) view.findViewById(R.id.babymonitor_hear_edit);
 		hearEdit.setTypeface(mTypeface_n);
-		talkEdit = (Switch) view.findViewById(R.id.babymonitor_talk_edit);
+//		talkEdit = (Switch) view.findViewById(R.id.babymonitor_talk_edit);
+		talkEdit = (CompoundButton) view.findViewById(R.id.babymonitor_talk_edit);
 		talkEdit.setTypeface(mTypeface_n);
 
 		// Initialize TextViews

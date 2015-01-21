@@ -5,7 +5,6 @@ import babyfon.init.R;
 import java.util.ArrayList;
 
 import babyfon.model.NavigationDrawerItemModel;
-import babyfon.settings.SharedPrefs;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Typeface;
@@ -71,4 +70,6 @@ public class NavigationDrawerListAdapter extends BaseAdapter {
 
 		return convertView;
 	}
+
+	// TODO: View-Holder Pattern verwenden
 }
