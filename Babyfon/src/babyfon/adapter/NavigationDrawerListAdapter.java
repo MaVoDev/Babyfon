@@ -1,10 +1,7 @@
 package babyfon.adapter;
 
-import babyfon.init.R;
-
 import java.util.ArrayList;
 
-import babyfon.model.NavigationDrawerItemModel;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Typeface;
@@ -14,6 +11,8 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+import babyfon.init.R;
+import babyfon.model.NavigationDrawerItemModel;
 
 public class NavigationDrawerListAdapter extends BaseAdapter {
 
