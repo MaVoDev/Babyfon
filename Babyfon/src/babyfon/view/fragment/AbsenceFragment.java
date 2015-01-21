@@ -7,7 +7,7 @@ import babyfon.init.R;
 import babyfon.model.AbsenceListItemModel;
 import babyfon.settings.SharedPrefs;
 import android.app.AlertDialog;
-import android.app.Fragment;
+import android.support.v4.app.Fragment;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Typeface;

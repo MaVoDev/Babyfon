@@ -9,11 +9,11 @@ import babyfon.init.R;
 import babyfon.settings.ModuleHandler;
 import babyfon.settings.SharedPrefs;
 import android.app.AlertDialog;
-import android.app.Fragment;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -211,7 +211,6 @@ public class OverviewFragment extends Fragment {
 									@Override
 									public void onClick(DialogInterface dialog, int id) {
 										mModuleHandler.stopRemoteCheck();
-
 										mSharedPrefs.setRemoteAddress(null);
 										mSharedPrefs.setRemoteName(null);
 										mSharedPrefs.setRemoteOnlineState(false);

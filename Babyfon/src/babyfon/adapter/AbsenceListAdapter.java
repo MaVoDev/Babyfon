@@ -2,11 +2,8 @@ package babyfon.adapter;
 
 import java.util.ArrayList;
 
-import babyfon.init.R;
-import babyfon.model.AbsenceListItemModel;
 import android.app.Activity;
 import android.content.Context;
-import android.database.AbstractWindowedCursor;
 import android.graphics.Typeface;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,6 +11,8 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+import babyfon.init.R;
+import babyfon.model.AbsenceListItemModel;
 
 public class AbsenceListAdapter extends BaseAdapter {
 

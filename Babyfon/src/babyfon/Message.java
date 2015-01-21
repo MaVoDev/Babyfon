@@ -1,9 +1,7 @@
 package babyfon;
 
-import android.app.Activity;
-import android.app.Fragment;
-import android.app.FragmentManager;
 import android.content.Context;
+import android.support.v4.app.FragmentManager;
 import android.widget.Toast;
 import babyfon.connectivity.wifi.TCPSender;
 import babyfon.init.R;
@@ -12,8 +10,6 @@ import babyfon.settings.ModuleHandler;
 import babyfon.settings.SharedPrefs;
 import babyfon.view.activity.MainActivity;
 import babyfon.view.fragment.AbsenceFragment;
-import babyfon.view.fragment.BabyMonitorFragment;
-import babyfon.view.fragment.OverviewFragment;
 import babyfon.view.fragment.setup.SetupCompleteParentsModeFragment;
 import babyfon.view.fragment.setup.SetupSearchDevicesFragment;
 
@@ -125,7 +121,7 @@ public class Message {
 
 			mModuleHandler.startRemoteCheck();
 
-			FragmentManager mFragmentManager = ((Activity) mContext).getFragmentManager();
+			FragmentManager mFragmentManager = ((MainActivity) mContext).getSupportFragmentManager();
 			mFragmentManager.beginTransaction()
 					.replace(R.id.frame_container, new SetupCompleteParentsModeFragment(mContext), null)
 					.addToBackStack(null).commit();
