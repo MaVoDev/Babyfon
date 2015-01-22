@@ -118,6 +118,14 @@ public class MainActivity extends ActionBarActivity {
 		startNavigationDrawerUpdateThread();
 
 		displayView(0);
+
+		// enabling action bar app icon and behaving it as toggle button
+		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+		getSupportActionBar().setHomeButtonEnabled(true);
+
+		// TODO: WORKAROUND UM DRAWER ERRORS ZU FIXEN, ALTER ERSTMAL
+		// AUSKOMMENTIERT; VS!
+		mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, android.R.string.ok, android.R.string.no);
 	}
 
 	@Override
@@ -169,8 +177,8 @@ public class MainActivity extends ActionBarActivity {
 		initNavigationDrawer();
 
 		if (mSharedPrefs.getRemoteAddress() != null) {
-			new babyfon.Message(this).send(this.getString(R.string.BABYFON_MSG_SYSTEM_REJOIN) + ";" + mSharedPrefs.getHostAddress() + ";"
-					+ mSharedPrefs.getPassword());
+			new babyfon.Message(this).send(this.getString(R.string.BABYFON_MSG_SYSTEM_REJOIN) + ";"
+					+ mSharedPrefs.getHostAddress() + ";" + mSharedPrefs.getPassword());
 			if (mSharedPrefs.getDeviceMode() == 0) {
 				mModuleHandler.registerBattery();
 				if (mSharedPrefs.getForwardingSMS() || mSharedPrefs.getForwardingSMSInfo()) {
@@ -425,7 +433,8 @@ public class MainActivity extends ActionBarActivity {
 	}
 
 	/**
-	 * When using the ActionBarDrawerToggle, you must call it during onPostCreate() and onConfigurationChanged()...
+	 * When using the ActionBarDrawerToggle, you must call it during
+	 * onPostCreate() and onConfigurationChanged()...
 	 */
 
 	@Override
@@ -493,15 +502,9 @@ public class MainActivity extends ActionBarActivity {
 		adapter = new NavigationDrawerListAdapter(getApplicationContext(), items);
 		mDrawerList.setAdapter(adapter);
 
-		// enabling action bar app icon and behaving it as toggle button
-		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-		getSupportActionBar().setHomeButtonEnabled(true);
-
-		// TODO: WORKAROUND UM DRAWER ERRORS ZU FIXEN, ALTER ERSTMAL AUSKOMMENTIERT; VS!
-		mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, android.R.string.ok, android.R.string.no);
-
 		// Drawer Layout, Drawer Icon, Drawer Name (Drawer open, close)
-		// mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, R.drawable.ic_drawer, R.string.app_name, R.string.app_name) {
+		// mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout,
+		// R.drawable.ic_drawer, R.string.app_name, R.string.app_name) {
 		// public void onDrawerClosed(View view) {
 		// getActionBar().setTitle(appTitle);
 		// // calling onPrepareOptionsMenu() to show action bar icons
