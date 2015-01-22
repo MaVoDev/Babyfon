@@ -1,19 +1,21 @@
 package babyfon.connectivity.bluetooth;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.IOException;
 import java.util.UUID;
 
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothServerSocket;
-import android.bluetooth.BluetoothSocket;
 import android.util.Log;
 
-public class BluetoothServerThread extends Thread {
+public class BluetoothServerThread extends BluetoothConnectionThread {
 	private static final String TAG = BluetoothServerThread.class.getCanonicalName();
 	private final BluetoothServerSocket mmServerSocket;
-	private BluetoothSocket mSocket;
 
-	public BluetoothServerThread(BluetoothAdapter mBluetoothAdapter) {
+	public BluetoothServerThread(BluetoothAdapter mBluetoothAdapter, BluetoothConnection bluetoothConnection) {
+
+		this.mBTConnection = bluetoothConnection;
 
 		// Use a temporary object that is later assigned to mmServerSocket,
 		// because mmServerSocket is final
@@ -28,6 +30,7 @@ public class BluetoothServerThread extends Thread {
 		mmServerSocket = tmp;
 	}
 
+	@Override
 	public void run() {
 		mSocket = null;
 		// Keep listening until exception occurs or a socket is returned
@@ -42,23 +45,43 @@ public class BluetoothServerThread extends Thread {
 				// Do work to manage the connection (in a separate thread)
 				// manageConnectedSocket(socket);
 
-				Log.i(TAG, "SOCKET CONNECTED!!!!!!!! [Name: " + mSocket.getRemoteDevice().getName() + "; MAC: "
-						+ mSocket.getRemoteDevice().getAddress() + "]");
-
 				// Start sending Audio to client
-//				mNoise = new AudioRecording(mSocket);
-//				mNoise.startRecording();
+				// mNoise = new AudioRecording(mSocket);
+				// mNoise.startRecording();
+
+				try {
+					isRunning = true;
+
+					mmInStream = mSocket.getInputStream();
+					mmOutStream = mSocket.getOutputStream();
+
+					// mInputStream = new BufferedInputStream(mSocket.getInputStream());
+					// mOutputStream = new BufferedOutputStream(mSocket.getOutputStream());
+
+					startListening();
+
+				} catch (IOException e) {
+					e.printStackTrace();
+					Log.e(TAG, "Error during Connection: " + e.getMessage());
+				}
 
 				try {
 					mmServerSocket.close();
 
-					// TODO: REMOVE THIS OR CONNECTION IS CLOSED IMMEDIATELY AFTER IT WAS ESTABLISHED!!!!!!!!!!
+					// TODO: REMOVE THIS OR CONNECTION IS CLOSED IMMEDIATELY
+					// AFTER IT WAS ESTABLISHED!!!!!!!!!!
 					// socket.close();
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 
+				Log.i(TAG, "SOCKET CONNECTED!!!!!!!! [Name: " + mSocket.getRemoteDevice().getName() + "; MAC: "
+						+ mSocket.getRemoteDevice().getAddress() + "]");
+
+				mBTConnection.getOnConnnectedListener().onConnectedListener(mSocket.getRemoteDevice().getName());
+
+				// STOP WHILE SCHLEIFE
 				break;
 			}
 		}
@@ -66,19 +89,4 @@ public class BluetoothServerThread extends Thread {
 		Log.i(TAG, "Server stopped!");
 	}
 
-	/** Will cancel the listening socket, and cause the thread to finish */
-	public void cancel() {
-		try {
-			mmServerSocket.close();
-
-			if (mSocket != null)
-				mSocket.close();
-
-			// Stop Recording
-//			if (mNoise != null)
-//				mNoise.stopRecording();
-
-		} catch (IOException e) {
-		}
-	}
 }

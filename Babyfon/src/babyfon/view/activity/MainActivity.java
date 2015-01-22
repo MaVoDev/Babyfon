@@ -28,6 +28,7 @@ import android.widget.AdapterView;
 import android.widget.FrameLayout;
 import android.widget.ListView;
 import babyfon.adapter.NavigationDrawerListAdapter;
+import babyfon.connectivity.ConnectionInterface;
 import babyfon.connectivity.sms.SMSReceiver;
 import babyfon.connectivity.wifi.TCPReceiver;
 import babyfon.connectivity.wifi.UDPReceiver;
@@ -56,6 +57,8 @@ public class MainActivity extends ActionBarActivity {
 	public static UDPReceiver mUDPReceiver;
 	public static SMSReceiver mSmsReceiver;
 	public static ConnectivityStateCheck mConnectivityStateCheck;
+
+	public static ConnectionInterface mConnection;
 
 	public static IntentFilter mIntentFilter;
 
@@ -360,12 +363,21 @@ public class MainActivity extends ActionBarActivity {
 			if (mSharedPrefs.getDeviceMode() == -1) {
 				id = "SetupFragment";
 			}
+
 			if (mSharedPrefs.getDeviceMode() == 0) {
 				id = "OverviewFragment";
 			}
 			if (mSharedPrefs.getDeviceMode() == 1) {
 				id = "BabymonitorFragment";
 			}
+			// TODO TEST VS. WENN FERTIG RAUSNEHMEN
+			// if (mSharedPrefs.getDeviceMode() == 1) {
+			// id = "OverviewFragment";
+			// }
+			// if (mSharedPrefs.getDeviceMode() == 0) {
+			// id = "BabymonitorFragment";
+			// }
+
 			break;
 		case 1:
 			if (mSharedPrefs.getDeviceMode() == 0) {

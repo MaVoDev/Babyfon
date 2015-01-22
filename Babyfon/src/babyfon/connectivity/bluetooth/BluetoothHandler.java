@@ -3,19 +3,15 @@ package babyfon.connectivity.bluetooth;
 import android.bluetooth.BluetoothAdapter;
 
 public class BluetoothHandler {
-
 	private BluetoothAdapter mBluetoothAdapter;
 
 	public BluetoothHandler() {
-
 	}
 
 	/**
-	 * Überprüft, ob Bluetooth unterstützt wird und ob Bluetooth ein- oder
-	 * ausgeschaltet ist.
+	 * Überprüft, ob Bluetooth unterstützt wird und ob Bluetooth ein- oder ausgeschaltet ist.
 	 * 
-	 * @return int Bluetooth Status: -1 = not available, 0 = not enabled, 1 =
-	 *         enabled
+	 * @return int Bluetooth Status: -1 = not available, 0 = not enabled, 1 = enabled
 	 */
 	public int getBluetoothState() {
 		mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
@@ -32,7 +28,7 @@ public class BluetoothHandler {
 			return 1;
 		}
 	}
-	
+
 	public void startBluetooth() {
 		mBluetoothAdapter.startDiscovery();
 	}
