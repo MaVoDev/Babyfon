@@ -36,17 +36,14 @@ Bugs:
 
 Optional:
 =============================================================================================================
-- App Logo
 - Navigation Drawer schöner gestalten, mit Image über der Itemliste
 - WiFi Direct Verbindung (Wenn keine Zeit ist, rausnehmen aus der App)
 - WiFi Direct State
 - Nachrichten zwischenpuffern, die nicht versendet werden konnten(SMS, Anrufe)
 - Nachrichten anders rum sortieren
 
-
 Änderungen
 ------------------
-
 
 # Audiostreaming Wi-Fi
 # Klingeln, Vibrieren, Anzeigen, wenn Geräusch erkannt

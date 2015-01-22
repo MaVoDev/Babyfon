@@ -42,14 +42,7 @@ public class Message {
 
 		if (strArray[0].equals(mContext.getString(R.string.BABYFON_MSG_BATTERY))) {
 			// Batterie
-			mSharedPrefs.setBatteryLevel(strArray[1]);
-//			((MainActivity) mContext).runOnUiThread(new Runnable() {
-//				@Override
-//				public void run() {
-//					Fragment fragment = ((MainActivity) mContext).getFragmentById("BabymonitorFragment");
-//					((BabyMonitorFragment) fragment).setBatteryLevel(strArray[1]);
-//				}
-//			});
+			mSharedPrefs.setBatteryLevel(Integer.parseInt(strArray[1]));
 		}
 
 		if (strArray[0].equals(mContext.getString(R.string.BABYFON_MSG_SMS))) {

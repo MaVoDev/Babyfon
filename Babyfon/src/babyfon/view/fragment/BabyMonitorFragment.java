@@ -31,8 +31,6 @@ public class BabyMonitorFragment extends Fragment {
 	private ImageView batteryEdit;
 	private ImageView baby;
 	private ProgressBar noiseLevel;
-//	private Switch hearEdit;
-//	private Switch talkEdit;
 	private CompoundButton hearEdit;
 	private CompoundButton talkEdit;
 	private TextView remoteText;
@@ -46,8 +44,7 @@ public class BabyMonitorFragment extends Fragment {
 	private TextView noiseText;
 	private TextView title;
 
-	private int batteryLevelInt;
-	private String batteryLevelString;
+	private int batteryLevel;
 
 	private ModuleHandler mModuleHandler;
 	private SharedPrefs mSharedPrefs;
@@ -64,11 +61,6 @@ public class BabyMonitorFragment extends Fragment {
 
 		this.mContext = mContext;
 	}
-
-	// public void setBatteryLevel(String batteryLevel) {
-	// this.batteryLevel = batteryLevel;
-	// updateUI();
-	// }
 
 	public void updateUI() {
 		if (mSharedPrefs.isRemoteOnline()) {
@@ -96,37 +88,39 @@ public class BabyMonitorFragment extends Fragment {
 
 		// TODO hier kommt die Abfrage für den Noise State zur Progressbar rein
 
-		if (batteryEdit != null) {
-			if (batteryState != null) {
-				if (mSharedPrefs.isRemoteOnline()) {
+		if (mSharedPrefs.getRemoteAddress() != null) {
+			if (batteryEdit != null) {
+				if (batteryState != null) {
+					if (mSharedPrefs.isRemoteOnline()) {
 
-					batteryLevelString = mSharedPrefs.getBatteryLevel();
+						batteryLevel = mSharedPrefs.getBatteryLevel();
 
-					if (batteryLevelString != null) {
-						batteryLevelInt = Integer.parseInt(batteryLevelString);
-						if (batteryLevelInt > 75) {
-							batteryEdit.setImageResource(R.drawable.batt100);
-						} else if (batteryLevelInt > 50) {
-							batteryEdit.setImageResource(R.drawable.batt75);
-						} else if (batteryLevelInt > 25) {
-							batteryEdit.setImageResource(R.drawable.batt45);
-						} else if (batteryLevelInt > 5) {
-							batteryEdit.setImageResource(R.drawable.batt15);
+						if (batteryLevel != -1) {
+							if (batteryLevel > 75) {
+								batteryEdit.setImageResource(R.drawable.batt100);
+							} else if (batteryLevel > 50) {
+								batteryEdit.setImageResource(R.drawable.batt75);
+							} else if (batteryLevel > 25) {
+								batteryEdit.setImageResource(R.drawable.batt45);
+							} else if (batteryLevel > 5) {
+								batteryEdit.setImageResource(R.drawable.batt15);
+							} else {
+								batteryEdit.setImageResource(R.drawable.batt00);
+							}
+							batteryState.setText(batteryLevel + "%");
 						} else {
+							batteryState.setText("n/a");
 							batteryEdit.setImageResource(R.drawable.batt00);
 						}
-						batteryState.setText(batteryLevelString + "%");
 					} else {
-						batteryLevelString = "n/a";
+						batteryState.setText("n/a");
 						batteryEdit.setImageResource(R.drawable.batt00);
 					}
-				} else {
-					batteryLevelString = "n/a";
-					batteryEdit.setImageResource(R.drawable.batt00);
+					batteryState.setText(batteryLevel + "%");
 				}
-				batteryState.setText(batteryLevelString + "%");
 			}
 		} else {
+			batteryState.setText("n/a");
 		}
 
 		hearText.setText(mSharedPrefs.getName() + " zuhören");
@@ -158,10 +152,10 @@ public class BabyMonitorFragment extends Fragment {
 		noiseLevel = (ProgressBar) view.findViewById(R.id.babymonitor_edit_noise_level);
 
 		// Initialize Switchen
-//		hearEdit = (Switch) view.findViewById(R.id.babymonitor_hear_edit);
+		// hearEdit = (Switch) view.findViewById(R.id.babymonitor_hear_edit);
 		hearEdit = (CompoundButton) view.findViewById(R.id.babymonitor_hear_edit);
 		hearEdit.setTypeface(mTypeface_n);
-//		talkEdit = (Switch) view.findViewById(R.id.babymonitor_talk_edit);
+		// talkEdit = (Switch) view.findViewById(R.id.babymonitor_talk_edit);
 		talkEdit = (CompoundButton) view.findViewById(R.id.babymonitor_talk_edit);
 		talkEdit.setTypeface(mTypeface_n);
 
