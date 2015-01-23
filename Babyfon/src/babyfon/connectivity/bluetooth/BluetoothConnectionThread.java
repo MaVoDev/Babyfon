@@ -1,17 +1,13 @@
 package babyfon.connectivity.bluetooth;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.io.PrintWriter;
 
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothSocket;
 import android.util.Log;
-import babyfon.audio.AudioRecording;
+import babyfon.audio.AudioRecorder;
 import babyfon.connectivity.ConnectionInterface.OnReceiveDataListener;
 
 public abstract class BluetoothConnectionThread extends Thread {
@@ -54,7 +50,7 @@ public abstract class BluetoothConnectionThread extends Thread {
 					// }
 
 					// byte[] bData = new byte[1024];
-					byte[] bData = new byte[AudioRecording.BufferElements2Rec];
+					byte[] bData = new byte[AudioRecorder.BufferElements2Rec];
 
 					int bytesRead = 0;
 
@@ -62,9 +58,9 @@ public abstract class BluetoothConnectionThread extends Thread {
 						// while (isRunning && (bytesRead = mInputStream.read(bData)) != -1) {
 						// while (isRunning && (bytesRead = mInputStream.read(bData, 0, bData.length)) != -1) {
 
-						if (listener != null)
-							// handleMsg(bData, listener);
-							handleMsg(bData, bytesRead, listener);
+						// if (listener != null)
+						// handleMsg(bData, listener);
+						handleMsg(bData, bytesRead);
 
 					}
 				} catch (IOException e) {
@@ -90,7 +86,7 @@ public abstract class BluetoothConnectionThread extends Thread {
 	//
 	// }
 
-	private void handleMsg(byte[] bData, int bytesRead, OnReceiveDataListener listener) {
+	private void handleMsg(byte[] bData, int bytesRead) {
 
 		// TODO: METHODE ANPASSEN, DASS AUF DEM HUAWEI HIER NICHT BLOCKIERT
 
@@ -114,7 +110,8 @@ public abstract class BluetoothConnectionThread extends Thread {
 		if (bytesRead >= 250)
 			type = 1; // 1 = Audio
 
-		listener.onReceiveDataListener(bData, type, bytesRead);
+		if (mBTConnection.getOnReceiveMsgListener() != null)
+			mBTConnection.getOnReceiveMsgListener().onReceiveDataListener(bData, type, bytesRead);
 		// listener.onReceiveDataListener(receivedData, bData[0]);
 		// listener.onReceiveDataListener(receivedData, type);
 
@@ -138,11 +135,16 @@ public abstract class BluetoothConnectionThread extends Thread {
 	}
 
 	/** Will cancel an in-progress connection, and close the socket */
-	public void cancel() {
+	public void stopBT() {
 		try {
-			mSocket.close();
+			if (mSocket != null)
+				mSocket.close();
+
+			mSocket = null;
+			mmInStream = null;
+			mmOutStream = null;
+
 		} catch (IOException e) {
 		}
 	}
-
 }

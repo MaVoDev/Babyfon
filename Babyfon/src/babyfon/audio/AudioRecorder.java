@@ -6,9 +6,9 @@ import android.media.MediaRecorder;
 import android.util.Log;
 import babyfon.connectivity.ConnectionInterface;
 
-public class AudioRecording {
+public class AudioRecorder {
 
-	private static String TAG = AudioRecording.class.getCanonicalName();
+	private static String TAG = AudioRecorder.class.getCanonicalName();
 
 	private static final int RECORDER_SAMPLERATE = 8000;
 	private static final int RECORDER_CHANNELS = AudioFormat.CHANNEL_IN_MONO;
@@ -30,7 +30,7 @@ public class AudioRecording {
 
 	private ConnectionInterface mConnection;
 
-	public AudioRecording(ConnectionInterface connection) {
+	public AudioRecorder(ConnectionInterface connection) {
 		this.mConnection = connection;
 
 		recorder = initRecorder();

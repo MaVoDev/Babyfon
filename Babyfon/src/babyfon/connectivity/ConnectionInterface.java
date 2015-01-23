@@ -17,7 +17,7 @@ public interface ConnectionInterface {
 	public <T> void startClient(T listAdapter);
 
 	/** Will cancel an in-progress connection, and close the socket */
-	public void closeConnection();
+	public void stopConnection();
 
 	/**
 	 * Sends data over the established connection.
@@ -29,6 +29,7 @@ public interface ConnectionInterface {
 	 */
 	public void sendData(byte[] data, byte type);
 
+	public void sendMessage(String msg);
 	//
 	// Listener
 	//

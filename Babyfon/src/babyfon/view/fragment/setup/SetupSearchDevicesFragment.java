@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import babyfon.Message;
 import babyfon.adapter.DeviceListAdapter;
 import babyfon.connectivity.ConnectionInterface;
+import babyfon.connectivity.ConnectionInterface.OnConnnectedListener;
 import babyfon.connectivity.bluetooth.BluetoothConnection;
 import babyfon.connectivity.bluetooth.BluetoothListAdapter;
 import babyfon.connectivity.wifi.TCPSender;
@@ -99,11 +100,13 @@ public class SetupSearchDevicesFragment extends Fragment {
 
 				Log.d(TAG, "Selected item: " + deviceName + " (" + deviceIP + ")");
 
+				// Bluetooth erstmal ausgelagert
+				// if (mSharedPrefs.getConnectivityTypeTemp() == 1) {
+				// MainActivity.mConnection.connectToDeviceFromList(position);
+				// }
 				if (mSharedPrefs.getConnectivityTypeTemp() == 2) {
 					mSharedPrefs.setRemoteAddressTemp(deviceIP);
 					mSharedPrefs.setRemoteName(deviceName);
-				} else {
-					// Bluetooth
 				}
 
 				openAuthDialog(deviceName, deviceIP);
@@ -247,6 +250,22 @@ public class SetupSearchDevicesFragment extends Fragment {
 
 		// Setup ListView Adapter
 		listViewDevices.setAdapter(deviceListAdapter);
+
+		listViewDevices.setOnItemClickListener(new OnItemClickListener() {
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+				MainActivity.mConnection.connectToDeviceFromList(position);
+			}
+		});
+
+		MainActivity.mConnection.setOnConnnectedListener(new OnConnnectedListener() {
+			@Override
+			public void onConnectedListener(String deviceName) {
+				// Verbunden also auf die Abschlussseite wechseln
+				getFragmentManager().beginTransaction().replace(R.id.frame_container, new SetupCompleteParentsModeFragment(mContext), null)
+						.addToBackStack(null).commit();
+			}
+		});
 
 		MainActivity.mConnection.startClient(deviceListAdapter);
 	}

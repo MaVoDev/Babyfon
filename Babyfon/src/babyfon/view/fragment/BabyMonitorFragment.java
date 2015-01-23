@@ -4,9 +4,12 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import babyfon.Message;
+import babyfon.audio.AudioDetection;
+import babyfon.connectivity.ConnectionInterface.OnReceiveDataListener;
 import babyfon.init.R;
 import babyfon.settings.ModuleHandler;
 import babyfon.settings.SharedPrefs;
+import babyfon.view.activity.MainActivity;
 import android.app.AlertDialog;
 import android.support.v4.app.Fragment;
 import android.content.Context;
@@ -210,29 +213,26 @@ public class BabyMonitorFragment extends Fragment {
 		kickRemote.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				new AlertDialog.Builder(getActivity())
-						.setTitle(mContext.getString(R.string.dialog_title_kick_remote))
+				new AlertDialog.Builder(getActivity()).setTitle(mContext.getString(R.string.dialog_title_kick_remote))
 						.setMessage(mContext.getString(R.string.dialog_message_kick_remote))
 						.setNegativeButton(mContext.getString(R.string.dialog_button_no), null)
-						.setPositiveButton(mContext.getString(R.string.dialog_button_yes),
-								new DialogInterface.OnClickListener() {
-									@Override
-									public void onClick(DialogInterface dialog, int id) {
-										mModuleHandler.stopRemoteCheck();
+						.setPositiveButton(mContext.getString(R.string.dialog_button_yes), new DialogInterface.OnClickListener() {
+							@Override
+							public void onClick(DialogInterface dialog, int id) {
+								mModuleHandler.stopRemoteCheck();
 
-										mSharedPrefs.setRemoteAddress(null);
-										mSharedPrefs.setRemoteName(null);
-										mSharedPrefs.setRemoteOnlineState(false);
+								mSharedPrefs.setRemoteAddress(null);
+								mSharedPrefs.setRemoteName(null);
+								mSharedPrefs.setRemoteOnlineState(false);
 
-										if (mSharedPrefs.getForwardingSMS() || mSharedPrefs.getForwardingSMSInfo()) {
-											mModuleHandler.unregisterSMS();
-										}
+								if (mSharedPrefs.getForwardingSMS() || mSharedPrefs.getForwardingSMSInfo()) {
+									mModuleHandler.unregisterSMS();
+								}
 
-										new Message(mContext).send(mContext
-												.getString(R.string.BABYFON_MSG_SYSTEM_DISCONNECTED));
-										updateUI();
-									}
-								}).create().show();
+								new Message(mContext).send(mContext.getString(R.string.BABYFON_MSG_SYSTEM_DISCONNECTED));
+								updateUI();
+							}
+						}).create().show();
 			}
 		});
 
@@ -269,6 +269,18 @@ public class BabyMonitorFragment extends Fragment {
 		return view;
 	}
 
+	protected void updateVolume(final int calculateVolume) {
+
+		getActivity().runOnUiThread(new Runnable() {
+
+			@Override
+			public void run() {
+				noiseLevel.setProgress(calculateVolume);
+			}
+
+		});
+	}
+
 	public void startUiUpdateThread() {
 		if (timer == null) {
 			timer = new Timer();
@@ -301,6 +313,18 @@ public class BabyMonitorFragment extends Fragment {
 			}
 
 		}
+
+		if (MainActivity.mConnection != null)
+			MainActivity.mConnection.setOnReceiveDataListener(new OnReceiveDataListener() {
+
+				@Override
+				public void onReceiveDataListener(byte[] bData, byte type, int bytesRead) {
+					if (type == 0)
+						; // String empfangen
+					else
+						updateVolume(AudioDetection.calculateVolume(bData, bytesRead));
+				}
+			});
 	}
 
 	@Override

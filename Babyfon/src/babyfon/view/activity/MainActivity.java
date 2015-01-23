@@ -28,6 +28,7 @@ import android.widget.AdapterView;
 import android.widget.FrameLayout;
 import android.widget.ListView;
 import babyfon.adapter.NavigationDrawerListAdapter;
+import babyfon.audio.AudioRecorder;
 import babyfon.connectivity.ConnectionInterface;
 import babyfon.connectivity.sms.SMSReceiver;
 import babyfon.connectivity.wifi.TCPReceiver;
@@ -58,6 +59,7 @@ public class MainActivity extends ActionBarActivity {
 	public static SMSReceiver mSmsReceiver;
 	public static ConnectivityStateCheck mConnectivityStateCheck;
 
+	public static AudioRecorder mAudioRecorder;
 	public static ConnectionInterface mConnection;
 
 	public static IntentFilter mIntentFilter;
@@ -177,8 +179,8 @@ public class MainActivity extends ActionBarActivity {
 		initNavigationDrawer();
 
 		if (mSharedPrefs.getRemoteAddress() != null) {
-			new babyfon.Message(this).send(this.getString(R.string.BABYFON_MSG_SYSTEM_REJOIN) + ";"
-					+ mSharedPrefs.getHostAddress() + ";" + mSharedPrefs.getPassword());
+			new babyfon.Message(this).send(this.getString(R.string.BABYFON_MSG_SYSTEM_REJOIN) + ";" + mSharedPrefs.getHostAddress() + ";"
+					+ mSharedPrefs.getPassword());
 			if (mSharedPrefs.getDeviceMode() == 0) {
 				mModuleHandler.registerBattery();
 				if (mSharedPrefs.getForwardingSMS() || mSharedPrefs.getForwardingSMSInfo()) {
@@ -280,15 +282,15 @@ public class MainActivity extends ActionBarActivity {
 		if (mDrawerToggle.onOptionsItemSelected(item)) {
 			return true;
 		}
-//		// Handle action bar actions click
-//		switch (item.getItemId()) {
-//		case R.id.action_settings:
-//			Intent intent = new Intent(getBaseContext(), SettingsActivity.class);
-//			startActivity(intent);
-//			return true;
-//		default:
-			return super.onOptionsItemSelected(item);
-//		}
+		// // Handle action bar actions click
+		// switch (item.getItemId()) {
+		// case R.id.action_settings:
+		// Intent intent = new Intent(getBaseContext(), SettingsActivity.class);
+		// startActivity(intent);
+		// return true;
+		// default:
+		return super.onOptionsItemSelected(item);
+		// }
 	}
 
 	public Fragment getFragmentById(String id) {
@@ -430,8 +432,7 @@ public class MainActivity extends ActionBarActivity {
 	}
 
 	/**
-	 * When using the ActionBarDrawerToggle, you must call it during
-	 * onPostCreate() and onConfigurationChanged()...
+	 * When using the ActionBarDrawerToggle, you must call it during onPostCreate() and onConfigurationChanged()...
 	 */
 
 	@Override

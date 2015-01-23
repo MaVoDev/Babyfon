@@ -1,6 +1,7 @@
 package babyfon.view.fragment.setup;
 
 import babyfon.Generator;
+import babyfon.audio.AudioRecorder;
 import babyfon.connectivity.bluetooth.BluetoothConnection;
 import babyfon.init.R;
 import babyfon.performance.Sound;
@@ -88,6 +89,10 @@ public class SetupCompleteBabyModeFragment extends Fragment {
 		if (mSharedPrefs.getConnectivityTypeTemp() == 1) {
 			MainActivity.mConnection = new BluetoothConnection(mContext);
 			MainActivity.mConnection.startServer();
+
+			MainActivity.mAudioRecorder = new AudioRecorder(MainActivity.mConnection);
+			MainActivity.mAudioRecorder.startRecording();
+
 		} else if (mSharedPrefs.getConnectivityTypeTemp() == 2) {
 			mModuleHandler.startTCPReceiver();
 			mModuleHandler.startUDPReceiver();

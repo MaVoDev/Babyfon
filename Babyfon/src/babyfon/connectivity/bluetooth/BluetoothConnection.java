@@ -45,7 +45,8 @@ public class BluetoothConnection implements ConnectionInterface {
 				Toast.makeText(context, "DISCOVERY FINISHED", Toast.LENGTH_LONG).show();
 				mBtDiscovering = false;
 
-				mOnSearchStatusChangedListener.onSearchStatusChanged(false);
+				if (mOnSearchStatusChangedListener != null)
+					mOnSearchStatusChangedListener.onSearchStatusChanged(false);
 			}
 		}
 	};
@@ -107,7 +108,8 @@ public class BluetoothConnection implements ConnectionInterface {
 			Log.i(TAG, "STARTING BLUETOOTH DISCOVERY...");
 			boolean searching = mBluetoothAdapter.startDiscovery();
 
-			mOnSearchStatusChangedListener.onSearchStatusChanged(searching);
+			if (mOnSearchStatusChangedListener != null)
+				mOnSearchStatusChangedListener.onSearchStatusChanged(searching);
 
 		}
 	}
@@ -141,8 +143,20 @@ public class BluetoothConnection implements ConnectionInterface {
 	}
 
 	@Override
-	public void closeConnection() {
+	public void stopConnection() {
 		// TODO Disconnect Zeug
+		if (mBluetoothConnectionThread != null)
+			mBluetoothConnectionThread.stopBT();
+		mBluetoothConnectionThread = null;
+	}
+
+	@Override
+	public void sendMessage(String msg) {
+		if (mBluetoothConnectionThread != null) {
+			mBluetoothConnectionThread.sendData(msg.getBytes());
+		} else {
+			Log.i(TAG, "No Message sent. Outstream is null!");
+		}
 	}
 
 	@Override
@@ -158,13 +172,13 @@ public class BluetoothConnection implements ConnectionInterface {
 			// TODO: SO ANPASSEN DASS ES AUF HUAWEI NICHT BLOCKIERT
 
 			// Array der art Array[TYPE, DatenByte_1, DatenByte_2, ..., DatenByte_N) erzeugen...
-//			byte[] sendDataPackage = new byte[data.length + 1];
-//			System.arraycopy(data, 0, sendDataPackage, 1, data.length);
-//			sendDataPackage[0] = type;
+			// byte[] sendDataPackage = new byte[data.length + 1];
+			// System.arraycopy(data, 0, sendDataPackage, 1, data.length);
+			// sendDataPackage[0] = type;
 
-//			mBluetoothConnectionThread.sendData(sendDataPackage);
+			// mBluetoothConnectionThread.sendData(sendDataPackage);
 
-			 mBluetoothConnectionThread.sendData(data);
+			mBluetoothConnectionThread.sendData(data);
 
 		} else {
 			Log.i(TAG, "No Message sent. Outstream is null!");

@@ -1,7 +1,5 @@
 package babyfon.connectivity.bluetooth;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
 import java.io.IOException;
 import java.util.UUID;
 
@@ -9,6 +7,7 @@ import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
 import android.util.Log;
+import babyfon.connectivity.ConnectionInterface.OnConnnectedListener;
 
 public class BluetoothClientThread extends BluetoothConnectionThread {
 	private static final String TAG = BluetoothClientThread.class.getCanonicalName();
@@ -73,7 +72,10 @@ public class BluetoothClientThread extends BluetoothConnectionThread {
 
 			startListening();
 
-			mBTConnection.getOnConnnectedListener().onConnectedListener(mSocket.getRemoteDevice().getName());
+			OnConnnectedListener listener = mBTConnection.getOnConnnectedListener();
+			if (listener != null)
+				listener.onConnectedListener(mSocket.getRemoteDevice().getName());
+
 		} catch (IOException e) {
 			e.printStackTrace();
 			Log.e(TAG, "Error during Connection: " + e.getMessage());
