@@ -4,9 +4,29 @@ import java.net.SocketException;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 
-import babyfon.Message;
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.graphics.Typeface;
+import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
+import android.text.InputFilter;
+import android.text.method.DigitsKeyListener;
+import android.util.Log;
+import android.view.KeyEvent;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ListView;
+import android.widget.TextView;
 import babyfon.adapter.DeviceListAdapter;
-import babyfon.connectivity.ConnectionInterface;
 import babyfon.connectivity.ConnectionInterface.OnConnnectedListener;
 import babyfon.connectivity.bluetooth.BluetoothConnection;
 import babyfon.connectivity.bluetooth.BluetoothListAdapter;
@@ -20,27 +40,6 @@ import babyfon.settings.SharedPrefs;
 import babyfon.view.activity.MainActivity;
 import babyfon.view.fragment.BabyMonitorFragment;
 import babyfon.view.fragment.OverviewFragment;
-import android.app.AlertDialog;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.content.Context;
-import android.content.DialogInterface;
-import android.graphics.Typeface;
-import android.os.Bundle;
-import android.text.InputFilter;
-import android.text.method.DigitsKeyListener;
-import android.util.Log;
-import android.view.KeyEvent;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.view.View.OnClickListener;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ListView;
-import android.widget.TextView;
 
 public class SetupSearchDevicesFragment extends Fragment {
 
@@ -171,8 +170,9 @@ public class SetupSearchDevicesFragment extends Fragment {
 		btnBackward.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				mFragmentManager.beginTransaction().replace(R.id.frame_container, new SetupConnectionFragment(mContext), null)
-						.addToBackStack(null).commit();
+				FragmentTransaction ft = mFragmentManager.beginTransaction();
+				ft.setCustomAnimations(R.anim.anim_slide_in_right, R.anim.anim_slide_out_right);
+				ft.replace(R.id.frame_container, new SetupConnectionFragment(mContext), null).addToBackStack(null).commit();
 			}
 		});
 
