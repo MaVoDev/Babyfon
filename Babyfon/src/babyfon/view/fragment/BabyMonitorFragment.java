@@ -3,16 +3,12 @@ package babyfon.view.fragment;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import babyfon.Message;
-import babyfon.init.R;
-import babyfon.settings.ModuleHandler;
-import babyfon.settings.SharedPrefs;
 import android.app.AlertDialog;
-import android.support.v4.app.Fragment;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,8 +16,14 @@ import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
-import android.widget.Switch;
 import android.widget.TextView;
+import babyfon.Message;
+import babyfon.audio.AudioDetection;
+import babyfon.connectivity.ConnectionInterface.OnReceiveDataListener;
+import babyfon.init.R;
+import babyfon.settings.ModuleHandler;
+import babyfon.settings.SharedPrefs;
+import babyfon.view.activity.MainActivity;
 
 public class BabyMonitorFragment extends Fragment {
 
@@ -31,8 +33,6 @@ public class BabyMonitorFragment extends Fragment {
 	private ImageView batteryEdit;
 	private ImageView baby;
 	private ProgressBar noiseLevel;
-//	private Switch hearEdit;
-//	private Switch talkEdit;
 	private CompoundButton hearEdit;
 	private CompoundButton talkEdit;
 	private TextView remoteText;
@@ -46,8 +46,7 @@ public class BabyMonitorFragment extends Fragment {
 	private TextView noiseText;
 	private TextView title;
 
-	private int batteryLevelInt;
-	private String batteryLevelString;
+	private int batteryLevel;
 
 	private ModuleHandler mModuleHandler;
 	private SharedPrefs mSharedPrefs;
@@ -64,11 +63,6 @@ public class BabyMonitorFragment extends Fragment {
 
 		this.mContext = mContext;
 	}
-
-	// public void setBatteryLevel(String batteryLevel) {
-	// this.batteryLevel = batteryLevel;
-	// updateUI();
-	// }
 
 	public void updateUI() {
 		if (mSharedPrefs.isRemoteOnline()) {
@@ -96,37 +90,39 @@ public class BabyMonitorFragment extends Fragment {
 
 		// TODO hier kommt die Abfrage für den Noise State zur Progressbar rein
 
-		if (batteryEdit != null) {
-			if (batteryState != null) {
-				if (mSharedPrefs.isRemoteOnline()) {
+		if (mSharedPrefs.getRemoteAddress() != null) {
+			if (batteryEdit != null) {
+				if (batteryState != null) {
+					if (mSharedPrefs.isRemoteOnline()) {
 
-					batteryLevelString = mSharedPrefs.getBatteryLevel();
+						batteryLevel = mSharedPrefs.getBatteryLevel();
 
-					if (batteryLevelString != null) {
-						batteryLevelInt = Integer.parseInt(batteryLevelString);
-						if (batteryLevelInt > 75) {
-							batteryEdit.setImageResource(R.drawable.batt100);
-						} else if (batteryLevelInt > 50) {
-							batteryEdit.setImageResource(R.drawable.batt75);
-						} else if (batteryLevelInt > 25) {
-							batteryEdit.setImageResource(R.drawable.batt45);
-						} else if (batteryLevelInt > 5) {
-							batteryEdit.setImageResource(R.drawable.batt15);
+						if (batteryLevel != -1) {
+							if (batteryLevel > 75) {
+								batteryEdit.setImageResource(R.drawable.batt100);
+							} else if (batteryLevel > 50) {
+								batteryEdit.setImageResource(R.drawable.batt75);
+							} else if (batteryLevel > 25) {
+								batteryEdit.setImageResource(R.drawable.batt45);
+							} else if (batteryLevel > 5) {
+								batteryEdit.setImageResource(R.drawable.batt15);
+							} else {
+								batteryEdit.setImageResource(R.drawable.batt00);
+							}
+							batteryState.setText(batteryLevel + "%");
 						} else {
+							batteryState.setText("n/a");
 							batteryEdit.setImageResource(R.drawable.batt00);
 						}
-						batteryState.setText(batteryLevelString + "%");
 					} else {
-						batteryLevelString = "n/a";
+						batteryState.setText("n/a");
 						batteryEdit.setImageResource(R.drawable.batt00);
 					}
-				} else {
-					batteryLevelString = "n/a";
-					batteryEdit.setImageResource(R.drawable.batt00);
+					batteryState.setText(batteryLevel + "%");
 				}
-				batteryState.setText(batteryLevelString + "%");
 			}
 		} else {
+			batteryState.setText("n/a");
 		}
 
 		hearText.setText(mSharedPrefs.getName() + " zuhören");
@@ -158,10 +154,10 @@ public class BabyMonitorFragment extends Fragment {
 		noiseLevel = (ProgressBar) view.findViewById(R.id.babymonitor_edit_noise_level);
 
 		// Initialize Switchen
-//		hearEdit = (Switch) view.findViewById(R.id.babymonitor_hear_edit);
+		// hearEdit = (Switch) view.findViewById(R.id.babymonitor_hear_edit);
 		hearEdit = (CompoundButton) view.findViewById(R.id.babymonitor_hear_edit);
 		hearEdit.setTypeface(mTypeface_n);
-//		talkEdit = (Switch) view.findViewById(R.id.babymonitor_talk_edit);
+		// talkEdit = (Switch) view.findViewById(R.id.babymonitor_talk_edit);
 		talkEdit = (CompoundButton) view.findViewById(R.id.babymonitor_talk_edit);
 		talkEdit.setTypeface(mTypeface_n);
 
@@ -216,29 +212,26 @@ public class BabyMonitorFragment extends Fragment {
 		kickRemote.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				new AlertDialog.Builder(getActivity())
-						.setTitle(mContext.getString(R.string.dialog_title_kick_remote))
+				new AlertDialog.Builder(getActivity()).setTitle(mContext.getString(R.string.dialog_title_kick_remote))
 						.setMessage(mContext.getString(R.string.dialog_message_kick_remote))
 						.setNegativeButton(mContext.getString(R.string.dialog_button_no), null)
-						.setPositiveButton(mContext.getString(R.string.dialog_button_yes),
-								new DialogInterface.OnClickListener() {
-									@Override
-									public void onClick(DialogInterface dialog, int id) {
-										mModuleHandler.stopRemoteCheck();
+						.setPositiveButton(mContext.getString(R.string.dialog_button_yes), new DialogInterface.OnClickListener() {
+							@Override
+							public void onClick(DialogInterface dialog, int id) {
+								mModuleHandler.stopRemoteCheck();
 
-										mSharedPrefs.setRemoteAddress(null);
-										mSharedPrefs.setRemoteName(null);
-										mSharedPrefs.setRemoteOnlineState(false);
+								mSharedPrefs.setRemoteAddress(null);
+								mSharedPrefs.setRemoteName(null);
+								mSharedPrefs.setRemoteOnlineState(false);
 
-										if (mSharedPrefs.getForwardingSMS() || mSharedPrefs.getForwardingSMSInfo()) {
-											mModuleHandler.unregisterSMS();
-										}
+								if (mSharedPrefs.getForwardingSMS() || mSharedPrefs.getForwardingSMSInfo()) {
+									mModuleHandler.unregisterSMS();
+								}
 
-										new Message(mContext).send(mContext
-												.getString(R.string.BABYFON_MSG_SYSTEM_DISCONNECTED));
-										updateUI();
-									}
-								}).create().show();
+								new Message(mContext).send(mContext.getString(R.string.BABYFON_MSG_SYSTEM_DISCONNECTED));
+								updateUI();
+							}
+						}).create().show();
 			}
 		});
 
@@ -275,6 +268,18 @@ public class BabyMonitorFragment extends Fragment {
 		return view;
 	}
 
+	protected void updateVolume(final int calculateVolume) {
+
+		getActivity().runOnUiThread(new Runnable() {
+
+			@Override
+			public void run() {
+				noiseLevel.setProgress(calculateVolume);
+			}
+
+		});
+	}
+
 	public void startUiUpdateThread() {
 		if (timer == null) {
 			timer = new Timer();
@@ -307,6 +312,18 @@ public class BabyMonitorFragment extends Fragment {
 			}
 
 		}
+
+		if (MainActivity.mConnection != null)
+			MainActivity.mConnection.setOnReceiveDataListener(new OnReceiveDataListener() {
+
+				@Override
+				public void onReceiveDataListener(byte[] bData, byte type, int bytesRead) {
+					if (type == 0)
+						; // String empfangen
+					else
+						updateVolume(AudioDetection.calculateVolume(bData, bytesRead));
+				}
+			});
 	}
 
 	@Override

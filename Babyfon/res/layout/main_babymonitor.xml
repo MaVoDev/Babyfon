@@ -32,6 +32,7 @@
 
                 <TextView
                     android:id="@+id/babymonitor_text_remote"
+                    style="@style/text_normal"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/babymonitor_connected_device"
@@ -53,6 +54,7 @@
 
                     <TextView
                         android:id="@+id/babymonitor_remote"
+                        style="@style/text_normal"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content" />
                 </LinearLayout>
@@ -87,6 +89,7 @@
 
                 <TextView
                     android:id="@+id/babymonitor_text_battery"
+                    style="@style/text_normal"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/babymonitor_text_battery"
@@ -100,6 +103,7 @@
 
                     <TextView
                         android:id="@+id/babymonitor_battery_state"
+                        style="@style/text_normal"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content" />
                 </LinearLayout>
@@ -162,6 +166,7 @@
 
                 <TextView
                     android:id="@+id/babymonitor_text_noise_level"
+                    style="@style/text_normal"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/babymonitor_text_noise"
@@ -202,6 +207,7 @@
 
                 <TextView
                     android:id="@+id/babymonitor_text_hear"
+                    style="@style/text_normal"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textStyle="bold" />
@@ -214,6 +220,7 @@
 
                     <TextView
                         android:id="@+id/babymonitor_hear_state"
+                        style="@style/text_normal"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content" />
                 </LinearLayout>
@@ -262,6 +269,7 @@
 
                 <TextView
                     android:id="@+id/babymonitor_text_talk"
+                    style="@style/text_normal"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textStyle="bold" />
@@ -274,6 +282,7 @@
 
                     <TextView
                         android:id="@+id/babymonitor_talk_state"
+                        style="@style/text_normal"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content" />
                 </LinearLayout>

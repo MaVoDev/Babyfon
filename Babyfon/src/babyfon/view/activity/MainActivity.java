@@ -28,6 +28,8 @@ import android.widget.AdapterView;
 import android.widget.FrameLayout;
 import android.widget.ListView;
 import babyfon.adapter.NavigationDrawerListAdapter;
+import babyfon.audio.AudioRecorder;
+import babyfon.connectivity.ConnectionInterface;
 import babyfon.connectivity.sms.SMSReceiver;
 import babyfon.connectivity.wifi.TCPReceiver;
 import babyfon.connectivity.wifi.UDPReceiver;
@@ -56,6 +58,9 @@ public class MainActivity extends ActionBarActivity {
 	public static UDPReceiver mUDPReceiver;
 	public static SMSReceiver mSmsReceiver;
 	public static ConnectivityStateCheck mConnectivityStateCheck;
+
+	public static AudioRecorder mAudioRecorder;
+	public static ConnectionInterface mConnection;
 
 	public static IntentFilter mIntentFilter;
 
@@ -115,6 +120,14 @@ public class MainActivity extends ActionBarActivity {
 		startNavigationDrawerUpdateThread();
 
 		displayView(0);
+
+		// enabling action bar app icon and behaving it as toggle button
+		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+		getSupportActionBar().setHomeButtonEnabled(true);
+
+		// TODO: WORKAROUND UM DRAWER ERRORS ZU FIXEN, ALTER ERSTMAL
+		// AUSKOMMENTIERT; VS!
+		mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, android.R.string.ok, android.R.string.no);
 	}
 
 	@Override
@@ -264,37 +277,20 @@ public class MainActivity extends ActionBarActivity {
 	}
 
 	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		getMenuInflater().inflate(R.menu.main, menu);
-		return true;
-	}
-
-	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		// toggle nav drawer on selecting action bar app icon/title
 		if (mDrawerToggle.onOptionsItemSelected(item)) {
 			return true;
 		}
-		// Handle action bar actions click
-		switch (item.getItemId()) {
-		case R.id.action_settings:
-			Intent intent = new Intent(getBaseContext(), SettingsActivity.class);
-			startActivity(intent);
-			return true;
-		default:
-			return super.onOptionsItemSelected(item);
-		}
-	}
-
-	/* *
-	 * Called when invalidateOptionsMenu() is triggered
-	 */
-	@Override
-	public boolean onPrepareOptionsMenu(Menu menu) {
-		// if nav drawer is opened, hide the action items
-		boolean drawerOpen = mDrawerLayout.isDrawerOpen(mDrawerList);
-		menu.findItem(R.id.action_settings).setVisible(!drawerOpen);
-		return super.onPrepareOptionsMenu(menu);
+		// // Handle action bar actions click
+		// switch (item.getItemId()) {
+		// case R.id.action_settings:
+		// Intent intent = new Intent(getBaseContext(), SettingsActivity.class);
+		// startActivity(intent);
+		// return true;
+		// default:
+		return super.onOptionsItemSelected(item);
+		// }
 	}
 
 	public Fragment getFragmentById(String id) {
@@ -333,6 +329,9 @@ public class MainActivity extends ActionBarActivity {
 				// No mode
 				fragment = new SetupStartFragment(this);
 			}
+		} else if (id.equals("Settings")) {
+			Intent intent = new Intent(getBaseContext(), SettingsActivity.class);
+			startActivity(intent);
 		}
 
 		mFragmentMap.put(id, fragment);
@@ -360,14 +359,26 @@ public class MainActivity extends ActionBarActivity {
 			if (mSharedPrefs.getDeviceMode() == -1) {
 				id = "SetupFragment";
 			}
+
 			if (mSharedPrefs.getDeviceMode() == 0) {
 				id = "OverviewFragment";
 			}
 			if (mSharedPrefs.getDeviceMode() == 1) {
 				id = "BabymonitorFragment";
 			}
+			// TODO TEST VS. WENN FERTIG RAUSNEHMEN
+			// if (mSharedPrefs.getDeviceMode() == 1) {
+			// id = "OverviewFragment";
+			// }
+			// if (mSharedPrefs.getDeviceMode() == 0) {
+			// id = "BabymonitorFragment";
+			// }
+
 			break;
 		case 1:
+			if (mSharedPrefs.getDeviceMode() == -1) {
+				id = "Settings";
+			}
 			if (mSharedPrefs.getDeviceMode() == 0) {
 				loadStoredSetupOptions();
 				id = "SetupFragment";
@@ -377,9 +388,17 @@ public class MainActivity extends ActionBarActivity {
 			}
 			break;
 		case 2:
+			if (mSharedPrefs.getDeviceMode() == 0) {
+				id = "Settings";
+			}
 			if (mSharedPrefs.getDeviceMode() == 1) {
 				loadStoredSetupOptions();
 				id = "SetupFragment";
+			}
+			break;
+		case 3:
+			if (mSharedPrefs.getDeviceMode() == 1) {
+				id = "Settings";
 			}
 			break;
 
@@ -460,6 +479,8 @@ public class MainActivity extends ActionBarActivity {
 			items.add(new NavigationDrawerItemModel(navMenuTitles[0], navMenuIcons.getResourceId(0, -1)));
 			// Listenelement: Einrichtungsassistent
 			items.add(new NavigationDrawerItemModel(navMenuTitles[1], navMenuIcons.getResourceId(1, -1)));
+			// Listenelement: Einstellungen
+			items.add(new NavigationDrawerItemModel(navMenuTitles[2], navMenuIcons.getResourceId(2, -1)));
 		} else if (mSharedPrefs.getDeviceMode() == 1) {
 			// Listenelement: Babymonitor
 			items.add(new NavigationDrawerItemModel(navMenuTitles[0], navMenuIcons.getResourceId(0, -1)));
@@ -467,9 +488,13 @@ public class MainActivity extends ActionBarActivity {
 			items.add(new NavigationDrawerItemModel(navMenuTitles[1], navMenuIcons.getResourceId(1, -1), true, "0"));
 			// Listenelement: Einrichtungsassistent
 			items.add(new NavigationDrawerItemModel(navMenuTitles[2], navMenuIcons.getResourceId(2, -1)));
+			// Listenelement: Einstellungen
+			items.add(new NavigationDrawerItemModel(navMenuTitles[3], navMenuIcons.getResourceId(3, -1)));
 		} else {
 			// Listenelement: Einrichtungsassistent
 			items.add(new NavigationDrawerItemModel(navMenuTitles[0], navMenuIcons.getResourceId(0, -1)));
+			// Listenelement: Einstellungen
+			items.add(new NavigationDrawerItemModel(navMenuTitles[1], navMenuIcons.getResourceId(1, -1)));
 		}
 
 		// Recycle the typed array
@@ -481,15 +506,9 @@ public class MainActivity extends ActionBarActivity {
 		adapter = new NavigationDrawerListAdapter(getApplicationContext(), items);
 		mDrawerList.setAdapter(adapter);
 
-		// enabling action bar app icon and behaving it as toggle button
-		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-		getSupportActionBar().setHomeButtonEnabled(true);
-
-		// TODO: WORKAROUND UM DRAWER ERRORS ZU FIXEN, ALTER ERSTMAL AUSKOMMENTIERT; VS!
-		mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, android.R.string.ok, android.R.string.no);
-
 		// Drawer Layout, Drawer Icon, Drawer Name (Drawer open, close)
-		// mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, R.drawable.ic_drawer, R.string.app_name, R.string.app_name) {
+		// mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout,
+		// R.drawable.ic_drawer, R.string.app_name, R.string.app_name) {
 		// public void onDrawerClosed(View view) {
 		// getActionBar().setTitle(appTitle);
 		// // calling onPrepareOptionsMenu() to show action bar icons

@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import babyfon.Message;
 import babyfon.adapter.DeviceListAdapter;
 import babyfon.connectivity.ConnectionInterface;
+import babyfon.connectivity.ConnectionInterface.OnConnnectedListener;
 import babyfon.connectivity.bluetooth.BluetoothConnection;
 import babyfon.connectivity.bluetooth.BluetoothListAdapter;
 import babyfon.connectivity.wifi.TCPSender;
@@ -59,8 +60,6 @@ public class SetupSearchDevicesFragment extends Fragment {
 
 	private static Context mContext;
 
-	private static ConnectionInterface mConnection;
-
 	private static final String TAG = SetupSearchDevicesFragment.class.getCanonicalName();
 
 	// Constructor
@@ -101,11 +100,13 @@ public class SetupSearchDevicesFragment extends Fragment {
 
 				Log.d(TAG, "Selected item: " + deviceName + " (" + deviceIP + ")");
 
+				// Bluetooth erstmal ausgelagert
+				// if (mSharedPrefs.getConnectivityTypeTemp() == 1) {
+				// MainActivity.mConnection.connectToDeviceFromList(position);
+				// }
 				if (mSharedPrefs.getConnectivityTypeTemp() == 2) {
 					mSharedPrefs.setRemoteAddressTemp(deviceIP);
 					mSharedPrefs.setRemoteName(deviceName);
-				} else {
-					// Bluetooth
 				}
 
 				openAuthDialog(deviceName, deviceIP);
@@ -170,8 +171,7 @@ public class SetupSearchDevicesFragment extends Fragment {
 		btnBackward.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				mFragmentManager.beginTransaction()
-						.replace(R.id.frame_container, new SetupConnectionFragment(mContext), null)
+				mFragmentManager.beginTransaction().replace(R.id.frame_container, new SetupConnectionFragment(mContext), null)
 						.addToBackStack(null).commit();
 			}
 		});
@@ -200,37 +200,30 @@ public class SetupSearchDevicesFragment extends Fragment {
 
 				switch (keyCode) {
 				case KeyEvent.KEYCODE_BACK:
-					new AlertDialog.Builder(getActivity())
-							.setTitle(mContext.getString(R.string.dialog_title_cancel_setup))
+					new AlertDialog.Builder(getActivity()).setTitle(mContext.getString(R.string.dialog_title_cancel_setup))
 							.setMessage(mContext.getString(R.string.dialog_message_cancel_setup))
 							.setNegativeButton(mContext.getString(R.string.dialog_button_no), null)
-							.setPositiveButton(mContext.getString(R.string.dialog_button_yes),
-									new DialogInterface.OnClickListener() {
-										@Override
-										public void onClick(DialogInterface dialog, int id) {
-											if (mSharedPrefs.getConnectivityType() != 2) {
-												mModuleHandler.stopTCPReceiver();
-											}
-											if (mSharedPrefs.getDeviceMode() == 0) {
-												mFragmentManager
-														.beginTransaction()
-														.replace(R.id.frame_container, new OverviewFragment(mContext),
-																null).addToBackStack(null).commit();
-											} else if (mSharedPrefs.getDeviceMode() == 1) {
-												mFragmentManager
-														.beginTransaction()
-														.replace(R.id.frame_container,
-																new BabyMonitorFragment(mContext), null)
-														.addToBackStack(null).commit();
-											} else {
-												mFragmentManager
-														.beginTransaction()
-														.replace(R.id.frame_container,
-																new SetupStartFragment(mContext), null)
-														.addToBackStack(null).commit();
-											}
-										}
-									}).create().show();
+							.setPositiveButton(mContext.getString(R.string.dialog_button_yes), new DialogInterface.OnClickListener() {
+								@Override
+								public void onClick(DialogInterface dialog, int id) {
+									if (mSharedPrefs.getConnectivityType() != 2) {
+										mModuleHandler.stopTCPReceiver();
+									}
+									if (mSharedPrefs.getDeviceMode() == 0) {
+										mFragmentManager.beginTransaction()
+												.replace(R.id.frame_container, new OverviewFragment(mContext), null).addToBackStack(null)
+												.commit();
+									} else if (mSharedPrefs.getDeviceMode() == 1) {
+										mFragmentManager.beginTransaction()
+												.replace(R.id.frame_container, new BabyMonitorFragment(mContext), null)
+												.addToBackStack(null).commit();
+									} else {
+										mFragmentManager.beginTransaction()
+												.replace(R.id.frame_container, new SetupStartFragment(mContext), null).addToBackStack(null)
+												.commit();
+									}
+								}
+							}).create().show();
 					break;
 				}
 				return true;
@@ -239,8 +232,11 @@ public class SetupSearchDevicesFragment extends Fragment {
 	}
 
 	public void refreshDeviceList() {
-		if (mSharedPrefs.getConnectivityTypeTemp() == 2) {
-			devices.clear();
+		devices.clear();
+
+		if (mSharedPrefs.getConnectivityTypeTemp() == 1) {
+			MainActivity.mConnection.searchDevices();
+		} else if (mSharedPrefs.getConnectivityTypeTemp() == 2) {
 			updateList();
 			initViewBWifi();
 		}
@@ -248,9 +244,30 @@ public class SetupSearchDevicesFragment extends Fragment {
 
 	public void initViewBluetooth() {
 		mModuleHandler.stopTCPReceiver();
+
 		BluetoothListAdapter deviceListAdapter = new BluetoothListAdapter(mContext, R.layout.bluetooth_row_element);
-		mConnection = new BluetoothConnection(mContext, deviceListAdapter);
+		MainActivity.mConnection = new BluetoothConnection(mContext);
+
+		// Setup ListView Adapter
 		listViewDevices.setAdapter(deviceListAdapter);
+
+		listViewDevices.setOnItemClickListener(new OnItemClickListener() {
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+				MainActivity.mConnection.connectToDeviceFromList(position);
+			}
+		});
+
+		MainActivity.mConnection.setOnConnnectedListener(new OnConnnectedListener() {
+			@Override
+			public void onConnectedListener(String deviceName) {
+				// Verbunden also auf die Abschlussseite wechseln
+				getFragmentManager().beginTransaction().replace(R.id.frame_container, new SetupCompleteParentsModeFragment(mContext), null)
+						.addToBackStack(null).commit();
+			}
+		});
+
+		MainActivity.mConnection.startClient(deviceListAdapter);
 	}
 
 	public void initViewBWifi() {
@@ -311,8 +328,8 @@ public class SetupSearchDevicesFragment extends Fragment {
 							e.printStackTrace();
 						}
 						new TCPSender(mContext).sendMessage(mSharedPrefs.getRemoteAddressTemp(),
-								mContext.getString(R.string.BABYFON_MSG_AUTH_REQ) + ";" + password + ";" + localIP
-										+ ";" + android.os.Build.MODEL);
+								mContext.getString(R.string.BABYFON_MSG_AUTH_REQ) + ";" + password + ";" + localIP + ";"
+										+ android.os.Build.MODEL);
 					}
 				});
 

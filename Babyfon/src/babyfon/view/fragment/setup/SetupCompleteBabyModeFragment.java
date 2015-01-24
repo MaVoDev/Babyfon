@@ -1,10 +1,13 @@
 package babyfon.view.fragment.setup;
 
 import babyfon.Generator;
+import babyfon.audio.AudioRecorder;
+import babyfon.connectivity.bluetooth.BluetoothConnection;
 import babyfon.init.R;
 import babyfon.performance.Sound;
 import babyfon.settings.ModuleHandler;
 import babyfon.settings.SharedPrefs;
+import babyfon.view.activity.MainActivity;
 import babyfon.view.fragment.OverviewFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -82,7 +85,15 @@ public class SetupCompleteBabyModeFragment extends Fragment {
 	}
 
 	public void handleModules() {
-		if (mSharedPrefs.getConnectivityTypeTemp() == 2) {
+
+		if (mSharedPrefs.getConnectivityTypeTemp() == 1) {
+			MainActivity.mConnection = new BluetoothConnection(mContext);
+			MainActivity.mConnection.startServer();
+
+			MainActivity.mAudioRecorder = new AudioRecorder(MainActivity.mConnection);
+			MainActivity.mAudioRecorder.startRecording();
+
+		} else if (mSharedPrefs.getConnectivityTypeTemp() == 2) {
 			mModuleHandler.startTCPReceiver();
 			mModuleHandler.startUDPReceiver();
 		} else {
@@ -131,9 +142,8 @@ public class SetupCompleteBabyModeFragment extends Fragment {
 			@Override
 			public void onClick(View v) {
 
-				mFragmentManager.beginTransaction()
-						.replace(R.id.frame_container, new OverviewFragment(mContext), null).addToBackStack(null)
-						.commit();
+				mFragmentManager.beginTransaction().replace(R.id.frame_container, new OverviewFragment(mContext), null)
+						.addToBackStack(null).commit();
 			}
 		});
 

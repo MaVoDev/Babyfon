@@ -2,7 +2,6 @@ ToDo:
 =============================================================================================================
 Interface/Navigation:
 - Mikrofonsensibilität einstellen können im Babymonitor
-# Klingeln, Vibrieren, Anzeigen, wenn Geräusch erkannt
 
 System:
 # Service
@@ -10,7 +9,7 @@ System:
 
 Netzwerk:
 !!! Bluetooth Verbindung
-# Audiostreaming Wi-Fi
+
 !!! Audiostreaming Bluetooth
 # Beim senden die Connectivity prüfen (Typ, an/aus, verbunden/nicht verbunden, ist ein remote vorhanden) Vielleicht eine extra Klasse für den Test (Beim Setup extra prüfen)
 		Thread in der Main, checken ob die gewählte Verbindung ordnungsgemäß läuft, wenn nicht dialog zum hinweis oder aktivieren, währenddessen stop thread, nach ok wieder thread start
@@ -37,17 +36,16 @@ Bugs:
 
 Optional:
 =============================================================================================================
-- App Logo
 - Navigation Drawer schöner gestalten, mit Image über der Itemliste
 - WiFi Direct Verbindung (Wenn keine Zeit ist, rausnehmen aus der App)
 - WiFi Direct State
 - Nachrichten zwischenpuffern, die nicht versendet werden konnten(SMS, Anrufe)
 - Nachrichten anders rum sortieren
 
-
 Änderungen
 ------------------
 
-
+# Audiostreaming Wi-Fi
+# Klingeln, Vibrieren, Anzeigen, wenn Geräusch erkannt
 # Babymonitor: Signalisierungsalarm als Overlay
 # Babymonitor: Wenn Babymode deaktiviert oder Remote gekickt wird, Remote Bescheid geben. Vom Babygerät disconnecten können.

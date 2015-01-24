@@ -524,8 +524,8 @@ public class SharedPrefs {
 		 * 
 		 * @return int: battery level
 		 */
-		public String getBatteryLevel() {
-			return mSharedPreferences.getString("battery_level", "n/a");
+		public int getBatteryLevel() {
+			return mSharedPreferences.getInt("battery_level", -1);
 		}
 
 		/**
@@ -533,7 +533,7 @@ public class SharedPrefs {
 		 * 
 		 * @param int level: battery level.
 		 */
-		public void setBatteryLevel(String level) {
-			editor.putString("battery_level", level).commit();
+		public void setBatteryLevel(int level) {
+			editor.putInt("battery_level", level).commit();
 		}
 }
