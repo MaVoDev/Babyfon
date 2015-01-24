@@ -4,6 +4,7 @@ import babyfon.init.R;
 import babyfon.settings.SharedPrefs;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -81,8 +82,16 @@ public class SetupStartFragment extends Fragment {
 		btnForward.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				fragmentManager.beginTransaction().replace(R.id.frame_container, nextFragment, null)
-						.addToBackStack(null).commit();
+				// fragmentManager.beginTransaction().replace(R.id.frame_container, nextFragment, null)
+				// .addToBackStack(null).commit();
+
+				FragmentTransaction ft = fragmentManager.beginTransaction();
+
+				// TODO an API 10 anpassen
+//				ft.setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out);
+				ft.setCustomAnimations(R.anim.anim_slide_in_left, R.anim.anim_slide_out_left);
+
+				ft.replace(R.id.frame_container, nextFragment, null).addToBackStack(null).commit();
 			}
 		});
 

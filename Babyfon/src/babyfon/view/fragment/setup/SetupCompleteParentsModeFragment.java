@@ -7,6 +7,7 @@ import babyfon.settings.SharedPrefs;
 import babyfon.view.fragment.BabyMonitorFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -118,9 +119,10 @@ public class SetupCompleteParentsModeFragment extends Fragment {
 			@Override
 			public void onClick(View v) {
 
-				mFragmentManager.beginTransaction()
-						.replace(R.id.frame_container, new BabyMonitorFragment(mContext), null).addToBackStack(null)
-						.commit();
+				FragmentTransaction ft = mFragmentManager.beginTransaction();
+				// ft.setCustomAnimations(R.anim.anim_slide_in_left, R.anim.anim_slide_out_left);
+				ft.setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out);
+				ft.replace(R.id.frame_container, new BabyMonitorFragment(mContext), null).addToBackStack(null).commit();
 			}
 		});
 

@@ -23,6 +23,7 @@ import babyfon.view.fragment.OverviewFragment;
 import android.app.AlertDialog;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Typeface;
@@ -171,8 +172,9 @@ public class SetupSearchDevicesFragment extends Fragment {
 		btnBackward.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				mFragmentManager.beginTransaction().replace(R.id.frame_container, new SetupConnectionFragment(mContext), null)
-						.addToBackStack(null).commit();
+				FragmentTransaction ft = mFragmentManager.beginTransaction();
+				ft.setCustomAnimations(R.anim.anim_slide_in_right, R.anim.anim_slide_out_right);
+				ft.replace(R.id.frame_container, new SetupConnectionFragment(mContext), null).addToBackStack(null).commit();
 			}
 		});
 

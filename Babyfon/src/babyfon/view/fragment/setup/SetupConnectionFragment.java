@@ -12,6 +12,7 @@ import babyfon.view.fragment.OverviewFragment;
 import android.app.AlertDialog;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Typeface;
@@ -224,9 +225,15 @@ public class SetupConnectionFragment extends Fragment {
 			@Override
 			public void onClick(View v) {
 
-				mFragmentManager.beginTransaction()
-						.replace(R.id.frame_container, new SetupDeviceModeFragment(mContext), null)
-						.addToBackStack(null).commit();
+				// mFragmentManager.beginTransaction()
+				// .replace(R.id.frame_container, new SetupDeviceModeFragment(mContext), null)
+				// .addToBackStack(null).commit();
+
+				FragmentTransaction ft = mFragmentManager.beginTransaction();
+				// ft.setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
+				// ft.setCustomAnimations(R.anim.anim_slide_in_right, R.anim.anim_slide_out_left);
+				ft.setCustomAnimations(R.anim.anim_slide_in_right, R.anim.anim_slide_out_right);
+				ft.replace(R.id.frame_container, new SetupDeviceModeFragment(mContext), null).addToBackStack(null).commit();
 			}
 		});
 
@@ -234,8 +241,8 @@ public class SetupConnectionFragment extends Fragment {
 			@Override
 			public void onClick(View v) {
 				mSharedPrefs.setConnectivityTypeTemp(connectivityType);
-				
-				if(connectivityType == 2) {
+
+				if (connectivityType == 2) {
 					try {
 						mSharedPrefs.setHostAdress(new WifiHandler(mContext).getLocalIPv4Address());
 					} catch (SocketException e) {
@@ -245,12 +252,14 @@ public class SetupConnectionFragment extends Fragment {
 					}
 				}
 
+				FragmentTransaction ft = mFragmentManager.beginTransaction();
+//				ft.setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
+				ft.setCustomAnimations(R.anim.anim_slide_in_left, R.anim.anim_slide_out_left);
+
 				if (mSharedPrefs.getDeviceModeTemp() == 0) {
-					mFragmentManager.beginTransaction().replace(R.id.frame_container, nextFragmentBaby, null)
-							.addToBackStack(null).commit();
+					ft.replace(R.id.frame_container, nextFragmentBaby, null).addToBackStack(null).commit();
 				} else {
-					mFragmentManager.beginTransaction().replace(R.id.frame_container, nextFragmentParents, null)
-							.addToBackStack(null).commit();
+					ft.replace(R.id.frame_container, nextFragmentParents, null).addToBackStack(null).commit();
 				}
 			}
 		});
@@ -272,34 +281,27 @@ public class SetupConnectionFragment extends Fragment {
 
 				switch (keyCode) {
 				case KeyEvent.KEYCODE_BACK:
-					new AlertDialog.Builder(getActivity())
-							.setTitle(mContext.getString(R.string.dialog_title_cancel_setup))
+					new AlertDialog.Builder(getActivity()).setTitle(mContext.getString(R.string.dialog_title_cancel_setup))
 							.setMessage(mContext.getString(R.string.dialog_message_cancel_setup))
 							.setNegativeButton(mContext.getString(R.string.dialog_button_no), null)
-							.setPositiveButton(mContext.getString(R.string.dialog_button_yes),
-									new DialogInterface.OnClickListener() {
-										@Override
-										public void onClick(DialogInterface dialog, int id) {
-											if (mSharedPrefs.getDeviceMode() == 0) {
-												mFragmentManager
-														.beginTransaction()
-														.replace(R.id.frame_container, new OverviewFragment(mContext),
-																null).addToBackStack(null).commit();
-											} else if (mSharedPrefs.getDeviceMode() == 1) {
-												mFragmentManager
-														.beginTransaction()
-														.replace(R.id.frame_container,
-																new BabyMonitorFragment(mContext), null)
-														.addToBackStack(null).commit();
-											} else {
-												mFragmentManager
-														.beginTransaction()
-														.replace(R.id.frame_container,
-																new SetupStartFragment(mContext), null)
-														.addToBackStack(null).commit();
-											}
-										}
-									}).create().show();
+							.setPositiveButton(mContext.getString(R.string.dialog_button_yes), new DialogInterface.OnClickListener() {
+								@Override
+								public void onClick(DialogInterface dialog, int id) {
+									if (mSharedPrefs.getDeviceMode() == 0) {
+										mFragmentManager.beginTransaction()
+												.replace(R.id.frame_container, new OverviewFragment(mContext), null).addToBackStack(null)
+												.commit();
+									} else if (mSharedPrefs.getDeviceMode() == 1) {
+										mFragmentManager.beginTransaction()
+												.replace(R.id.frame_container, new BabyMonitorFragment(mContext), null)
+												.addToBackStack(null).commit();
+									} else {
+										mFragmentManager.beginTransaction()
+												.replace(R.id.frame_container, new SetupStartFragment(mContext), null).addToBackStack(null)
+												.commit();
+									}
+								}
+							}).create().show();
 					break;
 				}
 				return true;
