@@ -332,8 +332,8 @@ public class OverviewFragment extends Fragment {
 						switch (item) {
 						case 0:
 							mModuleHandler.unregisterSMS();
-							mSharedPrefs.setForwardingSMS(false);
 							mSharedPrefs.setForwardingSMSInfo(false);
+							mSharedPrefs.setForwardingSMS(false);
 							break;
 						case 1:
 							mModuleHandler.registerSMS();
@@ -342,8 +342,8 @@ public class OverviewFragment extends Fragment {
 							break;
 						case 2:
 							mModuleHandler.registerSMS();
-							mSharedPrefs.setForwardingSMS(true);
 							mSharedPrefs.setForwardingSMSInfo(false);
+							mSharedPrefs.setForwardingSMS(true);
 							break;
 						}
 						updateUI();
@@ -378,9 +378,11 @@ public class OverviewFragment extends Fragment {
 
 						switch (item) {
 						case 0:
+							mModuleHandler.unregisterCall();
 							mSharedPrefs.setForwardingCallInfo(false);
 							break;
 						case 1:
+							mModuleHandler.registerCall();
 							mSharedPrefs.setForwardingCallInfo(true);
 							break;
 						}

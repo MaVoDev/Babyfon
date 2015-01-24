@@ -3,7 +3,8 @@ package babyfon.settings;
 import android.content.Context;
 import android.content.IntentFilter;
 import android.util.Log;
-import babyfon.connectivity.sms.SMSReceiver;
+import babyfon.connectivity.phone.CallReceiver;
+import babyfon.connectivity.phone.SMSReceiver;
 import babyfon.connectivity.wifi.TCPReceiver;
 import babyfon.connectivity.wifi.UDPReceiver;
 import babyfon.performance.Battery;
@@ -55,19 +56,61 @@ public class ModuleHandler {
 	}
 
 	/**
+	 * Register call receiver
+	 */
+	public void registerCall() {
+		if (MainActivity.mIntentFilterCall == null) {
+			MainActivity.mIntentFilterCall = new IntentFilter();
+			MainActivity.mIntentFilterCall.addAction("android.intent.action.PHONE_STATE");
+		}
+
+		if (MainActivity.mCallReceiver == null) {
+			Log.i(TAG, "Try to register call receiver...");
+			MainActivity.mCallReceiver = new CallReceiver(mContext);
+			try {
+				mContext.registerReceiver(MainActivity.mCallReceiver, MainActivity.mIntentFilterCall);
+				Log.d(TAG, "Call receiver registered.");
+			} catch (Exception e) {
+				Log.e(TAG, "Error: Can't register call receiver.");
+			}
+		} else {
+			Log.e(TAG, "Call receiver is still registered.");
+		}
+	}
+
+	/**
+	 * Unregister call receiver
+	 */
+	public void unregisterCall() {
+		if (MainActivity.mCallReceiver != null) {
+			Log.i(TAG, "Try to unregister call receiver...");
+			try {
+				mContext.unregisterReceiver(MainActivity.mCallReceiver);
+				MainActivity.mCallReceiver = null;
+				MainActivity.mIntentFilterCall = null;
+				Log.d(TAG, "Call receiver unregistered.");
+			} catch (Exception e) {
+				Log.e(TAG, "Error: Can't unregister call receiver.");
+			}
+		} else {
+			Log.e(TAG, "Can't unregister call: The receiver wasn't registerd or has been unregisterd.");
+		}
+	}
+
+	/**
 	 * Register SMS receiver
 	 */
 	public void registerSMS() {
-		if (MainActivity.mIntentFilter == null) {
-			MainActivity.mIntentFilter = new IntentFilter();
-			MainActivity.mIntentFilter.addAction("android.provider.Telephony.SMS_RECEIVED");
+		if (MainActivity.mIntentFilterSms == null) {
+			MainActivity.mIntentFilterSms = new IntentFilter();
+			MainActivity.mIntentFilterSms.addAction("android.provider.Telephony.SMS_RECEIVED");
 		}
 
 		if (MainActivity.mSmsReceiver == null) {
 			Log.i(TAG, "Try to register sms receiver...");
 			MainActivity.mSmsReceiver = new SMSReceiver(mContext);
 			try {
-				mContext.registerReceiver(MainActivity.mSmsReceiver, MainActivity.mIntentFilter);
+				mContext.registerReceiver(MainActivity.mSmsReceiver, MainActivity.mIntentFilterSms);
 				Log.d(TAG, "SMS receiver registered.");
 			} catch (Exception e) {
 				Log.e(TAG, "Error: Can't register sms receiver.");
@@ -86,7 +129,7 @@ public class ModuleHandler {
 			try {
 				mContext.unregisterReceiver(MainActivity.mSmsReceiver);
 				MainActivity.mSmsReceiver = null;
-				MainActivity.mIntentFilter = null;
+				MainActivity.mIntentFilterSms = null;
 				Log.d(TAG, "SMS receiver unregistered.");
 			} catch (Exception e) {
 				Log.e(TAG, "Error: Can't unregister sms receiver.");
@@ -168,18 +211,18 @@ public class ModuleHandler {
 	 * Start remote checker thread
 	 */
 	public void startRemoteCheck() {
-//		if (MainActivity.mConnectivityStateCheck == null) {
-			Log.i(TAG, "Try to start remote checker thread...");
-			MainActivity.mConnectivityStateCheck = new ConnectivityStateCheck(mContext);
-			if (MainActivity.mConnectivityStateCheck.startConnectivityStateThread()) {
-				Log.d(TAG, "Remote checker thread is running.");
-			} else {
-				Log.e(TAG, "Error: Can't start remote checker thread.");
-			}
+		// if (MainActivity.mConnectivityStateCheck == null) {
+		Log.i(TAG, "Try to start remote checker thread...");
+		MainActivity.mConnectivityStateCheck = new ConnectivityStateCheck(mContext);
+		if (MainActivity.mConnectivityStateCheck.startConnectivityStateThread()) {
+			Log.d(TAG, "Remote checker thread is running.");
+		} else {
+			Log.e(TAG, "Error: Can't start remote checker thread.");
+		}
 
-//		} else {
-//			Log.e(TAG, "Remote checker thread is still running.");
-//		}
+		// } else {
+		// Log.e(TAG, "Remote checker thread is still running.");
+		// }
 	}
 
 	/**

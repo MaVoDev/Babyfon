@@ -23,7 +23,6 @@ import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
-import android.widget.Switch;
 import android.widget.TextView;
 
 public class BabyMonitorFragment extends Fragment {
@@ -91,14 +90,14 @@ public class BabyMonitorFragment extends Fragment {
 
 		// TODO hier kommt die Abfrage für den Noise State zur Progressbar rein
 
+		// update batterie state
 		if (mSharedPrefs.getRemoteAddress() != null) {
 			if (batteryEdit != null) {
 				if (batteryState != null) {
 					if (mSharedPrefs.isRemoteOnline()) {
-
 						batteryLevel = mSharedPrefs.getBatteryLevel();
 
-						if (batteryLevel != -1) {
+						if (batteryLevel > 0) {
 							if (batteryLevel > 75) {
 								batteryEdit.setImageResource(R.drawable.batt100);
 							} else if (batteryLevel > 50) {
@@ -113,20 +112,26 @@ public class BabyMonitorFragment extends Fragment {
 							batteryState.setText(batteryLevel + "%");
 						} else {
 							batteryState.setText("n/a");
-							batteryEdit.setImageResource(R.drawable.batt00);
+							batteryEdit.setImageResource(R.drawable.battna);
 						}
 					} else {
 						batteryState.setText("n/a");
-						batteryEdit.setImageResource(R.drawable.batt00);
+						batteryEdit.setImageResource(R.drawable.battna);
 					}
-					batteryState.setText(batteryLevel + "%");
+				} else {
+					batteryState.setText("n/a");
+					batteryEdit.setImageResource(R.drawable.battna);
 				}
 			}
 		} else {
 			batteryState.setText("n/a");
+			batteryEdit.setImageResource(R.drawable.battna);
 		}
 
+		//
 		hearText.setText(mSharedPrefs.getName() + " zuhören");
+
+		//
 		talkText.setText("Mit " + mSharedPrefs.getName() + " reden");
 	}
 
@@ -154,11 +159,9 @@ public class BabyMonitorFragment extends Fragment {
 		// Initialize Progressbar
 		noiseLevel = (ProgressBar) view.findViewById(R.id.babymonitor_edit_noise_level);
 
-		// Initialize Switchen
-		// hearEdit = (Switch) view.findViewById(R.id.babymonitor_hear_edit);
+		// Initialize CompoundButton
 		hearEdit = (CompoundButton) view.findViewById(R.id.babymonitor_hear_edit);
 		hearEdit.setTypeface(mTypeface_n);
-		// talkEdit = (Switch) view.findViewById(R.id.babymonitor_talk_edit);
 		talkEdit = (CompoundButton) view.findViewById(R.id.babymonitor_talk_edit);
 		talkEdit.setTypeface(mTypeface_n);
 
@@ -191,9 +194,19 @@ public class BabyMonitorFragment extends Fragment {
 		talkState = (TextView) view.findViewById(R.id.babymonitor_talk_state);
 		talkState.setTypeface(mTypeface_n);
 
-		if (talkEdit.isChecked()) {
+		if (mSharedPrefs.isHearActivated()) {
+			hearEdit.setChecked(true);
+			hearState.setText(mContext.getString(R.string.enabled));
+		} else {
+			hearEdit.setChecked(false);
+			hearState.setText(mContext.getString(R.string.disabled));
+		}
+
+		if (mSharedPrefs.isTalkActivated()) {
+			talkEdit.setChecked(true);
 			talkState.setText(mContext.getString(R.string.enabled));
 		} else {
+			talkEdit.setChecked(false);
 			talkState.setText(mContext.getString(R.string.disabled));
 		}
 
@@ -213,26 +226,29 @@ public class BabyMonitorFragment extends Fragment {
 		kickRemote.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				new AlertDialog.Builder(getActivity()).setTitle(mContext.getString(R.string.dialog_title_kick_remote))
+				new AlertDialog.Builder(getActivity())
+						.setTitle(mContext.getString(R.string.dialog_title_kick_remote))
 						.setMessage(mContext.getString(R.string.dialog_message_kick_remote))
 						.setNegativeButton(mContext.getString(R.string.dialog_button_no), null)
-						.setPositiveButton(mContext.getString(R.string.dialog_button_yes), new DialogInterface.OnClickListener() {
-							@Override
-							public void onClick(DialogInterface dialog, int id) {
-								mModuleHandler.stopRemoteCheck();
+						.setPositiveButton(mContext.getString(R.string.dialog_button_yes),
+								new DialogInterface.OnClickListener() {
+									@Override
+									public void onClick(DialogInterface dialog, int id) {
+										mModuleHandler.stopRemoteCheck();
 
-								mSharedPrefs.setRemoteAddress(null);
-								mSharedPrefs.setRemoteName(null);
-								mSharedPrefs.setRemoteOnlineState(false);
+										mSharedPrefs.setRemoteAddress(null);
+										mSharedPrefs.setRemoteName(null);
+										mSharedPrefs.setRemoteOnlineState(false);
 
-								if (mSharedPrefs.getForwardingSMS() || mSharedPrefs.getForwardingSMSInfo()) {
-									mModuleHandler.unregisterSMS();
-								}
+										if (mSharedPrefs.getForwardingSMS() || mSharedPrefs.getForwardingSMSInfo()) {
+											mModuleHandler.unregisterSMS();
+										}
 
-								new Message(mContext).send(mContext.getString(R.string.BABYFON_MSG_SYSTEM_DISCONNECTED));
-								updateUI();
-							}
-						}).create().show();
+										new Message(mContext).send(mContext
+												.getString(R.string.BABYFON_MSG_SYSTEM_DISCONNECTED));
+										updateUI();
+									}
+								}).create().show();
 			}
 		});
 
@@ -243,9 +259,11 @@ public class BabyMonitorFragment extends Fragment {
 				if (isChecked) {
 					// checked true
 					hearState.setText(mContext.getString(R.string.enabled));
+					mSharedPrefs.setHearActivated(true);
 				} else {
 					// checked false
 					hearState.setText(mContext.getString(R.string.disabled));
+					mSharedPrefs.setHearActivated(false);
 				}
 
 			}
@@ -258,9 +276,11 @@ public class BabyMonitorFragment extends Fragment {
 				if (isChecked) {
 					// checked true
 					talkState.setText(mContext.getString(R.string.enabled));
+					mSharedPrefs.setTalkActivated(true);
 				} else {
 					// checked false
 					talkState.setText(mContext.getString(R.string.disabled));
+					mSharedPrefs.setTalkActivated(false);
 				}
 
 			}

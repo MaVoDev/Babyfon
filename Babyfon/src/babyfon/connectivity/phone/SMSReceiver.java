@@ -1,12 +1,16 @@
-package babyfon.connectivity.sms;
+package babyfon.connectivity.phone;
 
 import babyfon.Message;
 import babyfon.init.R;
 import babyfon.settings.SharedPrefs;
 import android.content.BroadcastReceiver;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.ContactsContract.PhoneLookup;
 import android.telephony.SmsManager;
 import android.telephony.SmsMessage;
 import android.util.Log;
@@ -24,8 +28,6 @@ public class SMSReceiver extends BroadcastReceiver {
 	}
 
 	public SMSReceiver(Context mContext) {
-		mSharedPrefs = new SharedPrefs(mContext);
-
 		this.mContext = mContext;
 	}
 
@@ -44,21 +46,13 @@ public class SMSReceiver extends BroadcastReceiver {
 
 				for (int i = 0; i < pdusObj.length; i++) {
 					SmsMessage currentMessage = SmsMessage.createFromPdu((byte[]) pdusObj[i]);
-					String number = currentMessage.getDisplayOriginatingAddress();
+					String phoneNumber = currentMessage.getDisplayOriginatingAddress();
 					String message = currentMessage.getDisplayMessageBody();
 
-					Log.i(TAG, "Number: " + number);
+					Log.i(TAG, "Phone number: " + phoneNumber);
 					Log.i(TAG, "Message: " + message);
 
-					if (mSharedPrefs.getForwardingSMS()) {
-						new Message(mContext).send(mContext.getString(R.string.BABYFON_MSG_SMS) + ";" + number + ";"
-								+ message);
-					}
-
-					if (mSharedPrefs.getForwardingSMSInfo()) {
-						new Message(mContext).send(mContext.getString(R.string.BABYFON_MSG_SMS_INFO) + ";" + number);
-					}
-
+					new Message(mContext).sms(phoneNumber, message);
 				}
 			}
 		} catch (Exception e) {

@@ -1,31 +1,28 @@
 ToDo:
 =============================================================================================================
-Interface/Navigation:
-- Mikrofonsensibilität einstellen können im Babymonitor
+Volker:
+- Anzeige der gefundenen BT Geräte richtig anzeigen
+- Geräusch erkennen
+- Bluetooth Verbindung
+- Audiostreaming Bluetooth
 
-System:
-# Service
-!!! Geräusch erkennen
+Marcus:
+- Audiostreaming Wi-Fi
+- Klingeln, Vibrieren, Anzeigen, wenn Geräusch erkannt
+- Babymonitor: Signalisierungsalarm als Overlay
+- Babymonitor: Wenn Babymode deaktiviert oder Remote gekickt wird, Remote Bescheid geben. Vom Babygerät disconnecten können.
 
-Netzwerk:
-!!! Bluetooth Verbindung
-
-!!! Audiostreaming Bluetooth
-# Beim senden die Connectivity prüfen (Typ, an/aus, verbunden/nicht verbunden, ist ein remote vorhanden) Vielleicht eine extra Klasse für den Test (Beim Setup extra prüfen)
+Weiteres:
+- Service
+- Beim senden die Connectivity prüfen (Typ, an/aus, verbunden/nicht verbunden, ist ein remote vorhanden) Vielleicht eine extra Klasse für den Test (Beim Setup extra prüfen)
 		Thread in der Main, checken ob die gewählte Verbindung ordnungsgemäß läuft, wenn nicht dialog zum hinweis oder aktivieren, währenddessen stop thread, nach ok wieder thread start
-
-SMS/Call:
 - Anzahl der SMS im Drawer anzeigen
 - Nachrichten (Call/SMS) zwischenspeichern
-- Wenn SMS gelesen, dann nicht mehr bold und setze Zahl im Drawer runter
-- Namen von SMS Sender auslesen
-- Verpasste Anrufe anzeigen
-- Verpasste Anrufe weiterleiten
-- Call als Receiver laufen lassen
+- Uhrzeit der SMS/Call
 
 Bugs:
 =============================================================================================================
-1 Batteriestatus wird im Babymonitor nicht mehr aktualisiert. Richtig empfangen wird es. Auch die Methode wird aufgerufen. Aber anscheinend nur nach dem Setup, sonst gehts. Vll hier auch nen Thread laufen lassen
+1 Absturz, wenn Anrufweiterleitung im im Betrieb deaktiviert wird und dann ein Anruf eingeht
 2 Wenn ein Modus gewählt ist, soll SetupStartFragment übersprungen werden. Das geht zurzeit nur, wenn die App geschlossen und neu gestartet wird. Soll aber gleich nach dem beenden eines Setup-Modus geschehen.  
 3 Bluetooth: Wenn im Elternmode Bluetooth gewählt ist und die App beendet wird, gibts nen Absturz    
 4 Wenn man das Setup beendet, aktualisiert sich der NavigationDrawer nicht. Der Einrichtungsassistent bleibt selected.
@@ -33,10 +30,14 @@ Bugs:
 6 Absturz bei SMS Empfang wenn nciht das passende Fragment offen ist
 7 Beim Start der App wird die Selektierung im Drawer nicht gesetzt
 8 Remote Checker Thread richtig starten und beenden
+9 Wenn Baby Away geht, dann wird akkustand nicht auf n/a gesetzt
 
 Optional:
 =============================================================================================================
 - Navigation Drawer schöner gestalten, mit Image über der Itemliste
+- Neues Gerät aus dem babymonitor hinzufügen können
+- Wenn SMS gelesen, dann nicht mehr bold und setze Zahl im Drawer runter
+- Mikrofonsensibilität einstellen können im Babymonitor
 - WiFi Direct Verbindung (Wenn keine Zeit ist, rausnehmen aus der App)
 - WiFi Direct State
 - Nachrichten zwischenpuffern, die nicht versendet werden konnten(SMS, Anrufe)
@@ -44,8 +45,3 @@ Optional:
 
 Änderungen
 ------------------
-
-# Audiostreaming Wi-Fi
-# Klingeln, Vibrieren, Anzeigen, wenn Geräusch erkannt
-# Babymonitor: Signalisierungsalarm als Overlay
-# Babymonitor: Wenn Babymode deaktiviert oder Remote gekickt wird, Remote Bescheid geben. Vom Babygerät disconnecten können.

@@ -21,6 +21,52 @@ public class SharedPrefs {
 	}
 
 	/*
+	 * == Babymonitor =====================================
+	 */
+
+	// == Talk state ====================================
+
+	/**
+	 * Get the talk state.
+	 * 
+	 * @return Boolean: talk state
+	 */
+	public Boolean isTalkActivated() {
+		return mSharedPreferences.getBoolean("talk_activated", false);
+	}
+
+	/**
+	 * Set the talk state.
+	 * 
+	 * @param Boolean
+	 *            talk state
+	 */
+	public void setTalkActivated(Boolean state) {
+		editor.putBoolean("talk_activated", state).commit();
+	}
+
+	// == Hear state ====================================
+
+	/**
+	 * Get the hear state.
+	 * 
+	 * @return Boolean: hear state
+	 */
+	public Boolean isHearActivated() {
+		return mSharedPreferences.getBoolean("hear_activated", false);
+	}
+
+	/**
+	 * Set the hear state.
+	 * 
+	 * @param Boolean
+	 *            hear state
+	 */
+	public void setHearActivated(Boolean state) {
+		editor.putBoolean("hear_activated", state).commit();
+	}
+
+	/*
 	 * == Network settings =====================================
 	 */
 
@@ -516,24 +562,24 @@ public class SharedPrefs {
 	public void setTempMode(int mode) {
 		editor.putInt("temp_mode", mode).commit();
 	}
-	
+
 	// == Battery =================================
 
-		/**
-		 * Get the battery level.
-		 * 
-		 * @return int: battery level
-		 */
-		public int getBatteryLevel() {
-			return mSharedPreferences.getInt("battery_level", -1);
-		}
+	/**
+	 * Get the battery level.
+	 * 
+	 * @return int: battery level
+	 */
+	public int getBatteryLevel() {
+		return mSharedPreferences.getInt("battery_level", -1);
+	}
 
-		/**
-		 * Set the battery level.
-		 * 
-		 * @param int level: battery level.
-		 */
-		public void setBatteryLevel(int level) {
-			editor.putInt("battery_level", level).commit();
-		}
+	/**
+	 * Set the battery level.
+	 * 
+	 * @param int level: battery level.
+	 */
+	public void setBatteryLevel(int level) {
+		editor.putInt("battery_level", level).commit();
+	}
 }

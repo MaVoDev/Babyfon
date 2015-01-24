@@ -6,11 +6,11 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.provider.CallLog;
 
-public class CallReceiver extends CallLog {
+public class CallReceiverUpdate extends CallLog {
 
 	private Context mContext;
 
-	public CallReceiver(Context mContext) {
+	public CallReceiverUpdate(Context mContext) {
 		this.mContext = mContext;
 	}
 

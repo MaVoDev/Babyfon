@@ -3,6 +3,7 @@ package babyfon;
 import android.content.Context;
 import android.support.v4.app.FragmentManager;
 import android.widget.Toast;
+import babyfon.connectivity.phone.PhoneBookHandler;
 import babyfon.connectivity.wifi.TCPSender;
 import babyfon.init.R;
 import babyfon.performance.ConnectivityStateCheck;
@@ -18,6 +19,7 @@ public class Message {
 	private ConnectivityStateCheck mConnectivityStateCheck;
 	private ModuleHandler mModuleHandler;
 	private SharedPrefs mSharedPrefs;
+	private PhoneBookHandler mPhoneBookHandler;
 
 	private Context mContext;
 
@@ -27,8 +29,30 @@ public class Message {
 		mConnectivityStateCheck = new ConnectivityStateCheck(mContext);
 		mModuleHandler = new ModuleHandler(mContext);
 		mSharedPrefs = new SharedPrefs(mContext);
+		mPhoneBookHandler = new PhoneBookHandler(mContext);
 
 		this.mContext = mContext;
+	}
+
+	public void call(String phoneNumber) {
+		String contactName = mPhoneBookHandler.getContactName(phoneNumber);
+
+		if (mSharedPrefs.getForwardingCallInfo()) {
+			send(mContext.getString(R.string.BABYFON_MSG_CALL_INFO) + ";" + contactName + ";" + phoneNumber);
+		}
+
+	}
+
+	public void sms(String phoneNumber, String message) {
+		String contactName = mPhoneBookHandler.getContactName(phoneNumber);
+
+		if (mSharedPrefs.getForwardingSMS()) {
+			send(mContext.getString(R.string.BABYFON_MSG_SMS) + ";" + contactName + ";" + message);
+		}
+
+		if (mSharedPrefs.getForwardingSMSInfo()) {
+			send(mContext.getString(R.string.BABYFON_MSG_SMS_INFO) + ";" + contactName);
+		}
 	}
 
 	public void send(String str) {
@@ -45,27 +69,40 @@ public class Message {
 			mSharedPrefs.setBatteryLevel(Integer.parseInt(strArray[1]));
 		}
 
+		if (strArray[0].equals(mContext.getString(R.string.BABYFON_MSG_CALL_INFO))) {
+			// Call
+			final String contactName = strArray[1];
+			final String phoneNumber = strArray[2];
+
+			((MainActivity) mContext).runOnUiThread(new Runnable() {
+				@Override
+				public void run() {
+					AbsenceFragment.setNewMessage(0, contactName, phoneNumber);
+				}
+			});
+		}
+
 		if (strArray[0].equals(mContext.getString(R.string.BABYFON_MSG_SMS))) {
 			// SMS
-			final String numberName = strArray[1];
+			final String contactName = strArray[1];
 			final String message = strArray[2];
 
 			((MainActivity) mContext).runOnUiThread(new Runnable() {
 				@Override
 				public void run() {
-					AbsenceFragment.setNewMessage(1, numberName, message);
+					AbsenceFragment.setNewMessage(1, contactName, message);
 				}
 			});
 		}
 
 		if (strArray[0].equals(mContext.getString(R.string.BABYFON_MSG_SMS_INFO))) {
 			// SMS
-			final String numberName = strArray[1];
+			final String contactName = strArray[1];
 
 			((MainActivity) mContext).runOnUiThread(new Runnable() {
 				@Override
 				public void run() {
-					AbsenceFragment.setNewMessage(1, numberName, "");
+					AbsenceFragment.setNewMessage(1, contactName, "");
 					;
 				}
 			});
@@ -141,6 +178,8 @@ public class Message {
 				if (mSharedPrefs.getForwardingSMS() || mSharedPrefs.getForwardingSMSInfo()) {
 					mModuleHandler.unregisterSMS();
 				}
+			} else {
+				mSharedPrefs.setBatteryLevel(-1);
 			}
 			mSharedPrefs.setRemoteOnlineState(false);
 

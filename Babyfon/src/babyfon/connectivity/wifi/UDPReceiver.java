@@ -39,7 +39,7 @@ public class UDPReceiver {
 				while (isRunning) {
 					udpServerSocket.receive(receivePacket);
 					String incomingUDPMessage = new String(buffer, 0, buffer.length);
-					Log.i(TAG, "Incoming UDP Message: " + incomingUDPMessage);
+//					Log.i(TAG, "Incoming UDP Message: " + incomingUDPMessage);
 					String targetIP = receivePacket.getAddress() + "";
 
 					// Cut the "/" from the InetAddress value

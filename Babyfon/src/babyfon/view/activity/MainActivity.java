@@ -30,7 +30,8 @@ import android.widget.ListView;
 import babyfon.adapter.NavigationDrawerListAdapter;
 import babyfon.audio.AudioRecorder;
 import babyfon.connectivity.ConnectionInterface;
-import babyfon.connectivity.sms.SMSReceiver;
+import babyfon.connectivity.phone.CallReceiver;
+import babyfon.connectivity.phone.SMSReceiver;
 import babyfon.connectivity.wifi.TCPReceiver;
 import babyfon.connectivity.wifi.UDPReceiver;
 import babyfon.init.R;
@@ -57,12 +58,14 @@ public class MainActivity extends ActionBarActivity {
 	public static TCPReceiver mTCPReceiver;
 	public static UDPReceiver mUDPReceiver;
 	public static SMSReceiver mSmsReceiver;
+	public static CallReceiver mCallReceiver;
 	public static ConnectivityStateCheck mConnectivityStateCheck;
 
 	public static AudioRecorder mAudioRecorder;
 	public static ConnectionInterface mConnection;
 
-	public static IntentFilter mIntentFilter;
+	public static IntentFilter mIntentFilterSms;
+	public static IntentFilter mIntentFilterCall;
 
 	private ModuleHandler mModuleHandler;
 	private SharedPrefs mSharedPrefs;
@@ -82,6 +85,7 @@ public class MainActivity extends ActionBarActivity {
 	// Timer
 	private Timer timerNavigationDrawer;
 	private Timer timerConnectivityState;
+	private Timer timerCloseDrawer;
 
 	private ArrayList<NavigationDrawerItemModel> items;
 	private NavigationDrawerListAdapter adapter;
@@ -97,6 +101,12 @@ public class MainActivity extends ActionBarActivity {
 					mModuleHandler.startUDPReceiver();
 				}
 			}
+		}
+		if (mSharedPrefs.getForwardingSMS() || mSharedPrefs.getForwardingSMSInfo()) {
+			mModuleHandler.registerSMS();
+		}
+		if (mSharedPrefs.getForwardingCallInfo()) {
+			mModuleHandler.registerCall();
 		}
 	}
 
@@ -158,6 +168,9 @@ public class MainActivity extends ActionBarActivity {
 			if (mSharedPrefs.getForwardingSMS() || mSharedPrefs.getForwardingSMSInfo()) {
 				mModuleHandler.unregisterSMS();
 			}
+			if (mSharedPrefs.getForwardingCallInfo()) {
+				mModuleHandler.unregisterCall();
+			}
 		}
 
 		if (mSharedPrefs.getConnectivityType() == 2) {
@@ -179,12 +192,15 @@ public class MainActivity extends ActionBarActivity {
 		initNavigationDrawer();
 
 		if (mSharedPrefs.getRemoteAddress() != null) {
-			new babyfon.Message(this).send(this.getString(R.string.BABYFON_MSG_SYSTEM_REJOIN) + ";" + mSharedPrefs.getHostAddress() + ";"
-					+ mSharedPrefs.getPassword());
+			new babyfon.Message(this).send(this.getString(R.string.BABYFON_MSG_SYSTEM_REJOIN) + ";"
+					+ mSharedPrefs.getHostAddress() + ";" + mSharedPrefs.getPassword());
 			if (mSharedPrefs.getDeviceMode() == 0) {
 				mModuleHandler.registerBattery();
 				if (mSharedPrefs.getForwardingSMS() || mSharedPrefs.getForwardingSMSInfo()) {
 					mModuleHandler.registerSMS();
+				}
+				if (mSharedPrefs.getForwardingCallInfo()) {
+					mModuleHandler.registerCall();
 				}
 			}
 		} else {
@@ -203,6 +219,23 @@ public class MainActivity extends ActionBarActivity {
 	@Override
 	protected void onPause() {
 		super.onPause();
+
+		if (mDrawerLayout.isDrawerOpen(mDrawerList)) {
+			// Wenn sich der Navigation Drawer nicht automatisch schlieﬂen
+			// sollte
+			timerCloseDrawer = new Timer();
+			timerCloseDrawer.scheduleAtFixedRate(new TimerTask() {
+				public void run() {
+					runOnUiThread(new Runnable() {
+						public void run() {
+							mDrawerLayout.closeDrawer(mDrawerList);
+							timerCloseDrawer.cancel();
+							timerCloseDrawer = null;
+						}
+					});
+				}
+			}, 500, 1000);
+		}
 
 		if (mSharedPrefs.getRemoteAddress() != null) {
 			mModuleHandler.stopRemoteCheck();
@@ -282,15 +315,7 @@ public class MainActivity extends ActionBarActivity {
 		if (mDrawerToggle.onOptionsItemSelected(item)) {
 			return true;
 		}
-		// // Handle action bar actions click
-		// switch (item.getItemId()) {
-		// case R.id.action_settings:
-		// Intent intent = new Intent(getBaseContext(), SettingsActivity.class);
-		// startActivity(intent);
-		// return true;
-		// default:
 		return super.onOptionsItemSelected(item);
-		// }
 	}
 
 	public Fragment getFragmentById(String id) {
@@ -432,7 +457,8 @@ public class MainActivity extends ActionBarActivity {
 	}
 
 	/**
-	 * When using the ActionBarDrawerToggle, you must call it during onPostCreate() and onConfigurationChanged()...
+	 * When using the ActionBarDrawerToggle, you must call it during
+	 * onPostCreate() and onConfigurationChanged()...
 	 */
 
 	@Override

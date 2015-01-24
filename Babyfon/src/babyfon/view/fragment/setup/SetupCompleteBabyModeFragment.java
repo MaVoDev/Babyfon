@@ -86,6 +86,14 @@ public class SetupCompleteBabyModeFragment extends Fragment {
 	}
 
 	public void handleModules() {
+		
+		if(mSharedPrefs.getForwardingSMSInfoTemp() || mSharedPrefs.getForwardingSMSTemp()) {
+			mModuleHandler.registerSMS();
+		}
+		
+		if(mSharedPrefs.getForwardingCallInfoTemp()) {
+			mModuleHandler.registerCall();
+		}
 
 		if (mSharedPrefs.getConnectivityTypeTemp() == 1) {
 			MainActivity.mConnection = new BluetoothConnection(mContext);

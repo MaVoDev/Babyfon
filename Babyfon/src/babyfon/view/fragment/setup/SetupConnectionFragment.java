@@ -200,7 +200,7 @@ public class SetupConnectionFragment extends Fragment {
 		// Set Wi-Fi availability
 		radioWifi.setEnabled(isWifiAvailable);
 
-		// Set Wi-Fi Direct availability
+//		 Set Wi-Fi Direct availability
 		radioWifiDirect.setEnabled(isWifiDirectAvailable);
 
 		// Check the next available connectivity
