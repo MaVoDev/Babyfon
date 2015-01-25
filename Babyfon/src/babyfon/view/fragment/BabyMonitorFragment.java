@@ -3,19 +3,13 @@ package babyfon.view.fragment;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import babyfon.Message;
-import babyfon.audio.AudioDetection;
-import babyfon.connectivity.ConnectionInterface.OnReceiveDataListener;
-import babyfon.init.R;
-import babyfon.settings.ModuleHandler;
-import babyfon.settings.SharedPrefs;
-import babyfon.view.activity.MainActivity;
 import android.app.AlertDialog;
-import android.support.v4.app.Fragment;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,11 +17,16 @@ import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
-import android.widget.Switch;
 import android.widget.TextView;
+import babyfon.Message;
+import babyfon.init.R;
+import babyfon.settings.ModuleHandler;
+import babyfon.settings.SharedPrefs;
+import babyfon.view.activity.MainActivity;
 
 public class BabyMonitorFragment extends Fragment {
 
+	private static final String TAG = BabyMonitorFragment.class.getCanonicalName();
 	// Define UI elements
 	private ImageView kickRemote;
 	private ImageView remoteOnlineState;
@@ -56,6 +55,8 @@ public class BabyMonitorFragment extends Fragment {
 	private Timer timer;
 
 	private Context mContext;
+
+	protected boolean mFragmentActive = false;
 
 	// Constructor
 	public BabyMonitorFragment(Context mContext) {
@@ -182,8 +183,10 @@ public class BabyMonitorFragment extends Fragment {
 
 		if (hearEdit.isChecked()) {
 			hearState.setText(mContext.getString(R.string.enabled));
+			MainActivity.mPlayAudio = true;
 		} else {
 			hearState.setText(mContext.getString(R.string.disabled));
+			MainActivity.mPlayAudio = false;
 		}
 
 		talkText = (TextView) view.findViewById(R.id.babymonitor_text_talk);
@@ -243,9 +246,11 @@ public class BabyMonitorFragment extends Fragment {
 				if (isChecked) {
 					// checked true
 					hearState.setText(mContext.getString(R.string.enabled));
+					MainActivity.mPlayAudio = true;
 				} else {
 					// checked false
 					hearState.setText(mContext.getString(R.string.disabled));
+					MainActivity.mPlayAudio = false;
 				}
 
 			}
@@ -269,7 +274,10 @@ public class BabyMonitorFragment extends Fragment {
 		return view;
 	}
 
-	protected void updateVolume(final int calculateVolume) {
+	public void updateVolume(final int calculateVolume) {
+
+		if (!mFragmentActive)
+			return;
 
 		getActivity().runOnUiThread(new Runnable() {
 
@@ -298,6 +306,8 @@ public class BabyMonitorFragment extends Fragment {
 
 	@Override
 	public void onResume() {
+		Log.e(TAG, "BabyMonitor->onResume()");
+
 		super.onResume();
 
 		if (timer == null) {
@@ -314,31 +324,28 @@ public class BabyMonitorFragment extends Fragment {
 
 		}
 
-		if (MainActivity.mConnection != null)
-			MainActivity.mConnection.setOnReceiveDataListener(new OnReceiveDataListener() {
-
-				@Override
-				public void onReceiveDataListener(byte[] bData, byte type, int bytesRead) {
-					if (type == 0)
-						; // String empfangen
-					else
-						updateVolume(AudioDetection.calculateVolume(bData, bytesRead));
-				}
-			});
+		mFragmentActive = true;
 	}
 
 	@Override
 	public void onPause() {
+		Log.e(TAG, "BabyMonitor->onPause()");
+
 		super.onPause();
 
 		if (timer != null) {
 			timer.cancel();
 			timer = null;
 		}
+
+		mFragmentActive = false;
+
 	}
 
 	@Override
 	public void onDestroy() {
+		Log.e(TAG, "BabyMonitor->onDestroy()");
+
 		super.onDestroy();
 
 		if (timer != null) {

@@ -20,8 +20,7 @@ public class AudioRecorder {
 
 	private String FolderName = "RecTest";
 
-	public static int BufferElements2Rec = 1024; // want to play 2048 (2K) since 2 bytes we
-	// use only 1024
+	public static int BufferElements2Rec = 1024; // want to play 2048 (2K) since 2 bytes we use only 1024
 
 	int BytesPerElement = 2; // 2 bytes in 16bit format
 	private AudioRecord recorder;

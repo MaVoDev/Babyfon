@@ -1,9 +1,12 @@
 package babyfon.view.fragment.setup;
 
+import babyfon.audio.AudioDetection;
+import babyfon.connectivity.ConnectionInterface.OnReceiveDataListener;
 import babyfon.init.R;
 import babyfon.performance.Sound;
 import babyfon.settings.ModuleHandler;
 import babyfon.settings.SharedPrefs;
+import babyfon.view.activity.MainActivity;
 import babyfon.view.fragment.BabyMonitorFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -118,6 +121,8 @@ public class SetupCompleteParentsModeFragment extends Fragment {
 		btnForward.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
+				initMessageHandler();
+
 				FragmentTransaction ft = mFragmentManager.beginTransaction();
 				ft.setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out);
 				ft.replace(R.id.frame_container, new BabyMonitorFragment(mContext), null).addToBackStack(null).commit();
@@ -125,6 +130,32 @@ public class SetupCompleteParentsModeFragment extends Fragment {
 		});
 
 		return view;
+	}
+
+	private void initMessageHandler() {
+
+		// Erstmal nur für Bluetooth TODO: für andere auch implementieren
+		if (mSharedPrefs.getConnectivityType() != 1)
+			return;
+
+		if (MainActivity.mConnection != null)
+			MainActivity.mConnection.setOnReceiveDataListener(new OnReceiveDataListener() {
+
+				@Override
+				public void onReceiveDataListener(byte[] bData, byte type, int bytesRead) {
+					if (type == 0)
+						; // String empfangen
+					else {
+
+						if (MainActivity.mPlayAudio) {
+							MainActivity.mAudioPlayer.playData(bData);
+						}
+
+						((BabyMonitorFragment) ((MainActivity) mContext).getFragmentById("BabyMonitorFragment"))
+								.updateVolume(AudioDetection.calculateVolume(bData, bytesRead));
+					}
+				}
+			});
 	}
 
 	@Override

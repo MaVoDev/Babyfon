@@ -1,7 +1,19 @@
 package babyfon.view.fragment.setup;
 
+import android.content.Context;
+import android.graphics.Typeface;
+import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.TextView;
 import babyfon.Generator;
-import babyfon.audio.AudioRecorder;
 import babyfon.connectivity.bluetooth.BluetoothConnection;
 import babyfon.init.R;
 import babyfon.performance.Sound;
@@ -9,19 +21,6 @@ import babyfon.settings.ModuleHandler;
 import babyfon.settings.SharedPrefs;
 import babyfon.view.activity.MainActivity;
 import babyfon.view.fragment.OverviewFragment;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
-import android.content.Context;
-import android.graphics.Typeface;
-import android.os.Bundle;
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.view.View.OnClickListener;
-import android.widget.Button;
-import android.widget.TextView;
 
 public class SetupCompleteBabyModeFragment extends Fragment {
 
@@ -91,8 +90,7 @@ public class SetupCompleteBabyModeFragment extends Fragment {
 			MainActivity.mConnection = new BluetoothConnection(mContext);
 			MainActivity.mConnection.startServer();
 
-			MainActivity.mAudioRecorder = new AudioRecorder(MainActivity.mConnection);
-			MainActivity.mAudioRecorder.startRecording();
+			mModuleHandler.startAudioRecorder();
 
 		} else if (mSharedPrefs.getConnectivityTypeTemp() == 2) {
 			mModuleHandler.startTCPReceiver();
