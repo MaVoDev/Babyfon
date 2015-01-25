@@ -78,7 +78,7 @@ public class SetupStartFragment extends Fragment {
 		final FragmentManager fragmentManager = getFragmentManager();
 
 		initUiElements(view);
-
+		
 		btnForward.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {

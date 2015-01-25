@@ -83,17 +83,20 @@ public class SettingsActivity extends PreferenceActivity {
 				"enable_display_notification");
 
 		// Define listener for checkbox (display notification)
-		cbpDisplayNotification.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
-			public boolean onPreferenceChange(Preference preference, Object state) {
-
-				boolean isEnabled = ((Boolean) state).booleanValue();
-				Log.d("Babyfon", "Pref " + preference.getKey() + " changed to " + isEnabled);
-
-				// Store value in SharedPreferences
-				mSharedPrefs.setDisplayNotificationState(isEnabled);
-				return true;
-			}
-		});
+		// cbpDisplayNotification.setOnPreferenceChangeListener(new
+		// Preference.OnPreferenceChangeListener() {
+		// public boolean onPreferenceChange(Preference preference, Object
+		// state) {
+		//
+		// boolean isEnabled = ((Boolean) state).booleanValue();
+		// Log.d("Babyfon", "Pref " + preference.getKey() + " changed to " +
+		// isEnabled);
+		//
+		// // Store value in SharedPreferences
+		// mSharedPrefs.setDisplayNotificationState(isEnabled);
+		// return true;
+		// }
+		// });
 
 		// Define checkbox (Sound notification)
 		final CheckBoxPreference cbpSoundNotification = (CheckBoxPreference) getPreferenceManager().findPreference(

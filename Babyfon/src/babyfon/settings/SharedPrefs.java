@@ -21,6 +21,30 @@ public class SharedPrefs {
 	}
 
 	/*
+	 * == Navigation Drawer =====================================
+	 */
+
+	// == Absence counter ====================================
+
+	/**
+	 * Get absence counter.
+	 * 
+	 * @return int: counter
+	 */
+	public int getCounter() {
+		return mSharedPreferences.getInt("absence_counter", 0);
+	}
+
+	/**
+	 * Set absence counter.
+	 * 
+	 * @param int counter
+	 */
+	public void setCounter(int num) {
+		editor.putInt("absence_counter", num).commit();
+	}
+
+	/*
 	 * == Babymonitor =====================================
 	 */
 

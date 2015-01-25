@@ -11,6 +11,7 @@ import babyfon.settings.ModuleHandler;
 import babyfon.settings.SharedPrefs;
 import babyfon.view.activity.MainActivity;
 import android.app.AlertDialog;
+import android.app.Notification;
 import android.support.v4.app.Fragment;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -221,7 +222,7 @@ public class BabyMonitorFragment extends Fragment {
 		initUiElements(view);
 
 		startUiUpdateThread();
-
+		
 		// kick remote
 		kickRemote.setOnClickListener(new View.OnClickListener() {
 			@Override

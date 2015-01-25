@@ -91,10 +91,6 @@ public class SetupCompleteBabyModeFragment extends Fragment {
 			mModuleHandler.registerSMS();
 		}
 		
-		if(mSharedPrefs.getForwardingCallInfoTemp()) {
-			mModuleHandler.registerCall();
-		}
-
 		if (mSharedPrefs.getConnectivityTypeTemp() == 1) {
 			MainActivity.mConnection = new BluetoothConnection(mContext);
 			MainActivity.mConnection.startServer();
@@ -130,6 +126,7 @@ public class SetupCompleteBabyModeFragment extends Fragment {
 		tvPassword.setText(password);
 
 		// Store values in the shared preferences
+		mSharedPrefs.setCounter(0);
 		mSharedPrefs.setActiveStateBabyMode(true);
 		mSharedPrefs.setDeviceMode(mSharedPrefs.getDeviceModeTemp());
 		Log.d(TAG, "Device mode: " + mSharedPrefs.getDeviceMode());

@@ -34,24 +34,27 @@ public class Message {
 		this.mContext = mContext;
 	}
 
-	public void call(String phoneNumber) {
+	public void call(String phoneNumber, String date, String time) {
 		String contactName = mPhoneBookHandler.getContactName(phoneNumber);
 
 		if (mSharedPrefs.getForwardingCallInfo()) {
-			send(mContext.getString(R.string.BABYFON_MSG_CALL_INFO) + ";" + contactName + ";" + phoneNumber);
+			send(mContext.getString(R.string.BABYFON_MSG_CALL_INFO) + ";" + contactName + ";" + phoneNumber + ";" + date + ";"
+					+ time);
 		}
 
 	}
 
-	public void sms(String phoneNumber, String message) {
+	public void sms(String phoneNumber, String message, String date, String time) {
 		String contactName = mPhoneBookHandler.getContactName(phoneNumber);
 
 		if (mSharedPrefs.getForwardingSMS()) {
-			send(mContext.getString(R.string.BABYFON_MSG_SMS) + ";" + contactName + ";" + message);
+			send(mContext.getString(R.string.BABYFON_MSG_SMS) + ";" + contactName + ";" + message + ";" + date + ";"
+					+ time);
 		}
 
 		if (mSharedPrefs.getForwardingSMSInfo()) {
-			send(mContext.getString(R.string.BABYFON_MSG_SMS_INFO) + ";" + contactName);
+			send(mContext.getString(R.string.BABYFON_MSG_SMS_INFO) + ";" + contactName + ";" + date + ";"
+					+ time);
 		}
 	}
 
@@ -73,11 +76,13 @@ public class Message {
 			// Call
 			final String contactName = strArray[1];
 			final String phoneNumber = strArray[2];
+			final String date = strArray[3];
+			final String time = strArray[4];
 
 			((MainActivity) mContext).runOnUiThread(new Runnable() {
 				@Override
 				public void run() {
-					AbsenceFragment.setNewMessage(0, contactName, phoneNumber);
+					AbsenceFragment.setNewMessage(0, contactName, phoneNumber, date, time);
 				}
 			});
 		}
@@ -86,11 +91,13 @@ public class Message {
 			// SMS
 			final String contactName = strArray[1];
 			final String message = strArray[2];
+			final String date = strArray[3];
+			final String time = strArray[4];
 
 			((MainActivity) mContext).runOnUiThread(new Runnable() {
 				@Override
 				public void run() {
-					AbsenceFragment.setNewMessage(1, contactName, message);
+					AbsenceFragment.setNewMessage(1, contactName, message, date, time);
 				}
 			});
 		}
@@ -98,11 +105,13 @@ public class Message {
 		if (strArray[0].equals(mContext.getString(R.string.BABYFON_MSG_SMS_INFO))) {
 			// SMS
 			final String contactName = strArray[1];
+			final String date = strArray[2];
+			final String time = strArray[3];
 
 			((MainActivity) mContext).runOnUiThread(new Runnable() {
 				@Override
 				public void run() {
-					AbsenceFragment.setNewMessage(1, contactName, "");
+					AbsenceFragment.setNewMessage(1, contactName, "", date, time);
 					;
 				}
 			});

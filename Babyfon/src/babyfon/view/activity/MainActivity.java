@@ -7,30 +7,38 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.res.Configuration;
 import android.content.res.TypedArray;
+import android.media.Ringtone;
 import android.os.Bundle;
 import android.os.StrictMode;
+import android.os.Vibrator;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.telephony.PhoneStateListener;
+import android.telephony.TelephonyManager;
 import android.util.Log;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.ListView;
+import babyfon.Notification;
 import babyfon.adapter.NavigationDrawerListAdapter;
 import babyfon.audio.AudioRecorder;
 import babyfon.connectivity.ConnectionInterface;
-import babyfon.connectivity.phone.CallReceiver;
+import babyfon.connectivity.phone.CallStateListener;
 import babyfon.connectivity.phone.SMSReceiver;
 import babyfon.connectivity.wifi.TCPReceiver;
 import babyfon.connectivity.wifi.UDPReceiver;
@@ -53,13 +61,17 @@ public class MainActivity extends ActionBarActivity {
 	private ListView mDrawerList;
 	private ActionBarDrawerToggle mDrawerToggle;
 
-	// Modules
+	// Module objects
 	public static Battery mBattery;
 	public static TCPReceiver mTCPReceiver;
 	public static UDPReceiver mUDPReceiver;
 	public static SMSReceiver mSmsReceiver;
-	public static CallReceiver mCallReceiver;
 	public static ConnectivityStateCheck mConnectivityStateCheck;
+
+	// Notification objects
+	public static Vibrator mVibrator;
+	public static Ringtone mRingtone;
+	public static FrameLayout overlay;
 
 	public static AudioRecorder mAudioRecorder;
 	public static ConnectionInterface mConnection;
@@ -90,6 +102,8 @@ public class MainActivity extends ActionBarActivity {
 	private ArrayList<NavigationDrawerItemModel> items;
 	private NavigationDrawerListAdapter adapter;
 
+	private int counter;
+
 	private static final String TAG = MainActivity.class.getCanonicalName();
 
 	public void handleModules() {
@@ -105,9 +119,6 @@ public class MainActivity extends ActionBarActivity {
 		if (mSharedPrefs.getForwardingSMS() || mSharedPrefs.getForwardingSMSInfo()) {
 			mModuleHandler.registerSMS();
 		}
-		if (mSharedPrefs.getForwardingCallInfo()) {
-			mModuleHandler.registerCall();
-		}
 	}
 
 	@Override
@@ -120,6 +131,11 @@ public class MainActivity extends ActionBarActivity {
 			StrictMode.setThreadPolicy(policy);
 		}
 
+		// TelephonyManager class object to register one listner
+		TelephonyManager mTelephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
+		// Register listener for LISTEN_CALL_STATE
+		mTelephonyManager.listen(new CallStateListener(this), PhoneStateListener.LISTEN_CALL_STATE);
+
 		mModuleHandler = new ModuleHandler(this);
 		mSharedPrefs = new SharedPrefs(this);
 
@@ -128,6 +144,8 @@ public class MainActivity extends ActionBarActivity {
 		initNavigationDrawer();
 
 		startNavigationDrawerUpdateThread();
+
+//		new Notification(this).start();
 
 		displayView(0);
 
@@ -168,9 +186,6 @@ public class MainActivity extends ActionBarActivity {
 			if (mSharedPrefs.getForwardingSMS() || mSharedPrefs.getForwardingSMSInfo()) {
 				mModuleHandler.unregisterSMS();
 			}
-			if (mSharedPrefs.getForwardingCallInfo()) {
-				mModuleHandler.unregisterCall();
-			}
 		}
 
 		if (mSharedPrefs.getConnectivityType() == 2) {
@@ -180,6 +195,8 @@ public class MainActivity extends ActionBarActivity {
 		if (mSharedPrefs.getRemoteAddress() != null) {
 			mModuleHandler.stopRemoteCheck();
 		}
+
+		new Notification(this).stop();
 	}
 
 	@Override
@@ -198,9 +215,6 @@ public class MainActivity extends ActionBarActivity {
 				mModuleHandler.registerBattery();
 				if (mSharedPrefs.getForwardingSMS() || mSharedPrefs.getForwardingSMSInfo()) {
 					mModuleHandler.registerSMS();
-				}
-				if (mSharedPrefs.getForwardingCallInfo()) {
-					mModuleHandler.registerCall();
 				}
 			}
 		} else {
@@ -291,7 +305,7 @@ public class MainActivity extends ActionBarActivity {
 				.setPositiveButton(getString(R.string.dialog_button_yes), new DialogInterface.OnClickListener() {
 					@Override
 					public void onClick(DialogInterface dialog, int which) {
-						finish();
+						MainActivity.this.finish();
 					}
 
 				}).setNegativeButton(getString(R.string.dialog_button_no), null).show();
@@ -391,14 +405,6 @@ public class MainActivity extends ActionBarActivity {
 			if (mSharedPrefs.getDeviceMode() == 1) {
 				id = "BabymonitorFragment";
 			}
-			// TODO TEST VS. WENN FERTIG RAUSNEHMEN
-			// if (mSharedPrefs.getDeviceMode() == 1) {
-			// id = "OverviewFragment";
-			// }
-			// if (mSharedPrefs.getDeviceMode() == 0) {
-			// id = "BabymonitorFragment";
-			// }
-
 			break;
 		case 1:
 			if (mSharedPrefs.getDeviceMode() == -1) {
@@ -511,7 +517,8 @@ public class MainActivity extends ActionBarActivity {
 			// Listenelement: Babymonitor
 			items.add(new NavigationDrawerItemModel(navMenuTitles[0], navMenuIcons.getResourceId(0, -1)));
 			// Listenelement: Anrufe und Nachrichten in Abwesenheit
-			items.add(new NavigationDrawerItemModel(navMenuTitles[1], navMenuIcons.getResourceId(1, -1), true, "0"));
+			items.add(new NavigationDrawerItemModel(navMenuTitles[1], navMenuIcons.getResourceId(1, -1), true, String
+					.valueOf(counter)));
 			// Listenelement: Einrichtungsassistent
 			items.add(new NavigationDrawerItemModel(navMenuTitles[2], navMenuIcons.getResourceId(2, -1)));
 			// Listenelement: Einstellungen
@@ -553,9 +560,12 @@ public class MainActivity extends ActionBarActivity {
 	}
 
 	public void startNavigationDrawerUpdateThread() {
+		counter = mSharedPrefs.getCounter();
+
 		if (timerNavigationDrawer == null) {
 			timerNavigationDrawer = new Timer();
 		}
+
 		timerNavigationDrawer.scheduleAtFixedRate(new TimerTask() {
 			public void run() {
 				runOnUiThread(new Runnable() {

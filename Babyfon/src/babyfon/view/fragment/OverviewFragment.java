@@ -197,7 +197,7 @@ public class OverviewFragment extends Fragment {
 		initUiElements(view);
 
 		startUiUpdateThread();
-
+		
 		// kick remote
 		kickRemote.setOnClickListener(new View.OnClickListener() {
 			@Override
@@ -378,11 +378,9 @@ public class OverviewFragment extends Fragment {
 
 						switch (item) {
 						case 0:
-							mModuleHandler.unregisterCall();
 							mSharedPrefs.setForwardingCallInfo(false);
 							break;
 						case 1:
-							mModuleHandler.registerCall();
 							mSharedPrefs.setForwardingCallInfo(true);
 							break;
 						}

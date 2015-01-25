@@ -5,20 +5,20 @@ Volker:
 - Geräusch erkennen
 - Bluetooth Verbindung
 - Audiostreaming Bluetooth
+- Service
 
 Marcus:
 - Audiostreaming Wi-Fi
-- Klingeln, Vibrieren, Anzeigen, wenn Geräusch erkannt
-- Babymonitor: Signalisierungsalarm als Overlay
 - Babymonitor: Wenn Babymode deaktiviert oder Remote gekickt wird, Remote Bescheid geben. Vom Babygerät disconnecten können.
-
-Weiteres:
-- Service
-- Beim senden die Connectivity prüfen (Typ, an/aus, verbunden/nicht verbunden, ist ein remote vorhanden) Vielleicht eine extra Klasse für den Test (Beim Setup extra prüfen)
-		Thread in der Main, checken ob die gewählte Verbindung ordnungsgemäß läuft, wenn nicht dialog zum hinweis oder aktivieren, währenddessen stop thread, nach ok wieder thread start
 - Anzahl der SMS im Drawer anzeigen
 - Nachrichten (Call/SMS) zwischenspeichern
-- Uhrzeit der SMS/Call
+
+Weiteres:
+- Beim senden die Connectivity prüfen (Typ, an/aus, verbunden/nicht verbunden, ist ein remote vorhanden) Vielleicht eine extra Klasse für den Test (Beim Setup extra prüfen)
+		Thread in der Main, checken ob die gewählte Verbindung ordnungsgemäß läuft, wenn nicht dialog zum hinweis oder aktivieren, währenddessen stop thread, nach ok wieder thread start
+- Notification: Wenn Baby schreit, dies anzeigen
+				Geräuscherkenner stoppen bei Baby
+				Im babymonitor wieder aktivierbar
 
 Bugs:
 =============================================================================================================
@@ -26,11 +26,9 @@ Bugs:
 2 Wenn ein Modus gewählt ist, soll SetupStartFragment übersprungen werden. Das geht zurzeit nur, wenn die App geschlossen und neu gestartet wird. Soll aber gleich nach dem beenden eines Setup-Modus geschehen.  
 3 Bluetooth: Wenn im Elternmode Bluetooth gewählt ist und die App beendet wird, gibts nen Absturz    
 4 Wenn man das Setup beendet, aktualisiert sich der NavigationDrawer nicht. Der Einrichtungsassistent bleibt selected.
-5 App wird nicht richtig beendet
-6 Absturz bei SMS Empfang wenn nciht das passende Fragment offen ist
-7 Beim Start der App wird die Selektierung im Drawer nicht gesetzt
-8 Remote Checker Thread richtig starten und beenden
-9 Wenn Baby Away geht, dann wird akkustand nicht auf n/a gesetzt
+5 Absturz bei SMS Empfang wenn nciht das passende Fragment offen ist
+6 Beim Start der App wird die Selektierung im Drawer nicht gesetzt
+7 Remote Checker Thread richtig starten und beenden
 
 Optional:
 =============================================================================================================
@@ -42,6 +40,7 @@ Optional:
 - WiFi Direct State
 - Nachrichten zwischenpuffern, die nicht versendet werden konnten(SMS, Anrufe)
 - Nachrichten anders rum sortieren
+- App wird nicht richtig beendet?
 
 Änderungen
 ------------------

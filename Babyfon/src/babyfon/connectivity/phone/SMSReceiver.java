@@ -1,5 +1,6 @@
 package babyfon.connectivity.phone;
 
+import babyfon.Generator;
 import babyfon.Message;
 import babyfon.init.R;
 import babyfon.settings.SharedPrefs;
@@ -51,8 +52,11 @@ public class SMSReceiver extends BroadcastReceiver {
 
 					Log.i(TAG, "Phone number: " + phoneNumber);
 					Log.i(TAG, "Message: " + message);
+					
+					String currentDate = new Generator().getCurrentDate();
+					String currentTime = new Generator().getCurrentTime();
 
-					new Message(mContext).sms(phoneNumber, message);
+					new Message(mContext).sms(phoneNumber, message, currentDate, currentTime);
 				}
 			}
 		} catch (Exception e) {

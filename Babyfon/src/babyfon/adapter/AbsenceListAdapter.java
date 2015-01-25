@@ -48,22 +48,30 @@ public class AbsenceListAdapter extends BaseAdapter {
 
 		ImageView type = (ImageView) convertView.findViewById(R.id.absence_type);
 		if (absenceItems.get(position).getType() == 0) {
-			type.setImageResource(android.R.drawable.sym_call_missed);
+			type.setImageResource(android.R.drawable.ic_menu_call);
 		} else {
 			type.setImageResource(android.R.drawable.sym_action_email);
 		}
 
 		TextView numberName = (TextView) convertView.findViewById(R.id.absence_number_name);
 		numberName.setText(absenceItems.get(position).getNumber());
+		
+		TextView time = (TextView) convertView.findViewById(R.id.absence_time);
+		time.setText(absenceItems.get(position).getTime());
 
 		TextView message = (TextView) convertView.findViewById(R.id.absence_message);
 		message.setText(absenceItems.get(position).getMessage());
 
+		TextView date = (TextView) convertView.findViewById(R.id.absence_date);
+		date.setText(absenceItems.get(position).getDate());
+
 		// Set Typeface
-		Typeface mTypeface_i = Typeface.createFromAsset(mContext.getAssets(), "fonts/BOOKOSI.TTF");
-		Typeface mTypeface_bi = Typeface.createFromAsset(mContext.getAssets(), "fonts/BOOKOSBI.TTF");
-		numberName.setTypeface(mTypeface_bi);
-		message.setTypeface(mTypeface_i);
+		Typeface mTypeface_n = Typeface.createFromAsset(mContext.getAssets(), "fonts/BOOKOSI.TTF");
+		Typeface mTypeface_b = Typeface.createFromAsset(mContext.getAssets(), "fonts/BOOKOSBI.TTF");
+		numberName.setTypeface(mTypeface_b);
+		message.setTypeface(mTypeface_n);
+		date.setTypeface(mTypeface_n);
+		time.setTypeface(mTypeface_n);
 
 		return convertView;
 	}

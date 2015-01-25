@@ -149,7 +149,7 @@ public class SetupSearchDevicesFragment extends Fragment {
 		final FragmentManager mFragmentManager = getFragmentManager();
 
 		initUiElements(view);
-
+		
 		devices = new ArrayList<DeviceListItemModel>();
 
 		mModuleHandler.unregisterBattery();

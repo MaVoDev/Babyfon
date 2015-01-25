@@ -126,7 +126,9 @@
     <string name="call_number_unknown">Die Telefonnummer wurde unterdrückt</string>
     <string name="yes">Ja</string>
     <string name="close">Schließen</string>
-
+    <string name="is_awake">&#160;ist wach!</string>
+    <string name="doubleTap">2x tippen, um die Meldung zu schließen</string>
+    
     <!-- Content Description -->
     <string name="desc_img_default">Image default description</string>
     <string name="desc_list_item_icon">Item Icon</string>

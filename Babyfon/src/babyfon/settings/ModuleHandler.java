@@ -3,7 +3,6 @@ package babyfon.settings;
 import android.content.Context;
 import android.content.IntentFilter;
 import android.util.Log;
-import babyfon.connectivity.phone.CallReceiver;
 import babyfon.connectivity.phone.SMSReceiver;
 import babyfon.connectivity.wifi.TCPReceiver;
 import babyfon.connectivity.wifi.UDPReceiver;
@@ -52,48 +51,6 @@ public class ModuleHandler {
 			}
 		} else {
 			Log.e(TAG, "Can't unregister battery: The receiver wasn't registerd or has been unregisterd.");
-		}
-	}
-
-	/**
-	 * Register call receiver
-	 */
-	public void registerCall() {
-		if (MainActivity.mIntentFilterCall == null) {
-			MainActivity.mIntentFilterCall = new IntentFilter();
-			MainActivity.mIntentFilterCall.addAction("android.intent.action.PHONE_STATE");
-		}
-
-		if (MainActivity.mCallReceiver == null) {
-			Log.i(TAG, "Try to register call receiver...");
-			MainActivity.mCallReceiver = new CallReceiver(mContext);
-			try {
-				mContext.registerReceiver(MainActivity.mCallReceiver, MainActivity.mIntentFilterCall);
-				Log.d(TAG, "Call receiver registered.");
-			} catch (Exception e) {
-				Log.e(TAG, "Error: Can't register call receiver.");
-			}
-		} else {
-			Log.e(TAG, "Call receiver is still registered.");
-		}
-	}
-
-	/**
-	 * Unregister call receiver
-	 */
-	public void unregisterCall() {
-		if (MainActivity.mCallReceiver != null) {
-			Log.i(TAG, "Try to unregister call receiver...");
-			try {
-				mContext.unregisterReceiver(MainActivity.mCallReceiver);
-				MainActivity.mCallReceiver = null;
-				MainActivity.mIntentFilterCall = null;
-				Log.d(TAG, "Call receiver unregistered.");
-			} catch (Exception e) {
-				Log.e(TAG, "Error: Can't unregister call receiver.");
-			}
-		} else {
-			Log.e(TAG, "Can't unregister call: The receiver wasn't registerd or has been unregisterd.");
 		}
 	}
 

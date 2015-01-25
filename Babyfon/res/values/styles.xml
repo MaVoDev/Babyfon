@@ -36,7 +36,34 @@
         <item name="android:layout_marginBottom">15dp</item>
     </style>
 
+    <style name="titleCry">
+        <item name="android:textSize">28sp</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textColor">@color/titleCry</item>
+        <item name="android:layout_gravity">center</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+
+    <style name="subtitleCry">
+        <item name="android:textSize">16sp</item>
+        <item name="android:textColor">@color/subtitleCry</item>
+        <item name="android:gravity">center</item>
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+
     <!-- Layouts -->
+    <style name="layout_content_cry">
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_height">fill_parent</item>
+        <item name="android:orientation">vertical</item>
+        <item name="android:layout_marginLeft">10dp</item>
+        <item name="android:layout_marginRight">10dp</item>
+        <item name="android:layout_marginTop">48dp</item>
+        <item name="android:layout_marginBottom">10dp</item>
+    </style>
+
     <style name="layout_content">
         <item name="android:layout_width">fill_parent</item>
         <item name="android:layout_height">fill_parent</item>
