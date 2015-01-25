@@ -21,13 +21,13 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.util.Log;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.FrameLayout;
 import android.widget.ListView;
 import babyfon.adapter.NavigationDrawerListAdapter;
+import babyfon.audio.AudioPlayer;
 import babyfon.audio.AudioRecorder;
 import babyfon.connectivity.ConnectionInterface;
 import babyfon.connectivity.sms.SMSReceiver;
@@ -60,9 +60,11 @@ public class MainActivity extends ActionBarActivity {
 	public static ConnectivityStateCheck mConnectivityStateCheck;
 
 	public static AudioRecorder mAudioRecorder;
+	public static AudioPlayer mAudioPlayer;
 	public static ConnectionInterface mConnection;
 
 	public static IntentFilter mIntentFilter;
+	public static boolean mPlayAudio = false;
 
 	private ModuleHandler mModuleHandler;
 	private SharedPrefs mSharedPrefs;
@@ -128,6 +130,8 @@ public class MainActivity extends ActionBarActivity {
 		// TODO: WORKAROUND UM DRAWER ERRORS ZU FIXEN, ALTER ERSTMAL
 		// AUSKOMMENTIERT; VS!
 		mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, android.R.string.ok, android.R.string.no);
+
+		MainActivity.mAudioPlayer = new AudioPlayer();
 	}
 
 	@Override
@@ -160,7 +164,11 @@ public class MainActivity extends ActionBarActivity {
 			}
 		}
 
-		if (mSharedPrefs.getConnectivityType() == 2) {
+		if (mSharedPrefs.getConnectivityType() == 1) {
+			mModuleHandler.stopAudioPlayer();
+			if (mConnection != null)
+				mConnection.stopConnection();
+		} else if (mSharedPrefs.getConnectivityType() == 2) {
 			mModuleHandler.stopTCPReceiver();
 		}
 
@@ -313,7 +321,7 @@ public class MainActivity extends ActionBarActivity {
 		} else if (id.equals("OverviewFragmentBaby")) {
 			// Baby mode
 			fragment = new OverviewFragment(this);
-		} else if (id.equals("BabymonitorFragment")) {
+		} else if (id.equals("BabyMonitorFragment")) {
 			// Open babymonitor
 			fragment = new BabyMonitorFragment(this);
 		} else if (id.equals("AbsenceFragment")) {
@@ -364,14 +372,14 @@ public class MainActivity extends ActionBarActivity {
 				id = "OverviewFragment";
 			}
 			if (mSharedPrefs.getDeviceMode() == 1) {
-				id = "BabymonitorFragment";
+				id = "BabyMonitorFragment";
 			}
 			// TODO TEST VS. WENN FERTIG RAUSNEHMEN
 			// if (mSharedPrefs.getDeviceMode() == 1) {
 			// id = "OverviewFragment";
 			// }
 			// if (mSharedPrefs.getDeviceMode() == 0) {
-			// id = "BabymonitorFragment";
+			// id = "BabyMonitorFragment";
 			// }
 
 			break;

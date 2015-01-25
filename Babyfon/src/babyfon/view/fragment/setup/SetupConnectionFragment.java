@@ -224,14 +224,7 @@ public class SetupConnectionFragment extends Fragment {
 		btnBackward.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-
-				// mFragmentManager.beginTransaction()
-				// .replace(R.id.frame_container, new SetupDeviceModeFragment(mContext), null)
-				// .addToBackStack(null).commit();
-
 				FragmentTransaction ft = mFragmentManager.beginTransaction();
-				// ft.setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
-				// ft.setCustomAnimations(R.anim.anim_slide_in_right, R.anim.anim_slide_out_left);
 				ft.setCustomAnimations(R.anim.anim_slide_in_right, R.anim.anim_slide_out_right);
 				ft.replace(R.id.frame_container, new SetupDeviceModeFragment(mContext), null).addToBackStack(null).commit();
 			}
@@ -253,7 +246,6 @@ public class SetupConnectionFragment extends Fragment {
 				}
 
 				FragmentTransaction ft = mFragmentManager.beginTransaction();
-//				ft.setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
 				ft.setCustomAnimations(R.anim.anim_slide_in_left, R.anim.anim_slide_out_left);
 
 				if (mSharedPrefs.getDeviceModeTemp() == 0) {

@@ -125,7 +125,6 @@ public class SetupForwardingFragment extends Fragment {
 		btnBackward.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-
 				FragmentTransaction ft = mFragmentManager.beginTransaction();
 				ft.setCustomAnimations(R.anim.anim_slide_in_right, R.anim.anim_slide_out_right);
 				ft.replace(R.id.frame_container, new SetupConnectionFragment(mContext), null).addToBackStack(null).commit();
@@ -156,7 +155,6 @@ public class SetupForwardingFragment extends Fragment {
 				}
 
 				FragmentTransaction ft = mFragmentManager.beginTransaction();
-				// ft.setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
 				ft.setCustomAnimations(R.anim.anim_slide_in_left, R.anim.anim_slide_out_left);
 				ft.replace(R.id.frame_container, nextFragment, null).addToBackStack(null).commit();
 			}

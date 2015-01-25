@@ -103,16 +103,8 @@ public class SetupDeviceModeFragment extends Fragment {
 				} else {
 					mSharedPrefs.setDeviceModeTemp(1);
 				}
-				// mFragmentManager.beginTransaction().replace(R.id.frame_container, nextFragment, null)
-				// .addToBackStack(null).commit();
 
 				FragmentTransaction ft = mFragmentManager.beginTransaction();
-
-				// TODO an API 10 anpassen
-				// ft.setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out);
-				// ft.setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
-
-				// ft.setCustomAnimations(R.anim.anim_slide_out_left, R.anim.anim_slide_in_left);
 				ft.setCustomAnimations(R.anim.anim_slide_in_left, R.anim.anim_slide_out_left);
 				ft.replace(R.id.frame_container, nextFragment, null).addToBackStack(null).commit();
 			}

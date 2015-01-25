@@ -3,6 +3,7 @@ package babyfon.settings;
 import android.content.Context;
 import android.content.IntentFilter;
 import android.util.Log;
+import babyfon.audio.AudioRecorder;
 import babyfon.connectivity.sms.SMSReceiver;
 import babyfon.connectivity.wifi.TCPReceiver;
 import babyfon.connectivity.wifi.UDPReceiver;
@@ -168,18 +169,18 @@ public class ModuleHandler {
 	 * Start remote checker thread
 	 */
 	public void startRemoteCheck() {
-//		if (MainActivity.mConnectivityStateCheck == null) {
-			Log.i(TAG, "Try to start remote checker thread...");
-			MainActivity.mConnectivityStateCheck = new ConnectivityStateCheck(mContext);
-			if (MainActivity.mConnectivityStateCheck.startConnectivityStateThread()) {
-				Log.d(TAG, "Remote checker thread is running.");
-			} else {
-				Log.e(TAG, "Error: Can't start remote checker thread.");
-			}
+		// if (MainActivity.mConnectivityStateCheck == null) {
+		Log.i(TAG, "Try to start remote checker thread...");
+		MainActivity.mConnectivityStateCheck = new ConnectivityStateCheck(mContext);
+		if (MainActivity.mConnectivityStateCheck.startConnectivityStateThread()) {
+			Log.d(TAG, "Remote checker thread is running.");
+		} else {
+			Log.e(TAG, "Error: Can't start remote checker thread.");
+		}
 
-//		} else {
-//			Log.e(TAG, "Remote checker thread is still running.");
-//		}
+		// } else {
+		// Log.e(TAG, "Remote checker thread is still running.");
+		// }
 	}
 
 	/**
@@ -195,6 +196,37 @@ public class ModuleHandler {
 			}
 		} else {
 			Log.e(TAG, "Can't stop thread: Remote checker thread wasn't running or has been stopped.");
+		}
+	}
+
+	/**
+	 * Stops the AudioPlayer
+	 */
+	public void stopAudioPlayer() {
+		if (MainActivity.mConnection != null)
+			MainActivity.mConnection.setOnReceiveDataListener(null);
+
+		if (MainActivity.mAudioPlayer != null) {
+			MainActivity.mAudioPlayer.stopPlaying();
+			MainActivity.mAudioPlayer = null;
+		}
+	}
+
+	/**
+	 * Start AudioRecorder
+	 */
+	public void startAudioRecorder() {
+		MainActivity.mAudioRecorder = new AudioRecorder(MainActivity.mConnection);
+		MainActivity.mAudioRecorder.startRecording();
+	}
+
+	/**
+	 * Stop AudioRecorder
+	 */
+	public void stopAudioRecorder() {
+		if (MainActivity.mAudioRecorder != null) {
+			MainActivity.mAudioRecorder.cleanUp();
+			MainActivity.mAudioRecorder = null;
 		}
 	}
 }
