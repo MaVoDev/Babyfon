@@ -48,6 +48,27 @@ public class SharedPrefs {
 	 * == Babymonitor =====================================
 	 */
 
+	// == Noise detector state ====================================
+
+	/**
+	 * Get the noise detector state.
+	 * 
+	 * @return Boolean: noise state
+	 */
+	public Boolean isNoiseActivated() {
+		return mSharedPreferences.getBoolean("noise_activated", true);
+	}
+
+	/**
+	 * Set the noise detector state.
+	 * 
+	 * @param Boolean
+	 *            noise state
+	 */
+	public void setNoiseActivated(Boolean state) {
+		editor.putBoolean("noise_activated", state).commit();
+	}
+
 	// == Talk state ====================================
 
 	/**

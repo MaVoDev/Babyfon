@@ -16,6 +16,7 @@
     <string name="BABYFON_MSG_SYSTEM_REJOIN">BABYFON_MSG_SYSTEM_REJOIN</string>
     <string name="BABYFON_MSG_CONNECTION_HELLO">BABYFON_MSG_CONNECTION_HELLO</string>
     <string name="BABYFON_MSG_SYSTEM_PWCHANGED">BABYFON_MSG_SYSTEM_PWCHANGED</string>
+    <string name="BABYFON_MSG_NOISE">BABYFON_MSG_NOISE</string>
 
     <!-- Titles -->
     <string name="title_baby_monitor">Babymonitor</string>
@@ -61,6 +62,7 @@
     <string name="babymonitor_connected_device_false">nicht verbunden</string>
     <string name="babymonitor_text_battery">Akkustand</string>
     <string name="babymonitor_text_noise">Lautstärke im Zimmer</string>
+    <string name="babymonitor_text_noise_activate">! Hier tippen, zum erneuten Starten !</string>
 
     
     <!-- Overview -->

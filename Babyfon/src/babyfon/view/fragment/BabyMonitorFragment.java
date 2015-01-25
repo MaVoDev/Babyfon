@@ -4,6 +4,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import babyfon.Message;
+import babyfon.Notification;
 import babyfon.audio.AudioDetection;
 import babyfon.connectivity.ConnectionInterface.OnReceiveDataListener;
 import babyfon.init.R;
@@ -11,7 +12,6 @@ import babyfon.settings.ModuleHandler;
 import babyfon.settings.SharedPrefs;
 import babyfon.view.activity.MainActivity;
 import android.app.AlertDialog;
-import android.app.Notification;
 import android.support.v4.app.Fragment;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -23,6 +23,7 @@ import android.view.ViewGroup;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -45,9 +46,15 @@ public class BabyMonitorFragment extends Fragment {
 	private TextView talkText;
 	private TextView talkState;
 	private TextView noiseText;
+	private TextView noiseActivateText;
 	private TextView title;
 
+	private long currentTime;
+	private long lastTime;
+
 	private int batteryLevel;
+
+	private int noiseCounter = 0;
 
 	private ModuleHandler mModuleHandler;
 	private SharedPrefs mSharedPrefs;
@@ -66,11 +73,16 @@ public class BabyMonitorFragment extends Fragment {
 	}
 
 	public void updateUI() {
-		if (mSharedPrefs.isRemoteOnline()) {
+		
+		if(mSharedPrefs.getConnectivityType() == 2) {
+			if (mSharedPrefs.isRemoteOnline()) {
 
-		} else {
-			remoteOnlineState.setImageResource(android.R.drawable.presence_away);
+			} else {
+				noiseLevel.setProgress(0);
+				remoteOnlineState.setImageResource(android.R.drawable.presence_away);
+			}
 		}
+		
 
 		if (mSharedPrefs.getRemoteAddress() != null) {
 			// remote host is connected
@@ -87,6 +99,14 @@ public class BabyMonitorFragment extends Fragment {
 			kickRemote.setVisibility(View.INVISIBLE);
 			remoteState.setText(R.string.overview_connected_device_false);
 			remoteOnlineState.setImageResource(android.R.drawable.presence_invisible);
+		}
+
+		if (mSharedPrefs.isNoiseActivated()) {
+			noiseActivateText.setVisibility(View.GONE);
+			noiseLevel.setVisibility(View.VISIBLE);
+		} else {
+			noiseActivateText.setVisibility(View.VISIBLE);
+			noiseLevel.setVisibility(View.GONE);
 		}
 
 		// TODO hier kommt die Abfrage für den Noise State zur Progressbar rein
@@ -183,6 +203,8 @@ public class BabyMonitorFragment extends Fragment {
 		hearState.setTypeface(mTypeface_n);
 		noiseText = (TextView) view.findViewById(R.id.babymonitor_text_noise_level);
 		noiseText.setTypeface(mTypeface_b);
+		noiseActivateText = (TextView) view.findViewById(R.id.babymonitor_text_noise_activate);
+		noiseActivateText.setTypeface(mTypeface_b);
 
 		if (hearEdit.isChecked()) {
 			hearState.setText(mContext.getString(R.string.enabled));
@@ -222,7 +244,14 @@ public class BabyMonitorFragment extends Fragment {
 		initUiElements(view);
 
 		startUiUpdateThread();
-		
+
+		noiseActivateText.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				mSharedPrefs.setNoiseActivated(true);
+			}
+		});
+
 		// kick remote
 		kickRemote.setOnClickListener(new View.OnClickListener() {
 			@Override
@@ -283,23 +312,50 @@ public class BabyMonitorFragment extends Fragment {
 					talkState.setText(mContext.getString(R.string.disabled));
 					mSharedPrefs.setTalkActivated(false);
 				}
-
 			}
 		});
 
 		return view;
 	}
 
-	protected void updateVolume(final int calculateVolume) {
+	public void updateVolume(final int calculateVolume) {
+		if (mSharedPrefs.isNoiseActivated()) {
+			int level = calculateVolume;
 
-		getActivity().runOnUiThread(new Runnable() {
+			if (level > 50) {
+				if (currentTime == 0 && lastTime == 0) {
+					currentTime = System.currentTimeMillis();
+					lastTime = System.currentTimeMillis();
+				} else {
+					currentTime = System.currentTimeMillis();
+				}
 
-			@Override
-			public void run() {
-				noiseLevel.setProgress(calculateVolume);
+				if ((currentTime - lastTime) > 5000) {
+					noiseCounter = 0;
+				} else {
+					noiseCounter++;
+
+				}
+				lastTime = currentTime;
 			}
 
-		});
+			if (noiseCounter > 5) {
+				noiseCounter = 0;
+				getActivity().runOnUiThread(new Runnable() {
+					@Override
+					public void run() {
+						new Notification(mContext).start();
+					}
+				});
+				mSharedPrefs.setNoiseActivated(false);
+			}
+			getActivity().runOnUiThread(new Runnable() {
+				@Override
+				public void run() {
+					noiseLevel.setProgress(calculateVolume);
+				}
+			});
+		}
 	}
 
 	public void startUiUpdateThread() {

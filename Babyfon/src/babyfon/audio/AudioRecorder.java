@@ -1,10 +1,14 @@
 package babyfon.audio;
 
+import android.content.Context;
 import android.media.AudioFormat;
 import android.media.AudioRecord;
 import android.media.MediaRecorder;
 import android.util.Log;
 import babyfon.connectivity.ConnectionInterface;
+import babyfon.connectivity.wifi.UDPReceiver;
+import babyfon.connectivity.wifi.UDPSender;
+import babyfon.settings.SharedPrefs;
 
 public class AudioRecorder {
 
@@ -20,7 +24,8 @@ public class AudioRecorder {
 
 	private String FolderName = "RecTest";
 
-	public static int BufferElements2Rec = 1024; // want to play 2048 (2K) since 2 bytes we
+	public static int BufferElements2Rec = 1024; // want to play 2048 (2K) since
+													// 2 bytes we
 	// use only 1024
 
 	int BytesPerElement = 2; // 2 bytes in 16bit format
@@ -30,10 +35,15 @@ public class AudioRecorder {
 
 	private ConnectionInterface mConnection;
 
-	public AudioRecorder(ConnectionInterface connection) {
+	private SharedPrefs mSharedPrefs;
+	
+	private UDPSender mUdpSender;
+	
+	public AudioRecorder(Context mContext, ConnectionInterface connection) {
 		this.mConnection = connection;
-
+		mSharedPrefs = new SharedPrefs(mContext);
 		recorder = initRecorder();
+		mUdpSender = new UDPSender(mContext);
 	}
 
 	public boolean isRecording() {
@@ -61,7 +71,8 @@ public class AudioRecorder {
 
 		Log.i(TAG, "Initializing Recorder...");
 
-		int minBufferSize = AudioRecord.getMinBufferSize(RECORDER_SAMPLERATE, RECORDER_CHANNELS, RECORDER_AUDIO_ENCODING);
+		int minBufferSize = AudioRecord.getMinBufferSize(RECORDER_SAMPLERATE, RECORDER_CHANNELS,
+				RECORDER_AUDIO_ENCODING);
 
 		Log.i(TAG, "BufferSize: " + minBufferSize);
 
@@ -72,8 +83,8 @@ public class AudioRecorder {
 			// RECORDER_CHANNELS,
 			// RECORDER_AUDIO_ENCODING, BufferElements2Rec * BytesPerElement);
 
-			AudioRecord recorder = new AudioRecord(MediaRecorder.AudioSource.MIC, RECORDER_SAMPLERATE, RECORDER_CHANNELS,
-					RECORDER_AUDIO_ENCODING, minBufferSize * 10);
+			AudioRecord recorder = new AudioRecord(MediaRecorder.AudioSource.MIC, RECORDER_SAMPLERATE,
+					RECORDER_CHANNELS, RECORDER_AUDIO_ENCODING, minBufferSize * 10);
 
 			BufferElements2Rec = minBufferSize * 2;
 
@@ -124,9 +135,16 @@ public class AudioRecorder {
 			// // stores the voice buffer
 			byte bData[] = short2byte(sData);
 
-			Log.i(TAG, "Writing data to file: " + sData.toString());
+//			Log.i(TAG, "Writing data to file: " + sData.toString());
 
-			mConnection.sendData(bData, (byte) 1);
+			if(mSharedPrefs.getConnectivityType() == 1) {
+				mConnection.sendData(bData, (byte) 1);
+			}
+			
+			if(mSharedPrefs.getConnectivityType() == 2) {
+				mUdpSender.sendUDPMessage(bData);
+			}
+			
 
 			// Send Audio Data to connected client
 			// mmOutStream.write(bData, 0, BufferElements2Rec

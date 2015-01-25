@@ -52,7 +52,7 @@ public class AudioPlayer {
 
 	public void playData(byte[] data) {
 
-		Log.i(TAG, "playData! " + data);
+//		Log.i(TAG, "playData! " + data);
 
 		track.write(data, 0, data.length);
 

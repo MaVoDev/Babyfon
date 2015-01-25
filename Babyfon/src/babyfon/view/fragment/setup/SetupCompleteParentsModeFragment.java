@@ -80,7 +80,6 @@ public class SetupCompleteParentsModeFragment extends Fragment {
 	}
 
 	public void handleModules() {
-		mModuleHandler.stopUDPReceiver();
 		mModuleHandler.unregisterBattery();
 	}
 
@@ -108,6 +107,7 @@ public class SetupCompleteParentsModeFragment extends Fragment {
 		Log.d(TAG, "Connectivity type: " + mSharedPrefs.getConnectivityType());
 
 		if (mSharedPrefs.getConnectivityType() == 2) {
+			mModuleHandler.startUDPReceiver();
 			mSharedPrefs.setRemoteAddress(mSharedPrefs.getRemoteAddressTemp());
 			Log.d(TAG, "Remote address: " + mSharedPrefs.getRemoteAddress());
 		}

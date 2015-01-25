@@ -38,8 +38,8 @@ public class Message {
 		String contactName = mPhoneBookHandler.getContactName(phoneNumber);
 
 		if (mSharedPrefs.getForwardingCallInfo()) {
-			send(mContext.getString(R.string.BABYFON_MSG_CALL_INFO) + ";" + contactName + ";" + phoneNumber + ";" + date + ";"
-					+ time);
+			send(mContext.getString(R.string.BABYFON_MSG_CALL_INFO) + ";" + contactName + ";" + phoneNumber + ";"
+					+ date + ";" + time);
 		}
 
 	}
@@ -53,11 +53,14 @@ public class Message {
 		}
 
 		if (mSharedPrefs.getForwardingSMSInfo()) {
-			send(mContext.getString(R.string.BABYFON_MSG_SMS_INFO) + ";" + contactName + ";" + date + ";"
-					+ time);
+			send(mContext.getString(R.string.BABYFON_MSG_SMS_INFO) + ";" + contactName + ";" + date + ";" + time);
 		}
 	}
 
+	/**
+	 * Send methode
+	 * @param str
+	 */
 	public void send(String str) {
 		if (mSharedPrefs.getConnectivityType() == 2 || mSharedPrefs.getConnectivityTypeTemp() == 2) {
 			new TCPSender(mContext).sendMessage(mSharedPrefs.getRemoteAddress(), str);
@@ -142,7 +145,6 @@ public class Message {
 
 				send(mContext.getString(R.string.BABYFON_MSG_AUTH_CONFIRMED) + ";" + mSharedPrefs.getPassword());
 
-				mModuleHandler.stopUDPReceiver();
 				mModuleHandler.registerBattery();
 
 				if (mSharedPrefs.getForwardingSMS() || mSharedPrefs.getForwardingSMSInfo()) {
@@ -157,7 +159,7 @@ public class Message {
 
 		if (strArray[0].equals(mContext.getString(R.string.BABYFON_MSG_AUTH_CONFIRMED))) {
 			mSharedPrefs.setPassword(strArray[1]);
-
+			
 			mModuleHandler.startRemoteCheck();
 
 			FragmentManager mFragmentManager = ((MainActivity) mContext).getSupportFragmentManager();

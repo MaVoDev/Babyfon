@@ -5,9 +5,11 @@ import java.util.TimerTask;
 
 import babyfon.Generator;
 import babyfon.Message;
+import babyfon.audio.AudioRecorder;
 import babyfon.init.R;
 import babyfon.settings.ModuleHandler;
 import babyfon.settings.SharedPrefs;
+import babyfon.view.activity.MainActivity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -187,6 +189,18 @@ public class OverviewFragment extends Fragment {
 
 		// password
 		passwordState.setText(mSharedPrefs.getPassword());
+
+		if (mSharedPrefs.isNoiseActivated()) {
+			if (MainActivity.mAudioRecorder == null) {
+				MainActivity.mAudioRecorder = new AudioRecorder(mContext, MainActivity.mConnection);
+				MainActivity.mAudioRecorder.startRecording();
+			}
+		} else {
+			if (MainActivity.mAudioRecorder != null) {
+				MainActivity.mAudioRecorder.stopRecording();
+				MainActivity.mAudioRecorder = null;
+			}
+		}
 	}
 
 	@Override
@@ -197,7 +211,7 @@ public class OverviewFragment extends Fragment {
 		initUiElements(view);
 
 		startUiUpdateThread();
-		
+
 		// kick remote
 		kickRemote.setOnClickListener(new View.OnClickListener() {
 			@Override

@@ -2,23 +2,18 @@ ToDo:
 =============================================================================================================
 Volker:
 - Anzeige der gefundenen BT Geräte richtig anzeigen
-- Geräusch erkennen
+- Geräusch erkennen)
 - Bluetooth Verbindung
 - Audiostreaming Bluetooth
 - Service
 
 Marcus:
-- Audiostreaming Wi-Fi
-- Babymonitor: Wenn Babymode deaktiviert oder Remote gekickt wird, Remote Bescheid geben. Vom Babygerät disconnecten können.
+# mit Baby reden
 - Anzahl der SMS im Drawer anzeigen
 - Nachrichten (Call/SMS) zwischenspeichern
-
-Weiteres:
 - Beim senden die Connectivity prüfen (Typ, an/aus, verbunden/nicht verbunden, ist ein remote vorhanden) Vielleicht eine extra Klasse für den Test (Beim Setup extra prüfen)
 		Thread in der Main, checken ob die gewählte Verbindung ordnungsgemäß läuft, wenn nicht dialog zum hinweis oder aktivieren, währenddessen stop thread, nach ok wieder thread start
-- Notification: Wenn Baby schreit, dies anzeigen
-				Geräuscherkenner stoppen bei Baby
-				Im babymonitor wieder aktivierbar
+
 
 Bugs:
 =============================================================================================================
@@ -29,6 +24,7 @@ Bugs:
 5 Absturz bei SMS Empfang wenn nciht das passende Fragment offen ist
 6 Beim Start der App wird die Selektierung im Drawer nicht gesetzt
 7 Remote Checker Thread richtig starten und beenden
+8 Wenn Babymonitor nicht im Vordergrund dann Absturz, wenn Geräusch eingeht.
 
 Optional:
 =============================================================================================================

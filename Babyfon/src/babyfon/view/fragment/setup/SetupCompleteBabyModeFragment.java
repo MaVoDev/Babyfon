@@ -94,10 +94,6 @@ public class SetupCompleteBabyModeFragment extends Fragment {
 		if (mSharedPrefs.getConnectivityTypeTemp() == 1) {
 			MainActivity.mConnection = new BluetoothConnection(mContext);
 			MainActivity.mConnection.startServer();
-
-			MainActivity.mAudioRecorder = new AudioRecorder(MainActivity.mConnection);
-			MainActivity.mAudioRecorder.startRecording();
-
 		} else if (mSharedPrefs.getConnectivityTypeTemp() == 2) {
 			mModuleHandler.startTCPReceiver();
 			mModuleHandler.startUDPReceiver();

@@ -31,7 +31,7 @@ import babyfon.connectivity.ConnectionInterface.OnConnnectedListener;
 import babyfon.connectivity.bluetooth.BluetoothConnection;
 import babyfon.connectivity.bluetooth.BluetoothListAdapter;
 import babyfon.connectivity.wifi.TCPSender;
-import babyfon.connectivity.wifi.UDPBroadcastSender;
+import babyfon.connectivity.wifi.UDPSender;
 import babyfon.connectivity.wifi.WifiHandler;
 import babyfon.init.R;
 import babyfon.model.DeviceListItemModel;
@@ -272,7 +272,7 @@ public class SetupSearchDevicesFragment extends Fragment {
 
 	public void initViewBWifi() {
 		mModuleHandler.startTCPReceiver();
-		new UDPBroadcastSender(mContext).sendUDPMessage(new WifiHandler(mContext).getNetworkAddressClassC());
+		new UDPSender(mContext).sendUDPMessage(new WifiHandler(mContext).getNetworkAddressClassC());
 	}
 
 	public void initViewBWifiDirect() {

@@ -1,7 +1,5 @@
 package babyfon;
 
-import java.util.logging.Handler;
-
 import babyfon.init.R;
 import babyfon.settings.SharedPrefs;
 import babyfon.view.activity.MainActivity;
@@ -13,8 +11,6 @@ import android.os.Vibrator;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.View.OnClickListener;
-import android.view.View.OnTouchListener;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.FrameLayout;
@@ -96,6 +92,8 @@ public class Notification {
 	 * Stop notifications
 	 */
 	public void stop() {
+		mSharedPrefs.setNoiseActivated(false);
+		
 		// stop display notification
 		if (MainActivity.overlay != null) {
 			MainActivity.overlay.setVisibility(View.GONE);
