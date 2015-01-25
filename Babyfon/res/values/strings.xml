@@ -129,5 +129,7 @@
     <!-- Content Description -->
     <string name="desc_img_default">Image default description</string>
     <string name="desc_list_item_icon">Item Icon</string>
+    <string name="service_started">Service started</string>
+    <string name="service_label">Service label</string>
 
 </resources>

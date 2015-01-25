@@ -7,12 +7,20 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import android.app.AlertDialog;
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.ServiceConnection;
 import android.content.res.Configuration;
 import android.content.res.TypedArray;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.IBinder;
+import android.os.Message;
+import android.os.Messenger;
+import android.os.RemoteException;
 import android.os.StrictMode;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -38,6 +46,7 @@ import babyfon.model.NavigationDrawerItemModel;
 import babyfon.performance.Battery;
 import babyfon.performance.ConnectivityStateCheck;
 import babyfon.performance.Sound;
+import babyfon.service.TestService;
 import babyfon.settings.ModuleHandler;
 import babyfon.settings.SharedPrefs;
 import babyfon.view.fragment.AbsenceFragment;
@@ -87,6 +96,80 @@ public class MainActivity extends ActionBarActivity {
 
 	private ArrayList<NavigationDrawerItemModel> items;
 	private NavigationDrawerListAdapter adapter;
+
+	//
+	// Service Zeugs
+	//
+
+	final Messenger mMessenger = new Messenger(new IncomingHandler());
+	protected Messenger mService;
+
+	static class IncomingHandler extends Handler {
+		@Override
+		public void handleMessage(Message msg) {
+			switch (msg.what) {
+			case TestService.MSG_SET_INT_VALUE:
+				// textIntValue.setText("Int Message: " + msg.arg1);
+				break;
+			case TestService.MSG_SET_STRING_VALUE:
+				String str1 = msg.getData().getString("str1");
+				// textStrValue.setText("Str Message: " + str1);
+				break;
+			default:
+				super.handleMessage(msg);
+			}
+		}
+	}
+
+	private ServiceConnection mServiceConnection = new ServiceConnection() {
+		public void onServiceConnected(ComponentName className, IBinder service) {
+			mService = new Messenger(service);
+			// textStatus.setText("Attached.");
+			try {
+				Message msg = Message.obtain(null, TestService.MSG_REGISTER_CLIENT);
+				msg.replyTo = mMessenger;
+				mService.send(msg);
+			} catch (RemoteException e) {
+				// In this case the service has crashed before we could even do anything with it
+			}
+		}
+
+		public void onServiceDisconnected(ComponentName className) {
+			// This is called when the connection with the service has been unexpectedly disconnected - process crashed.
+			mService = null;
+			// textStatus.setText("Disconnected.");
+		}
+	};
+	private boolean mIsBound;
+
+	void doBindService() {
+		bindService(new Intent(this, TestService.class), mServiceConnection, Context.BIND_AUTO_CREATE);
+		mIsBound = true;
+//		textStatus.setText("Binding.");
+	}
+
+	void doUnbindService() {
+		if (mIsBound) {
+			// If we have received the service, and hence registered with it, then now is the time to unregister.
+			if (mService != null) {
+				try {
+					Message msg = Message.obtain(null, TestService.MSG_UNREGISTER_CLIENT);
+					msg.replyTo = mMessenger;
+					mService.send(msg);
+				} catch (RemoteException e) {
+					// There is nothing special we need to do if the service has crashed.
+				}
+			}
+			// Detach our existing connection.
+			unbindService(mServiceConnection);
+			mIsBound = false;
+//			textStatus.setText("Unbinding.");
+		}
+	}
+
+	//
+	// / Service Zeugs
+	//
 
 	private static final String TAG = MainActivity.class.getCanonicalName();
 
