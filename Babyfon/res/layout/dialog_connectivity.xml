@@ -17,18 +17,18 @@
             android:text="@string/wifi" />
 
         <RadioButton
-            android:id="@+id/dialog_overview_baby_wifi_direct"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:text="@string/wifip2p" />
-
-        <RadioButton
             android:id="@+id/dialog_overview_baby_bluetooth"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:text="@string/bluetooth" />
+        
+        <RadioButton
+            android:id="@+id/dialog_overview_baby_call"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text="@string/by_call" />
     </RadioGroup>
 
 </LinearLayout>

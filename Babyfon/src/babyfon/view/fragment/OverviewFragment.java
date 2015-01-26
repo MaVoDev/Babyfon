@@ -13,14 +13,18 @@ import babyfon.view.activity.MainActivity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Typeface;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class OverviewFragment extends Fragment {
 
@@ -46,6 +50,14 @@ public class OverviewFragment extends Fragment {
 	private TextView connectivityState;
 	private TextView modeText;
 	private TextView modeState;
+
+	private LinearLayout layoutPassword;
+	private LinearLayout layoutCall;
+	private LinearLayout layoutSms;
+
+	private View layoutPasswordSeparator;
+	private View layoutCallSeparator;
+	private View layoutSmsSeparator;
 
 	private boolean isActive;
 
@@ -118,12 +130,54 @@ public class OverviewFragment extends Fragment {
 		modeState = (TextView) view.findViewById(R.id.overview_mode);
 		modeState.setTypeface(mTypeface_i);
 
+		// Initialize Layouts
+		layoutPassword = (LinearLayout) view.findViewById(R.id.overview_layout_password);
+		layoutCall = (LinearLayout) view.findViewById(R.id.overview_layout_call);
+		layoutSms = (LinearLayout) view.findViewById(R.id.overview_layout_sms);
+
+		// Initialize Views
+		layoutPasswordSeparator = (View) view.findViewById(R.id.overview_layout_password_separator);
+		layoutCallSeparator = (View) view.findViewById(R.id.overview_layout_call_separator);
+		layoutSmsSeparator = (View) view.findViewById(R.id.overview_layout_sms_separator);
+
 		updateUI();
 	}
 
 	public void updateUI() {
-		isActive = mSharedPrefs.getActiveStateBabyMode();
+		if (mSharedPrefs.getConnectivityType() == 1) {
+			updateBluetoothMode();
+		}
 
+		if (mSharedPrefs.getConnectivityType() == 2) {
+			updateWiFiMode();
+		}
+
+		if (mSharedPrefs.getConnectivityType() == 3) {
+			updateCallMode();
+		}
+
+		// connectivity type
+		if (mSharedPrefs.getConnectivityType() == 1) {
+			// bluetooth
+			connectivityState.setText(R.string.bluetooth);
+		} else if (mSharedPrefs.getConnectivityType() == 2) {
+			// wifi
+			connectivityState.setText(R.string.wifi);
+		} else {
+			// call
+			connectivityState.setText(R.string.by_call);
+		}
+	}
+
+	public void updateBluetoothMode() {
+		layoutCall.setVisibility(View.VISIBLE);
+		layoutCallSeparator.setVisibility(View.VISIBLE);
+		layoutSms.setVisibility(View.VISIBLE);
+		layoutSmsSeparator.setVisibility(View.VISIBLE);
+		layoutPassword.setVisibility(View.VISIBLE);
+		layoutPasswordSeparator.setVisibility(View.VISIBLE);
+
+		isActive = mSharedPrefs.getActiveStateBabyMode();
 		if (isActive) {
 			// baby mode is enabled
 			changeMode.setImageResource(android.R.drawable.ic_media_pause);
@@ -142,6 +196,7 @@ public class OverviewFragment extends Fragment {
 			remoteOnlineState.setImageResource(android.R.drawable.presence_away);
 		}
 
+		remoteText.setText(mContext.getString(R.string.overview_connected_device));
 		if (mSharedPrefs.getRemoteAddress() != null) {
 			// remote host is connected
 			kickRemote.setVisibility(View.VISIBLE);
@@ -159,17 +214,10 @@ public class OverviewFragment extends Fragment {
 			remoteOnlineState.setImageResource(android.R.drawable.presence_invisible);
 		}
 
-		// connectivity type
-		if (mSharedPrefs.getConnectivityType() == 1) {
-			// bluetooth
-			connectivityState.setText(R.string.bluetooth);
-		} else if (mSharedPrefs.getConnectivityType() == 2) {
-			// wifi
-			connectivityState.setText(R.string.wifi);
-		} else {
-			// wifi direct
-			connectivityState.setText(R.string.wifip2p);
-		}
+		// password
+		passwordState.setText(mSharedPrefs.getPassword());
+
+		modeText.setText(mContext.getString(R.string.overview_baby_mode_state));
 
 		// sms state
 		if (mSharedPrefs.getForwardingSMS()) {
@@ -187,20 +235,135 @@ public class OverviewFragment extends Fragment {
 			callState.setText(R.string.radio_send_false);
 		}
 
-		// password
-		passwordState.setText(mSharedPrefs.getPassword());
-
 		if (mSharedPrefs.isNoiseActivated()) {
 			if (MainActivity.mAudioRecorder == null) {
-				MainActivity.mAudioRecorder = new AudioRecorder(mContext, MainActivity.mConnection);
-				MainActivity.mAudioRecorder.startRecording();
+				startNoiseRecorder();
 			}
 		} else {
 			if (MainActivity.mAudioRecorder != null) {
 				MainActivity.mAudioRecorder.stopRecording();
-				MainActivity.mAudioRecorder = null;
 			}
 		}
+	}
+
+	public void updateWiFiMode() {
+		layoutCall.setVisibility(View.VISIBLE);
+		layoutCallSeparator.setVisibility(View.VISIBLE);
+		layoutSms.setVisibility(View.VISIBLE);
+		layoutSmsSeparator.setVisibility(View.VISIBLE);
+		layoutPassword.setVisibility(View.VISIBLE);
+		layoutPasswordSeparator.setVisibility(View.VISIBLE);
+
+		isActive = mSharedPrefs.getActiveStateBabyMode();
+		if (isActive) {
+			// baby mode is enabled
+			changeMode.setImageResource(android.R.drawable.ic_media_pause);
+			modeState.setText(R.string.enabled);
+			activeState.setImageResource(android.R.drawable.presence_online);
+		} else {
+			// baby mode is disabled
+			changeMode.setImageResource(android.R.drawable.ic_media_play);
+			modeState.setText(R.string.disabled);
+			activeState.setImageResource(android.R.drawable.presence_invisible);
+		}
+
+		if (mSharedPrefs.isRemoteOnline()) {
+
+		} else {
+			remoteOnlineState.setImageResource(android.R.drawable.presence_away);
+		}
+
+		remoteText.setText(mContext.getString(R.string.overview_connected_device));
+		if (mSharedPrefs.getRemoteAddress() != null) {
+			// remote host is connected
+			kickRemote.setVisibility(View.VISIBLE);
+			kickRemote.setImageResource(android.R.drawable.ic_menu_close_clear_cancel);
+			remoteState.setText(mSharedPrefs.getRemoteName());
+			if (mSharedPrefs.isRemoteOnline()) {
+				remoteOnlineState.setImageResource(android.R.drawable.presence_online);
+			} else {
+				remoteOnlineState.setImageResource(android.R.drawable.presence_away);
+			}
+		} else {
+			// remote host isn't connected
+			kickRemote.setVisibility(View.INVISIBLE);
+			remoteState.setText(R.string.overview_connected_device_false);
+			remoteOnlineState.setImageResource(android.R.drawable.presence_invisible);
+		}
+
+		// password
+		passwordState.setText(mSharedPrefs.getPassword());
+
+		modeText.setText(mContext.getString(R.string.overview_baby_mode_state));
+
+		// sms state
+		if (mSharedPrefs.getForwardingSMS()) {
+			smsState.setText(R.string.radio_forward);
+		} else if (mSharedPrefs.getForwardingSMSInfo()) {
+			smsState.setText(R.string.radio_only_notify);
+		} else {
+			smsState.setText(R.string.radio_send_false);
+		}
+
+		// call state
+		if (mSharedPrefs.getForwardingCallInfo()) {
+			callState.setText(R.string.radio_only_notify);
+		} else {
+			callState.setText(R.string.radio_send_false);
+		}
+
+		if (mSharedPrefs.isNoiseActivated()) {
+			if (MainActivity.mAudioRecorder == null) {
+				startNoiseRecorder();
+			}
+		} else {
+			if (MainActivity.mAudioRecorder != null) {
+				MainActivity.mAudioRecorder.stopRecording();
+			}
+		}
+	}
+
+	public void updateCallMode() {
+		layoutCall.setVisibility(View.INVISIBLE);
+		layoutCallSeparator.setVisibility(View.INVISIBLE);
+		layoutSms.setVisibility(View.INVISIBLE);
+		layoutSmsSeparator.setVisibility(View.INVISIBLE);
+		layoutPassword.setVisibility(View.INVISIBLE);
+		layoutPasswordSeparator.setVisibility(View.INVISIBLE);
+
+		remoteText.setText(mContext.getString(R.string.overview_text_call_device));
+		if (mSharedPrefs.getPhoneNumber() != null && !mSharedPrefs.getPhoneNumber().equals("")) {
+			remoteOnlineState.setImageResource(android.R.drawable.presence_online);
+			remoteState.setText(mSharedPrefs.getPhoneNumber());
+		} else {
+			remoteOnlineState.setImageResource(android.R.drawable.presence_invisible);
+			remoteState.setText(mContext.getString(R.string.overview_no_number));
+		}
+
+		if (mSharedPrefs.isNoiseActivated()) {
+			if (MainActivity.mAudioRecorder == null) {
+				((MainActivity) mContext).runOnUiThread(new Runnable() {
+					@Override
+					public void run() {
+						Toast toast = Toast.makeText(mContext, R.string.noise_countdown, Toast.LENGTH_SHORT);
+						toast.show();
+					}
+				});
+				startNoiseRecorder();
+			}
+			changeMode.setImageResource(android.R.drawable.ic_media_pause);
+			modeState.setText(R.string.enabled);
+			activeState.setImageResource(android.R.drawable.presence_online);
+		} else {
+			changeMode.setImageResource(android.R.drawable.ic_media_play);
+			modeState.setText(R.string.disabled);
+			activeState.setImageResource(android.R.drawable.presence_invisible);
+			if (MainActivity.mAudioRecorder != null) {
+				MainActivity.mAudioRecorder.stopRecording();
+			}
+		}
+
+		modeText.setText(mContext.getString(R.string.overview_baby_noise_state));
 	}
 
 	@Override
@@ -272,8 +435,8 @@ public class OverviewFragment extends Fragment {
 		changeConnectivity.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				final CharSequence[] items = { mContext.getString(R.string.wifi), mContext.getString(R.string.wifip2p),
-						mContext.getString(R.string.bluetooth) };
+				final CharSequence[] items = { mContext.getString(R.string.wifi),
+						mContext.getString(R.string.bluetooth), mContext.getString(R.string.by_call) };
 
 				AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
 				builder.setTitle(mContext.getString(R.string.dialog_title_connectivity));
@@ -281,7 +444,7 @@ public class OverviewFragment extends Fragment {
 				int checkedOption = -1;
 
 				if (mSharedPrefs.getConnectivityType() == 1) {
-					checkedOption = 2;
+					checkedOption = 1;
 				}
 
 				if (mSharedPrefs.getConnectivityType() == 2) {
@@ -289,7 +452,7 @@ public class OverviewFragment extends Fragment {
 				}
 
 				if (mSharedPrefs.getConnectivityType() == 3) {
-					checkedOption = 1;
+					checkedOption = 2;
 				}
 
 				builder.setSingleChoiceItems(items, checkedOption, new DialogInterface.OnClickListener() {
@@ -300,14 +463,17 @@ public class OverviewFragment extends Fragment {
 							mSharedPrefs.setConnectivityType(2);
 							if (mSharedPrefs.getRemoteAddress() == null) {
 								mModuleHandler.startUDPReceiver();
+								mModuleHandler.startTCPReceiver();
 							}
 							break;
 						case 1:
-							mSharedPrefs.setConnectivityType(3);
+							mSharedPrefs.setConnectivityType(1);
+							mModuleHandler.stopTCPReceiver();
 							mModuleHandler.stopUDPReceiver();
 							break;
 						case 2:
-							mSharedPrefs.setConnectivityType(1);
+							mSharedPrefs.setConnectivityType(3);
+							mModuleHandler.stopTCPReceiver();
 							mModuleHandler.stopUDPReceiver();
 							break;
 						}
@@ -413,55 +579,63 @@ public class OverviewFragment extends Fragment {
 
 			@Override
 			public void onClick(View v) {
-				if (isActive) {
-					// baby mode is active
-					title = mContext.getString(R.string.dialog_title_change_baby_mode_state_to_false);
-					message = mContext.getString(R.string.dialog_message_change_baby_mode_state_to_false);
+				if (mSharedPrefs.getConnectivityType() == 3) {
+					if (mSharedPrefs.isNoiseActivated()) {
+						mSharedPrefs.setNoiseActivated(false);
+					} else {
+						mSharedPrefs.setNoiseActivated(true);
+					}
 				} else {
-					// baby mode is not active
-					title = mContext.getString(R.string.dialog_title_change_baby_mode_state_to_true);
-					message = mContext.getString(R.string.dialog_message_change_baby_mode_state_to_true);
-				}
-				new AlertDialog.Builder(getActivity())
-						.setTitle(title)
-						.setMessage(message)
-						.setNegativeButton(mContext.getString(R.string.dialog_button_no), null)
-						.setPositiveButton(mContext.getString(R.string.dialog_button_yes),
-								new DialogInterface.OnClickListener() {
-									@Override
-									public void onClick(DialogInterface dialog, int id) {
-										if (isActive) {
-											// enabled -> disabled
-											mSharedPrefs.setActiveStateBabyMode(false);
-											if (mSharedPrefs.getRemoteAddress() != null) {
-												new Message(mContext).send(mContext
-														.getString(R.string.BABYFON_MSG_SYSTEM_AWAY));
-												mModuleHandler.unregisterBattery();
-												if (mSharedPrefs.getForwardingSMS()
-														|| mSharedPrefs.getForwardingSMSInfo()) {
-													mModuleHandler.unregisterSMS();
+					if (isActive) {
+						// baby mode is active
+						title = mContext.getString(R.string.dialog_title_change_baby_mode_state_to_false);
+						message = mContext.getString(R.string.dialog_message_change_baby_mode_state_to_false);
+					} else {
+						// baby mode is not active
+						title = mContext.getString(R.string.dialog_title_change_baby_mode_state_to_true);
+						message = mContext.getString(R.string.dialog_message_change_baby_mode_state_to_true);
+					}
+					new AlertDialog.Builder(getActivity())
+							.setTitle(title)
+							.setMessage(message)
+							.setNegativeButton(mContext.getString(R.string.dialog_button_no), null)
+							.setPositiveButton(mContext.getString(R.string.dialog_button_yes),
+									new DialogInterface.OnClickListener() {
+										@Override
+										public void onClick(DialogInterface dialog, int id) {
+											if (isActive) {
+												// enabled -> disabled
+												mSharedPrefs.setActiveStateBabyMode(false);
+												if (mSharedPrefs.getRemoteAddress() != null) {
+													new Message(mContext).send(mContext
+															.getString(R.string.BABYFON_MSG_SYSTEM_AWAY));
+													mModuleHandler.unregisterBattery();
+													if (mSharedPrefs.getForwardingSMS()
+															|| mSharedPrefs.getForwardingSMSInfo()) {
+														mModuleHandler.unregisterSMS();
+													}
+												} else {
+													mModuleHandler.stopUDPReceiver();
 												}
 											} else {
-												mModuleHandler.stopUDPReceiver();
-											}
-										} else {
-											// disabled -> enabled
-											mSharedPrefs.setActiveStateBabyMode(true);
-											if (mSharedPrefs.getRemoteAddress() != null) {
-												mModuleHandler.registerBattery();
-												if (mSharedPrefs.getForwardingSMS()
-														|| mSharedPrefs.getForwardingSMSInfo()) {
-													mModuleHandler.registerSMS();
+												// disabled -> enabled
+												mSharedPrefs.setActiveStateBabyMode(true);
+												if (mSharedPrefs.getRemoteAddress() != null) {
+													mModuleHandler.registerBattery();
+													if (mSharedPrefs.getForwardingSMS()
+															|| mSharedPrefs.getForwardingSMSInfo()) {
+														mModuleHandler.registerSMS();
+													}
+													new Message(mContext).send(mContext
+															.getString(R.string.BABYFON_MSG_SYSTEM_REJOIN));
+												} else {
+													mModuleHandler.startUDPReceiver();
 												}
-												new Message(mContext).send(mContext
-														.getString(R.string.BABYFON_MSG_SYSTEM_REJOIN));
-											} else {
-												mModuleHandler.startUDPReceiver();
 											}
+											updateUI();
 										}
-										updateUI();
-									}
-								}).create().show();
+									}).create().show();
+				}
 			}
 		});
 
@@ -481,6 +655,18 @@ public class OverviewFragment extends Fragment {
 				});
 			}
 		}, 0, 1000);
+	}
+
+	public void startNoiseRecorder() {
+		final Timer noiseRecorderCountdown = new Timer();
+
+		noiseRecorderCountdown.scheduleAtFixedRate(new TimerTask() {
+			public void run() {
+				MainActivity.mAudioRecorder = new AudioRecorder(mContext, MainActivity.mConnection);
+				MainActivity.mAudioRecorder.startRecording();
+				noiseRecorderCountdown.cancel();
+			}
+		}, 30000, 1000);
 	}
 
 	@Override

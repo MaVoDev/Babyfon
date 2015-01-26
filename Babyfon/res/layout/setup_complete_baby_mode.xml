@@ -8,7 +8,7 @@
             style="@style/fragmentTitle"
             android:text="@string/title_setup_complete_baby_mode" />
     </LinearLayout>
-    
+
     <TextView
         android:id="@+id/subtitle_setup_complete_baby"
         style="@style/fragmentSubtitle"
@@ -30,7 +30,8 @@
             android:layout_gravity="center_horizontal"
             android:layout_marginRight="8dp"
             android:layout_marginTop="20dp"
-            android:textSize="64sp" />
+            android:textSize="64sp"
+            android:visibility="visible" />
     </LinearLayout>
 
     <LinearLayout style="@style/layout_footer" >

@@ -21,6 +21,10 @@
     <string name="pref_title_name">Name des Babys</string>
     <string name="pref_title_gender">Geschlecht des Babys</string>
 
+    <!-- Contact settings -->
+    <string name="pref_header_contact">Kontaktinformationen</string>
+    <string name="pref_title_phone_number">Telefonnummer</string>
+
     <string-array name="pref_gender_list_titles">
         <item>Junge</item>
         <item>Mädchen</item>

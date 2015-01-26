@@ -82,28 +82,40 @@ public class SetupCompleteBabyModeFragment extends Fragment {
 		infoText = (TextView) view.findViewById(R.id.text_complete_baby);
 		infoText.setTypeface(mTypeface_i);
 
+		if (mSharedPrefs.getConnectivityTypeTemp() == 3) {
+			infoText.setText(mContext.getString(R.string.text_complete_baby_call));
+			tvPassword.setVisibility(View.INVISIBLE);
+		} else {
+			infoText.setText(mContext.getString(R.string.text_complete_baby));
+			tvPassword.setVisibility(View.VISIBLE);
+		}
+
 		updateUI();
 	}
 
 	public void handleModules() {
-		
-		if(mSharedPrefs.getForwardingSMSInfoTemp() || mSharedPrefs.getForwardingSMSTemp()) {
-			mModuleHandler.registerSMS();
-		}
-		
-		if (mSharedPrefs.getConnectivityTypeTemp() == 1) {
-			MainActivity.mConnection = new BluetoothConnection(mContext);
-			MainActivity.mConnection.startServer();
-		} else if (mSharedPrefs.getConnectivityTypeTemp() == 2) {
-			mModuleHandler.startTCPReceiver();
-			mModuleHandler.startUDPReceiver();
+
+		if (mSharedPrefs.getConnectivityTypeTemp() != 3) {
+			if (mSharedPrefs.getForwardingSMSInfoTemp() || mSharedPrefs.getForwardingSMSTemp()) {
+				mModuleHandler.registerSMS();
+			}
+
+			if (mSharedPrefs.getConnectivityTypeTemp() == 1) {
+				MainActivity.mConnection = new BluetoothConnection(mContext);
+				MainActivity.mConnection.startServer();
+			} else if (mSharedPrefs.getConnectivityTypeTemp() == 2) {
+				mModuleHandler.startTCPReceiver();
+				mModuleHandler.startUDPReceiver();
+			} else {
+				mModuleHandler.stopTCPReceiver();
+				mModuleHandler.stopUDPReceiver();
+			}
+			mSharedPrefs.setRemoteAddress(null);
+			mSharedPrefs.setRemoteName(null);
 		} else {
 			mModuleHandler.stopTCPReceiver();
 			mModuleHandler.stopUDPReceiver();
 		}
-
-		mSharedPrefs.setRemoteAddress(null);
-		mSharedPrefs.setRemoteName(null);
 	}
 
 	@Override

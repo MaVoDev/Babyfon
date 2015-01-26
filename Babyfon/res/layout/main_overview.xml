@@ -35,7 +35,6 @@
                     style="@style/text_normal"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/overview_baby_mode_state"
                     android:textStyle="bold" />
 
                 <LinearLayout
@@ -91,7 +90,6 @@
                     style="@style/text_normal"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/overview_connected_device"
                     android:textStyle="bold" />
 
                 <LinearLayout
@@ -174,6 +172,7 @@
             android:background="@android:color/darker_gray" />
 
         <LinearLayout
+            android:id="@+id/overview_layout_call"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/overview"
@@ -212,11 +211,13 @@
         </LinearLayout>
 
         <View
+            android:id="@+id/overview_layout_call_separator"
             android:layout_width="fill_parent"
             android:layout_height="1dp"
             android:background="@android:color/darker_gray" />
 
         <LinearLayout
+            android:id="@+id/overview_layout_sms"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/overview"
@@ -255,11 +256,13 @@
         </LinearLayout>
 
         <View
+            android:id="@+id/overview_layout_sms_separator"
             android:layout_width="fill_parent"
             android:layout_height="1dp"
             android:background="@android:color/darker_gray" />
 
         <LinearLayout
+            android:id="@+id/overview_layout_password"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/overview"
@@ -298,6 +301,7 @@
         </LinearLayout>
 
         <View
+            android:id="@+id/overview_layout_password_separator"
             android:layout_width="fill_parent"
             android:layout_height="1dp"
             android:background="@android:color/darker_gray" />

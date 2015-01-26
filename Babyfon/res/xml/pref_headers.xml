@@ -6,6 +6,9 @@
         android:fragment="babyfon.init.SettingsActivity$GeneralPreferenceFragment"
         android:title="@string/pref_header_baby" />
     <header
+        android:fragment="babyfon.init.SettingsActivity$ContactPreferenceFragment"
+        android:title="@string/pref_header_contact" />
+    <header
         android:fragment="babyfon.init.SettingsActivity$NotificationPreferenceFragment"
         android:title="@string/pref_header_notifications" />
 

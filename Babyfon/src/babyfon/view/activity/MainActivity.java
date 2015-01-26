@@ -14,6 +14,7 @@ import android.content.IntentFilter;
 import android.content.res.Configuration;
 import android.content.res.TypedArray;
 import android.media.Ringtone;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.os.Vibrator;
@@ -61,7 +62,7 @@ public class MainActivity extends ActionBarActivity {
 	private DrawerLayout mDrawerLayout;
 	private ListView mDrawerList;
 	private ActionBarDrawerToggle mDrawerToggle;
-	
+
 	public static AudioPlayer mAudioPlayer;
 
 	// Module objects
@@ -114,7 +115,7 @@ public class MainActivity extends ActionBarActivity {
 			if (mSharedPrefs.getConnectivityType() == 2) {
 				mModuleHandler.startTCPReceiver();
 				mModuleHandler.startUDPReceiver();
-			} 
+			}
 		}
 		if (mSharedPrefs.getForwardingSMS() || mSharedPrefs.getForwardingSMSInfo()) {
 			mModuleHandler.registerSMS();
@@ -173,7 +174,7 @@ public class MainActivity extends ActionBarActivity {
 
 		if (mSharedPrefs.getRemoteAddress() != null) {
 			new babyfon.Message(this).send(this.getString(R.string.BABYFON_MSG_SYSTEM_AWAY));
-		} 
+		}
 
 		if (mSharedPrefs.getDeviceMode() == 0) {
 			new Sound(this).soundOn();
@@ -186,6 +187,10 @@ public class MainActivity extends ActionBarActivity {
 		if (mSharedPrefs.getConnectivityType() == 2) {
 			mModuleHandler.stopUDPReceiver();
 			mModuleHandler.stopTCPReceiver();
+		}
+
+		if (MainActivity.mAudioRecorder != null) {
+			MainActivity.mAudioRecorder.stopRecording();
 		}
 
 		if (mSharedPrefs.getRemoteAddress() != null) {
@@ -216,7 +221,7 @@ public class MainActivity extends ActionBarActivity {
 		} else {
 			if (mSharedPrefs.getDeviceMode() == 0) {
 				mSharedPrefs.setRemoteOnlineState(false);
-				
+
 				new Sound(this).mute();
 			}
 		}
@@ -224,7 +229,7 @@ public class MainActivity extends ActionBarActivity {
 		if (mSharedPrefs.getRemoteAddress() != null) {
 			mModuleHandler.startRemoteCheck();
 		}
-		
+
 		if (mSharedPrefs.getConnectivityType() == 2) {
 			mModuleHandler.startUDPReceiver();
 			mModuleHandler.startTCPReceiver();
@@ -263,6 +268,19 @@ public class MainActivity extends ActionBarActivity {
 	@Override
 	protected void onResume() {
 		super.onResume();
+
+		if (mSharedPrefs.getConnectivityType() != 3) {
+			if (mSharedPrefs.isNoiseActivated()) {
+				if (MainActivity.mAudioRecorder == null) {
+					MainActivity.mAudioRecorder = new AudioRecorder(this, MainActivity.mConnection);
+					MainActivity.mAudioRecorder.startRecording();
+				}
+			} else {
+				if (MainActivity.mAudioRecorder != null) {
+					MainActivity.mAudioRecorder.stopRecording();
+				}
+			}
+		}
 
 		if (timerNavigationDrawer == null) {
 			timerNavigationDrawer = new Timer();

@@ -36,20 +36,21 @@
                 android:text="@string/wifi" />
 
             <RadioButton
-                android:id="@+id/radio_wifi_direct"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:checked="false"
-                android:text="@string/wifip2p" />
-
-            <RadioButton
                 android:id="@+id/radio_bluetooth"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:checked="false"
                 android:text="@string/bluetooth" />
+            
+            <RadioButton
+                android:id="@+id/radio_call"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:checked="false"
+                android:visibility="invisible"
+                android:text="@string/by_call" />
         </RadioGroup>
     </LinearLayout>
 

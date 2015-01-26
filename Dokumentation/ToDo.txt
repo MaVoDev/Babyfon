@@ -8,12 +8,12 @@ Volker:
 - Service
 
 Marcus:
-# mit Baby reden
+- mit Baby reden
 - Anzahl der SMS im Drawer anzeigen
+- Neues Gerät aus dem babymonitor hinzufügen können
 - Nachrichten (Call/SMS) zwischenspeichern
 - Beim senden die Connectivity prüfen (Typ, an/aus, verbunden/nicht verbunden, ist ein remote vorhanden) Vielleicht eine extra Klasse für den Test (Beim Setup extra prüfen)
 		Thread in der Main, checken ob die gewählte Verbindung ordnungsgemäß läuft, wenn nicht dialog zum hinweis oder aktivieren, währenddessen stop thread, nach ok wieder thread start
-
 
 Bugs:
 =============================================================================================================
@@ -25,18 +25,21 @@ Bugs:
 6 Beim Start der App wird die Selektierung im Drawer nicht gesetzt
 7 Remote Checker Thread richtig starten und beenden
 8 Wenn Babymonitor nicht im Vordergrund dann Absturz, wenn Geräusch eingeht.
+9 Toast für die 30 Sekunden bleibt zu lange da (im Anrufmodus auf Babyseite)
+10 Wenn 2 Geräte verbunden sind im WiFI und dann anruf mode, wird korrekt away gesetzt, aber wenn man wieder ins wifi geht passiert bei den eltern nix
 
 Optional:
 =============================================================================================================
 - Navigation Drawer schöner gestalten, mit Image über der Itemliste
-- Neues Gerät aus dem babymonitor hinzufügen können
 - Wenn SMS gelesen, dann nicht mehr bold und setze Zahl im Drawer runter
 - Mikrofonsensibilität einstellen können im Babymonitor
-- WiFi Direct Verbindung (Wenn keine Zeit ist, rausnehmen aus der App)
-- WiFi Direct State
 - Nachrichten zwischenpuffern, die nicht versendet werden konnten(SMS, Anrufe)
 - Nachrichten anders rum sortieren
 - App wird nicht richtig beendet?
 
 Änderungen
 ------------------
+
+Testfälle:
+--------------------------------------------
+- Audiostreaming + Geräusch + SMS + Anruf

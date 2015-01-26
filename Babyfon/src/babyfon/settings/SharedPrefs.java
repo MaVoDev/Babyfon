@@ -56,7 +56,7 @@ public class SharedPrefs {
 	 * @return Boolean: noise state
 	 */
 	public Boolean isNoiseActivated() {
-		return mSharedPreferences.getBoolean("noise_activated", true);
+		return mSharedPreferences.getBoolean("noise_activated", false);
 	}
 
 	/**
@@ -285,6 +285,27 @@ public class SharedPrefs {
 	 */
 	public void setName(String name) {
 		editor.putString("baby_name", name).commit();
+	}
+
+	// == Phone number ===========================
+
+	/**
+	 * Get the phone number.
+	 * 
+	 * @return String phone number
+	 */
+	public String getPhoneNumber() {
+		return mSharedPreferences.getString("phone_number", null);
+	}
+
+	/**
+	 * Set the phone number.
+	 * 
+	 * @param String
+	 *            phone number
+	 */
+	public void setPhoneNumber(String phoneNumber) {
+		editor.putString("phone_number", phoneNumber).commit();
 	}
 
 	// == Notification display ========================
