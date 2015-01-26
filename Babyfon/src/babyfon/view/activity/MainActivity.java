@@ -34,6 +34,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.FrameLayout;
 import android.widget.ListView;
+import android.widget.Toast;
 import babyfon.adapter.NavigationDrawerListAdapter;
 import babyfon.audio.AudioPlayer;
 import babyfon.audio.AudioRecorder;
@@ -46,6 +47,7 @@ import babyfon.model.NavigationDrawerItemModel;
 import babyfon.performance.Battery;
 import babyfon.performance.ConnectivityStateCheck;
 import babyfon.performance.Sound;
+import babyfon.service.LocalService;
 import babyfon.service.TestService;
 import babyfon.settings.ModuleHandler;
 import babyfon.settings.SharedPrefs;
@@ -98,77 +100,137 @@ public class MainActivity extends ActionBarActivity {
 	private NavigationDrawerListAdapter adapter;
 
 	//
-	// Service Zeugs
+	// --------------------------------------- Service Zeugs (REMOTE)
 	//
 
-	final Messenger mMessenger = new Messenger(new IncomingHandler());
-	protected Messenger mService;
+	// // Member Variablen für Service
+	// final Messenger mMessenger = new Messenger(new IncomingHandler());
+	// protected Messenger mMsgService;
+	//
+	// static class IncomingHandler extends Handler {
+	// @Override
+	// public void handleMessage(Message msg) {
+	// switch (msg.what) {
+	// case TestService.MSG_SET_INT_VALUE:
+	// // textIntValue.setText("Int Message: " + msg.arg1);
+	// break;
+	// case TestService.MSG_SET_STRING_VALUE:
+	// String str1 = msg.getData().getString("str1");
+	// // textStrValue.setText("Str Message: " + str1);
+	// break;
+	// default:
+	// super.handleMessage(msg);
+	// }
+	// }
+	// }
+	//
+	// private ServiceConnection mServiceConnection = new ServiceConnection() {
+	//
+	// public void onServiceConnected(ComponentName className, IBinder service) {
+	// mMsgService = new Messenger(service);
+	//
+	// // textStatus.setText("Attached.");
+	// try {
+	// Message msg = Message.obtain(null, TestService.MSG_REGISTER_CLIENT);
+	// msg.replyTo = mMessenger;
+	// mMsgService.send(msg);
+	// } catch (RemoteException e) {
+	// // In this case the service has crashed before we could even do anything with it
+	// }
+	// }
+	//
+	// public void onServiceDisconnected(ComponentName className) {
+	// // This is called when the connection with the service has been unexpectedly disconnected - process crashed.
+	// mMsgService = null;
+	// // textStatus.setText("Disconnected.");
+	// }
+	// };
+	// private boolean mIsBound;
+	//
+	// void doBindService() {
+	// bindService(new Intent(this, TestService.class), mServiceConnection, Context.BIND_AUTO_CREATE);
+	// mIsBound = true;
+	// // textStatus.setText("Binding.");
+	// }
+	//
+	// void doUnbindService() {
+	// if (mIsBound) {
+	// // If we have received the service, and hence registered with it, then now is the time to unregister.
+	// if (mMsgService != null) {
+	// try {
+	// Message msg = Message.obtain(null, TestService.MSG_UNREGISTER_CLIENT);
+	// msg.replyTo = mMessenger;
+	// mMsgService.send(msg);
+	// } catch (RemoteException e) {
+	// // There is nothing special we need to do if the service has crashed.
+	// }
+	// }
+	// // Detach our existing connection.
+	// unbindService(mServiceConnection);
+	// mIsBound = false;
+	// // textStatus.setText("Unbinding.");
+	// }
+	// }
 
-	static class IncomingHandler extends Handler {
-		@Override
-		public void handleMessage(Message msg) {
-			switch (msg.what) {
-			case TestService.MSG_SET_INT_VALUE:
-				// textIntValue.setText("Int Message: " + msg.arg1);
-				break;
-			case TestService.MSG_SET_STRING_VALUE:
-				String str1 = msg.getData().getString("str1");
-				// textStrValue.setText("Str Message: " + str1);
-				break;
-			default:
-				super.handleMessage(msg);
-			}
-		}
-	}
+	//
+	// --------------------------------------- / Service Zeugs (REMOTE) ENDE
+	//
+
+	// -------------------- ------------------ ------------------- ------------------
+
+	//
+	// --------------------------------------- Service Zeugs (LOCAL)
+	//
+
+	public static LocalService mBoundService;
+	private boolean mIsBound = false;
 
 	private ServiceConnection mServiceConnection = new ServiceConnection() {
 		public void onServiceConnected(ComponentName className, IBinder service) {
-			mService = new Messenger(service);
-			// textStatus.setText("Attached.");
-			try {
-				Message msg = Message.obtain(null, TestService.MSG_REGISTER_CLIENT);
-				msg.replyTo = mMessenger;
-				mService.send(msg);
-			} catch (RemoteException e) {
-				// In this case the service has crashed before we could even do anything with it
-			}
+			// This is called when the connection with the service has been
+			// established, giving us the service object we can use to
+			// interact with the service. Because we have bound to a explicit
+			// service that we know is running in our own process, we can
+			// cast its IBinder to a concrete class and directly access it.
+			mBoundService = ((LocalService.LocalBinder) service).getService();
+
+			// Tell the user about this for our demo.
+			Toast.makeText(MainActivity.this, "Service connected.", Toast.LENGTH_SHORT).show();
+
+			// Verbinden mit aktuelle gepairtem Device...
+			mBoundService.connectTo("CC:96:A0:41:34:3E");
+			// mBoundService.connectTo(mSharedPrefs.getRemoteAddress());
 		}
 
 		public void onServiceDisconnected(ComponentName className) {
-			// This is called when the connection with the service has been unexpectedly disconnected - process crashed.
-			mService = null;
-			// textStatus.setText("Disconnected.");
+			// This is called when the connection with the service has been
+			// unexpectedly disconnected -- that is, its process crashed.
+			// Because it is running in our same process, we should never
+			// see this happen.
+			mBoundService = null;
+			Toast.makeText(MainActivity.this, "Service disconnected.", Toast.LENGTH_SHORT).show();
 		}
 	};
-	private boolean mIsBound;
 
 	void doBindService() {
-		bindService(new Intent(this, TestService.class), mServiceConnection, Context.BIND_AUTO_CREATE);
+		// Establish a connection with the service. We use an explicit
+		// class name because we want a specific service implementation that
+		// we know will be running in our own process (and thus won't be
+		// supporting component replacement by other applications).
+		bindService(new Intent(MainActivity.this, LocalService.class), mServiceConnection, Context.BIND_AUTO_CREATE);
 		mIsBound = true;
-//		textStatus.setText("Binding.");
 	}
 
 	void doUnbindService() {
 		if (mIsBound) {
-			// If we have received the service, and hence registered with it, then now is the time to unregister.
-			if (mService != null) {
-				try {
-					Message msg = Message.obtain(null, TestService.MSG_UNREGISTER_CLIENT);
-					msg.replyTo = mMessenger;
-					mService.send(msg);
-				} catch (RemoteException e) {
-					// There is nothing special we need to do if the service has crashed.
-				}
-			}
 			// Detach our existing connection.
 			unbindService(mServiceConnection);
 			mIsBound = false;
-//			textStatus.setText("Unbinding.");
 		}
 	}
 
 	//
-	// / Service Zeugs
+	// --------------------------------------- / Service Zeugs (LOCAL) ENDE
 	//
 
 	private static final String TAG = MainActivity.class.getCanonicalName();
@@ -215,6 +277,9 @@ public class MainActivity extends ActionBarActivity {
 		mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, android.R.string.ok, android.R.string.no);
 
 		MainActivity.mAudioPlayer = new AudioPlayer();
+
+		// Zum Service verbinden / Service starten
+		doBindService();
 	}
 
 	@Override
@@ -230,6 +295,9 @@ public class MainActivity extends ActionBarActivity {
 			timerConnectivityState.cancel();
 			timerConnectivityState = null;
 		}
+
+		// Service unbinden
+		doUnbindService();
 
 		if (mSharedPrefs.getRemoteAddress() != null) {
 			new babyfon.Message(this).send(this.getString(R.string.BABYFON_MSG_SYSTEM_AWAY));

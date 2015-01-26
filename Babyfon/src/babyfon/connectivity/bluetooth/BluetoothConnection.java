@@ -123,6 +123,13 @@ public class BluetoothConnection implements ConnectionInterface {
 	}
 
 	@Override
+	public void connectToAdress(String address) {
+		BluetoothDevice device = mBluetoothAdapter.getRemoteDevice(address);
+		mBluetoothConnectionThread = new BluetoothClientThread(device, mBluetoothAdapter, this);
+		mBluetoothConnectionThread.start();
+	}
+
+	@Override
 	public void setOnSearchStatusChangedListener(OnSearchStatusChangedListener l) {
 		this.mOnSearchStatusChangedListener = l;
 	}
@@ -197,4 +204,5 @@ public class BluetoothConnection implements ConnectionInterface {
 	public OnReceiveDataListener getOnReceiveMsgListener() {
 		return mOnReceiveMsgListener;
 	}
+
 }

@@ -1,7 +1,5 @@
 package babyfon.connectivity;
 
-import android.widget.ArrayAdapter;
-
 public interface ConnectionInterface {
 
 	//
@@ -11,6 +9,8 @@ public interface ConnectionInterface {
 	public void searchDevices();
 
 	public void connectToDeviceFromList(int position);
+
+	public void connectToAdress(String adress);
 
 	public void startServer();
 
@@ -30,6 +30,7 @@ public interface ConnectionInterface {
 	public void sendData(byte[] data, byte type);
 
 	public void sendMessage(String msg);
+
 	//
 	// Listener
 	//
