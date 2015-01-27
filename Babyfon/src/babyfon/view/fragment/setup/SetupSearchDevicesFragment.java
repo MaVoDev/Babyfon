@@ -2,7 +2,6 @@ package babyfon.view.fragment.setup;
 
 import java.net.SocketException;
 import java.net.UnknownHostException;
-import java.util.ArrayList;
 
 import android.app.AlertDialog;
 import android.content.Context;
@@ -50,16 +49,17 @@ public class SetupSearchDevicesFragment extends Fragment {
 	private TextView subtitle;
 	private TextView title;
 
-	private ArrayList<DeviceListItemModel> devices;
+	// private ArrayList<DeviceListItemModel> devices;
+	private DeviceListAdapter mDevicesAdapter;
 
 	private int connectivityType;
 
 	private ModuleHandler mModuleHandler;
 	private ConnectionInterface mConnection;
 	private BluetoothHandler mBtHandler;
-	private static SharedPrefs mSharedPrefs;
+	private SharedPrefs mSharedPrefs;
 
-	private static Context mContext;
+	private Context mContext;
 
 	private static final String TAG = SetupSearchDevicesFragment.class.getCanonicalName();
 
@@ -84,13 +84,13 @@ public class SetupSearchDevicesFragment extends Fragment {
 		}
 	}
 
-	public void updateList() {
+	public void initList() {
 
-		DeviceListAdapter adapter = new DeviceListAdapter(mContext.getApplicationContext(), devices);
-		// DeviceListAdapter adapter = new DeviceListAdapter(mContext.getApplicationContext(), devices);
+		mDevicesAdapter = new DeviceListAdapter(mContext, R.layout.listview_devices);
+		// mDevicesAdapter = new DeviceListAdapter(mContext, R.layout.bluetooth_row_element);
 
 		// Assign adapter to ListView
-		listViewDevices.setAdapter(adapter);
+		listViewDevices.setAdapter(mDevicesAdapter);
 
 		// ListView Item Click Listener
 		listViewDevices.setOnItemClickListener(new OnItemClickListener() {
@@ -98,8 +98,8 @@ public class SetupSearchDevicesFragment extends Fragment {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-				String deviceName = devices.get(position).getDeviceName();
-				String deviceIP = devices.get(position).getIP();
+				String deviceName = mDevicesAdapter.getItem(position).getDeviceName();
+				String deviceIP = mDevicesAdapter.getItem(position).getIP();
 
 				Log.d(TAG, "Selected item: " + deviceName + " (" + deviceIP + ")");
 
@@ -155,7 +155,7 @@ public class SetupSearchDevicesFragment extends Fragment {
 
 		initUiElements(view);
 
-		devices = new ArrayList<DeviceListItemModel>();
+		initList();
 
 		mModuleHandler.unregisterBattery();
 
@@ -237,12 +237,12 @@ public class SetupSearchDevicesFragment extends Fragment {
 	}
 
 	public void refreshDeviceList() {
-		devices.clear();
+		mDevicesAdapter.clear();
 
 		if (mSharedPrefs.getConnectivityTypeTemp() == 1) {
 			mBtHandler.searchDevices();
 		} else if (mSharedPrefs.getConnectivityTypeTemp() == 2) {
-			updateList();
+			// initList();
 			initViewBWifi();
 		}
 	}
@@ -252,13 +252,10 @@ public class SetupSearchDevicesFragment extends Fragment {
 
 		mBtHandler = new BluetoothHandler(mContext);
 		mBtHandler.enableBluetooth();
-		mBtHandler.prepareForSearch(devices);
-
-		// init list
-		updateList();
+		mBtHandler.prepareForSearch(mDevicesAdapter);
 
 		if (MainActivity.mBoundService != null)
-			mConnection = MainActivity.mBoundService.getConnection(); // TODO
+			mConnection = MainActivity.mBoundService.getConnection();
 
 		mConnection.setOnConnnectedListener(new OnConnnectedListener() {
 			@Override
@@ -282,16 +279,10 @@ public class SetupSearchDevicesFragment extends Fragment {
 
 	public void setNewDevice(String ip, String name) {
 
-		if (devices == null) {
-			devices = new ArrayList<DeviceListItemModel>();
-		}
-
-		devices.add(new DeviceListItemModel(name, ip));
+		mDevicesAdapter.add(new DeviceListItemModel(name, ip));
 
 		Log.i(TAG, "Device found: " + ip + " | " + name);
-		Log.i(TAG, "Number of devices: " + devices.size());
-
-		updateList();
+		Log.i(TAG, "Number of devices: " + mDevicesAdapter.getCount());
 	}
 
 	public void openAuthDialog(final String deviceName, String deviceIP) {
@@ -371,9 +362,8 @@ public class SetupSearchDevicesFragment extends Fragment {
 	public void onResume() {
 		super.onResume();
 
-		if (devices == null) {
-			devices = new ArrayList<DeviceListItemModel>();
-		}
+		if (mDevicesAdapter != null)
+			mDevicesAdapter.clear();
 
 		if (btnRefresh != null && listViewDevices != null) {
 			updateUI();

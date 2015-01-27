@@ -1,8 +1,5 @@
 package babyfon.connectivity.bluetooth;
 
-import java.util.ArrayList;
-
-import babyfon.model.DeviceListItemModel;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.content.BroadcastReceiver;
@@ -11,12 +8,14 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.util.Log;
 import android.widget.Toast;
+import babyfon.adapter.DeviceListAdapter;
+import babyfon.model.DeviceListItemModel;
 
 public class BluetoothHandler {
 	private static final String TAG = BluetoothHandler.class.getCanonicalName();
 	private BluetoothAdapter mBluetoothAdapter;
 	private Context mContext;
-	private ArrayList<DeviceListItemModel> mDevices;
+	private DeviceListAdapter mDeviceListAdapter;
 
 	// Receiver
 	private final BroadcastReceiver mReceiver = new BroadcastReceiver() {
@@ -30,7 +29,7 @@ public class BluetoothHandler {
 
 				Log.i(TAG, "ADD DEVICE: " + device.getName());
 
-				mDevices.add(new DeviceListItemModel(device.getName(), device.getAddress()));
+				mDeviceListAdapter.add(new DeviceListItemModel(device.getName(), device.getAddress()));
 
 			} else if (BluetoothAdapter.ACTION_DISCOVERY_FINISHED.equals(action)) {
 				Toast.makeText(context, "DISCOVERY FINISHED", Toast.LENGTH_LONG).show();
@@ -108,8 +107,8 @@ public class BluetoothHandler {
 			return true;
 	}
 
-	public void prepareForSearch(ArrayList<DeviceListItemModel> devices) {
-		this.mDevices = devices;
+	public void prepareForSearch(DeviceListAdapter mDevicesAdapter) {
+		this.mDeviceListAdapter = mDevicesAdapter;
 
 		// Register the BroadcastReceiver
 		IntentFilter bluetoothFoundFilter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
@@ -122,13 +121,16 @@ public class BluetoothHandler {
 	private boolean mBtDiscovering = false;
 
 	public void searchDevices() {
+
+		Log.i(TAG, "Devices: " + mDeviceListAdapter.getCount());
+
 		if (mBtDiscovering) {
 			// Wenn wir gerade nach Geräten Suchen nichts tun...
 
 		} else {
 			// ...ansonsten Liste leeren und neue Suche starten
 
-			mDevices.clear();
+			mDeviceListAdapter.clear();
 
 			Log.i(TAG, "STARTING BLUETOOTH DISCOVERY...");
 			mBtDiscovering = mBluetoothAdapter.startDiscovery();
