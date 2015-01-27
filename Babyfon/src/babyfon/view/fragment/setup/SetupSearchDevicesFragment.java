@@ -346,7 +346,8 @@ public class SetupSearchDevicesFragment extends Fragment {
 		alert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int whichButton) {
 
-				mConnection.connectToAdress(deviceIP);
+				// mConnection.connectToAdress(deviceIP);
+				MainActivity.mBoundService.connectTo(deviceIP);
 
 			}
 		});

@@ -118,6 +118,7 @@ public class LocalService extends Service {
 	 * Öffnet einen Socket, der auf einen Client wartet, der sich mit ihm verbindet.
 	 */
 	public void startServer() {
+
 		mConnection.startServer();
 
 		mConnection.setOnReceiveDataListener(new OnReceiveDataListener() {
