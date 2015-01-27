@@ -16,10 +16,8 @@ public class BluetoothConnection implements ConnectionInterface {
 
 	// private static int REQUEST_ENABLE_BT = 1;
 
-	private Context mContext;
 	private boolean mBtDiscovering = false;
 	private BluetoothAdapter mBluetoothAdapter;
-	private BluetoothListAdapter mArrayAdapter;
 
 	private BluetoothConnectionThread mBluetoothConnectionThread;
 
@@ -28,125 +26,38 @@ public class BluetoothConnection implements ConnectionInterface {
 	private OnConnectionLostListener mOnConnectionLostListener;
 	private OnConnnectedListener mOnConnnectedListener;
 
-	// Receiver
-	private final BroadcastReceiver mReceiver = new BroadcastReceiver() {
-
-		public void onReceive(Context context, Intent intent) {
-			String action = intent.getAction();
-			// When discovery finds a device
-			if (BluetoothDevice.ACTION_FOUND.equals(action)) {
-				// Get the BluetoothDevice object from the Intent
-				BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
-
-				Log.i(TAG, "ADD DEVICE: " + device.getName());
-
-				mArrayAdapter.add(device);
-			} else if (BluetoothAdapter.ACTION_DISCOVERY_FINISHED.equals(action)) {
-				Toast.makeText(context, "DISCOVERY FINISHED", Toast.LENGTH_LONG).show();
-				mBtDiscovering = false;
-
-				if (mOnSearchStatusChangedListener != null)
-					mOnSearchStatusChangedListener.onSearchStatusChanged(false);
-			}
-		}
-	};
-
-	public BluetoothConnection(Context context) {
-		this.mContext = context;
+	public BluetoothConnection() {
 		mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 	}
 
 	@Override
 	public void startServer() {
-		enableDiscoverability();
+		// enableDiscoverability();
 
 		mBluetoothConnectionThread = new BluetoothServerThread(mBluetoothAdapter, this);
 		mBluetoothConnectionThread.start();
 	}
 
-	@Override
-	public <T> void startClient(T listAdapter) {
-
-		enableBluetooth();
-
-		this.mArrayAdapter = (BluetoothListAdapter) listAdapter;
-
-		// Register the BroadcastReceiver
-		IntentFilter bluetoothFoundFilter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
-		IntentFilter bluetoothScanFinishedFilter = new IntentFilter(BluetoothAdapter.ACTION_DISCOVERY_FINISHED);
-
-		mContext.registerReceiver(mReceiver, bluetoothFoundFilter);
-		mContext.registerReceiver(mReceiver, bluetoothScanFinishedFilter);
-	}
-
-	private void enableBluetooth() {
-		if (mBluetoothAdapter.isEnabled()) {
-			Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-			mContext.startActivity(enableBtIntent);
-		}
-	}
-
-	private void enableDiscoverability() {
-		if (mBluetoothAdapter.getScanMode() != BluetoothAdapter.SCAN_MODE_CONNECTABLE_DISCOVERABLE) {
-			Intent discoverableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE);
-			discoverableIntent.putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, 0);
-			mContext.startActivity(discoverableIntent);
-		}
-	}
-
-	@Override
-	public void searchDevices() {
-		if (mBtDiscovering) {
-			// Wenn wir gerade nach Geräten Suchen nichts tun...
-
-		} else {
-			// ...ansonsten Liste leeren und neue Suche starten
-
-			mBtDiscovering = true;
-			mArrayAdapter.clear();
-
-			Log.i(TAG, "STARTING BLUETOOTH DISCOVERY...");
-			boolean searching = mBluetoothAdapter.startDiscovery();
-
-			if (mOnSearchStatusChangedListener != null)
-				mOnSearchStatusChangedListener.onSearchStatusChanged(searching);
-
-		}
-	}
-
-	@Override
-	public void connectToDeviceFromList(int position) {
-		BluetoothDevice device = mArrayAdapter.getItem(position);
-		Log.i(TAG, "Try to connect to device: " + device.getName());
-		mBluetoothConnectionThread = new BluetoothClientThread(device, mBluetoothAdapter, this);
-		mBluetoothConnectionThread.start();
-	}
+	// private void enableBluetooth() {
+	// if (mBluetoothAdapter.isEnabled()) {
+	// Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+	// mContext.startActivity(enableBtIntent);
+	// }
+	// }
+	//
+	// private void enableDiscoverability() {
+	// if (mBluetoothAdapter.getScanMode() != BluetoothAdapter.SCAN_MODE_CONNECTABLE_DISCOVERABLE) {
+	// Intent discoverableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE);
+	// discoverableIntent.putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, 0);
+	// mContext.startActivity(discoverableIntent);
+	// }
+	// }
 
 	@Override
 	public void connectToAdress(String address) {
 		BluetoothDevice device = mBluetoothAdapter.getRemoteDevice(address);
 		mBluetoothConnectionThread = new BluetoothClientThread(device, mBluetoothAdapter, this);
 		mBluetoothConnectionThread.start();
-	}
-
-	@Override
-	public void setOnSearchStatusChangedListener(OnSearchStatusChangedListener l) {
-		this.mOnSearchStatusChangedListener = l;
-	}
-
-	@Override
-	public void setOnReceiveDataListener(OnReceiveDataListener l) {
-		this.mOnReceiveMsgListener = l;
-	}
-
-	@Override
-	public void setOnConnectionLostListener(OnConnectionLostListener l) {
-		this.mOnConnectionLostListener = l;
-	}
-
-	@Override
-	public void setOnConnnectedListener(OnConnnectedListener l) {
-		this.mOnConnnectedListener = l;
 	}
 
 	@Override
@@ -191,6 +102,26 @@ public class BluetoothConnection implements ConnectionInterface {
 			Log.i(TAG, "No Message sent. Outstream is null!");
 		}
 
+	}
+
+	@Override
+	public void setOnSearchStatusChangedListener(OnSearchStatusChangedListener l) {
+		this.mOnSearchStatusChangedListener = l;
+	}
+
+	@Override
+	public void setOnReceiveDataListener(OnReceiveDataListener l) {
+		this.mOnReceiveMsgListener = l;
+	}
+
+	@Override
+	public void setOnConnectionLostListener(OnConnectionLostListener l) {
+		this.mOnConnectionLostListener = l;
+	}
+
+	@Override
+	public void setOnConnnectedListener(OnConnnectedListener l) {
+		this.mOnConnnectedListener = l;
 	}
 
 	public OnConnectionLostListener getOnConnectionLostListener() {

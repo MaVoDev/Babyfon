@@ -7,16 +7,25 @@ import android.app.Service;
 import android.content.Intent;
 import android.os.Binder;
 import android.os.IBinder;
+import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 import android.widget.Toast;
 import babyfon.audio.AudioPlayer;
+import babyfon.connectivity.ConnectionInterface;
 import babyfon.connectivity.ConnectionInterface.OnReceiveDataListener;
 import babyfon.connectivity.bluetooth.BluetoothConnection;
 import babyfon.init.R;
 import babyfon.view.activity.MainActivity;
 
 public class LocalService extends Service {
+	private static final String TAG = "LocalService";
+
+	private static final int NOTIFICATION_ID = 0;
+
 	private NotificationManager mNM;
+
+	private AudioPlayer mAudioPlayer;
+	private ConnectionInterface mConnection;
 
 	// Unique Identification Number for the Notification.
 	// We use it on Notification start, and to cancel it.
@@ -34,7 +43,18 @@ public class LocalService extends Service {
 
 	@Override
 	public void onCreate() {
+		Log.i(TAG, "Service->onCreate()...");
+
+		// Damit Service nicht beendet wird bei zu wenig Speicher, starten mit startForeground
+		startForeground(NOTIFICATION_ID, createServiceNotification());
+
 		mNM = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+
+		if (mConnection == null)
+			mConnection = new BluetoothConnection();
+
+		if (mAudioPlayer == null)
+			mAudioPlayer = new AudioPlayer();
 
 		// Display a notification about us starting. We put an icon in the status bar.
 		showNotification();
@@ -42,16 +62,43 @@ public class LocalService extends Service {
 
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
-		Log.i("LocalService", "Received start id " + startId + ": " + intent);
+		Log.i(TAG, "Received start id " + startId + ": " + intent);
 		// We want this service to continue running until it is explicitly
 		// stopped, so return sticky.
 		return START_STICKY;
 	}
 
+	private Notification createServiceNotification() {
+
+		// Orientiert an http://developer.android.com/training/notify-user/build-notification.html
+
+		NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this).setSmallIcon(R.drawable.ic_launcher)
+				.setContentTitle("My notification").setContentText("Hello World!");
+
+		Intent resultIntent = new Intent(this, MainActivity.class);
+
+		// Because clicking the notification opens a new ("special") activity, there's
+		// no need to create an artificial back stack.
+		PendingIntent resultPendingIntent = PendingIntent.getActivity(this, 0, resultIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+		mBuilder.setContentIntent(resultPendingIntent);
+
+		return mBuilder.build();
+	}
+
 	@Override
 	public void onDestroy() {
+		Log.i(TAG, LocalService.class.getSimpleName() + "->onDestroy()");
+
 		// Cancel the persistent notification.
 		mNM.cancel(NOTIFICATION);
+
+		// Verbindung schlieﬂen
+		if (mConnection != null)
+			mConnection.stopConnection();
+
+		if (mAudioPlayer != null)
+			mAudioPlayer.stopPlaying();
 
 		// Tell the user we stopped.
 		// Toast.makeText(this, R.string.local_service_stopped, Toast.LENGTH_SHORT).show();
@@ -67,7 +114,20 @@ public class LocalService extends Service {
 	// RemoteService for a more complete example.
 	private final IBinder mBinder = new LocalBinder();
 
-	private BluetoothConnection mConnection;
+	/**
+	 * ÷ffnet einen Socket, der auf einen Client wartet, der sich mit ihm verbindet.
+	 */
+	public void startServer() {
+		mConnection.startServer();
+
+		mConnection.setOnReceiveDataListener(new OnReceiveDataListener() {
+
+			@Override
+			public void onReceiveDataListener(byte[] bData, byte type, int bytesRead) {
+				mAudioPlayer.playData(bData);
+			}
+		});
+	}
 
 	/**
 	 * Stellt eine Verbindung zu dem angegebenen Ger‰t her.
@@ -76,16 +136,14 @@ public class LocalService extends Service {
 	 *            Adresse des Ger‰tes zu dem verbunden werden soll.
 	 */
 	public void connectTo(String address) {
-		mConnection = new BluetoothConnection(getApplicationContext());
-		mConnection.connectToAdress(address);
 
-		final AudioPlayer audioPlayer = new AudioPlayer();
+		mConnection.connectToAdress(address);
 
 		mConnection.setOnReceiveDataListener(new OnReceiveDataListener() {
 
 			@Override
 			public void onReceiveDataListener(byte[] bData, byte type, int bytesRead) {
-				audioPlayer.playData(bData);
+				mAudioPlayer.playData(bData);
 			}
 		});
 	}
@@ -109,5 +167,9 @@ public class LocalService extends Service {
 
 		// Send the notification.
 		mNM.notify(NOTIFICATION, notification);
+	}
+
+	public ConnectionInterface getConnection() {
+		return mConnection;
 	}
 }

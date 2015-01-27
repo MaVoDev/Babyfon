@@ -78,7 +78,9 @@ public class Message {
 			((MainActivity) mContext).runOnUiThread(new Runnable() {
 				@Override
 				public void run() {
-					SetupSearchDevicesFragment.setNewDevice(ip, name);
+					SetupSearchDevicesFragment fragment = (SetupSearchDevicesFragment) ((MainActivity) mContext)
+							.getFragmentById("SetupSearchDevicesFragment");
+					fragment.setNewDevice(ip, name);
 				}
 			});
 		}
@@ -115,8 +117,7 @@ public class Message {
 			mModuleHandler.startRemoteCheck();
 
 			FragmentManager mFragmentManager = ((MainActivity) mContext).getSupportFragmentManager();
-			mFragmentManager.beginTransaction()
-					.replace(R.id.frame_container, new SetupCompleteParentsModeFragment(mContext), null)
+			mFragmentManager.beginTransaction().replace(R.id.frame_container, new SetupCompleteParentsModeFragment(mContext), null)
 					.addToBackStack(null).commit();
 		}
 
@@ -167,8 +168,7 @@ public class Message {
 		if (strArray[0].equals(mContext.getString(R.string.BABYFON_MSG_SYSTEM_REJOIN))) {
 
 			if (mSharedPrefs.getDeviceMode() == 0) {
-				if (!mSharedPrefs.getRemoteAddress().equals(strArray[1])
-						|| !mSharedPrefs.getPassword().equals(strArray[2])) {
+				if (!mSharedPrefs.getRemoteAddress().equals(strArray[1]) || !mSharedPrefs.getPassword().equals(strArray[2])) {
 					send((mContext.getString(R.string.BABYFON_MSG_SYSTEM_DISCONNECTED)));
 				} else {
 					mModuleHandler.registerBattery();
@@ -184,16 +184,13 @@ public class Message {
 		if (strArray[0].equals(mContext.getString(R.string.BABYFON_MSG_CONNECTION_HELLO))) {
 			// Hello
 			if (mSharedPrefs.getRemoteAddress() != null) {
-				if (!mSharedPrefs.getRemoteAddress().equals(strArray[1])
-						|| !mSharedPrefs.getPassword().equals(strArray[2])) {
-					new TCPSender(mContext).sendMessage(strArray[1],
-							mContext.getString(R.string.BABYFON_MSG_SYSTEM_DISCONNECTED));
+				if (!mSharedPrefs.getRemoteAddress().equals(strArray[1]) || !mSharedPrefs.getPassword().equals(strArray[2])) {
+					new TCPSender(mContext).sendMessage(strArray[1], mContext.getString(R.string.BABYFON_MSG_SYSTEM_DISCONNECTED));
 				} else {
 					mSharedPrefs.setRemoteOnlineState(true);
 				}
 			} else {
-				new TCPSender(mContext).sendMessage(strArray[1],
-						mContext.getString(R.string.BABYFON_MSG_SYSTEM_DISCONNECTED));
+				new TCPSender(mContext).sendMessage(strArray[1], mContext.getString(R.string.BABYFON_MSG_SYSTEM_DISCONNECTED));
 			}
 		}
 

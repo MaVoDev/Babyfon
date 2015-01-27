@@ -55,6 +55,7 @@ import babyfon.view.fragment.AbsenceFragment;
 import babyfon.view.fragment.BabyMonitorFragment;
 import babyfon.view.fragment.OverviewFragment;
 import babyfon.view.fragment.setup.SetupDeviceModeFragment;
+import babyfon.view.fragment.setup.SetupSearchDevicesFragment;
 import babyfon.view.fragment.setup.SetupStartFragment;
 
 public class MainActivity extends ActionBarActivity {
@@ -186,6 +187,7 @@ public class MainActivity extends ActionBarActivity {
 	private boolean mIsBound = false;
 
 	private ServiceConnection mServiceConnection = new ServiceConnection() {
+
 		public void onServiceConnected(ComponentName className, IBinder service) {
 			// This is called when the connection with the service has been
 			// established, giving us the service object we can use to
@@ -195,10 +197,12 @@ public class MainActivity extends ActionBarActivity {
 			mBoundService = ((LocalService.LocalBinder) service).getService();
 
 			// Tell the user about this for our demo.
+			Log.i(TAG, "Service connected with app...");
 			Toast.makeText(MainActivity.this, "Service connected.", Toast.LENGTH_SHORT).show();
 
+			// TODO: einbauen:
 			// Verbinden mit aktuelle gepairtem Device...
-			mBoundService.connectTo("CC:96:A0:41:34:3E");
+			// mBoundService.connectTo("CC:96:A0:41:34:3E");
 			// mBoundService.connectTo(mSharedPrefs.getRemoteAddress());
 		}
 
@@ -217,7 +221,15 @@ public class MainActivity extends ActionBarActivity {
 		// class name because we want a specific service implementation that
 		// we know will be running in our own process (and thus won't be
 		// supporting component replacement by other applications).
-		bindService(new Intent(MainActivity.this, LocalService.class), mServiceConnection, Context.BIND_AUTO_CREATE);
+
+		// bindService(new Intent(MainActivity.this, LocalService.class), mServiceConnection, Context.BIND_AUTO_CREATE);
+
+		Intent serviceIntent = new Intent(MainActivity.this, LocalService.class);
+
+		startService(serviceIntent);
+		bindService(serviceIntent, mServiceConnection, 0);
+		// bindService(serviceIntent, mServiceConnection, Context.BIND_AUTO_CREATE);
+
 		mIsBound = true;
 	}
 
@@ -478,6 +490,9 @@ public class MainActivity extends ActionBarActivity {
 		} else if (id.equals("AbsenceFragment")) {
 			// Open absence
 			fragment = new AbsenceFragment(this);
+		} else if (id.equals("SetupSearchDevicesFragment")) {
+			// Open setup search devices
+			fragment = new SetupSearchDevicesFragment(this);
 		} else if (id.equals("SetupFragment")) {
 			// Open setup
 			// TODO Bug #2

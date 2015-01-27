@@ -14,7 +14,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 import babyfon.Generator;
-import babyfon.connectivity.bluetooth.BluetoothConnection;
+import babyfon.connectivity.bluetooth.BluetoothHandler;
 import babyfon.init.R;
 import babyfon.performance.Sound;
 import babyfon.settings.ModuleHandler;
@@ -87,10 +87,9 @@ public class SetupCompleteBabyModeFragment extends Fragment {
 	public void handleModules() {
 
 		if (mSharedPrefs.getConnectivityTypeTemp() == 1) {
-			MainActivity.mConnection = new BluetoothConnection(mContext);
-			MainActivity.mConnection.startServer();
 
-			mModuleHandler.startAudioRecorder();
+			new BluetoothHandler(mContext).enableBluetoothDiscoverability();
+			MainActivity.mBoundService.startServer();
 
 		} else if (mSharedPrefs.getConnectivityTypeTemp() == 2) {
 			mModuleHandler.startTCPReceiver();

@@ -41,7 +41,6 @@ public class SetupConnectionFragment extends Fragment {
 	private TextView title;
 	private TextView infoText;
 
-	private boolean isBluetoothAvailable;
 	private boolean isWifiAvailable;
 	private boolean isWifiDirectAvailable;
 
@@ -60,7 +59,7 @@ public class SetupConnectionFragment extends Fragment {
 	public SetupConnectionFragment(Context mContext) {
 		nextFragmentBaby = new SetupForwardingFragment(mContext);
 		nextFragmentParents = new SetupSearchDevicesFragment(mContext);
-		mBluetoothHandler = new BluetoothHandler();
+		mBluetoothHandler = new BluetoothHandler(mContext);
 		mWifiHandler = new WifiHandler(mContext);
 
 		mSharedPrefs = new SharedPrefs(mContext);
@@ -71,12 +70,6 @@ public class SetupConnectionFragment extends Fragment {
 	}
 
 	public void getAvailability() {
-		if (mBluetoothHandler.getBluetoothState() != -1) {
-			isBluetoothAvailable = true;
-		} else {
-			isBluetoothAvailable = false;
-		}
-
 		if (mWifiHandler.getWifiState() != -1) {
 			isWifiAvailable = true;
 			isWifiDirectAvailable = true;
@@ -195,7 +188,7 @@ public class SetupConnectionFragment extends Fragment {
 		getConnectivityType(radioGrpConnectivity.getCheckedRadioButtonId());
 
 		// Set Bluetooth availability
-		radioBluetooth.setEnabled(isBluetoothAvailable);
+		radioBluetooth.setEnabled(mBluetoothHandler.isBluetoothSupported());
 
 		// Set Wi-Fi availability
 		radioWifi.setEnabled(isWifiAvailable);
@@ -204,7 +197,7 @@ public class SetupConnectionFragment extends Fragment {
 		radioWifiDirect.setEnabled(isWifiDirectAvailable);
 
 		// Check the next available connectivity
-		if (!isBluetoothAvailable) {
+		if (!mBluetoothHandler.isBluetoothSupported()) {
 			if (!isWifiAvailable) {
 				if (!isWifiDirectAvailable) {
 					radioGrpConnectivity.clearCheck();
@@ -233,6 +226,22 @@ public class SetupConnectionFragment extends Fragment {
 		btnForward.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
+
+				// Bluetooth Check
+				if (connectivityType == 1) {
+
+					boolean btEnabled;
+					if (mSharedPrefs.getDeviceModeTemp() == 0) {
+						btEnabled = mBluetoothHandler.enableBluetoothDiscoverability();
+					} else {
+						btEnabled = mBluetoothHandler.enableBluetooth();
+					}
+
+					// nur weitergehen, wenn Bluetooth-Discoverability an ist
+					if (!btEnabled)
+						return;
+				}
+
 				mSharedPrefs.setConnectivityTypeTemp(connectivityType);
 
 				if (connectivityType == 2) {

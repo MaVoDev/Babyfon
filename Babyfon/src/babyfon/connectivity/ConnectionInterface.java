@@ -6,15 +6,9 @@ public interface ConnectionInterface {
 	// Methoden
 	//
 
-	public void searchDevices();
-
-	public void connectToDeviceFromList(int position);
-
 	public void connectToAdress(String adress);
 
 	public void startServer();
-
-	public <T> void startClient(T listAdapter);
 
 	/** Will cancel an in-progress connection, and close the socket */
 	public void stopConnection();

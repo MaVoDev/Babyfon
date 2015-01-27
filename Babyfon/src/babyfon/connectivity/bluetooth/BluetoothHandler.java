@@ -1,11 +1,47 @@
 package babyfon.connectivity.bluetooth;
 
+import java.util.ArrayList;
+
+import babyfon.model.DeviceListItemModel;
 import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothDevice;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.util.Log;
+import android.widget.Toast;
 
 public class BluetoothHandler {
+	private static final String TAG = BluetoothHandler.class.getCanonicalName();
 	private BluetoothAdapter mBluetoothAdapter;
+	private Context mContext;
+	private ArrayList<DeviceListItemModel> mDevices;
 
-	public BluetoothHandler() {
+	// Receiver
+	private final BroadcastReceiver mReceiver = new BroadcastReceiver() {
+
+		public void onReceive(Context context, Intent intent) {
+			String action = intent.getAction();
+			// When discovery finds a device
+			if (BluetoothDevice.ACTION_FOUND.equals(action)) {
+				// Get the BluetoothDevice object from the Intent
+				BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
+
+				Log.i(TAG, "ADD DEVICE: " + device.getName());
+
+				mDevices.add(new DeviceListItemModel(device.getName(), device.getAddress()));
+
+			} else if (BluetoothAdapter.ACTION_DISCOVERY_FINISHED.equals(action)) {
+				Toast.makeText(context, "DISCOVERY FINISHED", Toast.LENGTH_LONG).show();
+				mBtDiscovering = false;
+			}
+		}
+	};
+
+	public BluetoothHandler(Context context) {
+		this.mContext = context;
+		mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 	}
 
 	/**
@@ -29,7 +65,74 @@ public class BluetoothHandler {
 		}
 	}
 
-	public void startBluetooth() {
-		mBluetoothAdapter.startDiscovery();
+	/**
+	 * Gibt zurück, ob Bluetooth supported wird.
+	 * 
+	 * @return true, wenn Bluetooth supported wird.<br>
+	 *         false, wenn Bluetooth nicht supported wird.
+	 */
+	public boolean isBluetoothSupported() {
+		return (mBluetoothAdapter != null);
 	}
+
+	/**
+	 * Falls es nicht schon an ist: Bluetooth einschalten.
+	 * 
+	 * @return <b>true</b>, wenn BT schon an ist; <b>false</b>, wenn BT bisher aus war
+	 */
+	public boolean enableBluetooth() {
+		BluetoothAdapter adapter = BluetoothAdapter.getDefaultAdapter();
+		if (!adapter.isEnabled()) {
+			Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+			mContext.startActivity(enableBtIntent);
+
+			return false;
+		} else
+			return true;
+	}
+
+	/**
+	 * Falls es nicht schon an ist: Bluetooth einschalten und Gerät sichtbar für andere Geräte machen.
+	 * 
+	 * @return <b>true</b>, wenn BT-discoverability schon an ist; <b>false</b>, wenn BT-discoverability bisher aus war
+	 */
+	public boolean enableBluetoothDiscoverability() {
+		BluetoothAdapter adapter = BluetoothAdapter.getDefaultAdapter();
+		if (adapter.getScanMode() != BluetoothAdapter.SCAN_MODE_CONNECTABLE_DISCOVERABLE) {
+			Intent discoverableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE);
+			discoverableIntent.putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, 0);
+			mContext.startActivity(discoverableIntent);
+
+			return false;
+		} else
+			return true;
+	}
+
+	public void prepareForSearch(ArrayList<DeviceListItemModel> devices) {
+		this.mDevices = devices;
+
+		// Register the BroadcastReceiver
+		IntentFilter bluetoothFoundFilter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
+		IntentFilter bluetoothScanFinishedFilter = new IntentFilter(BluetoothAdapter.ACTION_DISCOVERY_FINISHED);
+
+		mContext.registerReceiver(mReceiver, bluetoothFoundFilter);
+		mContext.registerReceiver(mReceiver, bluetoothScanFinishedFilter);
+	}
+
+	private boolean mBtDiscovering = false;
+
+	public void searchDevices() {
+		if (mBtDiscovering) {
+			// Wenn wir gerade nach Geräten Suchen nichts tun...
+
+		} else {
+			// ...ansonsten Liste leeren und neue Suche starten
+
+			mDevices.clear();
+
+			Log.i(TAG, "STARTING BLUETOOTH DISCOVERY...");
+			mBtDiscovering = mBluetoothAdapter.startDiscovery();
+		}
+	}
+
 }
