@@ -73,7 +73,7 @@ public class MainActivity extends ActionBarActivity {
 
 	public static AudioRecorder mAudioRecorder;
 	public static AudioPlayer mAudioPlayer;
-	public static ConnectionInterface mConnection;
+	// public static ConnectionInterface mConnection;
 
 	public static IntentFilter mIntentFilter;
 	public static boolean mPlayAudio = false;
@@ -329,8 +329,8 @@ public class MainActivity extends ActionBarActivity {
 
 		if (mSharedPrefs.getConnectivityType() == 1) {
 			mModuleHandler.stopAudioPlayer();
-			if (mConnection != null)
-				mConnection.stopConnection();
+			// if (mConnection != null)
+			// mConnection.stopConnection();
 		} else if (mSharedPrefs.getConnectivityType() == 2) {
 			mModuleHandler.stopTCPReceiver();
 		}

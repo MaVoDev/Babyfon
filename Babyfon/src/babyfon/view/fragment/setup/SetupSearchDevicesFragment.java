@@ -254,17 +254,19 @@ public class SetupSearchDevicesFragment extends Fragment {
 		mBtHandler.enableBluetooth();
 		mBtHandler.prepareForSearch(mDevicesAdapter);
 
-		if (MainActivity.mBoundService != null)
+		if (MainActivity.mBoundService != null) {
 			mConnection = MainActivity.mBoundService.getConnection();
 
-		mConnection.setOnConnnectedListener(new OnConnnectedListener() {
-			@Override
-			public void onConnectedListener(String deviceName) {
-				// Verbunden also auf die Abschlussseite wechseln
-				getFragmentManager().beginTransaction().replace(R.id.frame_container, new SetupCompleteParentsModeFragment(mContext), null)
-						.addToBackStack(null).commit();
-			}
-		});
+			mConnection.setOnConnnectedListener(new OnConnnectedListener() {
+				@Override
+				public void onConnectedListener(String deviceName) {
+					// Verbunden also auf die Abschlussseite wechseln
+					getFragmentManager().beginTransaction()
+							.replace(R.id.frame_container, new SetupCompleteParentsModeFragment(mContext), null).addToBackStack(null)
+							.commit();
+				}
+			});
+		}
 
 	}
 
