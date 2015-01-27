@@ -32,6 +32,11 @@ public class Message {
 	}
 
 	public void send(String str) {
+
+		if (mSharedPrefs.getConnectivityType() == 1 || mSharedPrefs.getConnectivityTypeTemp() == 1) {
+			if (MainActivity.mBoundService != null)
+				MainActivity.mBoundService.getConnection().sendMessage(str);
+		}
 		if (mSharedPrefs.getConnectivityType() == 2 || mSharedPrefs.getConnectivityTypeTemp() == 2) {
 			new TCPSender(mContext).sendMessage(mSharedPrefs.getRemoteAddress(), str);
 		}

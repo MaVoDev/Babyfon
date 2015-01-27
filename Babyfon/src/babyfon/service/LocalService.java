@@ -10,6 +10,7 @@ import android.os.IBinder;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 import android.widget.Toast;
+import babyfon.Message;
 import babyfon.audio.AudioPlayer;
 import babyfon.connectivity.ConnectionInterface;
 import babyfon.connectivity.ConnectionInterface.OnReceiveDataListener;
@@ -125,7 +126,13 @@ public class LocalService extends Service {
 
 			@Override
 			public void onReceiveDataListener(byte[] bData, byte type, int bytesRead) {
-				mAudioPlayer.playData(bData);
+				// mAudioPlayer.playData(bData);
+
+				if (type == 1)
+					// PLay Audio
+					;
+				else
+					new Message(getApplicationContext()).handleIncomingMessage(new String(bData));
 			}
 		});
 	}
@@ -144,7 +151,12 @@ public class LocalService extends Service {
 
 			@Override
 			public void onReceiveDataListener(byte[] bData, byte type, int bytesRead) {
-				mAudioPlayer.playData(bData);
+
+				if (type == 1)
+					// PLay Audio
+					mAudioPlayer.playData(bData);
+				else
+					new Message(getApplicationContext()).handleIncomingMessage(new String(bData));
 			}
 		});
 	}

@@ -132,7 +132,7 @@ public class BluetoothConnection implements ConnectionInterface {
 		return mOnConnnectedListener;
 	}
 
-	public OnReceiveDataListener getOnReceiveMsgListener() {
+	public OnReceiveDataListener getOnReceiveDataListener() {
 		return mOnReceiveMsgListener;
 	}
 

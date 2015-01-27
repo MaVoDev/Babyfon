@@ -36,7 +36,7 @@ public abstract class BluetoothConnectionThread extends Thread {
 				Log.i(TAG, "START listening for messages...");
 				// while (isRunning ) {
 				try {
-					OnReceiveDataListener listener = mBTConnection.getOnReceiveMsgListener();
+					OnReceiveDataListener listener = mBTConnection.getOnReceiveDataListener();
 
 					// Leite die empfangenen Nachrichten an den
 					// OnReceiveMsgListener weiter
@@ -110,8 +110,8 @@ public abstract class BluetoothConnectionThread extends Thread {
 		if (bytesRead >= 250)
 			type = 1; // 1 = Audio
 
-		if (mBTConnection.getOnReceiveMsgListener() != null)
-			mBTConnection.getOnReceiveMsgListener().onReceiveDataListener(bData, type, bytesRead);
+		if (mBTConnection.getOnReceiveDataListener() != null)
+			mBTConnection.getOnReceiveDataListener().onReceiveDataListener(bData, type, bytesRead);
 		// listener.onReceiveDataListener(receivedData, bData[0]);
 		// listener.onReceiveDataListener(receivedData, type);
 
