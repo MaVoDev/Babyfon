@@ -107,7 +107,7 @@
         <item name="android:textColor">@color/text</item>
         <item name="android:layout_marginBottom">10dp</item>
         <item name="android:padding">16dp</item>
-        <item name="android:background">@android:drawable/d</item>
+        <item name="android:background">@drawable/abc_item_background_holo_light</item>
     </style>
 
     <!-- Layout overview baby -->
