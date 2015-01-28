@@ -124,7 +124,10 @@
     <string name="enabled">aktiviert</string>
     <string name="disabled">deaktiviert</string>
     <string name="ok">OK</string>
-    <string name="noise_countdown">Die Geräuscherkennung wird in 30 Sekunden gestartet.</string>
+    <string name="seconds">Sekunden</string>
+    <string name="second">Sekunde</string>
+    <string name="noise_countdown_start">Die Geräuscherkennung wird gestartet.</string>
+    <string name="noise_countdown_stop">Die Geräuscherkennung wurde angehalten.</string>
     <string name="no">Nein</string>
     <string name="unknownContact">Unbekannt</string>
     <string name="settings">Einstellungen</string>
@@ -134,6 +137,10 @@
     <string name="close">Schließen</string>
     <string name="is_awake">&#160;ist wach!</string>
     <string name="doubleTap">2x tippen, um die Meldung zu schließen</string>
+
+    <!-- Toast messages -->
+    <string name="wrong_password">Falsches Passwort</string>
+    <string name="no_phone_number">Es wurde noch keine Telefonnummer in den Einstellungen hinterlegt.</string>
 
     <!-- Content Description -->
     <string name="desc_img_default">Image default description</string>

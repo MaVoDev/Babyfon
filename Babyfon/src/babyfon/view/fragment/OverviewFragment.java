@@ -5,6 +5,7 @@ import java.util.TimerTask;
 
 import babyfon.Generator;
 import babyfon.Message;
+import babyfon.Output;
 import babyfon.audio.AudioRecorder;
 import babyfon.init.R;
 import babyfon.settings.ModuleHandler;
@@ -13,9 +14,7 @@ import babyfon.view.activity.MainActivity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.graphics.Typeface;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -24,7 +23,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 public class OverviewFragment extends Fragment {
 
@@ -54,15 +52,19 @@ public class OverviewFragment extends Fragment {
 	private LinearLayout layoutPassword;
 	private LinearLayout layoutCall;
 	private LinearLayout layoutSms;
+	private LinearLayout layoutChangeMode;
 
 	private View layoutPasswordSeparator;
 	private View layoutCallSeparator;
 	private View layoutSmsSeparator;
 
 	private boolean isActive;
+	private boolean isCountdownActive = false;
 
 	// Timer
-	private Timer timer;
+	private Timer updateTimer;
+
+	int countdown;
 
 	// Alert Dialogs
 	private AlertDialog callDialog;
@@ -134,6 +136,7 @@ public class OverviewFragment extends Fragment {
 		layoutPassword = (LinearLayout) view.findViewById(R.id.overview_layout_password);
 		layoutCall = (LinearLayout) view.findViewById(R.id.overview_layout_call);
 		layoutSms = (LinearLayout) view.findViewById(R.id.overview_layout_sms);
+		layoutChangeMode = (LinearLayout) view.findViewById(R.id.overview_layout_edit_mode);
 
 		// Initialize Views
 		layoutPasswordSeparator = (View) view.findViewById(R.id.overview_layout_password_separator);
@@ -236,13 +239,9 @@ public class OverviewFragment extends Fragment {
 		}
 
 		if (mSharedPrefs.isNoiseActivated()) {
-			if (MainActivity.mAudioRecorder == null) {
-				startNoiseRecorder();
-			}
+			startRecorder();
 		} else {
-			if (MainActivity.mAudioRecorder != null) {
-				MainActivity.mAudioRecorder.stopRecording();
-			}
+			stopRecorder();
 		}
 	}
 
@@ -313,13 +312,9 @@ public class OverviewFragment extends Fragment {
 		}
 
 		if (mSharedPrefs.isNoiseActivated()) {
-			if (MainActivity.mAudioRecorder == null) {
-				startNoiseRecorder();
-			}
+			startRecorder();
 		} else {
-			if (MainActivity.mAudioRecorder != null) {
-				MainActivity.mAudioRecorder.stopRecording();
-			}
+			stopRecorder();
 		}
 	}
 
@@ -340,30 +335,25 @@ public class OverviewFragment extends Fragment {
 			remoteState.setText(mContext.getString(R.string.overview_no_number));
 		}
 
-		if (mSharedPrefs.isNoiseActivated()) {
-			if (MainActivity.mAudioRecorder == null) {
-				((MainActivity) mContext).runOnUiThread(new Runnable() {
-					@Override
-					public void run() {
-						Toast toast = Toast.makeText(mContext, R.string.noise_countdown, Toast.LENGTH_SHORT);
-						toast.show();
-					}
-				});
-				startNoiseRecorder();
-			}
-			changeMode.setImageResource(android.R.drawable.ic_media_pause);
-			modeState.setText(R.string.enabled);
-			activeState.setImageResource(android.R.drawable.presence_online);
-		} else {
-			changeMode.setImageResource(android.R.drawable.ic_media_play);
-			modeState.setText(R.string.disabled);
+		if (isCountdownActive) {
 			activeState.setImageResource(android.R.drawable.presence_invisible);
-			if (MainActivity.mAudioRecorder != null) {
-				MainActivity.mAudioRecorder.stopRecording();
+			changeMode.setImageResource(android.R.drawable.ic_media_pause);
+		} else {
+			if (mSharedPrefs.isNoiseActivated()) {
+				changeMode.setImageResource(android.R.drawable.ic_media_pause);
+				modeState.setText(R.string.enabled);
+				activeState.setImageResource(android.R.drawable.presence_online);
+			} else {
+				changeMode.setImageResource(android.R.drawable.ic_media_play);
+				modeState.setText(R.string.disabled);
+				activeState.setImageResource(android.R.drawable.presence_invisible);
 			}
 		}
-
 		modeText.setText(mContext.getString(R.string.overview_baby_noise_state));
+
+		if (mSharedPrefs.getPhoneNumber() == null && mSharedPrefs.getPhoneNumber().equals("")) {
+			isCountdownActive = false;
+		}
 	}
 
 	@Override
@@ -477,6 +467,12 @@ public class OverviewFragment extends Fragment {
 							mModuleHandler.stopUDPReceiver();
 							break;
 						}
+
+						if (mSharedPrefs.getConnectivityType() != item) {
+							isCountdownActive = false;
+							stopRecorder();
+						}
+
 						updateUI();
 						connectivityDialog.dismiss();
 					}
@@ -574,16 +570,26 @@ public class OverviewFragment extends Fragment {
 		});
 
 		// change mode
-		changeMode.setOnClickListener(new View.OnClickListener() {
+		layoutChangeMode.setOnClickListener(new View.OnClickListener() {
 			String title, message;
 
 			@Override
 			public void onClick(View v) {
 				if (mSharedPrefs.getConnectivityType() == 3) {
 					if (mSharedPrefs.isNoiseActivated()) {
+						isCountdownActive = false;
+						new Output().toast(mContext, mContext.getString(R.string.noise_countdown_stop), 0);
 						mSharedPrefs.setNoiseActivated(false);
+						stopRecorder();
 					} else {
-						mSharedPrefs.setNoiseActivated(true);
+						if (mSharedPrefs.getPhoneNumber() != null && !mSharedPrefs.getPhoneNumber().equals("")) {
+							countdown = 30;
+							isCountdownActive = true;
+							new Output().toast(mContext, mContext.getString(R.string.noise_countdown_start), 0);
+							mSharedPrefs.setNoiseActivated(true);
+						} else {
+							new Output().toast(mContext, mContext.getString(R.string.no_phone_number), 1);
+						}
 					}
 				} else {
 					if (isActive) {
@@ -643,12 +649,16 @@ public class OverviewFragment extends Fragment {
 	}
 
 	public void startUiUpdateThread() {
-		if (timer == null) {
-			timer = new Timer();
+		if (updateTimer == null) {
+			updateTimer = new Timer();
 		}
-		timer.scheduleAtFixedRate(new TimerTask() {
+		updateTimer.scheduleAtFixedRate(new TimerTask() {
 			public void run() {
-				getActivity().runOnUiThread(new Runnable() {
+				if (isCountdownActive) {
+					new Task().run();
+				}
+				((MainActivity) mContext).runOnUiThread(new Runnable() {
+					@Override
 					public void run() {
 						updateUI();
 					}
@@ -657,24 +667,26 @@ public class OverviewFragment extends Fragment {
 		}, 0, 1000);
 	}
 
-	public void startNoiseRecorder() {
-		final Timer noiseRecorderCountdown = new Timer();
+	public void startRecorder() {
+		isCountdownActive = false;
+		if (MainActivity.mAudioRecorder == null) {
+			MainActivity.mAudioRecorder = new AudioRecorder(mContext, MainActivity.mConnection);
+		}
+		MainActivity.mAudioRecorder.startRecording();
+	}
 
-		noiseRecorderCountdown.scheduleAtFixedRate(new TimerTask() {
-			public void run() {
-				MainActivity.mAudioRecorder = new AudioRecorder(mContext, MainActivity.mConnection);
-				MainActivity.mAudioRecorder.startRecording();
-				noiseRecorderCountdown.cancel();
-			}
-		}, 30000, 1000);
+	public void stopRecorder() {
+		if (MainActivity.mAudioRecorder != null) {
+			MainActivity.mAudioRecorder.stopRecording();
+		}
 	}
 
 	@Override
 	public void onResume() {
 		super.onResume();
 
-		if (timer == null) {
-			timer = new Timer();
+		if (updateTimer == null) {
+			updateTimer = new Timer();
 		}
 		startUiUpdateThread();
 	}
@@ -683,9 +695,9 @@ public class OverviewFragment extends Fragment {
 	public void onPause() {
 		super.onPause();
 
-		if (timer != null) {
-			timer.cancel();
-			timer = null;
+		if (updateTimer != null) {
+			updateTimer.cancel();
+			updateTimer = null;
 		}
 	}
 
@@ -693,9 +705,39 @@ public class OverviewFragment extends Fragment {
 	public void onDestroy() {
 		super.onDestroy();
 
-		if (timer != null) {
-			timer.cancel();
-			timer = null;
+		if (updateTimer != null) {
+			updateTimer.cancel();
+			updateTimer = null;
+		}
+	}
+
+	/**
+	 * Countdown Timer
+	 */
+	class Task implements Runnable {
+		public void run() {
+			countdown--;
+			((MainActivity) mContext).runOnUiThread(new Runnable() {
+				@Override
+				public void run() {
+					if (isCountdownActive) {
+						if (countdown > 0) {
+							if (countdown != 1) {
+								modeState.setText("Aktiv in: " + countdown + " " + mContext.getString(R.string.seconds));
+							} else {
+								modeState.setText("Aktiv in: " + countdown + " " + mContext.getString(R.string.second));
+							}
+						} else {
+							startRecorder();
+						}
+					}
+				}
+			});
+			try {
+				Thread.sleep(1000);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 }

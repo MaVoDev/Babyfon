@@ -2,7 +2,6 @@ package babyfon;
 
 import android.content.Context;
 import android.support.v4.app.FragmentManager;
-import android.widget.Toast;
 import babyfon.connectivity.phone.PhoneBookHandler;
 import babyfon.connectivity.wifi.TCPSender;
 import babyfon.init.R;
@@ -59,6 +58,7 @@ public class Message {
 
 	/**
 	 * Send methode
+	 * 
 	 * @param str
 	 */
 	public void send(String str) {
@@ -159,7 +159,7 @@ public class Message {
 
 		if (strArray[0].equals(mContext.getString(R.string.BABYFON_MSG_AUTH_CONFIRMED))) {
 			mSharedPrefs.setPassword(strArray[1]);
-			
+
 			mModuleHandler.startRemoteCheck();
 
 			FragmentManager mFragmentManager = ((MainActivity) mContext).getSupportFragmentManager();
@@ -174,13 +174,7 @@ public class Message {
 			mSharedPrefs.setRemoteName(null);
 			mSharedPrefs.setRemoteOnlineState(false);
 
-			((MainActivity) mContext).runOnUiThread(new Runnable() {
-				@Override
-				public void run() {
-					Toast toast = Toast.makeText(mContext, "Falsches Passwort!", Toast.LENGTH_SHORT);
-					toast.show();
-				}
-			});
+			new Output().toast(mContext, mContext.getString(R.string.wrong_password), 0);
 		}
 
 		if (strArray[0].equals(mContext.getString(R.string.BABYFON_MSG_SYSTEM_AWAY))) {

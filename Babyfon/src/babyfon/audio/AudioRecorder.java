@@ -176,12 +176,12 @@ public class AudioRecorder {
 							noiseCounter = 0;
 						} else {
 							noiseCounter++;
-
+							
 						}
 						lastTime = currentTime;
 					}
 					if (mSharedPrefs.getPhoneNumber() != null) {
-						if (noiseCounter > 5) {
+						if (noiseCounter > 10) {
 							noiseCounter = 0;
 							stopRecording();
 							mSharedPrefs.setNoiseActivated(false);
@@ -224,6 +224,7 @@ public class AudioRecorder {
 			isRecording = false;
 			recorder.stop();
 			MainActivity.mAudioRecorder = null;
+			recorder = null;
 			Log.i(TAG, "Recording stopped...");
 		}
 	}

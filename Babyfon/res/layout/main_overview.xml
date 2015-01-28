@@ -58,7 +58,9 @@
                 </LinearLayout>
             </LinearLayout>
 
-            <LinearLayout style="@style/overview_edit" >
+            <LinearLayout
+                android:id="@+id/overview_layout_edit_mode"
+                style="@style/overview_edit" >
 
                 <ImageView
                     android:id="@+id/overview_edit_mode"

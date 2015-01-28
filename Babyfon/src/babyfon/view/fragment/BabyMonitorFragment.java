@@ -149,10 +149,7 @@ public class BabyMonitorFragment extends Fragment {
 			batteryEdit.setImageResource(R.drawable.battna);
 		}
 
-		//
 		hearText.setText(mSharedPrefs.getName() + " zuhören");
-
-		//
 		talkText.setText("Mit " + mSharedPrefs.getName() + " reden");
 	}
 
@@ -339,7 +336,7 @@ public class BabyMonitorFragment extends Fragment {
 				lastTime = currentTime;
 			}
 
-			if (noiseCounter > 5) {
+			if (noiseCounter > 10) {
 				noiseCounter = 0;
 				getActivity().runOnUiThread(new Runnable() {
 					@Override

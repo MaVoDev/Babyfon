@@ -362,7 +362,6 @@ public class MainActivity extends ActionBarActivity {
 	}
 
 	private Fragment createFragmentById(String id) {
-
 		Fragment fragment = null;
 
 		if (id.equals("OverviewFragment")) {
@@ -379,7 +378,6 @@ public class MainActivity extends ActionBarActivity {
 			fragment = new AbsenceFragment(this);
 		} else if (id.equals("SetupFragment")) {
 			// Open setup
-			// TODO Bug #2
 			if (mSharedPrefs.getDeviceMode() != -1) {
 				// Baby or parents mode is active
 				fragment = new SetupDeviceModeFragment(this);
@@ -392,7 +390,10 @@ public class MainActivity extends ActionBarActivity {
 			startActivity(intent);
 		}
 
-		mFragmentMap.put(id, fragment);
+		// doesn't store the setup start screen
+		if(mSharedPrefs.getDeviceMode() != -1) {
+			mFragmentMap.put(id, fragment);
+		}
 
 		return fragment;
 	}
