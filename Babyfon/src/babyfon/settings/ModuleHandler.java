@@ -202,15 +202,15 @@ public class ModuleHandler {
 	/**
 	 * Stops the AudioPlayer
 	 */
-	public void stopAudioPlayer() {
-		// if (MainActivity.mConnection != null)
-		// MainActivity.mConnection.setOnReceiveDataListener(null);
-
-		if (MainActivity.mAudioPlayer != null) {
-			MainActivity.mAudioPlayer.stopPlaying();
-			MainActivity.mAudioPlayer = null;
-		}
-	}
+	// public void stopAudioPlayer() {
+	// // if (MainActivity.mConnection != null)
+	// // MainActivity.mConnection.setOnReceiveDataListener(null);
+	//
+	// if (MainActivity.mAudioPlayer != null) {
+	// MainActivity.mAudioPlayer.stopPlaying();
+	// MainActivity.mAudioPlayer = null;
+	// }
+	// }
 
 	/**
 	 * Start AudioRecorder

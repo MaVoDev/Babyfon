@@ -7,6 +7,7 @@ import babyfon.connectivity.bluetooth.BluetoothHandler;
 import babyfon.connectivity.wifi.WifiHandler;
 import babyfon.init.R;
 import babyfon.settings.SharedPrefs;
+import babyfon.view.activity.MainActivity;
 import babyfon.view.fragment.BabyMonitorFragment;
 import babyfon.view.fragment.OverviewFragment;
 import android.app.AlertDialog;
@@ -58,7 +59,8 @@ public class SetupConnectionFragment extends Fragment {
 	// Constructor
 	public SetupConnectionFragment(Context mContext) {
 		nextFragmentBaby = new SetupForwardingFragment(mContext);
-		nextFragmentParents = new SetupSearchDevicesFragment(mContext);
+		// nextFragmentParents = new SetupSearchDevicesFragment(mContext);
+		nextFragmentParents = (SetupSearchDevicesFragment) ((MainActivity) (mContext)).getFragmentById("SetupSearchDevicesFragment");
 		mBluetoothHandler = new BluetoothHandler(mContext);
 		mWifiHandler = new WifiHandler(mContext);
 

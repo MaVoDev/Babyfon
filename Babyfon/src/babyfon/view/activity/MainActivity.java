@@ -72,7 +72,6 @@ public class MainActivity extends ActionBarActivity {
 	public static ConnectivityStateCheck mConnectivityStateCheck;
 
 	public static AudioRecorder mAudioRecorder;
-	public static AudioPlayer mAudioPlayer;
 	// public static ConnectionInterface mConnection;
 
 	public static IntentFilter mIntentFilter;
@@ -288,8 +287,6 @@ public class MainActivity extends ActionBarActivity {
 		// AUSKOMMENTIERT; VS!
 		mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, android.R.string.ok, android.R.string.no);
 
-		MainActivity.mAudioPlayer = new AudioPlayer();
-
 		// Zum Service verbinden / Service starten
 		doBindService();
 	}
@@ -328,7 +325,7 @@ public class MainActivity extends ActionBarActivity {
 		}
 
 		if (mSharedPrefs.getConnectivityType() == 1) {
-			mModuleHandler.stopAudioPlayer();
+			// mModuleHandler.stopAudioPlayer();
 			// if (mConnection != null)
 			// mConnection.stopConnection();
 		} else if (mSharedPrefs.getConnectivityType() == 2) {
