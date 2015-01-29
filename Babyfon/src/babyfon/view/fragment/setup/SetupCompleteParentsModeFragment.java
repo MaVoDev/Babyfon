@@ -84,7 +84,6 @@ public class SetupCompleteParentsModeFragment extends Fragment {
 	}
 
 	public void handleModules() {
-		mModuleHandler.stopUDPReceiver();
 		mModuleHandler.unregisterBattery();
 	}
 
@@ -104,6 +103,7 @@ public class SetupCompleteParentsModeFragment extends Fragment {
 		}
 
 		// Store values in the shared preferences
+		mSharedPrefs.setCounter(0);
 		mSharedPrefs.setActiveStateBabyMode(false);
 		mSharedPrefs.setDeviceMode(mSharedPrefs.getDeviceModeTemp());
 		Log.d(TAG, "Device mode: " + mSharedPrefs.getDeviceMode());
@@ -111,6 +111,7 @@ public class SetupCompleteParentsModeFragment extends Fragment {
 		Log.d(TAG, "Connectivity type: " + mSharedPrefs.getConnectivityType());
 
 		if (mSharedPrefs.getConnectivityType() == 2) {
+			mModuleHandler.startUDPReceiver();
 			mSharedPrefs.setRemoteAddress(mSharedPrefs.getRemoteAddressTemp());
 			Log.d(TAG, "Remote address: " + mSharedPrefs.getRemoteAddress());
 		}

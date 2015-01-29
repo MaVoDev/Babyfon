@@ -31,7 +31,7 @@ public class TCPSender {
 			new Thread(new Runnable() {
 				@Override
 				public void run() {
-					Log.i(TAG, "Try to send message: " + msg);
+//					Log.i(TAG, "Try to send message: " + msg);
 
 					SocketAddress sAddress = new InetSocketAddress(target, mSharedPrefs.getTCPPort());
 					Socket socket = new Socket();

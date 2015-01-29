@@ -29,10 +29,6 @@ public class SettingsActivity extends PreferenceActivity {
 
 	private SharedPrefs mSharedPrefs;
 
-	// Typeface
-	Typeface mTypeface_b;
-	Typeface mTypeface_n;
-
 	/**
 	 * Determines whether to always show the simplified settings UI, where
 	 * settings are presented in a single list. When false, settings are shown
@@ -44,9 +40,6 @@ public class SettingsActivity extends PreferenceActivity {
 	@Override
 	protected void onPostCreate(Bundle savedInstanceState) {
 		super.onPostCreate(savedInstanceState);
-
-		mTypeface_b = Typeface.createFromAsset(this.getAssets(), "fonts/BOOKOSBI.TTF");
-		mTypeface_n = Typeface.createFromAsset(this.getAssets(), "fonts/BOOKOSI.TTF");
 
 		mSharedPrefs = new SharedPrefs(this);
 		setupSimplePreferencesScreen();
@@ -65,6 +58,9 @@ public class SettingsActivity extends PreferenceActivity {
 		// Add 'Baby' preferences.
 		addPreferencesFromResource(R.xml.pref_baby);
 
+		// Add 'Contact' preferences.
+		addPreferencesFromResource(R.xml.pref_contact);
+
 		// Add 'Notification' preferences, and a corresponding header.
 		PreferenceCategory fakeHeader = new PreferenceCategory(this);
 		fakeHeader.setTitle(R.string.pref_header_notifications);
@@ -76,6 +72,7 @@ public class SettingsActivity extends PreferenceActivity {
 		// to reflect the new value, per the Android Design guidelines.
 		bindPreferenceSummaryToValue(findPreference("baby_name"));
 		bindPreferenceSummaryToValue(findPreference("gender_list"));
+		bindPreferenceSummaryToValue(findPreference("phone_number"));
 		bindPreferenceSummaryToValue(findPreference("choose_ringtone"));
 
 		// Define checkbox (Display notification)
@@ -83,17 +80,20 @@ public class SettingsActivity extends PreferenceActivity {
 				"enable_display_notification");
 
 		// Define listener for checkbox (display notification)
-		cbpDisplayNotification.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
-			public boolean onPreferenceChange(Preference preference, Object state) {
-
-				boolean isEnabled = ((Boolean) state).booleanValue();
-				Log.d("Babyfon", "Pref " + preference.getKey() + " changed to " + isEnabled);
-
-				// Store value in SharedPreferences
-				mSharedPrefs.setDisplayNotificationState(isEnabled);
-				return true;
-			}
-		});
+		// cbpDisplayNotification.setOnPreferenceChangeListener(new
+		// Preference.OnPreferenceChangeListener() {
+		// public boolean onPreferenceChange(Preference preference, Object
+		// state) {
+		//
+		// boolean isEnabled = ((Boolean) state).booleanValue();
+		// Log.d("Babyfon", "Pref " + preference.getKey() + " changed to " +
+		// isEnabled);
+		//
+		// // Store value in SharedPreferences
+		// mSharedPrefs.setDisplayNotificationState(isEnabled);
+		// return true;
+		// }
+		// });
 
 		// Define checkbox (Sound notification)
 		final CheckBoxPreference cbpSoundNotification = (CheckBoxPreference) getPreferenceManager().findPreference(
@@ -167,6 +167,28 @@ public class SettingsActivity extends PreferenceActivity {
 				// Store value in SharedPreferences
 				mSharedPrefs.setName(name);
 				System.out.println(mSharedPrefs.getName());
+
+				return true;
+			}
+		});
+
+		// Define edittext (Name)
+		final EditTextPreference etpPhoneNumber = (EditTextPreference) getPreferenceManager().findPreference(
+				"phone_number");
+
+		// Define listener for edittext (Name)
+		etpPhoneNumber.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+			public boolean onPreferenceChange(Preference preference, Object state) {
+
+				// Update the summary of the name in the ui.
+				sBindPreferenceSummaryToValueListener.onPreferenceChange(preference, state);
+
+				String phoneNumber = state.toString();
+				Log.d("Babyfon", "Pref " + preference.getKey() + " changed to " + phoneNumber);
+
+				// Store value in SharedPreferences
+				mSharedPrefs.setPhoneNumber(phoneNumber);
+				System.out.println(mSharedPrefs.getPhoneNumber());
 
 				return true;
 			}

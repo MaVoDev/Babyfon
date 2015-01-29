@@ -25,6 +25,7 @@
             android:divider="@null"
             android:dividerHeight="0dp" >
         </ListView>
+
     </LinearLayout>
 
     <LinearLayout style="@style/layout_footer" >

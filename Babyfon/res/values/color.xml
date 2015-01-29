@@ -4,7 +4,11 @@
     <!-- Navigation Drawer -->
     <color name="list_item_title">#000000</color>
     <color name="title">#404040</color>
+    <color name="titleCry">#FFFFFF</color>
+     <color name="subtitleCry">#303030</color>
     <color name="text">#404040</color>
     <color name="list_divider">#272727</color>
+    <color name="counter_text_bg">#828282</color>
+    <color name="counter_text_color">#FFFFFF</color>
     
 </resources>

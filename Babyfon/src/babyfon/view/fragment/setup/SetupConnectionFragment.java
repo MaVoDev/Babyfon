@@ -4,6 +4,8 @@ import java.net.SocketException;
 import java.net.UnknownHostException;
 
 import babyfon.connectivity.bluetooth.BluetoothHandler;
+import babyfon.connectivity.phone.CallStateListener;
+import babyfon.connectivity.wifi.TCPSender;
 import babyfon.connectivity.wifi.WifiHandler;
 import babyfon.init.R;
 import babyfon.settings.SharedPrefs;
@@ -14,6 +16,10 @@ import android.app.AlertDialog;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.telephony.PhoneNumberFormattingTextWatcher;
+import android.text.InputFilter;
+import android.text.InputType;
+import android.text.method.DigitsKeyListener;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Typeface;
@@ -24,6 +30,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
@@ -37,13 +44,12 @@ public class SetupConnectionFragment extends Fragment {
 	private RadioGroup radioGrpConnectivity;
 	private RadioButton radioBluetooth;
 	private RadioButton radioWifi;
-	private RadioButton radioWifiDirect;
+	private RadioButton radioCall;
 	private TextView subtitle;
 	private TextView title;
 	private TextView infoText;
 
 	private boolean isWifiAvailable;
-	private boolean isWifiDirectAvailable;
 
 	private int connectivityType;
 
@@ -51,6 +57,7 @@ public class SetupConnectionFragment extends Fragment {
 	private WifiHandler mWifiHandler;
 
 	private SetupForwardingFragment nextFragmentBaby;
+	private SetupCompleteBabyModeFragment nextFragmentBabyCall;
 	private SetupSearchDevicesFragment nextFragmentParents;
 	private SharedPrefs mSharedPrefs;
 
@@ -74,10 +81,8 @@ public class SetupConnectionFragment extends Fragment {
 	public void getAvailability() {
 		if (mWifiHandler.getWifiState() != -1) {
 			isWifiAvailable = true;
-			isWifiDirectAvailable = true;
 		} else {
 			isWifiAvailable = false;
-			isWifiDirectAvailable = false;
 		}
 	}
 
@@ -93,13 +98,13 @@ public class SetupConnectionFragment extends Fragment {
 			// Wi-Fi ausgewählt
 			connectivityType = 2;
 			break;
-		case R.id.radio_wifi_direct:
-			// Wi-Fi Direct ausgewählt
-			connectivityType = 3;
-			break;
 		case R.id.radio_bluetooth:
 			// Bluetooth ausgewählt
 			connectivityType = 1;
+			break;
+		case R.id.radio_call:
+			// Wi-Fi Direct ausgewählt
+			connectivityType = 3;
 			break;
 		}
 	}
@@ -118,19 +123,28 @@ public class SetupConnectionFragment extends Fragment {
 		if (mSharedPrefs.getConnectivityTypeTemp() == 1) {
 			radioBluetooth.setChecked(true);
 			radioWifi.setChecked(false);
-			radioWifiDirect.setChecked(false);
+			if (mSharedPrefs.getDeviceModeTemp() == 0) {
+				radioCall.setChecked(false);
+			}
 		}
 
 		if (mSharedPrefs.getConnectivityTypeTemp() == 2) {
 			radioBluetooth.setChecked(false);
 			radioWifi.setChecked(true);
-			radioWifiDirect.setChecked(false);
+			if (mSharedPrefs.getDeviceModeTemp() == 0) {
+				radioCall.setChecked(false);
+			}
 		}
 
 		if (mSharedPrefs.getConnectivityTypeTemp() == 3) {
-			radioBluetooth.setChecked(false);
-			radioWifi.setChecked(false);
-			radioWifiDirect.setChecked(true);
+			if (mSharedPrefs.getDeviceModeTemp() == 0) {
+				radioBluetooth.setChecked(false);
+				radioWifi.setChecked(false);
+				radioCall.setChecked(true);
+			} else {
+				radioBluetooth.setChecked(false);
+				radioWifi.setChecked(true);
+			}
 		}
 	}
 
@@ -158,8 +172,13 @@ public class SetupConnectionFragment extends Fragment {
 		radioBluetooth.setTypeface(mTypeface_i);
 		radioWifi = (RadioButton) view.findViewById(R.id.radio_wifi);
 		radioWifi.setTypeface(mTypeface_i);
-		radioWifiDirect = (RadioButton) view.findViewById(R.id.radio_wifi_direct);
-		radioWifiDirect.setTypeface(mTypeface_i);
+		radioCall = (RadioButton) view.findViewById(R.id.radio_call);
+		radioCall.setTypeface(mTypeface_i);
+		if (mSharedPrefs.getDeviceModeTemp() == 0) {
+			radioCall.setVisibility(View.VISIBLE);
+		} else {
+			radioCall.setVisibility(View.INVISIBLE);
+		}
 
 		// Initialize TextViews
 		subtitle = (TextView) view.findViewById(R.id.subtitle_setup_connection);
@@ -195,18 +214,18 @@ public class SetupConnectionFragment extends Fragment {
 		// Set Wi-Fi availability
 		radioWifi.setEnabled(isWifiAvailable);
 
-		// Set Wi-Fi Direct availability
-		radioWifiDirect.setEnabled(isWifiDirectAvailable);
-
 		// Check the next available connectivity
-		if (!mBluetoothHandler.isBluetoothSupported()) {
-			if (!isWifiAvailable) {
-				if (!isWifiDirectAvailable) {
-					radioGrpConnectivity.clearCheck();
-				}
+		if (!isWifiAvailable) {
+			if (!mBluetoothHandler.isBluetoothSupported()) {
+				radioGrpConnectivity.clearCheck();
+				radioCall.setChecked(true);
 			} else {
-				radioWifi.setChecked(true);
+				radioGrpConnectivity.clearCheck();
+				radioBluetooth.setChecked(true);
 			}
+		} else {
+			radioGrpConnectivity.clearCheck();
+			radioWifi.setChecked(true);
 		}
 
 		radioGrpConnectivity.setOnCheckedChangeListener(new OnCheckedChangeListener() {
@@ -260,7 +279,12 @@ public class SetupConnectionFragment extends Fragment {
 				ft.setCustomAnimations(R.anim.anim_slide_in_left, R.anim.anim_slide_out_left);
 
 				if (mSharedPrefs.getDeviceModeTemp() == 0) {
-					ft.replace(R.id.frame_container, nextFragmentBaby, null).addToBackStack(null).commit();
+					if (connectivityType == 3) {
+						ft.replace(R.id.frame_container, nextFragmentBabyCall, null).addToBackStack(null).commit();
+					} else {
+						ft.replace(R.id.frame_container, nextFragmentBaby, null).addToBackStack(null).commit();
+					}
+
 				} else {
 					ft.replace(R.id.frame_container, nextFragmentParents, null).addToBackStack(null).commit();
 				}

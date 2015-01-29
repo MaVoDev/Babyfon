@@ -61,10 +61,17 @@ public class SetupForwardingFragment extends Fragment {
 			btnForward.setBackgroundResource(R.drawable.btn_selector_female);
 		}
 
-		if (mSharedPrefs.getForwardingSMSInfoTemp() || mSharedPrefs.getForwardingSMSTemp()) {
+		if (mSharedPrefs.getForwardingSMSInfo() || mSharedPrefs.getForwardingSMS()) {
 			chkboxSMS.setChecked(true);
 			radioForwardSMS.setEnabled(true);
 			radioInfoSMS.setEnabled(true);
+			if (mSharedPrefs.getForwardingSMS()) {
+				radioForwardSMS.setChecked(true);
+				radioInfoSMS.setChecked(false);
+			} else {
+				radioForwardSMS.setChecked(false);
+				radioInfoSMS.setChecked(true);
+			}
 		} else {
 			chkboxSMS.setChecked(false);
 			radioForwardSMS.setEnabled(false);
@@ -127,7 +134,8 @@ public class SetupForwardingFragment extends Fragment {
 			public void onClick(View v) {
 				FragmentTransaction ft = mFragmentManager.beginTransaction();
 				ft.setCustomAnimations(R.anim.anim_slide_in_right, R.anim.anim_slide_out_right);
-				ft.replace(R.id.frame_container, new SetupConnectionFragment(mContext), null).addToBackStack(null).commit();
+				ft.replace(R.id.frame_container, new SetupConnectionFragment(mContext), null).addToBackStack(null)
+						.commit();
 			}
 		});
 
@@ -191,27 +199,34 @@ public class SetupForwardingFragment extends Fragment {
 
 				switch (keyCode) {
 				case KeyEvent.KEYCODE_BACK:
-					new AlertDialog.Builder(getActivity()).setTitle(mContext.getString(R.string.dialog_title_cancel_setup))
+					new AlertDialog.Builder(getActivity())
+							.setTitle(mContext.getString(R.string.dialog_title_cancel_setup))
 							.setMessage(mContext.getString(R.string.dialog_message_cancel_setup))
 							.setNegativeButton(mContext.getString(R.string.dialog_button_no), null)
-							.setPositiveButton(mContext.getString(R.string.dialog_button_yes), new DialogInterface.OnClickListener() {
-								@Override
-								public void onClick(DialogInterface dialog, int id) {
-									if (mSharedPrefs.getDeviceMode() == 0) {
-										mFragmentManager.beginTransaction()
-												.replace(R.id.frame_container, new OverviewFragment(mContext), null).addToBackStack(null)
-												.commit();
-									} else if (mSharedPrefs.getDeviceMode() == 1) {
-										mFragmentManager.beginTransaction()
-												.replace(R.id.frame_container, new BabyMonitorFragment(mContext), null)
-												.addToBackStack(null).commit();
-									} else {
-										mFragmentManager.beginTransaction()
-												.replace(R.id.frame_container, new SetupStartFragment(mContext), null).addToBackStack(null)
-												.commit();
-									}
-								}
-							}).create().show();
+							.setPositiveButton(mContext.getString(R.string.dialog_button_yes),
+									new DialogInterface.OnClickListener() {
+										@Override
+										public void onClick(DialogInterface dialog, int id) {
+											if (mSharedPrefs.getDeviceMode() == 0) {
+												mFragmentManager
+														.beginTransaction()
+														.replace(R.id.frame_container, new OverviewFragment(mContext),
+																null).addToBackStack(null).commit();
+											} else if (mSharedPrefs.getDeviceMode() == 1) {
+												mFragmentManager
+														.beginTransaction()
+														.replace(R.id.frame_container,
+																new BabyMonitorFragment(mContext), null)
+														.addToBackStack(null).commit();
+											} else {
+												mFragmentManager
+														.beginTransaction()
+														.replace(R.id.frame_container,
+																new SetupStartFragment(mContext), null)
+														.addToBackStack(null).commit();
+											}
+										}
+									}).create().show();
 					break;
 				}
 				return true;

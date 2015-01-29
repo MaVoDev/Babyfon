@@ -21,6 +21,97 @@ public class SharedPrefs {
 	}
 
 	/*
+	 * == Navigation Drawer =====================================
+	 */
+
+	// == Absence counter ====================================
+
+	/**
+	 * Get absence counter.
+	 * 
+	 * @return int: counter
+	 */
+	public int getCounter() {
+		return mSharedPreferences.getInt("absence_counter", 0);
+	}
+
+	/**
+	 * Set absence counter.
+	 * 
+	 * @param int counter
+	 */
+	public void setCounter(int num) {
+		editor.putInt("absence_counter", num).commit();
+	}
+
+	/*
+	 * == Babymonitor =====================================
+	 */
+
+	// == Noise detector state ====================================
+
+	/**
+	 * Get the noise detector state.
+	 * 
+	 * @return Boolean: noise state
+	 */
+	public Boolean isNoiseActivated() {
+		return mSharedPreferences.getBoolean("noise_activated", false);
+	}
+
+	/**
+	 * Set the noise detector state.
+	 * 
+	 * @param Boolean
+	 *            noise state
+	 */
+	public void setNoiseActivated(Boolean state) {
+		editor.putBoolean("noise_activated", state).commit();
+	}
+
+	// == Talk state ====================================
+
+	/**
+	 * Get the talk state.
+	 * 
+	 * @return Boolean: talk state
+	 */
+	public Boolean isTalkActivated() {
+		return mSharedPreferences.getBoolean("talk_activated", false);
+	}
+
+	/**
+	 * Set the talk state.
+	 * 
+	 * @param Boolean
+	 *            talk state
+	 */
+	public void setTalkActivated(Boolean state) {
+		editor.putBoolean("talk_activated", state).commit();
+	}
+
+	// == Hear state ====================================
+
+	/**
+	 * Get the hear state.
+	 * 
+	 * @return Boolean: hear state
+	 */
+	public Boolean isHearActivated() {
+		return mSharedPreferences.getBoolean("hear_activated", false);
+	}
+
+	/**
+	 * Set the hear state.
+	 * 
+	 * @param Boolean
+	 *            hear state
+	 */
+	public void setHearActivated(Boolean state) {
+		editor.putBoolean("hear_activated", state).commit();
+	}
+
+	/*
 	 * == Network settings =====================================
 	 */
 
@@ -194,6 +285,27 @@ public class SharedPrefs {
 	 */
 	public void setName(String name) {
 		editor.putString("baby_name", name).commit();
+	}
+
+	// == Phone number ===========================
+
+	/**
+	 * Get the phone number.
+	 * 
+	 * @return String phone number
+	 */
+	public String getPhoneNumber() {
+		return mSharedPreferences.getString("phone_number", null);
+	}
+
+	/**
+	 * Set the phone number.
+	 * 
+	 * @param String
+	 *            phone number
+	 */
+	public void setPhoneNumber(String phoneNumber) {
+		editor.putString("phone_number", phoneNumber).commit();
 	}
 
 	// == Notification display ========================
@@ -516,24 +628,24 @@ public class SharedPrefs {
 	public void setTempMode(int mode) {
 		editor.putInt("temp_mode", mode).commit();
 	}
-	
+
 	// == Battery =================================
 
-		/**
-		 * Get the battery level.
-		 * 
-		 * @return int: battery level
-		 */
-		public int getBatteryLevel() {
-			return mSharedPreferences.getInt("battery_level", -1);
-		}
+	/**
+	 * Get the battery level.
+	 * 
+	 * @return int: battery level
+	 */
+	public int getBatteryLevel() {
+		return mSharedPreferences.getInt("battery_level", -1);
+	}
 
-		/**
-		 * Set the battery level.
-		 * 
-		 * @param int level: battery level.
-		 */
-		public void setBatteryLevel(int level) {
-			editor.putInt("battery_level", level).commit();
-		}
+	/**
+	 * Set the battery level.
+	 * 
+	 * @param int level: battery level.
+	 */
+	public void setBatteryLevel(int level) {
+		editor.putInt("battery_level", level).commit();
+	}
 }

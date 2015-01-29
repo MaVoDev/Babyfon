@@ -31,7 +31,7 @@ public class AbsenceFragment extends Fragment {
 
 	private static ArrayList<AbsenceListItemModel> messages;
 
-	private SharedPrefs mSharedPrefs;
+	private static SharedPrefs mSharedPrefs;
 
 	private static Context mContext;
 
@@ -55,6 +55,8 @@ public class AbsenceFragment extends Fragment {
 
 	public static void updateList() {
 		AbsenceListAdapter adapter = new AbsenceListAdapter(mContext.getApplicationContext(), messages);
+		
+		mSharedPrefs.setCounter(messages.size());
 
 		// Assign adapter to ListView
 		listViewAbsence.setAdapter(adapter);
@@ -103,7 +105,7 @@ public class AbsenceFragment extends Fragment {
 		View view = inflater.inflate(R.layout.main_absence, container, false);
 
 		initUiElements(view);
-
+		
 		btnDeleteList.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -143,11 +145,11 @@ public class AbsenceFragment extends Fragment {
 		updateList();
 	}
 
-	public static void setNewMessage(int type, String numberName, String message) {
+	public static void setNewMessage(int type, String numberName, String message, String date, String time) {
 		if (messages == null) {
 			messages = new ArrayList<AbsenceListItemModel>();
 		}
-		messages.add(new AbsenceListItemModel(type, numberName, message));
+		messages.add(new AbsenceListItemModel(type, numberName, message, date, time));
 
 		updateList();
 	}

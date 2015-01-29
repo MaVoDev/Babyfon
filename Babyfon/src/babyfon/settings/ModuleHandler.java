@@ -3,8 +3,7 @@ package babyfon.settings;
 import android.content.Context;
 import android.content.IntentFilter;
 import android.util.Log;
-import babyfon.audio.AudioRecorder;
-import babyfon.connectivity.sms.SMSReceiver;
+import babyfon.connectivity.phone.SMSReceiver;
 import babyfon.connectivity.wifi.TCPReceiver;
 import babyfon.connectivity.wifi.UDPReceiver;
 import babyfon.performance.Battery;
@@ -59,16 +58,16 @@ public class ModuleHandler {
 	 * Register SMS receiver
 	 */
 	public void registerSMS() {
-		if (MainActivity.mIntentFilter == null) {
-			MainActivity.mIntentFilter = new IntentFilter();
-			MainActivity.mIntentFilter.addAction("android.provider.Telephony.SMS_RECEIVED");
+		if (MainActivity.mIntentFilterSms == null) {
+			MainActivity.mIntentFilterSms = new IntentFilter();
+			MainActivity.mIntentFilterSms.addAction("android.provider.Telephony.SMS_RECEIVED");
 		}
 
 		if (MainActivity.mSmsReceiver == null) {
 			Log.i(TAG, "Try to register sms receiver...");
 			MainActivity.mSmsReceiver = new SMSReceiver(mContext);
 			try {
-				mContext.registerReceiver(MainActivity.mSmsReceiver, MainActivity.mIntentFilter);
+				mContext.registerReceiver(MainActivity.mSmsReceiver, MainActivity.mIntentFilterSms);
 				Log.d(TAG, "SMS receiver registered.");
 			} catch (Exception e) {
 				Log.e(TAG, "Error: Can't register sms receiver.");
@@ -87,7 +86,7 @@ public class ModuleHandler {
 			try {
 				mContext.unregisterReceiver(MainActivity.mSmsReceiver);
 				MainActivity.mSmsReceiver = null;
-				MainActivity.mIntentFilter = null;
+				MainActivity.mIntentFilterSms = null;
 				Log.d(TAG, "SMS receiver unregistered.");
 			} catch (Exception e) {
 				Log.e(TAG, "Error: Can't unregister sms receiver.");

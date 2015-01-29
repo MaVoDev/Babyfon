@@ -12,6 +12,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.text.InputFilter;
+import android.text.InputType;
 import android.text.method.DigitsKeyListener;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -30,7 +31,7 @@ import babyfon.connectivity.ConnectionInterface;
 import babyfon.connectivity.ConnectionInterface.OnConnnectedListener;
 import babyfon.connectivity.bluetooth.BluetoothHandler;
 import babyfon.connectivity.wifi.TCPSender;
-import babyfon.connectivity.wifi.UDPBroadcastSender;
+import babyfon.connectivity.wifi.UDPSender;
 import babyfon.connectivity.wifi.WifiHandler;
 import babyfon.init.R;
 import babyfon.model.DeviceListItemModel;
@@ -272,7 +273,7 @@ public class SetupSearchDevicesFragment extends Fragment {
 
 	public void initViewBWifi() {
 		mModuleHandler.startTCPReceiver();
-		new UDPBroadcastSender(mContext).sendUDPMessage(new WifiHandler(mContext).getNetworkAddressClassC());
+		new UDPSender(mContext).sendUDPMessage(new WifiHandler(mContext).getNetworkAddressClassC());
 	}
 
 	public void initViewBWifiDirect() {
@@ -288,53 +289,54 @@ public class SetupSearchDevicesFragment extends Fragment {
 	}
 
 	public void openAuthDialog(final String deviceName, String deviceIP) {
-		// ((MainActivity) mContext).runOnUiThread(new Runnable() {
-		// @Override
-		// public void run() {
-		AlertDialog.Builder alert = new AlertDialog.Builder(mContext);
+		((MainActivity) mContext).runOnUiThread(new Runnable() {
+			@Override
+			public void run() {
+				AlertDialog.Builder alert = new AlertDialog.Builder(mContext);
+				alert.setTitle("Mit \"" + deviceName + "\" verbinden");
+				alert.setMessage("Passwort:");
 
-		alert.setTitle("Mit \"" + deviceName + "\" verbinden");
-		alert.setMessage("Passwort:");
+				// Set an EditText view to get user input
+				final EditText input = new EditText(mContext);
+				input.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+				input.setFilters(new InputFilter[] {
+						// Maximum 4 characters
+						new InputFilter.LengthFilter(4),
+						// Digits only.
+						DigitsKeyListener.getInstance(), });
 
-		// Set an EditText view to get user input
-		final EditText input = new EditText(mContext);
-		input.setFilters(new InputFilter[] {
-				// Maximum 4 characters
-				new InputFilter.LengthFilter(4),
-				// Digits only.
-				DigitsKeyListener.getInstance(), });
+				// Digits only & use numeric soft-keyboard.
+				input.setKeyListener(DigitsKeyListener.getInstance());
+				alert.setView(input);
 
-		// Digits only & use numeric soft-keyboard.
-		input.setKeyListener(DigitsKeyListener.getInstance());
-		alert.setView(input);
+				alert.setPositiveButton("Senden", new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int whichButton) {
+						String password = input.getText().toString();
+						String localIP = null;
+						try {
+							localIP = new WifiHandler(mContext).getLocalIPv4Address();
+						} catch (SocketException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						} catch (UnknownHostException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+						new TCPSender(mContext).sendMessage(mSharedPrefs.getRemoteAddressTemp(),
+								mContext.getString(R.string.BABYFON_MSG_AUTH_REQ) + ";" + password + ";" + localIP + ";"
+										+ android.os.Build.MODEL);
+					}
+				});
 
-		alert.setPositiveButton("Senden", new DialogInterface.OnClickListener() {
-			public void onClick(DialogInterface dialog, int whichButton) {
-				String password = input.getText().toString();
-				String localIP = null;
-				try {
-					localIP = new WifiHandler(mContext).getLocalIPv4Address();
-				} catch (SocketException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (UnknownHostException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				new TCPSender(mContext).sendMessage(mSharedPrefs.getRemoteAddressTemp(), mContext.getString(R.string.BABYFON_MSG_AUTH_REQ)
-						+ ";" + password + ";" + localIP + ";" + android.os.Build.MODEL);
+				alert.setNegativeButton("Abbrechen", new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int whichButton) {
+
+					}
+				});
+
+				alert.show();
 			}
 		});
-
-		alert.setNegativeButton("Abbrechen", new DialogInterface.OnClickListener() {
-			public void onClick(DialogInterface dialog, int whichButton) {
-
-			}
-		});
-
-		alert.show();
-		// }
-		// });
 	}
 
 	public void openConnectDialog(final String deviceName, final String deviceIP) {

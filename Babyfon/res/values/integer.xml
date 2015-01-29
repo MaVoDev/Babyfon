@@ -1,10 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <!-- SharedPreferences -->
-
-
-    <!-- P -->
+    <!-- Wi-Fi network -->
     <integer name="sharedprefs_default_port_tcp">13141</integer>
     <integer name="sharedprefs_default_port_udp">13142</integer>
 

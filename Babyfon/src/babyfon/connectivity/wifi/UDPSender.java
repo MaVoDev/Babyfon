@@ -1,5 +1,6 @@
 package babyfon.connectivity.wifi;
 
+import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
@@ -11,19 +12,20 @@ import android.util.Log;
 import babyfon.init.R;
 import babyfon.settings.SharedPrefs;
 
-public class UDPBroadcastSender {
+public class UDPSender {
 
 	private Context mContext;
 	private SharedPrefs mSharedPrefs;
-	
-	private static final String TAG = UDPBroadcastSender.class.getCanonicalName();
 
-	public UDPBroadcastSender(Context mContext) {
+	private static final String TAG = UDPSender.class.getCanonicalName();
+
+	public UDPSender(Context mContext) {
 		this.mContext = mContext;
 		mSharedPrefs = new SharedPrefs(mContext);
 	}
 
 	public void sendUDPMessage(String ipRange) {
+		// send Broadcast
 		String localIP;
 		try {
 			localIP = new WifiHandler(mContext).getLocalIPv4Address();
@@ -57,5 +59,23 @@ public class UDPBroadcastSender {
 		} else {
 			Log.e(TAG, "The local ip is null!");
 		}
+	}
+
+	public void sendUDPMessage(byte[] bData) {
+		InetAddress mInetAddress;
+		try {
+			mInetAddress = InetAddress.getByName(mSharedPrefs.getRemoteAddress());
+			DatagramPacket packet = new DatagramPacket(bData, bData.length, mInetAddress, mSharedPrefs.getUDPPort());
+			DatagramSocket dsocket = new DatagramSocket();
+			dsocket.send(packet);
+			dsocket.close();
+		} catch (UnknownHostException e) {
+			e.printStackTrace();
+		} catch (SocketException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
 	}
 }

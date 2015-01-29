@@ -12,9 +12,10 @@
 
     <ScrollView style="@style/layout_body" >
 
-        <LinearLayout android:orientation="vertical"
+        <LinearLayout
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" >
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
 
             <View
                 android:layout_width="fill_parent"
@@ -39,7 +40,6 @@
                         style="@style/text_normal"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/overview_baby_mode_state"
                         android:textStyle="bold" />
 
                     <LinearLayout
@@ -63,7 +63,9 @@
                     </LinearLayout>
                 </LinearLayout>
 
-                <LinearLayout style="@style/overview_edit" >
+                <LinearLayout
+                    android:id="@+id/overview_layout_edit_mode"
+                    style="@style/overview_edit" >
 
                     <ImageView
                         android:id="@+id/overview_edit_mode"
@@ -95,7 +97,6 @@
                         style="@style/text_normal"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/overview_connected_device"
                         android:textStyle="bold" />
 
                     <LinearLayout
@@ -178,6 +179,7 @@
                 android:background="@android:color/darker_gray" />
 
             <LinearLayout
+                android:id="@+id/overview_layout_call"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/overview"
@@ -216,11 +218,13 @@
             </LinearLayout>
 
             <View
+                android:id="@+id/overview_layout_call_separator"
                 android:layout_width="fill_parent"
                 android:layout_height="1dp"
                 android:background="@android:color/darker_gray" />
 
             <LinearLayout
+                android:id="@+id/overview_layout_sms"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/overview"
@@ -259,11 +263,13 @@
             </LinearLayout>
 
             <View
+                android:id="@+id/overview_layout_sms_separator"
                 android:layout_width="fill_parent"
                 android:layout_height="1dp"
                 android:background="@android:color/darker_gray" />
 
             <LinearLayout
+                android:id="@+id/overview_layout_password"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/overview"
@@ -302,6 +308,7 @@
             </LinearLayout>
 
             <View
+                android:id="@+id/overview_layout_password_separator"
                 android:layout_width="fill_parent"
                 android:layout_height="1dp"
                 android:background="@android:color/darker_gray" />

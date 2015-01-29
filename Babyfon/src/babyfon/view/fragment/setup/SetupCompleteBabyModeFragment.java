@@ -81,26 +81,40 @@ public class SetupCompleteBabyModeFragment extends Fragment {
 		infoText = (TextView) view.findViewById(R.id.text_complete_baby);
 		infoText.setTypeface(mTypeface_i);
 
+		if (mSharedPrefs.getConnectivityTypeTemp() == 3) {
+			infoText.setText(mContext.getString(R.string.text_complete_baby_call));
+			tvPassword.setVisibility(View.INVISIBLE);
+		} else {
+			infoText.setText(mContext.getString(R.string.text_complete_baby));
+			tvPassword.setVisibility(View.VISIBLE);
+		}
+
 		updateUI();
 	}
 
 	public void handleModules() {
 
-		if (mSharedPrefs.getConnectivityTypeTemp() == 1) {
+		if (mSharedPrefs.getConnectivityTypeTemp() != 3) {
+			if (mSharedPrefs.getForwardingSMSInfoTemp() || mSharedPrefs.getForwardingSMSTemp()) {
+				mModuleHandler.registerSMS();
+			}
 
-			new BluetoothHandler(mContext).enableBluetoothDiscoverability();
-			MainActivity.mBoundService.startServer();
-
-		} else if (mSharedPrefs.getConnectivityTypeTemp() == 2) {
-			mModuleHandler.startTCPReceiver();
-			mModuleHandler.startUDPReceiver();
+			if (mSharedPrefs.getConnectivityTypeTemp() == 1) {
+				new BluetoothHandler(mContext).enableBluetoothDiscoverability();
+				MainActivity.mBoundService.startServer();
+			} else if (mSharedPrefs.getConnectivityTypeTemp() == 2) {
+				mModuleHandler.startTCPReceiver();
+				mModuleHandler.startUDPReceiver();
+			} else {
+				mModuleHandler.stopTCPReceiver();
+				mModuleHandler.stopUDPReceiver();
+			}
+			mSharedPrefs.setRemoteAddress(null);
+			mSharedPrefs.setRemoteName(null);
 		} else {
 			mModuleHandler.stopTCPReceiver();
 			mModuleHandler.stopUDPReceiver();
 		}
-
-		mSharedPrefs.setRemoteAddress(null);
-		mSharedPrefs.setRemoteName(null);
 	}
 
 	@Override
@@ -119,6 +133,7 @@ public class SetupCompleteBabyModeFragment extends Fragment {
 		tvPassword.setText(password);
 
 		// Store values in the shared preferences
+		mSharedPrefs.setCounter(0);
 		mSharedPrefs.setActiveStateBabyMode(true);
 		mSharedPrefs.setDeviceMode(mSharedPrefs.getDeviceModeTemp());
 		Log.d(TAG, "Device mode: " + mSharedPrefs.getDeviceMode());

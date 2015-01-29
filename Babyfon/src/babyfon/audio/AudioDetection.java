@@ -16,7 +16,6 @@ public class AudioDetection {
 		if (readSize > 0) {
 			final double amplitude = sum / readSize;
 			// pb.setProgress((int) Math.sqrt(amplitude));
-
 			return (int) Math.sqrt(amplitude);
 		} else
 			return 0;

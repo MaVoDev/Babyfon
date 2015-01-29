@@ -2,7 +2,7 @@ package babyfon;
 
 import android.content.Context;
 import android.support.v4.app.FragmentManager;
-import android.widget.Toast;
+import babyfon.connectivity.phone.PhoneBookHandler;
 import babyfon.connectivity.wifi.TCPSender;
 import babyfon.init.R;
 import babyfon.performance.ConnectivityStateCheck;
@@ -18,6 +18,7 @@ public class Message {
 	private ConnectivityStateCheck mConnectivityStateCheck;
 	private ModuleHandler mModuleHandler;
 	private SharedPrefs mSharedPrefs;
+	private PhoneBookHandler mPhoneBookHandler;
 
 	private Context mContext;
 
@@ -27,10 +28,39 @@ public class Message {
 		mConnectivityStateCheck = new ConnectivityStateCheck(mContext);
 		mModuleHandler = new ModuleHandler(mContext);
 		mSharedPrefs = new SharedPrefs(mContext);
+		mPhoneBookHandler = new PhoneBookHandler(mContext);
 
 		this.mContext = mContext;
 	}
 
+	public void call(String phoneNumber, String date, String time) {
+		String contactName = mPhoneBookHandler.getContactName(phoneNumber);
+
+		if (mSharedPrefs.getForwardingCallInfo()) {
+			send(mContext.getString(R.string.BABYFON_MSG_CALL_INFO) + ";" + contactName + ";" + phoneNumber + ";"
+					+ date + ";" + time);
+		}
+
+	}
+
+	public void sms(String phoneNumber, String message, String date, String time) {
+		String contactName = mPhoneBookHandler.getContactName(phoneNumber);
+
+		if (mSharedPrefs.getForwardingSMS()) {
+			send(mContext.getString(R.string.BABYFON_MSG_SMS) + ";" + contactName + ";" + message + ";" + date + ";"
+					+ time);
+		}
+
+		if (mSharedPrefs.getForwardingSMSInfo()) {
+			send(mContext.getString(R.string.BABYFON_MSG_SMS_INFO) + ";" + contactName + ";" + date + ";" + time);
+		}
+	}
+
+	/**
+	 * Send methode
+	 * 
+	 * @param str
+	 */
 	public void send(String str) {
 
 		if (mSharedPrefs.getConnectivityType() == 1 || mSharedPrefs.getConnectivityTypeTemp() == 1) {
@@ -50,27 +80,46 @@ public class Message {
 			mSharedPrefs.setBatteryLevel(Integer.parseInt(strArray[1]));
 		}
 
-		if (strArray[0].equals(mContext.getString(R.string.BABYFON_MSG_SMS))) {
-			// SMS
-			final String numberName = strArray[1];
-			final String message = strArray[2];
+		if (strArray[0].equals(mContext.getString(R.string.BABYFON_MSG_CALL_INFO))) {
+			// Call
+			final String contactName = strArray[1];
+			final String phoneNumber = strArray[2];
+			final String date = strArray[3];
+			final String time = strArray[4];
 
 			((MainActivity) mContext).runOnUiThread(new Runnable() {
 				@Override
 				public void run() {
-					AbsenceFragment.setNewMessage(1, numberName, message);
+					AbsenceFragment.setNewMessage(0, contactName, phoneNumber, date, time);
+				}
+			});
+		}
+
+		if (strArray[0].equals(mContext.getString(R.string.BABYFON_MSG_SMS))) {
+			// SMS
+			final String contactName = strArray[1];
+			final String message = strArray[2];
+			final String date = strArray[3];
+			final String time = strArray[4];
+
+			((MainActivity) mContext).runOnUiThread(new Runnable() {
+				@Override
+				public void run() {
+					AbsenceFragment.setNewMessage(1, contactName, message, date, time);
 				}
 			});
 		}
 
 		if (strArray[0].equals(mContext.getString(R.string.BABYFON_MSG_SMS_INFO))) {
 			// SMS
-			final String numberName = strArray[1];
+			final String contactName = strArray[1];
+			final String date = strArray[2];
+			final String time = strArray[3];
 
 			((MainActivity) mContext).runOnUiThread(new Runnable() {
 				@Override
 				public void run() {
-					AbsenceFragment.setNewMessage(1, numberName, "");
+					AbsenceFragment.setNewMessage(1, contactName, "", date, time);
 					;
 				}
 			});
@@ -103,7 +152,6 @@ public class Message {
 
 				send(mContext.getString(R.string.BABYFON_MSG_AUTH_CONFIRMED) + ";" + mSharedPrefs.getPassword());
 
-				mModuleHandler.stopUDPReceiver();
 				mModuleHandler.registerBattery();
 
 				if (mSharedPrefs.getForwardingSMS() || mSharedPrefs.getForwardingSMSInfo()) {
@@ -132,13 +180,7 @@ public class Message {
 			mSharedPrefs.setRemoteName(null);
 			mSharedPrefs.setRemoteOnlineState(false);
 
-			((MainActivity) mContext).runOnUiThread(new Runnable() {
-				@Override
-				public void run() {
-					Toast toast = Toast.makeText(mContext, "Falsches Passwort!", Toast.LENGTH_SHORT);
-					toast.show();
-				}
-			});
+			new Output().toast(mContext, mContext.getString(R.string.wrong_password), 0);
 		}
 
 		if (strArray[0].equals(mContext.getString(R.string.BABYFON_MSG_SYSTEM_AWAY))) {
@@ -147,6 +189,8 @@ public class Message {
 				if (mSharedPrefs.getForwardingSMS() || mSharedPrefs.getForwardingSMSInfo()) {
 					mModuleHandler.unregisterSMS();
 				}
+			} else {
+				mSharedPrefs.setBatteryLevel(-1);
 			}
 			mSharedPrefs.setRemoteOnlineState(false);
 

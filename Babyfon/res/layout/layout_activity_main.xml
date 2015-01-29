@@ -10,6 +10,48 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
+    <FrameLayout
+        android:id="@+id/baby_alert"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:animateLayoutChanges="true"
+        android:inAnimation="@anim/anim_fade_in_out"
+        android:visibility="gone" >
+
+        <LinearLayout style="@style/layout_content_cry" >
+
+            <LinearLayout style="@style/layout_header" >
+
+                <TextView
+                    android:id="@+id/cry_baby_name"
+                    style="@style/titleCry"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/bg_name_cry" />
+            </LinearLayout>
+
+            <LinearLayout style="@style/layout_body" >
+
+                <ImageView
+                    android:id="@+id/cry_baby_image"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="48dp"
+                    android:gravity="center"
+                    android:contentDescription="@string/desc_img_default"
+                    android:src="@drawable/logo_welcome_screen" />
+            </LinearLayout>
+
+            <LinearLayout style="@style/layout_footer" >
+
+                <TextView
+                    android:id="@+id/cry_subtitle"
+                    style="@style/subtitleCry"
+                    android:text="@string/doubleTap" />
+            </LinearLayout>
+        </LinearLayout>
+    </FrameLayout>
+
     <!-- Listview to display slider menu -->
 
     <ListView

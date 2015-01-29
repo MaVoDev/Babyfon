@@ -16,6 +16,7 @@
     <string name="BABYFON_MSG_SYSTEM_REJOIN">BABYFON_MSG_SYSTEM_REJOIN</string>
     <string name="BABYFON_MSG_CONNECTION_HELLO">BABYFON_MSG_CONNECTION_HELLO</string>
     <string name="BABYFON_MSG_SYSTEM_PWCHANGED">BABYFON_MSG_SYSTEM_PWCHANGED</string>
+    <string name="BABYFON_MSG_NOISE">BABYFON_MSG_NOISE</string>
 
     <!-- Titles -->
     <string name="title_baby_monitor">Babymonitor</string>
@@ -40,7 +41,7 @@
     <string name="dialog_button_no">Nein</string>
     <string name="dialog_message_cancel_setup">Soll die Einrichtung wirklich abgebrochen werden? Alle durchgeführten Änderungen werden verworfen.</string>
     <string name="dialog_title_cancel_setup">Einrichtung abbrechen</string>
-    <string name="dialog_message_exit">Soll die App wirklich beendet werden? Alle bestehenden Verbindungen werden getrennt.</string>
+    <string name="dialog_message_exit">Soll die App wirklich beendet werden? Alle bestehenden Verbindungen gestoppt.</string>
     <string name="dialog_title_exit">Babyfon beenden?</string>
     <string name="dialog_title_refresh_password">Passwort erneuern</string>
     <string name="dialog_message_refresh_password">Möchtest du wirklich ein neues Passwort erstellen?</string>
@@ -61,14 +62,17 @@
     <string name="babymonitor_connected_device_false">nicht verbunden</string>
     <string name="babymonitor_text_battery">Akkustand</string>
     <string name="babymonitor_text_noise">Lautstärke im Zimmer</string>
+    <string name="babymonitor_text_noise_activate">! Hier tippen, zum erneuten Starten !</string>
 
-    
     <!-- Overview -->
     <string name="overview_baby_mode_state">Status des Gerätes</string>
+    <string name="overview_baby_noise_state">Status der Geräuscherkennung</string>
     <string name="overview_password">Passwort</string>
     <string name="overview_connected_device">Verbundenes Mobilgerät</string>
     <string name="overview_connected_device_false">nicht verbunden</string>
     <string name="overview_text_connectivity">Gewählte Verbindung</string>
+    <string name="overview_text_call_device">Eingetragene Telefonnummer</string>
+    <string name="overview_no_number">Keine Telefonnummer gefunden</string>
 
     <!-- Buttons -->
     <string name="btn_forward">Weiter</string>
@@ -92,6 +96,7 @@
     <string name="text_connection">Wähle eine Verbindung aus, über die du mit dem anderen Mobilgerät kommunizieren möchtest.</string>
     <string name="text_device_mode">Entscheide zwischen dem Baby- und dem Elternmodus. Bei wem wird das Mobilgerät später liegen?</string>
     <string name="text_complete_baby">Die Einrichtung ist abgeschlossen und der Babymodus ist jetzt aktiv. Mit dem unten stehenden Passwort kannst du dich mit diesem Gerät verbinden.</string>
+    <string name="text_complete_baby_call">Die Einrichtung ist abgeschlossen und der Babymodus ist jetzt aktiv. Hinterlege in den Einstellungen deine Mobilnummer, um benachrichtigt zu werden, wenn das Baby wach ist. Die Geräuscherkennung wird 30 Sekunden nach Abschluss des Assistenten gestartet.</string>
     <string name="text_setup_start">Dieser Einrichtungsassistent hilft dir dabei dein Babyfon einzurichten.</string>
 
     <!-- Error messages -->
@@ -113,18 +118,29 @@
     <string name="app_name">Babyfon</string>
     <string name="bluetooth">Bluetooth</string>
     <string name="wifi">Wi-Fi (W-LAN)</string>
-    <string name="wifip2p">Wi-Fi Direct</string>
+    <string name="by_call">per Anruf</string>
     <string name="at_baby">Bei dem Baby</string>
     <string name="at_parents">Bei den Eltern</string>
     <string name="enabled">aktiviert</string>
     <string name="disabled">deaktiviert</string>
     <string name="ok">OK</string>
+    <string name="seconds">Sekunden</string>
+    <string name="second">Sekunde</string>
+    <string name="noise_countdown_start">Die Geräuscherkennung wird gestartet.</string>
+    <string name="noise_countdown_stop">Die Geräuscherkennung wurde angehalten.</string>
     <string name="no">Nein</string>
+    <string name="unknownContact">Unbekannt</string>
     <string name="settings">Einstellungen</string>
     <string name="call_name_unknown">Unbekannter Anrufer</string>
     <string name="call_number_unknown">Die Telefonnummer wurde unterdrückt</string>
     <string name="yes">Ja</string>
     <string name="close">Schließen</string>
+    <string name="is_awake">&#160;ist wach!</string>
+    <string name="doubleTap">2x tippen, um die Meldung zu schließen</string>
+
+    <!-- Toast messages -->
+    <string name="wrong_password">Falsches Passwort</string>
+    <string name="no_phone_number">Es wurde noch keine Telefonnummer in den Einstellungen hinterlegt.</string>
 
     <!-- Content Description -->
     <string name="desc_img_default">Image default description</string>

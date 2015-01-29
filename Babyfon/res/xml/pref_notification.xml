@@ -11,15 +11,17 @@
         android:defaultValue="content://settings/system/notification_sound"
         android:dependency="enable_sound_notification"
         android:key="choose_ringtone"
-        android:ringtoneType="notification"
+        android:ringtoneType="alarm"
         android:title="@string/pref_title_ringtone" />
 
-    <CheckBoxPreference
+    <!--
+          <CheckBoxPreference
         android:defaultValue="true"
         android:key="enable_display_notification"
         android:summaryOff="@string/summary_display_off"
         android:summaryOn="@string/summary_display_on"
         android:title="@string/pref_title_display" />
+    --> 
     <CheckBoxPreference
         android:defaultValue="true"
         android:key="enable_vibrate_notification"

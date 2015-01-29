@@ -5,9 +5,14 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 
 import android.content.Context;
+import android.media.AudioRecord;
 import android.util.Log;
+import babyfon.audio.AudioDetection;
+import babyfon.audio.AudioRecorder;
 import babyfon.init.R;
 import babyfon.settings.SharedPrefs;
+import babyfon.view.activity.MainActivity;
+import babyfon.view.fragment.BabyMonitorFragment;
 
 public class UDPReceiver {
 
@@ -32,24 +37,40 @@ public class UDPReceiver {
 			try {
 
 				udpServerSocket = new DatagramSocket(mSharedPrefs.getUDPPort());
-				byte[] buffer = new byte[mContext.getString(R.string.BABYFON_MSG_CONNECTION_SEARCH).length()];
+				byte[] buffer;
+
+				if (mSharedPrefs.getRemoteAddress() != null) {
+					buffer = new byte[2048];
+				} else {
+					buffer = new byte[mContext.getString(R.string.BABYFON_MSG_CONNECTION_SEARCH).length()];
+				}
 
 				DatagramPacket receivePacket = new DatagramPacket(buffer, buffer.length);
 
 				while (isRunning) {
 					udpServerSocket.receive(receivePacket);
 					String incomingUDPMessage = new String(buffer, 0, buffer.length);
-					Log.i(TAG, "Incoming UDP Message: " + incomingUDPMessage);
+					// Log.i(TAG, "Incoming UDP Message: " +
+					// incomingUDPMessage);
 					String targetIP = receivePacket.getAddress() + "";
 
 					// Cut the "/" from the InetAddress value
 					targetIP = targetIP.substring(1);
 
-					if (incomingUDPMessage.equals(mContext.getString(R.string.BABYFON_MSG_CONNECTION_SEARCH))) {
-						new TCPSender(mContext).sendMessage(targetIP,
-								mContext.getString(R.string.BABYFON_MSG_CONNECTION_FOUND) + ";"
-										+ new WifiHandler(mContext).getLocalIPv4Address() + ";"
-										+ android.os.Build.MODEL);
+					if (mSharedPrefs.getRemoteAddress() == null) {
+						if (incomingUDPMessage.equals(mContext.getString(R.string.BABYFON_MSG_CONNECTION_SEARCH))) {
+							new TCPSender(mContext).sendMessage(targetIP,
+									mContext.getString(R.string.BABYFON_MSG_CONNECTION_FOUND) + ";"
+											+ new WifiHandler(mContext).getLocalIPv4Address() + ";"
+											+ android.os.Build.MODEL);
+						}
+					} else {
+						((BabyMonitorFragment) ((MainActivity) mContext).getFragmentById("BabymonitorFragment"))
+								.updateVolume(AudioDetection.calculateVolume(buffer, 0));
+
+						if(mSharedPrefs.isHearActivated()) {
+							MainActivity.mAudioPlayer.playData(buffer);
+						}
 					}
 				}
 			} catch (IOException e) {

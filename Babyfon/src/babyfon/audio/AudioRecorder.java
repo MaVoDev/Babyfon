@@ -1,12 +1,22 @@
 package babyfon.audio;
 
+import android.content.Context;
+import android.content.Intent;
 import android.media.AudioFormat;
 import android.media.AudioRecord;
 import android.media.MediaRecorder;
+import android.net.Uri;
 import android.util.Log;
 import babyfon.connectivity.ConnectionInterface;
+import babyfon.connectivity.wifi.UDPSender;
+import babyfon.settings.SharedPrefs;
+import babyfon.view.activity.MainActivity;
 
 public class AudioRecorder {
+
+	private long currentTime;
+	private long lastTime;
+	private int noiseCounter = 0;
 
 	private static String TAG = AudioRecorder.class.getCanonicalName();
 
@@ -29,10 +39,18 @@ public class AudioRecorder {
 
 	private ConnectionInterface mConnection;
 
-	public AudioRecorder(ConnectionInterface connection) {
-		this.mConnection = connection;
+	private SharedPrefs mSharedPrefs;
 
+	private UDPSender mUdpSender;
+
+	private Context mContext;
+
+	public AudioRecorder(Context mContext, ConnectionInterface connection) {
+		this.mConnection = connection;
+		mSharedPrefs = new SharedPrefs(mContext);
 		recorder = initRecorder();
+		mUdpSender = new UDPSender(mContext);
+		this.mContext = mContext;
 	}
 
 	public boolean isRecording() {
@@ -58,11 +76,11 @@ public class AudioRecorder {
 
 	private AudioRecord initRecorder() {
 
-		Log.i(TAG, "Initializing Recorder...");
+		// Log.i(TAG, "Initializing Recorder...");
 
 		int minBufferSize = AudioRecord.getMinBufferSize(RECORDER_SAMPLERATE, RECORDER_CHANNELS, RECORDER_AUDIO_ENCODING);
 
-		Log.i(TAG, "BufferSize: " + minBufferSize);
+		// Log.i(TAG, "BufferSize: " + minBufferSize);
 
 		if (minBufferSize != AudioRecord.ERROR_BAD_VALUE) {
 
@@ -123,15 +141,58 @@ public class AudioRecorder {
 			// // stores the voice buffer
 			byte bData[] = short2byte(sData);
 
-			Log.i(TAG, "Writing data to file: " + sData.toString());
+			// Log.i(TAG, "Writing data to file: " + sData.toString());
 
-			mConnection.sendData(bData, (byte) 1);
+			if (mSharedPrefs.getConnectivityType() == 1) {
+				mConnection.sendData(bData, (byte) 1);
+			}
 
-			// Send Audio Data to connected client
-			// mmOutStream.write(bData, 0, BufferElements2Rec
-			// * BytesPerElement);
+			if (mSharedPrefs.getConnectivityType() == 2) {
+				mUdpSender.sendUDPMessage(bData);
+			}
 
+			if (mSharedPrefs.getConnectivityType() == 3) {
+				if (mSharedPrefs.isNoiseActivated()) {
+					int level = AudioDetection.calculateVolume(bData, 0);
+					System.out.println(level);
+					if (level > 50) {
+						if (currentTime == 0 && lastTime == 0) {
+							currentTime = System.currentTimeMillis();
+							lastTime = System.currentTimeMillis();
+						} else {
+							currentTime = System.currentTimeMillis();
+						}
+
+						if ((currentTime - lastTime) > 5000) {
+							noiseCounter = 0;
+						} else {
+							noiseCounter++;
+
+						}
+						lastTime = currentTime;
+					}
+					if (mSharedPrefs.getPhoneNumber() != null) {
+						if (noiseCounter > 10) {
+							noiseCounter = 0;
+							stopRecording();
+							mSharedPrefs.setNoiseActivated(false);
+							((MainActivity) mContext).runOnUiThread(new Runnable() {
+								@Override
+								public void run() {
+									Intent intent = new Intent(Intent.ACTION_CALL);
+									intent.setData(Uri.parse("tel:" + mSharedPrefs.getPhoneNumber()));
+									mContext.startActivity(intent);
+								}
+							});
+						}
+					}
+				}
+			}
 		}
+
+		// Send Audio Data to connected client
+		// mmOutStream.write(bData, 0, BufferElements2Rec
+		// * BytesPerElement);
 
 	}
 
@@ -153,7 +214,8 @@ public class AudioRecorder {
 		if (null != recorder) {
 			isRecording = false;
 			recorder.stop();
-
+			MainActivity.mAudioRecorder = null;
+			recorder = null;
 			Log.i(TAG, "Recording stopped...");
 		}
 	}
