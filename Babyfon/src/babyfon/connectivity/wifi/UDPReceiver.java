@@ -65,7 +65,7 @@ public class UDPReceiver {
 											+ android.os.Build.MODEL);
 						}
 					} else {
-						((BabyMonitorFragment) ((MainActivity) mContext).getFragmentById("BabymonitorFragment"))
+						((BabyMonitorFragment) ((MainActivity) mContext).getFragmentById("BabyMonitorFragment"))
 								.updateVolume(AudioDetection.calculateVolume(buffer, 0));
 
 						if(mSharedPrefs.isHearActivated()) {

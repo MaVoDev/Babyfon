@@ -66,8 +66,8 @@ public class SetupConnectionFragment extends Fragment {
 	// Constructor
 	public SetupConnectionFragment(Context mContext) {
 		nextFragmentBaby = new SetupForwardingFragment(mContext);
-		// nextFragmentParents = new SetupSearchDevicesFragment(mContext);
-		nextFragmentParents = (SetupSearchDevicesFragment) ((MainActivity) (mContext)).getFragmentById("SetupSearchDevicesFragment");
+		nextFragmentParents = new SetupSearchDevicesFragment(mContext);
+//		nextFragmentParents = (SetupSearchDevicesFragment) ((MainActivity) (mContext)).getFragmentById("SetupSearchDevicesFragment");
 		mBluetoothHandler = new BluetoothHandler(mContext);
 		mWifiHandler = new WifiHandler(mContext);
 

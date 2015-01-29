@@ -66,6 +66,9 @@ public class SetupSearchDevicesFragment extends Fragment {
 
 	// Constructor
 	public SetupSearchDevicesFragment(Context mContext) {
+		// WORKAROUND
+		((MainActivity) mContext).setFragmentForId(this, "SetupSearchDevicesFragment");
+
 		mModuleHandler = new ModuleHandler(mContext);
 		mSharedPrefs = new SharedPrefs(mContext);
 

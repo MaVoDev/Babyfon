@@ -359,6 +359,11 @@ public class MainActivity extends ActionBarActivity {
 		return super.onOptionsItemSelected(item);
 	}
 
+	// WORKAROUND FÜR FEHLER IN SetupSearchDevices
+	public void setFragmentForId(Fragment fragment, String id) {
+		mFragmentMap.put(id, fragment);
+	}
+
 	public Fragment getFragmentById(String id) {
 
 		Fragment fragment = mFragmentMap.get(id);
