@@ -657,7 +657,7 @@ public class OverviewFragment extends Fragment {
 		isCountdownActive = false;
 		if (MainActivity.mAudioRecorder == null) {
 			// MainActivity.mAudioRecorder = new AudioRecorder(mContext, MainActivity.mConnection);
-			MainActivity.mAudioRecorder = new AudioRecorder(mContext, null);
+			MainActivity.mAudioRecorder = new AudioRecorder(mContext, MainActivity.mBoundService.getConnection());
 		}
 		MainActivity.mAudioRecorder.startRecording();
 	}

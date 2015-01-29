@@ -193,6 +193,16 @@
                             android:layout_height="wrap_content"
                             android:max="60"
                             android:visibility="visible" />
+
+                        <TextView
+                            android:id="@+id/babymonitor_text_noise_activate"
+                            style="@style/text_normal"
+                            android:layout_width="fill_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center_horizontal"
+                            android:text="@string/babymonitor_text_noise_activate"
+                            android:textColor="#228B22"
+                            android:visibility="gone" />
                     </LinearLayout>
                 </LinearLayout>
 

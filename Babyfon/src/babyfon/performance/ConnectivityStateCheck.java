@@ -75,20 +75,20 @@ public class ConnectivityStateCheck {
 
 				timerRemoteCheck.scheduleAtFixedRate(new TimerTask() {
 					public void run() {
-						((MainActivity) mContext).runOnUiThread(new Runnable() {
+						// ((MainActivity) mContext).runOnUiThread(new Runnable() { // TODO BT TEST, WORKAROUND, danach wieder rein!
+						((MainActivity) MainActivity.getContext()).runOnUiThread(new Runnable() {
 							public void run() {
-								if (mSharedPrefs.getConnectivityType() == 2) {
+								if (mSharedPrefs.getConnectivityType() == 1) {
+									// Bluetooth
+
+								} else if (mSharedPrefs.getConnectivityType() == 2) {
 									// wi-fi
 									if (mSharedPrefs.getRemoteAddress() != null) {
 										// remote address is available
 										try {
 											if (remoteAddress.isReachable(4000)) {
-												new Message(mContext).send(mContext
-														.getString(R.string.BABYFON_MSG_CONNECTION_HELLO)
-														+ ";"
-														+ mSharedPrefs.getHostAddress()
-														+ ";"
-														+ mSharedPrefs.getPassword());
+												new Message(mContext).send(mContext.getString(R.string.BABYFON_MSG_CONNECTION_HELLO) + ";"
+														+ mSharedPrefs.getHostAddress() + ";" + mSharedPrefs.getPassword());
 											} else {
 												mSharedPrefs.setRemoteOnlineState(false);
 											}
@@ -110,7 +110,7 @@ public class ConnectivityStateCheck {
 
 	public boolean stopConnectivityStateThread() {
 		try {
-//			timerRemoteCheck.cancel();
+			// timerRemoteCheck.cancel();
 			timerRemoteCheck = null;
 			return true;
 		} catch (Exception e) {

@@ -6,7 +6,7 @@ import java.util.UUID;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothServerSocket;
 import android.util.Log;
-import babyfon.connectivity.ConnectionInterface.OnConnnectedListener;
+import babyfon.connectivity.ConnectionInterface.OnConnectedListener;
 
 public class BluetoothServerThread extends BluetoothConnectionThread {
 	private static final String TAG = BluetoothServerThread.class.getCanonicalName();
@@ -78,7 +78,7 @@ public class BluetoothServerThread extends BluetoothConnectionThread {
 				Log.i(TAG, "SOCKET CONNECTED!!!!!!!! [Name: " + mSocket.getRemoteDevice().getName() + "; MAC: "
 						+ mSocket.getRemoteDevice().getAddress() + "]");
 
-				OnConnnectedListener listener = mBTConnection.getOnConnnectedListener();
+				OnConnectedListener listener = mBTConnection.getOnConnnectedListener();
 				if (listener != null)
 					listener.onConnectedListener(mSocket.getRemoteDevice().getName());
 

@@ -28,7 +28,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import babyfon.adapter.DeviceListAdapter;
 import babyfon.connectivity.ConnectionInterface;
-import babyfon.connectivity.ConnectionInterface.OnConnnectedListener;
+import babyfon.connectivity.ConnectionInterface.OnConnectedListener;
 import babyfon.connectivity.bluetooth.BluetoothHandler;
 import babyfon.connectivity.wifi.TCPSender;
 import babyfon.connectivity.wifi.UDPSender;
@@ -261,13 +261,16 @@ public class SetupSearchDevicesFragment extends Fragment {
 		if (MainActivity.mBoundService != null) {
 			mConnection = MainActivity.mBoundService.getConnection();
 
-			mConnection.setOnConnnectedListener(new OnConnnectedListener() {
+			mConnection.setOnConnectedListener(new OnConnectedListener() {
 				@Override
 				public void onConnectedListener(String deviceName) {
 					// Verbunden also auf die Abschlussseite wechseln
 					getFragmentManager().beginTransaction()
 							.replace(R.id.frame_container, new SetupCompleteParentsModeFragment(mContext), null).addToBackStack(null)
 							.commit();
+
+					// TODO Testing. Remote check nach verbindung starten
+					// mModuleHandler.startRemoteCheck();
 				}
 			});
 		}

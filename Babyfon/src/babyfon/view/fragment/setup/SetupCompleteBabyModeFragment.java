@@ -1,5 +1,6 @@
 package babyfon.view.fragment.setup;
 
+import android.bluetooth.BluetoothAdapter;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -14,6 +15,8 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 import babyfon.Generator;
+import babyfon.Message;
+import babyfon.connectivity.ConnectionInterface.OnConnectedListener;
 import babyfon.connectivity.bluetooth.BluetoothHandler;
 import babyfon.init.R;
 import babyfon.performance.Sound;
@@ -102,6 +105,19 @@ public class SetupCompleteBabyModeFragment extends Fragment {
 			if (mSharedPrefs.getConnectivityTypeTemp() == 1) {
 				new BluetoothHandler(mContext).enableBluetoothDiscoverability();
 				MainActivity.mBoundService.startServer();
+
+				// TODO Testing! startet remote check nachdem verbunden zum client
+				MainActivity.mBoundService.getConnection().setOnConnectedListener(new OnConnectedListener() {
+					@Override
+					public void onConnectedListener(String deviceName) {
+						// mModuleHandler.startRemoteCheck();
+
+						String msg = new String(mContext.getString(R.string.BABYFON_MSG_AUTH_REQ) + ";" + 0 + ";"
+								+ BluetoothAdapter.getDefaultAdapter().getAddress() + ";" + android.os.Build.MODEL);
+						new Message(mContext).send(msg);
+					}
+				});
+
 			} else if (mSharedPrefs.getConnectivityTypeTemp() == 2) {
 				mModuleHandler.startTCPReceiver();
 				mModuleHandler.startUDPReceiver();

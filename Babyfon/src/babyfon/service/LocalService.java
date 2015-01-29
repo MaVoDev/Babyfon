@@ -132,7 +132,7 @@ public class LocalService extends Service {
 					// PLay Audio
 					;
 				else
-					new Message(getApplicationContext()).handleIncomingMessage(new String(bData));
+					new Message(MainActivity.getContext()).handleIncomingMessage(new String(bData, 0, bytesRead));
 			}
 		});
 	}
@@ -156,7 +156,7 @@ public class LocalService extends Service {
 					// PLay Audio
 					mAudioPlayer.playData(bData);
 				else
-					new Message(getApplicationContext()).handleIncomingMessage(new String(bData));
+					new Message(getApplicationContext()).handleIncomingMessage(new String(bData, 0, bytesRead));
 			}
 		});
 	}

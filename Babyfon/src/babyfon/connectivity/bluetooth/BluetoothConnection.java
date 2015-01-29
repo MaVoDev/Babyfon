@@ -24,7 +24,7 @@ public class BluetoothConnection implements ConnectionInterface {
 	private OnSearchStatusChangedListener mOnSearchStatusChangedListener;
 	private OnReceiveDataListener mOnReceiveMsgListener;
 	private OnConnectionLostListener mOnConnectionLostListener;
-	private OnConnnectedListener mOnConnnectedListener;
+	private OnConnectedListener mOnConnnectedListener;
 
 	public BluetoothConnection() {
 		mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
@@ -120,7 +120,7 @@ public class BluetoothConnection implements ConnectionInterface {
 	}
 
 	@Override
-	public void setOnConnnectedListener(OnConnnectedListener l) {
+	public void setOnConnectedListener(OnConnectedListener l) {
 		this.mOnConnnectedListener = l;
 	}
 
@@ -128,7 +128,7 @@ public class BluetoothConnection implements ConnectionInterface {
 		return mOnConnectionLostListener;
 	}
 
-	public OnConnnectedListener getOnConnnectedListener() {
+	public OnConnectedListener getOnConnnectedListener() {
 		return mOnConnnectedListener;
 	}
 

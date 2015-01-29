@@ -42,7 +42,7 @@ public interface ConnectionInterface {
 		void onConnectionLostListener(String errorMsg);
 	}
 
-	public interface OnConnnectedListener {
+	public interface OnConnectedListener {
 
 		void onConnectedListener(String deviceName);
 	}
@@ -53,7 +53,7 @@ public interface ConnectionInterface {
 
 	public void setOnConnectionLostListener(OnConnectionLostListener l);
 
-	public void setOnConnnectedListener(OnConnnectedListener l);
+	public void setOnConnectedListener(OnConnectedListener l);
 
 	// TODO: Evtl noch einen OnConnectionFailed Listener einbauen
 

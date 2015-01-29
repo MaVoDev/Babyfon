@@ -59,6 +59,10 @@ public class AudioRecorder {
 
 	public void startRecording() {
 
+		// Nicht noch ein Recording starten, wenn derzeit schon recordet wird!
+		if (isRecording)
+			return;
+
 		Log.i(TAG, "Starting Audio Recording...");
 
 		recorder.startRecording();
@@ -145,13 +149,9 @@ public class AudioRecorder {
 
 			if (mSharedPrefs.getConnectivityType() == 1) {
 				mConnection.sendData(bData, (byte) 1);
-			}
-
-			if (mSharedPrefs.getConnectivityType() == 2) {
+			} else if (mSharedPrefs.getConnectivityType() == 2) {
 				mUdpSender.sendUDPMessage(bData);
-			}
-
-			if (mSharedPrefs.getConnectivityType() == 3) {
+			} else if (mSharedPrefs.getConnectivityType() == 3) { // TODO vermutlich kein ELSE IF hier, sondern normales IF
 				if (mSharedPrefs.isNoiseActivated()) {
 					int level = AudioDetection.calculateVolume(bData, 0);
 					System.out.println(level);

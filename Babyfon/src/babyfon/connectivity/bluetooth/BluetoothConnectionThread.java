@@ -130,7 +130,7 @@ public abstract class BluetoothConnectionThread extends Thread {
 				e.printStackTrace();
 			}
 		} else {
-			Log.i(TAG, "No Message sent. Outstream is null!");
+			Log.e(TAG, "No Message sent. Outstream is null!");
 		}
 	}
 

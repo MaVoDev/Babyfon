@@ -132,6 +132,10 @@ public class MainActivity extends ActionBarActivity {
 			StrictMode.setThreadPolicy(policy);
 		}
 
+		// TODO TEST
+		mContext = this;
+		// ---------
+
 		// TelephonyManager class object to register one listner
 		TelephonyManager mTelephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
 		// Register listener for LISTEN_CALL_STATE
@@ -275,20 +279,21 @@ public class MainActivity extends ActionBarActivity {
 	protected void onResume() {
 		super.onResume();
 		// TODO: in service auslagern
-		if (mBoundService != null) {
-			if (mSharedPrefs.getConnectivityType() != 3) {
-				if (mSharedPrefs.isNoiseActivated()) {
-					if (MainActivity.mAudioRecorder == null) {
-						MainActivity.mAudioRecorder = new AudioRecorder(this, mBoundService.getConnection());
-						MainActivity.mAudioRecorder.startRecording();
-					}
-				} else {
-					if (MainActivity.mAudioRecorder != null) {
-						MainActivity.mAudioRecorder.stopRecording();
+		if (false)
+			if (mBoundService != null) {
+				if (mSharedPrefs.getConnectivityType() != 3) {
+					if (mSharedPrefs.isNoiseActivated()) {
+						if (MainActivity.mAudioRecorder == null) {
+							MainActivity.mAudioRecorder = new AudioRecorder(this, mBoundService.getConnection());
+							MainActivity.mAudioRecorder.startRecording();
+						}
+					} else {
+						if (MainActivity.mAudioRecorder != null) {
+							MainActivity.mAudioRecorder.stopRecording();
+						}
 					}
 				}
 			}
-		}
 
 		if (timerNavigationDrawer == null) {
 			timerNavigationDrawer = new Timer();
@@ -359,7 +364,7 @@ public class MainActivity extends ActionBarActivity {
 		return super.onOptionsItemSelected(item);
 	}
 
-	// WORKAROUND FÜR FEHLER IN SetupSearchDevices
+	// TODO WORKAROUND FÜR FEHLER IN SetupSearchDevices
 	public void setFragmentForId(Fragment fragment, String id) {
 		mFragmentMap.put(id, fragment);
 	}
@@ -620,6 +625,7 @@ public class MainActivity extends ActionBarActivity {
 	//
 
 	public static LocalService mBoundService;
+	private static Context mContext;
 	private boolean mIsBound = false;
 
 	private ServiceConnection mServiceConnection = new ServiceConnection() {
@@ -680,4 +686,12 @@ public class MainActivity extends ActionBarActivity {
 	//
 	// --------------------------------------- / Service Zeugs (LOCAL) ENDE
 	//
+
+	public static Context getContext() {
+		if (mContext == null)
+			return null;
+		else
+			return mContext;
+
+	}
 }
