@@ -151,7 +151,14 @@ public class Message {
 
 			// TODO BT TESTING! -------------------
 			if (mSharedPrefs.getConnectivityType() == 1 || mSharedPrefs.getConnectivityTypeTemp() == 1) {
-				send(mContext.getString(R.string.BABYFON_MSG_AUTH_CONFIRMED) + ";" + mSharedPrefs.getPassword());
+				// send(mContext.getString(R.string.BABYFON_MSG_AUTH_CONFIRMED) + ";" + mSharedPrefs.getPassword());
+
+				mSharedPrefs.setRemoteName(remoteName);
+				mSharedPrefs.setRemoteOnlineState(true);
+
+				// TODO evtl PW für Test auf 0 setzen
+				send(mContext.getString(R.string.BABYFON_MSG_AUTH_CONFIRMED) + ";" + 0);
+				// send(mContext.getString(R.string.BABYFON_MSG_AUTH_CONFIRMED) + ";" + mSharedPrefs.getPassword());
 
 				mModuleHandler.registerBattery();
 
@@ -254,7 +261,7 @@ public class Message {
 			// Hello
 			if (mSharedPrefs.getRemoteAddress() != null) {
 				// TODO Bluetooth test ---------------
-				if (mSharedPrefs.getConnectivityType() == 1) {
+				if (mSharedPrefs.getConnectivityType() == 1 || mSharedPrefs.getConnectivityTypeTemp() == 1) {
 					if (!mSharedPrefs.getRemoteAddress().equals(strArray[1]))
 						mSharedPrefs.setRemoteOnlineState(true);
 				} else {
