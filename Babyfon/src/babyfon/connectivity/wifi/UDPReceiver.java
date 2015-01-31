@@ -5,10 +5,8 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 
 import android.content.Context;
-import android.media.AudioRecord;
 import android.util.Log;
 import babyfon.audio.AudioDetection;
-import babyfon.audio.AudioRecorder;
 import babyfon.init.R;
 import babyfon.settings.SharedPrefs;
 import babyfon.view.activity.MainActivity;
@@ -50,24 +48,26 @@ public class UDPReceiver {
 				while (isRunning) {
 					udpServerSocket.receive(receivePacket);
 					String incomingUDPMessage = new String(buffer, 0, buffer.length);
-					// Log.i(TAG, "Incoming UDP Message: " +
-					// incomingUDPMessage);
+					Log.i(TAG, "Incoming UDP Message: " + incomingUDPMessage);
 					String targetIP = receivePacket.getAddress() + "";
 
 					// Cut the "/" from the InetAddress value
 					targetIP = targetIP.substring(1);
 
-					if (mSharedPrefs.getRemoteAddress() == null) {
-						if (incomingUDPMessage.equals(mContext.getString(R.string.BABYFON_MSG_CONNECTION_SEARCH))) {
-							new TCPSender(mContext).sendMessage(targetIP, mContext.getString(R.string.BABYFON_MSG_CONNECTION_FOUND) + ";"
-									+ new WifiHandler(mContext).getLocalIPv4Address() + ";" + android.os.Build.MODEL);
-						}
-					} else {
-						((BabyMonitorFragment) ((MainActivity) mContext).getFragmentById("BabyMonitorFragment"))
-								.updateVolume(AudioDetection.calculateVolume(buffer, 0));
+					if (incomingUDPMessage.equals(mContext.getString(R.string.BABYFON_MSG_CONNECTION_SEARCH))) {
+						new TCPSender(mContext).sendMessage(targetIP,
+								mContext.getString(R.string.BABYFON_MSG_CONNECTION_FOUND) + ";"
+										+ new WifiHandler(mContext).getLocalIPv4Address() + ";"
+										+ android.os.Build.MODEL);
 
-						if (mSharedPrefs.isHearActivated()) {
-							MainActivity.mAudioPlayer.playData(buffer);
+					} else {
+						if (mSharedPrefs.getRemoteAddress() != null) {
+							((BabyMonitorFragment) ((MainActivity) mContext).getFragmentById("BabyMonitorFragment"))
+									.updateVolume(AudioDetection.calculateVolume(buffer, 0));
+
+							if (mSharedPrefs.isHearActivated()) {
+								MainActivity.mAudioPlayer.playData(buffer);
+							}
 						}
 					}
 				}

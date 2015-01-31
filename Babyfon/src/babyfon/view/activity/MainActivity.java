@@ -209,8 +209,8 @@ public class MainActivity extends ActionBarActivity {
 
 		if (mSharedPrefs.getRemoteAddress() != null) {
 			mModuleHandler.startRemoteCheck();
-			new babyfon.Message(this).send(this.getString(R.string.BABYFON_MSG_CONNECTION_HELLO) + ";" + mSharedPrefs.getHostAddress()
-					+ ";" + mSharedPrefs.getPassword());
+			new babyfon.Message(this).send(this.getString(R.string.BABYFON_MSG_CONNECTION_HELLO) + ";"
+					+ mSharedPrefs.getHostAddress() + ";" + mSharedPrefs.getPassword());
 			if (mSharedPrefs.getDeviceMode() == 0) {
 				mModuleHandler.registerBattery();
 				if (mSharedPrefs.getForwardingSMS() || mSharedPrefs.getForwardingSMSInfo()) {
@@ -224,10 +224,10 @@ public class MainActivity extends ActionBarActivity {
 				new Sound(this).mute();
 			}
 		}
-		// if (mSharedPrefs.getConnectivityType() == 2) {
-		// mModuleHandler.startUDPReceiver();
-		// mModuleHandler.startTCPReceiver();
-		// }
+		if (mSharedPrefs.getConnectivityType() == 2) {
+			mModuleHandler.startUDPReceiver();
+			mModuleHandler.startTCPReceiver();
+		}
 	}
 
 	@Override
@@ -263,14 +263,11 @@ public class MainActivity extends ActionBarActivity {
 	protected void onResume() {
 		super.onResume();
 
-		// TODO: in service auslagern
-
-		// if (mSharedPrefs.getConnectivityType() != 3) {
-		if (mSharedPrefs.getConnectivityType() == 2) { // TODO erstmal rausgenommen für BT, muss noch angepasst werden
-			// if (mSharedPrefs.getConnectivityType() == 2) {
-			// mModuleHandler.startTCPReceiver();
-			// mModuleHandler.startUDPReceiver();
-			// }
+		if (mSharedPrefs.getConnectivityType() != 3) {
+			if (mSharedPrefs.getConnectivityType() == 2) {
+				mModuleHandler.startTCPReceiver();
+				mModuleHandler.startUDPReceiver();
+			}
 
 			if (mSharedPrefs.isNoiseActivated()) {
 				if (MainActivity.mAudioRecorder == null) {
@@ -497,7 +494,8 @@ public class MainActivity extends ActionBarActivity {
 	}
 
 	/**
-	 * When using the ActionBarDrawerToggle, you must call it during onPostCreate() and onConfigurationChanged()...
+	 * When using the ActionBarDrawerToggle, you must call it during
+	 * onPostCreate() and onConfigurationChanged()...
 	 */
 
 	@Override
@@ -550,7 +548,8 @@ public class MainActivity extends ActionBarActivity {
 			// Listenelement: Babymonitor
 			items.add(new NavigationDrawerItemModel(navMenuTitles[0], navMenuIcons.getResourceId(0, -1)));
 			// Listenelement: Anrufe und Nachrichten in Abwesenheit
-			items.add(new NavigationDrawerItemModel(navMenuTitles[1], navMenuIcons.getResourceId(1, -1), true, String.valueOf(counter)));
+			items.add(new NavigationDrawerItemModel(navMenuTitles[1], navMenuIcons.getResourceId(1, -1), true, String
+					.valueOf(counter)));
 			// Listenelement: Einrichtungsassistent
 			items.add(new NavigationDrawerItemModel(navMenuTitles[2], navMenuIcons.getResourceId(2, -1)));
 			// Listenelement: Einstellungen
@@ -607,14 +606,6 @@ public class MainActivity extends ActionBarActivity {
 							initNavigationDrawer();
 							Log.d(TAG, "Navigation Drawer changed.");
 						}
-
-						if (mSharedPrefs.getConnectivityType() == 2 || mSharedPrefs.getConnectivityTypeTemp() == 2) {
-							mModuleHandler.startTCPReceiver();
-							mModuleHandler.startUDPReceiver();
-						} else {
-							mModuleHandler.stopTCPReceiver();
-							mModuleHandler.stopUDPReceiver();
-						}
 					}
 				});
 			}
@@ -665,13 +656,15 @@ public class MainActivity extends ActionBarActivity {
 		// we know will be running in our own process (and thus won't be
 		// supporting component replacement by other applications).
 
-		// bindService(new Intent(MainActivity.this, LocalService.class), mServiceConnection, Context.BIND_AUTO_CREATE);
+		// bindService(new Intent(MainActivity.this, LocalService.class),
+		// mServiceConnection, Context.BIND_AUTO_CREATE);
 
 		Intent serviceIntent = new Intent(MainActivity.this, LocalService.class);
 
 		startService(serviceIntent);
 		bindService(serviceIntent, mServiceConnection, 0);
-		// bindService(serviceIntent, mServiceConnection, Context.BIND_AUTO_CREATE);
+		// bindService(serviceIntent, mServiceConnection,
+		// Context.BIND_AUTO_CREATE);
 
 		mIsBound = true;
 	}

@@ -212,7 +212,6 @@ public class Message {
 		}
 
 		if (strArray[0].equals(mContext.getString(R.string.BABYFON_MSG_SYSTEM_AWAY))) {
-			mModuleHandler.stopRemoteCheck();
 			if (mSharedPrefs.getDeviceMode() == 0) {
 				mModuleHandler.unregisterBattery();
 				if (mSharedPrefs.getForwardingSMS() || mSharedPrefs.getForwardingSMSInfo()) {

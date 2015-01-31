@@ -126,7 +126,7 @@ public class ModuleHandler {
 				Log.e(TAG, "Error: Can't close TCP receiver.");
 			}
 		} else {
-			// Log.e(TAG, "Can't close UDP receiver: The receiver wasn't active or has been stopped.");
+			Log.e(TAG, "Can't close UDP receiver: The receiver wasn't active or has been stopped.");
 		}
 	}
 
@@ -143,7 +143,7 @@ public class ModuleHandler {
 				Log.e(TAG, "Error: Can't start UDP receiver.");
 			}
 		} else {
-			// Log.e(TAG, "UDP receiver is still running.");
+			 Log.e(TAG, "UDP receiver is still running.");
 		}
 	}
 
@@ -160,7 +160,7 @@ public class ModuleHandler {
 				Log.e(TAG, "Error: Can't close UDP receiver.");
 			}
 		} else {
-			// Log.e(TAG, "Can't close UDP receiver: The receiver wasn't active or has been stopped.");
+			Log.e(TAG, "Can't close UDP receiver: The receiver wasn't active or has been stopped.");
 		}
 	}
 
@@ -189,6 +189,7 @@ public class ModuleHandler {
 		if (MainActivity.mConnectivityStateCheck != null) {
 			Log.i(TAG, "Try to stop remote checker thread...");
 			if (MainActivity.mConnectivityStateCheck.stopConnectivityStateThread()) {
+				MainActivity.mConnectivityStateCheck = null;
 				Log.d(TAG, "Remote checker thread stopped.");
 			} else {
 				Log.e(TAG, "Error: Can't stop remote checker thread.");

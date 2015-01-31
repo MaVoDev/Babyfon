@@ -86,6 +86,11 @@ public class OverviewFragment extends Fragment {
 
 		this.mContext = mContext;
 	}
+	
+	public void setCounter() {
+		countdown = 30;
+		isCountdownActive = true;
+	}
 
 	/**
 	 * Initialize the UI elements
@@ -482,6 +487,7 @@ public class OverviewFragment extends Fragment {
 							mModuleHandler.stopRemoteCheck();
 							mModuleHandler.stopTCPReceiver();
 							mModuleHandler.stopUDPReceiver();
+							mModuleHandler.unregisterBattery();
 							break;
 						}
 

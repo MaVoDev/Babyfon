@@ -81,6 +81,7 @@ public class SetupCompleteParentsModeFragment extends Fragment {
 
 	public void handleModules() {
 		mModuleHandler.unregisterBattery();
+		mModuleHandler.unregisterSMS();
 	}
 
 	@Override
@@ -105,16 +106,17 @@ public class SetupCompleteParentsModeFragment extends Fragment {
 		Log.d(TAG, "Device mode: " + mSharedPrefs.getDeviceMode());
 		mSharedPrefs.setConnectivityType(mSharedPrefs.getConnectivityTypeTemp());
 		Log.d(TAG, "Connectivity type: " + mSharedPrefs.getConnectivityType());
-		mSharedPrefs.setConnectivityTypeTemp(-1);
-
 		if (mSharedPrefs.getConnectivityType() == 1) {
 			mSharedPrefs.setRemoteAddress(mSharedPrefs.getRemoteAddressTemp());
 			Log.d(TAG, "Remote address: " + mSharedPrefs.getRemoteAddress());
 		} else if (mSharedPrefs.getConnectivityType() == 2) {
 			mModuleHandler.startUDPReceiver();
+			mModuleHandler.startTCPReceiver();
 			mSharedPrefs.setRemoteAddress(mSharedPrefs.getRemoteAddressTemp());
 			Log.d(TAG, "Remote address: " + mSharedPrefs.getRemoteAddress());
 		}
+		
+		mModuleHandler.startRemoteCheck();
 
 		initUiElements(view);
 		handleModules();
