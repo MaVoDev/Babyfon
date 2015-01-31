@@ -319,7 +319,12 @@ public class OverviewFragment extends Fragment {
 		} else {
 			callState.setText(R.string.radio_send_false);
 		}
-		startRecorder();
+		if(mSharedPrefs.getRemoteAddress() != null) {
+			startRecorder();
+		} else {
+			stopRecorder();
+		}
+		
 	}
 
 	public void updateCallMode() {

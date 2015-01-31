@@ -8,8 +8,6 @@ Bug: Absturz, wenn im Overview die Verbindung auf BT gestellt wird.
 
 Marcus
 =============================================================================================================
-Bug: Beim Kicken auf dem Babygerät wird glaub ein receiver nicht neu gestartet
-Task: mit Baby reden und erkenner stoppen, danach wieder starten
 Task: Anzahl der SMS im Drawer anzeigen
 Task: Nachrichten (Call/SMS) zwischenspeichern
 Task: Beim senden die Connectivity prüfen (Typ, an/aus, verbunden/nicht verbunden, ist ein remote vorhanden) Vielleicht eine extra Klasse für den Test (Beim Setup extra prüfen)
@@ -17,6 +15,9 @@ Task: Beim senden die Connectivity prüfen (Typ, an/aus, verbunden/nicht verbund
 
 Bugs
 =============================================================================================================
+Bug: Die Eltern Talk funktion funktioniert nur, wenn die App aufm Babygerät neu gestartet wird.
+Bug: Absturz wenn NoiseLevel aktiviert wird, funzt aber nachm Neustart der App
+Bug: Wenn Elternmode, dann Baby, dann wird dies Gerät nicht gefunden
 Bug: Beim Start der App wird die Selektierung im Drawer nicht gesetzt
 Bug: Wenn der Counter im Anrufmodus automatisch startet und man ihn stoppen will, startet er stattdessen einmal neu
 Bug: Absturz, wenn Anrufweiterleitung im Betrieb deaktiviert wird und dann ein Anruf eingeht

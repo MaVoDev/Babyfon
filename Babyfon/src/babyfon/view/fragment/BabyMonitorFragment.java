@@ -63,7 +63,7 @@ public class BabyMonitorFragment extends Fragment {
 	private TextView title;
 
 	private LinearLayout layoutRemote;
-
+	
 	private long currentTime;
 	private long lastTime;
 
@@ -79,7 +79,7 @@ public class BabyMonitorFragment extends Fragment {
 
 	private Context mContext;
 
-	protected boolean mFragmentActive = false;
+	// protected boolean mFragmentActive = false;
 
 	// Constructor
 	public BabyMonitorFragment(Context mContext) {
@@ -281,26 +281,29 @@ public class BabyMonitorFragment extends Fragment {
 		kickRemote.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				new AlertDialog.Builder(getActivity()).setTitle(mContext.getString(R.string.dialog_title_kick_remote))
+				new AlertDialog.Builder(getActivity())
+						.setTitle(mContext.getString(R.string.dialog_title_kick_remote))
 						.setMessage(mContext.getString(R.string.dialog_message_kick_remote))
 						.setNegativeButton(mContext.getString(R.string.dialog_button_no), null)
-						.setPositiveButton(mContext.getString(R.string.dialog_button_yes), new DialogInterface.OnClickListener() {
-							@Override
-							public void onClick(DialogInterface dialog, int id) {
-								mModuleHandler.stopRemoteCheck();
+						.setPositiveButton(mContext.getString(R.string.dialog_button_yes),
+								new DialogInterface.OnClickListener() {
+									@Override
+									public void onClick(DialogInterface dialog, int id) {
+										mModuleHandler.stopRemoteCheck();
 
-								mSharedPrefs.setRemoteAddress(null);
-								mSharedPrefs.setRemoteName(null);
-								mSharedPrefs.setRemoteOnlineState(false);
+										mSharedPrefs.setRemoteAddress(null);
+										mSharedPrefs.setRemoteName(null);
+										mSharedPrefs.setRemoteOnlineState(false);
 
-								if (mSharedPrefs.getForwardingSMS() || mSharedPrefs.getForwardingSMSInfo()) {
-									mModuleHandler.unregisterSMS();
-								}
+										if (mSharedPrefs.getForwardingSMS() || mSharedPrefs.getForwardingSMSInfo()) {
+											mModuleHandler.unregisterSMS();
+										}
 
-								new Message(mContext).send(mContext.getString(R.string.BABYFON_MSG_SYSTEM_DISCONNECTED));
-								updateUI();
-							}
-						}).create().show();
+										new Message(mContext).send(mContext
+												.getString(R.string.BABYFON_MSG_SYSTEM_DISCONNECTED));
+										updateUI();
+									}
+								}).create().show();
 			}
 		});
 
@@ -327,9 +330,14 @@ public class BabyMonitorFragment extends Fragment {
 			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 				if (isChecked) {
 					// checked true
+					if(mSharedPrefs.isNoiseActivated()) {
+						mSharedPrefs.setNoiseActivated(false);
+					}
+					startRecorder();
 					talkState.setText(mContext.getString(R.string.enabled));
 					mSharedPrefs.setTalkActivated(true);
 				} else {
+					stopRecorder();
 					// checked false
 					talkState.setText(mContext.getString(R.string.disabled));
 					mSharedPrefs.setTalkActivated(false);
@@ -346,7 +354,8 @@ public class BabyMonitorFragment extends Fragment {
 					mSharedPrefs.setDeviceModeTemp(1);
 					FragmentTransaction ft = mFragmentManager.beginTransaction();
 					ft.setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out);
-					ft.replace(R.id.frame_container, new SetupConnectionFragment(mContext), null).addToBackStack(null).commit();
+					ft.replace(R.id.frame_container, new SetupConnectionFragment(mContext), null).addToBackStack(null)
+							.commit();
 				}
 			}
 		});
@@ -355,12 +364,15 @@ public class BabyMonitorFragment extends Fragment {
 	}
 
 	public void updateVolume(final int calculateVolume) {
-		// TODO: Mal gucken, ob das benötigt wird. Also evtl raus.
-//		if (!mFragmentActive)
-//			return;
-		
-		if (mSharedPrefs.isNoiseActivated()) {
-			int level = calculateVolume;
+		if (mSharedPrefs.isNoiseActivated() && !mSharedPrefs.isTalkActivated()) {
+			final int level = calculateVolume;
+			
+			((MainActivity) mContext).runOnUiThread(new Runnable() {
+				@Override
+				public void run() {
+					noiseLevel.setProgress(level);
+				}
+			});
 
 			if (level > 50) {
 				if (currentTime == 0 && lastTime == 0) {
@@ -377,7 +389,7 @@ public class BabyMonitorFragment extends Fragment {
 				}
 				lastTime = currentTime;
 			}
-
+			
 			if (noiseCounter > 10) {
 				noiseCounter = 0;
 				((MainActivity) mContext).runOnUiThread(new Runnable() {
@@ -388,12 +400,6 @@ public class BabyMonitorFragment extends Fragment {
 				});
 				mSharedPrefs.setNoiseActivated(false);
 			}
-			((MainActivity) mContext).runOnUiThread(new Runnable() {
-				@Override
-				public void run() {
-					noiseLevel.setProgress(calculateVolume);
-				}
-			});
 		}
 	}
 
@@ -432,7 +438,7 @@ public class BabyMonitorFragment extends Fragment {
 
 		}
 
-		mFragmentActive = true;
+		// mFragmentActive = true;
 	}
 
 	@Override
@@ -446,7 +452,7 @@ public class BabyMonitorFragment extends Fragment {
 			timer = null;
 		}
 
-		mFragmentActive = false;
+		// mFragmentActive = false;
 
 	}
 
@@ -461,18 +467,17 @@ public class BabyMonitorFragment extends Fragment {
 			timer = null;
 		}
 	}
-	
-//	public void startRecorder() {
-//		if (MainActivity.mAudioRecorder == null) {
-//			// MainActivity.mAudioRecorder = new AudioRecorder(mContext, MainActivity.mBoundService.getConnection());
-//			MainActivity.mAudioRecorder = new AudioRecorder(mContext, null); // TODO: anpassen für BT
-//		}
-//		MainActivity.mAudioRecorder.startRecording();
-//	}
-//
-//	public void stopRecorder() {
-//		if (MainActivity.mAudioRecorder != null) {
-//			MainActivity.mAudioRecorder.stopRecording();
-//		}
-//	}
+
+	public void startRecorder() {
+		if (MainActivity.mAudioRecorder == null) {
+			MainActivity.mAudioRecorder = new AudioRecorder(mContext, null); 
+		}
+		MainActivity.mAudioRecorder.startRecording();
+	}
+
+	public void stopRecorder() {
+		if (MainActivity.mAudioRecorder != null) {
+			MainActivity.mAudioRecorder.stopRecording();
+		}
+	}
 }
