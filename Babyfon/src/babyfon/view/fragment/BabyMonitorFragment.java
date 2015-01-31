@@ -6,6 +6,7 @@ import java.util.TimerTask;
 import babyfon.Message;
 import babyfon.Notification;
 import babyfon.audio.AudioDetection;
+import babyfon.audio.AudioRecorder;
 import babyfon.connectivity.ConnectionInterface.OnReceiveDataListener;
 import babyfon.init.R;
 import babyfon.settings.ModuleHandler;
@@ -354,10 +355,9 @@ public class BabyMonitorFragment extends Fragment {
 	}
 
 	public void updateVolume(final int calculateVolume) {
-		
 		// TODO: Mal gucken, ob das benötigt wird. Also evtl raus.
-		if (!mFragmentActive)
-			return;
+//		if (!mFragmentActive)
+//			return;
 		
 		if (mSharedPrefs.isNoiseActivated()) {
 			int level = calculateVolume;
@@ -461,4 +461,18 @@ public class BabyMonitorFragment extends Fragment {
 			timer = null;
 		}
 	}
+	
+//	public void startRecorder() {
+//		if (MainActivity.mAudioRecorder == null) {
+//			// MainActivity.mAudioRecorder = new AudioRecorder(mContext, MainActivity.mBoundService.getConnection());
+//			MainActivity.mAudioRecorder = new AudioRecorder(mContext, null); // TODO: anpassen für BT
+//		}
+//		MainActivity.mAudioRecorder.startRecording();
+//	}
+//
+//	public void stopRecorder() {
+//		if (MainActivity.mAudioRecorder != null) {
+//			MainActivity.mAudioRecorder.stopRecording();
+//		}
+//	}
 }

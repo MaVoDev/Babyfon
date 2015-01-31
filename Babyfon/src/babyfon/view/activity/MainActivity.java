@@ -147,8 +147,10 @@ public class MainActivity extends ActionBarActivity {
 		// AUSKOMMENTIERT; VS!
 		mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, android.R.string.ok, android.R.string.no);
 
-		// Zum Service verbinden / Service starten
-		doBindService();
+		if(mSharedPrefs.getConnectivityType() == 1) {
+			// Zum Service verbinden / Service starten
+			doBindService();
+		}
 	}
 
 	@Override
@@ -269,14 +271,17 @@ public class MainActivity extends ActionBarActivity {
 				mModuleHandler.startUDPReceiver();
 			}
 
-			if (mSharedPrefs.isNoiseActivated()) {
-				if (MainActivity.mAudioRecorder == null) {
-					MainActivity.mAudioRecorder = new AudioRecorder(this, mBoundService.getConnection());
-					MainActivity.mAudioRecorder.startRecording();
-				}
-			} else {
-				if (MainActivity.mAudioRecorder != null) {
-					MainActivity.mAudioRecorder.stopRecording();
+			if(mSharedPrefs.getRemoteAddress() != null) {
+				if (mSharedPrefs.isNoiseActivated()) {
+					if (MainActivity.mAudioRecorder == null) {
+//						MainActivity.mAudioRecorder = new AudioRecorder(this, mBoundService.getConnection());
+						MainActivity.mAudioRecorder = new AudioRecorder(this, null);
+						MainActivity.mAudioRecorder.startRecording();
+					}
+				} else {
+					if (MainActivity.mAudioRecorder != null) {
+						MainActivity.mAudioRecorder.stopRecording();
+					}
 				}
 			}
 		}

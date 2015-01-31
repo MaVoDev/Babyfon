@@ -1,60 +1,40 @@
-ToDo:
+Volker
 =============================================================================================================
-Volker:
-- Anzeige der gefundenen BT Geräte richtig anzeigen
-- Geräusch erkennen)
-- Bluetooth Verbindung
-- Audiostreaming Bluetooth
-- Service
+Task: Geräusch erkennen)
+Task: Bluetooth Verbindung
+Task: Audiostreaming Bluetooth
+Task: Service
+Bug: Absturz, wenn im Overview die Verbindung auf BT gestellt wird.
 
-Marcus:
-Bug: Hello nachrichten richtig setzen
-Bug: udp tcp setzt irgendwann aus -.-
-Bug: Wifi zu anruf und zu wifi schickt keine batt mehr, sofort senden können
-Bug: Beim Start der App wird die Selektierung im Drawer nicht gesetzt
-
-Task: Wenn Anruf (ignoriert, weggedrückt oder aufgelegt wird) dann starte erkenner neu
-Task: mit Baby reden
+Marcus
+=============================================================================================================
+Bug: Beim Kicken auf dem Babygerät wird glaub ein receiver nicht neu gestartet
+Task: mit Baby reden und erkenner stoppen, danach wieder starten
 Task: Anzahl der SMS im Drawer anzeigen
 Task: Nachrichten (Call/SMS) zwischenspeichern
-Task: Noise wieder starten wenn aufgelegt wurde
 Task: Beim senden die Connectivity prüfen (Typ, an/aus, verbunden/nicht verbunden, ist ein remote vorhanden) Vielleicht eine extra Klasse für den Test (Beim Setup extra prüfen)
 		Thread in der Main, checken ob die gewählte Verbindung ordnungsgemäß läuft, wenn nicht dialog zum hinweis oder aktivieren, währenddessen stop thread, nach ok wieder thread start
 
-Bugs:
+Bugs
 =============================================================================================================
-1 Absturz, wenn Anrufweiterleitung im im Betrieb deaktiviert wird und dann ein Anruf eingeht
-2 Bluetooth: Wenn im Elternmode Bluetooth gewählt ist und die App beendet wird, gibts nen Absturz    
-3 Wenn man das Setup beendet, aktualisiert sich der NavigationDrawer nicht. Der Einrichtungsassistent bleibt selected.
-4 Absturz bei SMS Empfang wenn nciht das passende Fragment offen ist
-5 Wenn Babymonitor nicht im Vordergrund dann Absturz, wenn Geräusch eingeht.
-7 Absturz nach babyanruf (wenn aufgelegt, weggedrückt oder ignoriert)
-8 WLAN: Im Babymonitor wir das Babygerät zu Anfang auf Away gesetzt, und kann so auch nicht gekickt werden, auf dem Babygerät werden die Eltern weiter online gezeigt
+Bug: Beim Start der App wird die Selektierung im Drawer nicht gesetzt
+Bug: Wenn der Counter im Anrufmodus automatisch startet und man ihn stoppen will, startet er stattdessen einmal neu
+Bug: Absturz, wenn Anrufweiterleitung im Betrieb deaktiviert wird und dann ein Anruf eingeht
+Bug: Bluetooth: Wenn im Elternmode Bluetooth gewählt ist und die App beendet wird, gibts nen Absturz    
+Bug: Wenn man das Setup beendet, aktualisiert sich der NavigationDrawer nicht. Der Einrichtungsassistent bleibt selected.
+Bug: Absturz bei SMS Empfang wenn nicht das passende Fragment offen ist
+Bug: Wenn Babymonitor nicht im Vordergrund dann Absturz, wenn Geräusch eingeht.
+Bug: Der CallStateListener für den Counter beim Start der MainActivity aus. Das irgendwie abfangen
+Bug: Absturz nach babyanruf (wenn aufgelegt, weggedrückt oder ignoriert)
 
-Optional:
+Optionales
 =============================================================================================================
-- Navigation Drawer schöner gestalten, mit Image über der Itemliste
-- Wenn SMS gelesen, dann nicht mehr bold und setze Zahl im Drawer runter
-- Mikrofonsensibilität einstellen können im Babymonitor
-- Nachrichten zwischenpuffern, die nicht versendet werden konnten(SMS, Anrufe)
-- Nachrichten anders rum sortieren
-
-Änderungen
-------------------
-Settings:
-- Neuer Aufbau
-- Header für den ersten Preference Container hinzugefügt ("Mein Baby")
-
-Interface - Babymonitor:
-- Ein neuer Remote kann jetzt direkt im Babymonitor gesucht werden, das passende Fragement wird von dort aus geöffnet
-
-Interface - Overview:
-- Die Einstellungen können bei noch nicht eingetragender Telefonnummer direkt aus dem Fragment geöffnet werden.
-
-Bugfix:
-- Der Wechsel zwischen Wi-Fi und Anruf funktioniert nun richtig, auch wenn ein Gerät verbunden ist. Des Weiteren
+Task: Navigation Drawer schöner gestalten, mit Image über der Itemliste
+Task: Wenn SMS gelesen, dann nicht mehr bold und setze Zahl im Drawer runter
+Task: Mikrofonsensibilität einstellen können im Babymonitor
+Task: Nachrichten anders rum sortieren
 
 Testfälle:
---------------------------------------------
+=============================================================================================================
 - Audiostreaming + Geräusch + SMS + Anruf
-- Wechsel zwischen Verbindungstypen im Btrieb und außerhalb des Betriebs
+- Wechsel zwischen Verbindungstypen im Betrieb und außerhalb des Betriebs

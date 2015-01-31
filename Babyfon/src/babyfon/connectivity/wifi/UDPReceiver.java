@@ -29,9 +29,7 @@ public class UDPReceiver {
 
 	private class UDPReceiverThread extends Thread {
 		public void run() {
-
 			isRunning = true;
-
 			try {
 
 				udpServerSocket = new DatagramSocket(mSharedPrefs.getUDPPort());
@@ -48,18 +46,17 @@ public class UDPReceiver {
 				while (isRunning) {
 					udpServerSocket.receive(receivePacket);
 					String incomingUDPMessage = new String(buffer, 0, buffer.length);
-					Log.i(TAG, "Incoming UDP Message: " + incomingUDPMessage);
 					String targetIP = receivePacket.getAddress() + "";
-
 					// Cut the "/" from the InetAddress value
 					targetIP = targetIP.substring(1);
 
 					if (incomingUDPMessage.equals(mContext.getString(R.string.BABYFON_MSG_CONNECTION_SEARCH))) {
-						new TCPSender(mContext).sendMessage(targetIP,
-								mContext.getString(R.string.BABYFON_MSG_CONNECTION_FOUND) + ";"
-										+ new WifiHandler(mContext).getLocalIPv4Address() + ";"
-										+ android.os.Build.MODEL);
-
+						if (mSharedPrefs.getRemoteAddress() == null) {
+							new TCPSender(mContext).sendMessage(targetIP,
+									mContext.getString(R.string.BABYFON_MSG_CONNECTION_FOUND) + ";"
+											+ new WifiHandler(mContext).getLocalIPv4Address() + ";"
+											+ android.os.Build.MODEL);
+						}
 					} else {
 						if (mSharedPrefs.getRemoteAddress() != null) {
 							((BabyMonitorFragment) ((MainActivity) mContext).getFragmentById("BabyMonitorFragment"))

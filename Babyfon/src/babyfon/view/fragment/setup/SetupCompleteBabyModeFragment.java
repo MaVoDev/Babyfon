@@ -122,6 +122,7 @@ public class SetupCompleteBabyModeFragment extends Fragment {
 
 			} else if (mSharedPrefs.getConnectivityTypeTemp() == 2) {
 				mModuleHandler.stopBT();
+				mModuleHandler.unregisterBattery();
 				mModuleHandler.startTCPReceiver();
 				mModuleHandler.startUDPReceiver();
 			} else {
