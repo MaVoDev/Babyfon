@@ -11,8 +11,12 @@ import babyfon.init.R;
 import babyfon.settings.ModuleHandler;
 import babyfon.settings.SharedPrefs;
 import babyfon.view.activity.MainActivity;
+import babyfon.view.fragment.setup.SetupConnectionFragment;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Typeface;
@@ -49,6 +53,8 @@ public class BabyMonitorFragment extends Fragment {
 	private TextView noiseActivateText;
 	private TextView title;
 
+	private LinearLayout layoutRemote;
+
 	private long currentTime;
 	private long lastTime;
 
@@ -73,8 +79,8 @@ public class BabyMonitorFragment extends Fragment {
 	}
 
 	public void updateUI() {
-		
-		if(mSharedPrefs.getConnectivityType() == 2) {
+
+		if (mSharedPrefs.getConnectivityType() == 2) {
 			if (mSharedPrefs.isRemoteOnline()) {
 
 			} else {
@@ -82,7 +88,6 @@ public class BabyMonitorFragment extends Fragment {
 				remoteOnlineState.setImageResource(android.R.drawable.presence_away);
 			}
 		}
-		
 
 		if (mSharedPrefs.getRemoteAddress() != null) {
 			// remote host is connected
@@ -203,6 +208,9 @@ public class BabyMonitorFragment extends Fragment {
 		noiseActivateText = (TextView) view.findViewById(R.id.babymonitor_text_noise_activate);
 		noiseActivateText.setTypeface(mTypeface_b);
 
+		// Initialize Layouts
+		layoutRemote = (LinearLayout) view.findViewById(R.id.babymonitor_layout_remote);
+
 		if (hearEdit.isChecked()) {
 			hearState.setText(mContext.getString(R.string.enabled));
 		} else {
@@ -237,6 +245,8 @@ public class BabyMonitorFragment extends Fragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
 		View view = inflater.inflate(R.layout.main_babymonitor, container, false);
+
+		final FragmentManager mFragmentManager = getFragmentManager();
 
 		initUiElements(view);
 
@@ -312,6 +322,21 @@ public class BabyMonitorFragment extends Fragment {
 			}
 		});
 
+		// change remote in fragment
+		layoutRemote.setOnClickListener(new View.OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				if (mSharedPrefs.getRemoteAddress() == null) {
+					mSharedPrefs.setDeviceModeTemp(1);
+					FragmentTransaction ft = mFragmentManager.beginTransaction();
+					ft.setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out);
+					ft.replace(R.id.frame_container, new SetupConnectionFragment(mContext), null).addToBackStack(null)
+							.commit();
+				}
+			}
+		});
+
 		return view;
 	}
 
@@ -331,14 +356,13 @@ public class BabyMonitorFragment extends Fragment {
 					noiseCounter = 0;
 				} else {
 					noiseCounter++;
-
 				}
 				lastTime = currentTime;
 			}
 
 			if (noiseCounter > 10) {
 				noiseCounter = 0;
-				getActivity().runOnUiThread(new Runnable() {
+				((MainActivity) mContext).runOnUiThread(new Runnable() {
 					@Override
 					public void run() {
 						new Notification(mContext).start();
@@ -346,7 +370,7 @@ public class BabyMonitorFragment extends Fragment {
 				});
 				mSharedPrefs.setNoiseActivated(false);
 			}
-			getActivity().runOnUiThread(new Runnable() {
+			((MainActivity) mContext).runOnUiThread(new Runnable() {
 				@Override
 				public void run() {
 					noiseLevel.setProgress(calculateVolume);

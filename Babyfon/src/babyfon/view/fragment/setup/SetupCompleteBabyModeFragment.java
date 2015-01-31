@@ -1,7 +1,6 @@
 package babyfon.view.fragment.setup;
 
 import babyfon.Generator;
-import babyfon.audio.AudioRecorder;
 import babyfon.connectivity.bluetooth.BluetoothConnection;
 import babyfon.init.R;
 import babyfon.performance.Sound;
@@ -140,6 +139,7 @@ public class SetupCompleteBabyModeFragment extends Fragment {
 		Log.d(TAG, "Device mode: " + mSharedPrefs.getDeviceMode());
 		mSharedPrefs.setConnectivityType(mSharedPrefs.getConnectivityTypeTemp());
 		Log.d(TAG, "Connectivity type: " + mSharedPrefs.getConnectivityType());
+		mSharedPrefs.setConnectivityTypeTemp(-1);
 		mSharedPrefs.setForwardingCallInfo(mSharedPrefs.getForwardingCallInfoTemp());
 		Log.d(TAG, "Forwarding Call info: " + mSharedPrefs.getForwardingCallInfo());
 		mSharedPrefs.setForwardingSMS(mSharedPrefs.getForwardingSMSTemp());

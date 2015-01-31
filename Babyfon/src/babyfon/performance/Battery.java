@@ -51,6 +51,7 @@ public class Battery {
 	}
 
 	public boolean register() {
+		new Message(mContext).send(mContext.getString(R.string.BABYFON_MSG_BATTERY) + ";" + getBatteryLevel());
 		try {
 			// Änderung des Akkulevels
 			mContext.registerReceiver(this.mBatInfoReceiver, new IntentFilter(Intent.ACTION_BATTERY_CHANGED));
@@ -64,5 +65,18 @@ public class Battery {
 		} catch (Exception e) {
 			return false;
 		}
+	}
+
+	public int getBatteryLevel() {
+		Intent batteryIntent = mContext.registerReceiver(null, new IntentFilter(Intent.ACTION_BATTERY_CHANGED));
+		int level = batteryIntent.getIntExtra(BatteryManager.EXTRA_LEVEL, -1);
+		int scale = batteryIntent.getIntExtra(BatteryManager.EXTRA_SCALE, -1);
+
+		// Error checking that probably isn't needed but I added just in case.
+		if (level == -1 || scale == -1) {
+			return (int) 50.0f;
+		}
+
+		return (int) (((float) level / (float) scale) * 100.0f);
 	}
 }

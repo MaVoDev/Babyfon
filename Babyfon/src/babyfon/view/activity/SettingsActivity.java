@@ -54,17 +54,27 @@ public class SettingsActivity extends PreferenceActivity {
 		if (!isSimplePreferences(this)) {
 			return;
 		}
+		
+		// Add fake container
+		addPreferencesFromResource(R.xml.pref_fake_container);
 
-		// Add 'Baby' preferences.
+		// Add 'Baby' preferences, and a corresponding header.
+		PreferenceCategory babyInfoHeader = new PreferenceCategory(this);
+		babyInfoHeader.setTitle(R.string.pref_header_baby);
+		getPreferenceScreen().addPreference(babyInfoHeader);
 		addPreferencesFromResource(R.xml.pref_baby);
 
-		// Add 'Contact' preferences.
+		// Add 'Contact' preferences, and a corresponding header.
+		PreferenceCategory contactHeader = new PreferenceCategory(this);
+		contactHeader.setTitle(R.string.pref_header_contact);
+		System.out.println(contactHeader);
+		getPreferenceScreen().addPreference(contactHeader);
 		addPreferencesFromResource(R.xml.pref_contact);
 
 		// Add 'Notification' preferences, and a corresponding header.
-		PreferenceCategory fakeHeader = new PreferenceCategory(this);
-		fakeHeader.setTitle(R.string.pref_header_notifications);
-		getPreferenceScreen().addPreference(fakeHeader);
+		PreferenceCategory notificationHeader = new PreferenceCategory(this);
+		notificationHeader.setTitle(R.string.pref_header_notifications);
+		getPreferenceScreen().addPreference(notificationHeader);
 		addPreferencesFromResource(R.xml.pref_notification);
 
 		// Bind the summaries of EditText/List/Dialog/Ringtone preferences to

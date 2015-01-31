@@ -48,7 +48,8 @@ public class TCPSender {
 
 					if (outSingle != null) {
 						outSingle.println(msg);
-						Log.i(TAG, "Send message successfully!");
+						Log.i(TAG, "Send: " + msg);
+//						Log.i(TAG, "Send message successfully!");
 						mSharedPrefs.setRemoteOnlineState(true);
 					}
 				}

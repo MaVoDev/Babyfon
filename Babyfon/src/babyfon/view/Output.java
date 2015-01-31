@@ -1,4 +1,4 @@
-package babyfon;
+package babyfon.view;
 
 import babyfon.view.activity.MainActivity;
 import android.content.Context;

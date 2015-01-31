@@ -110,18 +110,6 @@ public class MainActivity extends ActionBarActivity {
 
 	private static final String TAG = MainActivity.class.getCanonicalName();
 
-	public void handleModules() {
-		if (mSharedPrefs.getDeviceMode() != -1) {
-			if (mSharedPrefs.getConnectivityType() == 2) {
-				mModuleHandler.startTCPReceiver();
-				mModuleHandler.startUDPReceiver();
-			}
-		}
-		if (mSharedPrefs.getForwardingSMS() || mSharedPrefs.getForwardingSMSInfo()) {
-			mModuleHandler.registerSMS();
-		}
-	}
-
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -140,8 +128,6 @@ public class MainActivity extends ActionBarActivity {
 		mAudioPlayer = new AudioPlayer();
 		mModuleHandler = new ModuleHandler(this);
 		mSharedPrefs = new SharedPrefs(this);
-
-		handleModules();
 
 		initNavigationDrawer();
 
@@ -210,7 +196,8 @@ public class MainActivity extends ActionBarActivity {
 		initNavigationDrawer();
 
 		if (mSharedPrefs.getRemoteAddress() != null) {
-			new babyfon.Message(this).send(this.getString(R.string.BABYFON_MSG_SYSTEM_REJOIN) + ";"
+			mModuleHandler.startRemoteCheck();
+			new babyfon.Message(this).send(this.getString(R.string.BABYFON_MSG_CONNECTION_HELLO) + ";"
 					+ mSharedPrefs.getHostAddress() + ";" + mSharedPrefs.getPassword());
 			if (mSharedPrefs.getDeviceMode() == 0) {
 				mModuleHandler.registerBattery();
@@ -225,15 +212,10 @@ public class MainActivity extends ActionBarActivity {
 				new Sound(this).mute();
 			}
 		}
-
-		if (mSharedPrefs.getRemoteAddress() != null) {
-			mModuleHandler.startRemoteCheck();
-		}
-
-		if (mSharedPrefs.getConnectivityType() == 2) {
-			mModuleHandler.startUDPReceiver();
-			mModuleHandler.startTCPReceiver();
-		}
+//		if (mSharedPrefs.getConnectivityType() == 2) {
+//			mModuleHandler.startUDPReceiver();
+//			mModuleHandler.startTCPReceiver();
+//		}
 	}
 
 	@Override
@@ -270,6 +252,11 @@ public class MainActivity extends ActionBarActivity {
 		super.onResume();
 
 		if (mSharedPrefs.getConnectivityType() != 3) {
+//			if (mSharedPrefs.getConnectivityType() == 2) {
+//				mModuleHandler.startTCPReceiver();
+//				mModuleHandler.startUDPReceiver();
+//			}
+
 			if (mSharedPrefs.isNoiseActivated()) {
 				if (MainActivity.mAudioRecorder == null) {
 					MainActivity.mAudioRecorder = new AudioRecorder(this, MainActivity.mConnection);
@@ -280,6 +267,10 @@ public class MainActivity extends ActionBarActivity {
 					MainActivity.mAudioRecorder.stopRecording();
 				}
 			}
+		}
+
+		if (mSharedPrefs.getForwardingSMS() || mSharedPrefs.getForwardingSMSInfo()) {
+			mModuleHandler.registerSMS();
 		}
 
 		if (timerNavigationDrawer == null) {
@@ -391,7 +382,7 @@ public class MainActivity extends ActionBarActivity {
 		}
 
 		// doesn't store the setup start screen
-		if(mSharedPrefs.getDeviceMode() != -1) {
+		if (mSharedPrefs.getDeviceMode() != -1) {
 			mFragmentMap.put(id, fragment);
 		}
 
@@ -594,6 +585,14 @@ public class MainActivity extends ActionBarActivity {
 							mSharedPrefs.setTempMode(mSharedPrefs.getDeviceMode());
 							initNavigationDrawer();
 							Log.d(TAG, "Navigation Drawer changed.");
+						}
+						
+						if (mSharedPrefs.getConnectivityType() == 2 || mSharedPrefs.getConnectivityTypeTemp() == 2) {
+							mModuleHandler.startTCPReceiver();
+							mModuleHandler.startUDPReceiver();
+						} else {
+							mModuleHandler.stopTCPReceiver();
+							mModuleHandler.stopUDPReceiver();
 						}
 					}
 				});

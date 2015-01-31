@@ -225,6 +225,7 @@ public class SetupForwardingFragment extends Fragment {
 																new SetupStartFragment(mContext), null)
 														.addToBackStack(null).commit();
 											}
+											mSharedPrefs.setConnectivityTypeTemp(-1);
 										}
 									}).create().show();
 					break;

@@ -96,7 +96,7 @@
     <string name="text_connection">Wähle eine Verbindung aus, über die du mit dem anderen Mobilgerät kommunizieren möchtest.</string>
     <string name="text_device_mode">Entscheide zwischen dem Baby- und dem Elternmodus. Bei wem wird das Mobilgerät später liegen?</string>
     <string name="text_complete_baby">Die Einrichtung ist abgeschlossen und der Babymodus ist jetzt aktiv. Mit dem unten stehenden Passwort kannst du dich mit diesem Gerät verbinden.</string>
-    <string name="text_complete_baby_call">Die Einrichtung ist abgeschlossen und der Babymodus ist jetzt aktiv. Hinterlege in den Einstellungen deine Mobilnummer, um benachrichtigt zu werden, wenn das Baby wach ist. Die Geräuscherkennung wird 30 Sekunden nach Abschluss des Assistenten gestartet.</string>
+    <string name="text_complete_baby_call">Die Einrichtung ist abgeschlossen und der Babymodus ist jetzt aktiv. Hinterlege in den Einstellungen deine Mobilnummer, um benachrichtigt zu werden, wenn das Baby wach ist.</string>
     <string name="text_setup_start">Dieser Einrichtungsassistent hilft dir dabei dein Babyfon einzurichten.</string>
 
     <!-- Error messages -->
@@ -139,7 +139,8 @@
     <string name="doubleTap">2x tippen, um die Meldung zu schließen</string>
 
     <!-- Toast messages -->
-    <string name="wrong_password">Falsches Passwort</string>
+    <string name="wrong_password">Falsches Passwort!</string>
+    <string name="disconnected">Die Verbindung wurde getrennt.</string>
     <string name="no_phone_number">Es wurde noch keine Telefonnummer in den Einstellungen hinterlegt.</string>
 
     <!-- Content Description -->

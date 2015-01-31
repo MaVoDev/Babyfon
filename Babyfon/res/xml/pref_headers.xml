@@ -3,7 +3,7 @@
     <!-- These settings headers are only used on tablets. -->
 
     <header
-        android:fragment="babyfon.init.SettingsActivity$GeneralPreferenceFragment"
+        android:fragment="babyfon.init.SettingsActivity$BabyPreferenceFragment"
         android:title="@string/pref_header_baby" />
     <header
         android:fragment="babyfon.init.SettingsActivity$ContactPreferenceFragment"

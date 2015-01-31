@@ -110,7 +110,9 @@ public class ConnectivityStateCheck {
 
 	public boolean stopConnectivityStateThread() {
 		try {
-//			timerRemoteCheck.cancel();
+			if (timerRemoteCheck != null) {
+				timerRemoteCheck.cancel();
+			}
 			timerRemoteCheck = null;
 			return true;
 		} catch (Exception e) {

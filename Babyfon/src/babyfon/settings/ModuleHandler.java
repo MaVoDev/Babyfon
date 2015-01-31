@@ -109,7 +109,7 @@ public class ModuleHandler {
 				Log.e(TAG, "Error: Can't start TCP receiver.");
 			}
 		} else {
-			Log.e(TAG, "TCP receiver is still running.");
+//			Log.e(TAG, "TCP receiver is still running.");
 		}
 	}
 
@@ -126,7 +126,7 @@ public class ModuleHandler {
 				Log.e(TAG, "Error: Can't close TCP receiver.");
 			}
 		} else {
-			Log.e(TAG, "Can't close UDP receiver: The receiver wasn't active or has been stopped.");
+//			Log.e(TAG, "Can't close UDP receiver: The receiver wasn't active or has been stopped.");
 		}
 	}
 
@@ -143,7 +143,7 @@ public class ModuleHandler {
 				Log.e(TAG, "Error: Can't start UDP receiver.");
 			}
 		} else {
-			Log.e(TAG, "UDP receiver is still running.");
+//			Log.e(TAG, "UDP receiver is still running.");
 		}
 	}
 
@@ -160,7 +160,7 @@ public class ModuleHandler {
 				Log.e(TAG, "Error: Can't close UDP receiver.");
 			}
 		} else {
-			Log.e(TAG, "Can't close UDP receiver: The receiver wasn't active or has been stopped.");
+//			Log.e(TAG, "Can't close UDP receiver: The receiver wasn't active or has been stopped.");
 		}
 	}
 
@@ -168,22 +168,22 @@ public class ModuleHandler {
 	 * Start remote checker thread
 	 */
 	public void startRemoteCheck() {
-		// if (MainActivity.mConnectivityStateCheck == null) {
-		Log.i(TAG, "Try to start remote checker thread...");
-		MainActivity.mConnectivityStateCheck = new ConnectivityStateCheck(mContext);
-		if (MainActivity.mConnectivityStateCheck.startConnectivityStateThread()) {
-			Log.d(TAG, "Remote checker thread is running.");
-		} else {
-			Log.e(TAG, "Error: Can't start remote checker thread.");
-		}
+		if (MainActivity.mConnectivityStateCheck == null) {
+			Log.i(TAG, "Try to start remote checker thread...");
+			MainActivity.mConnectivityStateCheck = new ConnectivityStateCheck(mContext);
+			if (MainActivity.mConnectivityStateCheck.startConnectivityStateThread()) {
+				Log.d(TAG, "Remote checker thread is running.");
+			} else {
+				Log.e(TAG, "Error: Can't start remote checker thread.");
+			}
 
-		// } else {
-		// Log.e(TAG, "Remote checker thread is still running.");
-		// }
+		} else {
+			Log.e(TAG, "Remote checker thread is still running.");
+		}
 	}
 
 	/**
-	 * Start remote checker thread
+	 * Stop remote checker thread
 	 */
 	public void stopRemoteCheck() {
 		if (MainActivity.mConnectivityStateCheck != null) {

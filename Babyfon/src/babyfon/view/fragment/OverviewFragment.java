@@ -5,18 +5,21 @@ import java.util.TimerTask;
 
 import babyfon.Generator;
 import babyfon.Message;
-import babyfon.Output;
 import babyfon.audio.AudioRecorder;
 import babyfon.init.R;
 import babyfon.settings.ModuleHandler;
 import babyfon.settings.SharedPrefs;
+import babyfon.view.Output;
 import babyfon.view.activity.MainActivity;
+import babyfon.view.activity.SettingsActivity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -53,6 +56,7 @@ public class OverviewFragment extends Fragment {
 	private LinearLayout layoutCall;
 	private LinearLayout layoutSms;
 	private LinearLayout layoutChangeMode;
+	private LinearLayout layoutPhoneNumber;
 
 	private View layoutPasswordSeparator;
 	private View layoutCallSeparator;
@@ -137,6 +141,7 @@ public class OverviewFragment extends Fragment {
 		layoutCall = (LinearLayout) view.findViewById(R.id.overview_layout_call);
 		layoutSms = (LinearLayout) view.findViewById(R.id.overview_layout_sms);
 		layoutChangeMode = (LinearLayout) view.findViewById(R.id.overview_layout_edit_mode);
+		layoutPhoneNumber = (LinearLayout) view.findViewById(R.id.overview_layout_connectivity_state);
 
 		// Initialize Views
 		layoutPasswordSeparator = (View) view.findViewById(R.id.overview_layout_password_separator);
@@ -311,11 +316,7 @@ public class OverviewFragment extends Fragment {
 			callState.setText(R.string.radio_send_false);
 		}
 
-		if (mSharedPrefs.isNoiseActivated()) {
-			startRecorder();
-		} else {
-			stopRecorder();
-		}
+		startRecorder();
 	}
 
 	public void updateCallMode() {
@@ -351,7 +352,7 @@ public class OverviewFragment extends Fragment {
 		}
 		modeText.setText(mContext.getString(R.string.overview_baby_noise_state));
 
-		if (mSharedPrefs.getPhoneNumber() == null && mSharedPrefs.getPhoneNumber().equals("")) {
+		if (mSharedPrefs.getPhoneNumber() == null || mSharedPrefs.getPhoneNumber().equals("")) {
 			isCountdownActive = false;
 		}
 	}
@@ -381,9 +382,12 @@ public class OverviewFragment extends Fragment {
 										mSharedPrefs.setRemoteAddress(null);
 										mSharedPrefs.setRemoteName(null);
 										mSharedPrefs.setRemoteOnlineState(false);
-
 										mModuleHandler.unregisterBattery();
-										mModuleHandler.startUDPReceiver();
+
+										if (mSharedPrefs.getConnectivityType() == 2) {
+											mModuleHandler.startUDPReceiver();
+											mModuleHandler.startTCPReceiver();
+										}
 
 										if (mSharedPrefs.getForwardingSMS() || mSharedPrefs.getForwardingSMSInfo()) {
 											mModuleHandler.unregisterSMS();
@@ -451,18 +455,39 @@ public class OverviewFragment extends Fragment {
 						switch (item) {
 						case 0:
 							mSharedPrefs.setConnectivityType(2);
-							if (mSharedPrefs.getRemoteAddress() == null) {
-								mModuleHandler.startUDPReceiver();
-								mModuleHandler.startTCPReceiver();
+							isCountdownActive = false;
+							mSharedPrefs.setNoiseActivated(true);
+							mModuleHandler.startRemoteCheck();
+							mModuleHandler.startUDPReceiver();
+							mModuleHandler.startTCPReceiver();
+							new Message(mContext).send(mContext.getString(R.string.BABYFON_MSG_CONNECTION_HELLO) + ";"
+									+ mSharedPrefs.getHostAddress() + ";" + mSharedPrefs.getPassword());
+							mModuleHandler.registerBattery();
+							if (mSharedPrefs.getForwardingSMS() || mSharedPrefs.getForwardingSMSInfo()) {
+								mModuleHandler.registerSMS();
 							}
 							break;
 						case 1:
+							if (mSharedPrefs.getConnectivityType() == 2) {
+								new Message(mContext).send(mContext.getString(R.string.BABYFON_MSG_SYSTEM_AWAY));
+							}
 							mSharedPrefs.setConnectivityType(1);
+							isCountdownActive = false;
+							if (mSharedPrefs.getForwardingSMS() || mSharedPrefs.getForwardingSMSInfo()) {
+								mModuleHandler.registerSMS();
+							}
+							mModuleHandler.stopRemoteCheck();
 							mModuleHandler.stopTCPReceiver();
 							mModuleHandler.stopUDPReceiver();
 							break;
 						case 2:
+							if (mSharedPrefs.getConnectivityType() == 2) {
+								new Message(mContext).send(mContext.getString(R.string.BABYFON_MSG_SYSTEM_AWAY));
+							}
 							mSharedPrefs.setConnectivityType(3);
+							mSharedPrefs.setNoiseActivated(false);
+							mModuleHandler.unregisterSMS();
+							mModuleHandler.stopRemoteCheck();
 							mModuleHandler.stopTCPReceiver();
 							mModuleHandler.stopUDPReceiver();
 							break;
@@ -577,6 +602,7 @@ public class OverviewFragment extends Fragment {
 			public void onClick(View v) {
 				if (mSharedPrefs.getConnectivityType() == 3) {
 					if (mSharedPrefs.isNoiseActivated()) {
+						changeMode.setImageResource(android.R.drawable.ic_media_play);
 						isCountdownActive = false;
 						new Output().toast(mContext, mContext.getString(R.string.noise_countdown_stop), 0);
 						mSharedPrefs.setNoiseActivated(false);
@@ -584,6 +610,7 @@ public class OverviewFragment extends Fragment {
 					} else {
 						if (mSharedPrefs.getPhoneNumber() != null && !mSharedPrefs.getPhoneNumber().equals("")) {
 							countdown = 30;
+							changeMode.setImageResource(android.R.drawable.ic_media_pause);
 							isCountdownActive = true;
 							new Output().toast(mContext, mContext.getString(R.string.noise_countdown_start), 0);
 							mSharedPrefs.setNoiseActivated(true);
@@ -611,8 +638,12 @@ public class OverviewFragment extends Fragment {
 										public void onClick(DialogInterface dialog, int id) {
 											if (isActive) {
 												// enabled -> disabled
+												mModuleHandler.stopRemoteCheck();
+												mSharedPrefs.setRemoteOnlineState(false);
 												mSharedPrefs.setActiveStateBabyMode(false);
 												if (mSharedPrefs.getRemoteAddress() != null) {
+													mModuleHandler.stopUDPReceiver();
+													mModuleHandler.stopTCPReceiver();
 													new Message(mContext).send(mContext
 															.getString(R.string.BABYFON_MSG_SYSTEM_AWAY));
 													mModuleHandler.unregisterBattery();
@@ -622,25 +653,45 @@ public class OverviewFragment extends Fragment {
 													}
 												} else {
 													mModuleHandler.stopUDPReceiver();
+													mModuleHandler.stopTCPReceiver();
 												}
 											} else {
 												// disabled -> enabled
+												mModuleHandler.startRemoteCheck();
 												mSharedPrefs.setActiveStateBabyMode(true);
 												if (mSharedPrefs.getRemoteAddress() != null) {
+													mModuleHandler.startUDPReceiver();
+													mModuleHandler.startTCPReceiver();
 													mModuleHandler.registerBattery();
 													if (mSharedPrefs.getForwardingSMS()
 															|| mSharedPrefs.getForwardingSMSInfo()) {
 														mModuleHandler.registerSMS();
 													}
-													new Message(mContext).send(mContext
-															.getString(R.string.BABYFON_MSG_SYSTEM_REJOIN));
+													mModuleHandler.startRemoteCheck();
 												} else {
-													mModuleHandler.startUDPReceiver();
+													if (mSharedPrefs.getConnectivityType() == 2) {
+														mModuleHandler.startUDPReceiver();
+														mModuleHandler.startTCPReceiver();
+													}
 												}
 											}
 											updateUI();
 										}
 									}).create().show();
+				}
+			}
+		});
+
+		// change phone number in fragment
+		layoutPhoneNumber.setOnClickListener(new View.OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				if (mSharedPrefs.getConnectivityType() == 3) {
+					if (mSharedPrefs.getPhoneNumber() == null || mSharedPrefs.getPhoneNumber().equals("")) {
+						Intent intent = new Intent(mContext, SettingsActivity.class);
+						startActivity(intent);
+					}
 				}
 			}
 		});
@@ -671,8 +722,9 @@ public class OverviewFragment extends Fragment {
 		isCountdownActive = false;
 		if (MainActivity.mAudioRecorder == null) {
 			MainActivity.mAudioRecorder = new AudioRecorder(mContext, MainActivity.mConnection);
+			MainActivity.mAudioRecorder.startRecording();
 		}
-		MainActivity.mAudioRecorder.startRecording();
+
 	}
 
 	public void stopRecorder() {
@@ -723,9 +775,9 @@ public class OverviewFragment extends Fragment {
 					if (isCountdownActive) {
 						if (countdown > 0) {
 							if (countdown != 1) {
-								modeState.setText("Aktiv in: " + countdown + " " + mContext.getString(R.string.seconds));
+								modeState.setText("Aktiv in " + countdown + " " + mContext.getString(R.string.seconds));
 							} else {
-								modeState.setText("Aktiv in: " + countdown + " " + mContext.getString(R.string.second));
+								modeState.setText("Aktiv in " + countdown + " " + mContext.getString(R.string.second));
 							}
 						} else {
 							startRecorder();

@@ -8,6 +8,7 @@ import babyfon.init.R;
 import babyfon.performance.ConnectivityStateCheck;
 import babyfon.settings.ModuleHandler;
 import babyfon.settings.SharedPrefs;
+import babyfon.view.Output;
 import babyfon.view.activity.MainActivity;
 import babyfon.view.fragment.AbsenceFragment;
 import babyfon.view.fragment.setup.SetupCompleteParentsModeFragment;
@@ -178,6 +179,7 @@ public class Message {
 		}
 
 		if (strArray[0].equals(mContext.getString(R.string.BABYFON_MSG_SYSTEM_AWAY))) {
+			mModuleHandler.stopRemoteCheck();
 			if (mSharedPrefs.getDeviceMode() == 0) {
 				mModuleHandler.unregisterBattery();
 				if (mSharedPrefs.getForwardingSMS() || mSharedPrefs.getForwardingSMSInfo()) {
@@ -193,7 +195,7 @@ public class Message {
 
 		if (strArray[0].equals(mContext.getString(R.string.BABYFON_MSG_SYSTEM_DISCONNECTED))) {
 			mModuleHandler.stopRemoteCheck();
-
+			new Output().toast(mContext, mContext.getString(R.string.disconnected), 1);
 			if (mSharedPrefs.getDeviceMode() == 0) {
 				mModuleHandler.unregisterBattery();
 				if (mSharedPrefs.getForwardingSMS() || mSharedPrefs.getForwardingSMSInfo()) {
@@ -201,6 +203,7 @@ public class Message {
 				}
 				if (mSharedPrefs.getConnectivityType() == 2) {
 					mModuleHandler.startUDPReceiver();
+					mModuleHandler.startTCPReceiver();
 				}
 			}
 			mSharedPrefs.setRemoteOnlineState(false);
@@ -234,10 +237,15 @@ public class Message {
 							mContext.getString(R.string.BABYFON_MSG_SYSTEM_DISCONNECTED));
 				} else {
 					mSharedPrefs.setRemoteOnlineState(true);
+					if (mSharedPrefs.getConnectivityType() == 2) {
+						mModuleHandler.startRemoteCheck();
+					}
 				}
 			} else {
-				new TCPSender(mContext).sendMessage(strArray[1],
-						mContext.getString(R.string.BABYFON_MSG_SYSTEM_DISCONNECTED));
+				if (mSharedPrefs.getConnectivityType() == 2) {
+					new TCPSender(mContext).sendMessage(strArray[1],
+							mContext.getString(R.string.BABYFON_MSG_SYSTEM_DISCONNECTED));
+				}
 			}
 		}
 
