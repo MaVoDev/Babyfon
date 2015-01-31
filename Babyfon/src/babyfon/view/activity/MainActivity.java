@@ -179,8 +179,10 @@ public class MainActivity extends ActionBarActivity {
 			timerConnectivityState = null;
 		}
 
-		// Service unbinden
-		doUnbindService();
+		// TODO service für alle anpassen
+		if (mSharedPrefs.getConnectivityType() == 1)
+			// Service unbinden
+			doUnbindService();
 
 		if (mSharedPrefs.getRemoteAddress() != null) {
 			new babyfon.Message(this).send(this.getString(R.string.BABYFON_MSG_SYSTEM_AWAY));
