@@ -26,6 +26,7 @@ import babyfon.connectivity.bluetooth.BluetoothHandler;
 import babyfon.connectivity.wifi.WifiHandler;
 import babyfon.init.R;
 import babyfon.settings.SharedPrefs;
+import babyfon.view.activity.MainActivity;
 import babyfon.view.fragment.BabyMonitorFragment;
 import babyfon.view.fragment.OverviewFragment;
 
@@ -254,8 +255,12 @@ public class SetupConnectionFragment extends Fragment {
 					}
 
 					// nur weitergehen, wenn Bluetooth-Discoverability an ist
-					if (!btEnabled)
+					if (!btEnabled) {
 						return;
+					} else {
+						mSharedPrefs.setHostAdress(mBluetoothHandler.getOwnAddress());
+						((MainActivity) mContext).doBindService();
+					}
 				} else
 
 				if (connectivityType == 2) {

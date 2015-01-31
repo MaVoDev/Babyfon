@@ -15,6 +15,7 @@ import babyfon.Notification;
 import babyfon.connectivity.ConnectionInterface;
 import babyfon.connectivity.wifi.UDPReceiver;
 import babyfon.connectivity.wifi.UDPSender;
+import babyfon.service.LocalService;
 import babyfon.settings.SharedPrefs;
 import babyfon.view.activity.MainActivity;
 
@@ -43,7 +44,7 @@ public class AudioRecorder {
 
 	private int threshold = 9999999;
 
-	private ConnectionInterface mConnection;
+	private LocalService mService;
 
 	private SharedPrefs mSharedPrefs;
 
@@ -51,8 +52,8 @@ public class AudioRecorder {
 
 	private Context mContext;
 
-	public AudioRecorder(Context mContext, ConnectionInterface connection) {
-		this.mConnection = connection;
+	public AudioRecorder(Context mContext, LocalService service) {
+		this.mService = service;
 		mSharedPrefs = new SharedPrefs(mContext);
 		recorder = initRecorder();
 		mUdpSender = new UDPSender(mContext);
@@ -154,7 +155,7 @@ public class AudioRecorder {
 			// Log.i(TAG, "Writing data to file: " + sData.toString());
 
 			if (mSharedPrefs.getConnectivityType() == 1) {
-				mConnection.sendData(bData, (byte) 1);
+				mService.getConnection().sendData(bData, (byte) 1);
 			}
 
 			if (mSharedPrefs.getConnectivityType() == 2) {

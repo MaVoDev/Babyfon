@@ -14,14 +14,15 @@ public class Output {
 	 * @param text
 	 *            : text to be displayed
 	 * @param duration
-	 *            : duration of the displaying (0 = Toast.LENGTH_SHORT, 1 =
-	 *            Toast.LENGTH_LONG)
+	 *            : duration of the displaying (0 = Toast.LENGTH_SHORT, 1 = Toast.LENGTH_LONG)
 	 */
 	public void toast(final Context mContext, final String text, final int duration) {
-		((MainActivity) mContext).runOnUiThread(new Runnable() {
+//		((MainActivity) mContext).runOnUiThread(new Runnable() {
+		((MainActivity) MainActivity.getContext()).runOnUiThread(new Runnable() {
 			@Override
 			public void run() {
-				Toast toast = Toast.makeText(mContext, text, duration);
+				// Toast toast = Toast.makeText(mContext, text, duration);
+				Toast toast = Toast.makeText(MainActivity.getContext(), text, duration); // TODO workaround
 				toast.show();
 			}
 		});

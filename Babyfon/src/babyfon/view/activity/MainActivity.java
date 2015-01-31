@@ -147,7 +147,7 @@ public class MainActivity extends ActionBarActivity {
 		// AUSKOMMENTIERT; VS!
 		mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, android.R.string.ok, android.R.string.no);
 
-		if(mSharedPrefs.getConnectivityType() == 1) {
+		if (mSharedPrefs.getConnectivityType() == 1) {
 			// Zum Service verbinden / Service starten
 			doBindService();
 		}
@@ -211,8 +211,8 @@ public class MainActivity extends ActionBarActivity {
 
 		if (mSharedPrefs.getRemoteAddress() != null) {
 			mModuleHandler.startRemoteCheck();
-			new babyfon.Message(this).send(this.getString(R.string.BABYFON_MSG_CONNECTION_HELLO) + ";"
-					+ mSharedPrefs.getHostAddress() + ";" + mSharedPrefs.getPassword());
+			new babyfon.Message(this).send(this.getString(R.string.BABYFON_MSG_CONNECTION_HELLO) + ";" + mSharedPrefs.getHostAddress()
+					+ ";" + mSharedPrefs.getPassword());
 			if (mSharedPrefs.getDeviceMode() == 0) {
 				mModuleHandler.registerBattery();
 				if (mSharedPrefs.getForwardingSMS() || mSharedPrefs.getForwardingSMSInfo()) {
@@ -271,10 +271,10 @@ public class MainActivity extends ActionBarActivity {
 				mModuleHandler.startUDPReceiver();
 			}
 
-			if(mSharedPrefs.getRemoteAddress() != null) {
+			if (mSharedPrefs.getRemoteAddress() != null) {
 				if (mSharedPrefs.isNoiseActivated()) {
 					if (MainActivity.mAudioRecorder == null) {
-//						MainActivity.mAudioRecorder = new AudioRecorder(this, mBoundService.getConnection());
+						// MainActivity.mAudioRecorder = new AudioRecorder(this, mBoundService.getConnection());
 						MainActivity.mAudioRecorder = new AudioRecorder(this, null);
 						MainActivity.mAudioRecorder.startRecording();
 					}
@@ -499,8 +499,7 @@ public class MainActivity extends ActionBarActivity {
 	}
 
 	/**
-	 * When using the ActionBarDrawerToggle, you must call it during
-	 * onPostCreate() and onConfigurationChanged()...
+	 * When using the ActionBarDrawerToggle, you must call it during onPostCreate() and onConfigurationChanged()...
 	 */
 
 	@Override
@@ -553,8 +552,7 @@ public class MainActivity extends ActionBarActivity {
 			// Listenelement: Babymonitor
 			items.add(new NavigationDrawerItemModel(navMenuTitles[0], navMenuIcons.getResourceId(0, -1)));
 			// Listenelement: Anrufe und Nachrichten in Abwesenheit
-			items.add(new NavigationDrawerItemModel(navMenuTitles[1], navMenuIcons.getResourceId(1, -1), true, String
-					.valueOf(counter)));
+			items.add(new NavigationDrawerItemModel(navMenuTitles[1], navMenuIcons.getResourceId(1, -1), true, String.valueOf(counter)));
 			// Listenelement: Einrichtungsassistent
 			items.add(new NavigationDrawerItemModel(navMenuTitles[2], navMenuIcons.getResourceId(2, -1)));
 			// Listenelement: Einstellungen
@@ -639,6 +637,13 @@ public class MainActivity extends ActionBarActivity {
 			Log.i(TAG, "Service connected with app...");
 			Toast.makeText(MainActivity.this, "Service connected.", Toast.LENGTH_SHORT).show();
 
+			if (MainActivity.mAudioRecorder != null) {
+				MainActivity.mAudioRecorder.stopRecording();
+				MainActivity.mAudioRecorder = null;
+			}
+			MainActivity.mAudioRecorder = new AudioRecorder(MainActivity.this, mBoundService);
+			MainActivity.mAudioRecorder.startRecording();
+
 			// TODO: einbauen:
 			// Verbinden mit aktuelle gepairtem Device...
 			// mBoundService.connectTo("CC:96:A0:41:34:3E");
@@ -655,7 +660,7 @@ public class MainActivity extends ActionBarActivity {
 		}
 	};
 
-	void doBindService() {
+	public void doBindService() {
 		// Establish a connection with the service. We use an explicit
 		// class name because we want a specific service implementation that
 		// we know will be running in our own process (and thus won't be

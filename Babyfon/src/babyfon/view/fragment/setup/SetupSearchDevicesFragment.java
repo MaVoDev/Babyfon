@@ -71,7 +71,7 @@ public class SetupSearchDevicesFragment extends Fragment {
 	// Constructor
 	public SetupSearchDevicesFragment(Context mContext) {
 		// WORKAROUND
-		((MainActivity) mContext).setFragmentForId(this, "SetupSearchDevicesFragment");
+		((MainActivity) MainActivity.getContext()).setFragmentForId(this, "SetupSearchDevicesFragment");
 
 		mModuleHandler = new ModuleHandler(mContext);
 		mSharedPrefs = new SharedPrefs(mContext);
@@ -249,6 +249,8 @@ public class SetupSearchDevicesFragment extends Fragment {
 	}
 
 	public void initViewBluetooth() {
+		Log.i(TAG, "Init View Bluetooth...");
+
 		mBtHandler = new BluetoothHandler(mContext);
 		mBtHandler.enableBluetooth();
 		mBtHandler.prepareForSearch(mDevicesAdapter);
@@ -267,16 +269,16 @@ public class SetupSearchDevicesFragment extends Fragment {
 				public void onConnectedListener(String deviceName) {
 
 					mBtHandler.unregisterReceiver();
-					MainActivity.mBoundService.getConnection().registerDisconnectHandler();
+					// MainActivity.mBoundService.getConnection().registerDisconnectHandler();
 
 					String msg = new String(mContext.getString(R.string.BABYFON_MSG_AUTH_REQ) + ";" + mPW + ";"
 							+ BluetoothAdapter.getDefaultAdapter().getAddress() + ";" + android.os.Build.MODEL);
 					new Message(mContext).send(msg);
 
 					// Verbunden also auf die Abschlussseite wechseln
-					getFragmentManager().beginTransaction()
-							.replace(R.id.frame_container, new SetupCompleteParentsModeFragment(mContext), null).addToBackStack(null)
-							.commit();
+					// getFragmentManager().beginTransaction()
+					// .replace(R.id.frame_container, new SetupCompleteParentsModeFragment(mContext), null).addToBackStack(null)
+					// .commit();
 
 					// TODO Testing. Remote check nach verbindung starten
 					// mModuleHandler.startRemoteCheck();

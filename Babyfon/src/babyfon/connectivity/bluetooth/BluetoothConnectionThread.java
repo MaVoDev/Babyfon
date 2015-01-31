@@ -107,7 +107,7 @@ public abstract class BluetoothConnectionThread extends Thread {
 		byte type = 0; // 0 = String
 
 		// 250 ist geschätzter Wert, String wird vermutlich immer kleiner sein bzw. wir sorgen dafür, dass sie es sind
-		if (bytesRead >= 250)
+		if (bytesRead >= 100)
 			type = 1; // 1 = Audio
 
 		if (mBTConnection.getOnReceiveDataListener() != null)
@@ -145,8 +145,8 @@ public abstract class BluetoothConnectionThread extends Thread {
 				mSocket.close();
 
 			mSocket = null;
-//			mmInStream = null;
-//			mmOutStream = null;
+			// mmInStream = null;
+			// mmOutStream = null;
 
 			if (mBTConnection.getOnConnectionLostListener() != null)
 				mBTConnection.getOnConnectionLostListener().onConnectionLostListener("Bluetooth Connection closed");
