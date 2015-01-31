@@ -62,14 +62,19 @@ public class Message {
 	 */
 	public void send(String str) {
 
-		Log.e(TAG, "Send msg: " + str);
+		send(mSharedPrefs.getRemoteAddress(), str);
+	}
+
+	private void send(String target, String msg) {
+
+		Log.e(TAG, "Send msg: " + msg);
 
 		if (mSharedPrefs.getConnectivityType() == 1 || mSharedPrefs.getConnectivityTypeTemp() == 1) {
 			if (MainActivity.mBoundService != null)
-				MainActivity.mBoundService.getConnection().sendMessage(str);
+				MainActivity.mBoundService.getConnection().sendMessage(msg + ";"); // extra ";" ist Workaround für Doppel-Sende-Bug
 		}
 		if (mSharedPrefs.getConnectivityType() == 2 || mSharedPrefs.getConnectivityTypeTemp() == 2) {
-			new TCPSender(mContext).sendMessage(mSharedPrefs.getRemoteAddress(), str);
+			new TCPSender(mContext).sendMessage(target, msg);
 		}
 	}
 
@@ -149,24 +154,6 @@ public class Message {
 
 			mSharedPrefs.setRemoteAddress(remoteAddress);
 
-			// TODO BT TESTING! -------------------
-			if (mSharedPrefs.getConnectivityType() == 1 || mSharedPrefs.getConnectivityTypeTemp() == 1) {
-				// send(mContext.getString(R.string.BABYFON_MSG_AUTH_CONFIRMED) + ";" + mSharedPrefs.getPassword());
-
-				mSharedPrefs.setRemoteName(remoteName);
-				mSharedPrefs.setRemoteOnlineState(true);
-
-				// TODO evtl PW für Test auf 0 setzen
-				send(mContext.getString(R.string.BABYFON_MSG_AUTH_CONFIRMED) + ";" + 0);
-				// send(mContext.getString(R.string.BABYFON_MSG_AUTH_CONFIRMED) + ";" + mSharedPrefs.getPassword());
-
-				mModuleHandler.registerBattery();
-
-				mModuleHandler.startRemoteCheck();
-				return;
-			}
-			// BT TESTING! ------------------- ENDE
-
 			if (mSharedPrefs.getPassword().equals(password)) {
 				mSharedPrefs.setRemoteName(remoteName);
 				mSharedPrefs.setRemoteOnlineState(true);
@@ -232,7 +219,9 @@ public class Message {
 				if (mSharedPrefs.getForwardingSMS() || mSharedPrefs.getForwardingSMSInfo()) {
 					mModuleHandler.unregisterSMS();
 				}
-				if (mSharedPrefs.getConnectivityType() == 2) {
+				if (mSharedPrefs.getConnectivityType() == 1) {
+					mModuleHandler.stopBT();
+				} else if (mSharedPrefs.getConnectivityType() == 2) {
 					mModuleHandler.startUDPReceiver();
 				}
 			}
@@ -260,22 +249,17 @@ public class Message {
 		if (strArray[0].equals(mContext.getString(R.string.BABYFON_MSG_CONNECTION_HELLO))) {
 			// Hello
 			if (mSharedPrefs.getRemoteAddress() != null) {
-				// TODO Bluetooth test ---------------
-				if (mSharedPrefs.getConnectivityType() == 1 || mSharedPrefs.getConnectivityTypeTemp() == 1) {
-					if (!mSharedPrefs.getRemoteAddress().equals(strArray[1]))
-						mSharedPrefs.setRemoteOnlineState(true);
-				} else {
-					send(mContext.getString(R.string.BABYFON_MSG_SYSTEM_DISCONNECTED));
-				}
-				// Bluetooth test --------------- ENDE
-
 				if (!mSharedPrefs.getRemoteAddress().equals(strArray[1]) || !mSharedPrefs.getPassword().equals(strArray[2])) {
-					new TCPSender(mContext).sendMessage(strArray[1], mContext.getString(R.string.BABYFON_MSG_SYSTEM_DISCONNECTED));
+					send(strArray[1], mContext.getString(R.string.BABYFON_MSG_SYSTEM_DISCONNECTED));
+					// new TCPSender(mContext).sendMessage(strArray[1], mContext.getString(R.string.BABYFON_MSG_SYSTEM_DISCONNECTED));
 				} else {
 					mSharedPrefs.setRemoteOnlineState(true);
 				}
 			} else {
-				new TCPSender(mContext).sendMessage(strArray[1], mContext.getString(R.string.BABYFON_MSG_SYSTEM_DISCONNECTED));
+
+				// TODO funktioniert das auch mit WIFI?
+				send(strArray[1], mContext.getString(R.string.BABYFON_MSG_SYSTEM_DISCONNECTED));
+				// new TCPSender(mContext).sendMessage(strArray[1], mContext.getString(R.string.BABYFON_MSG_SYSTEM_DISCONNECTED));
 			}
 		}
 

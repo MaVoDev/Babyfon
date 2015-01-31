@@ -112,13 +112,16 @@ public class SetupCompleteBabyModeFragment extends Fragment {
 					public void onConnectedListener(String deviceName) {
 						// mModuleHandler.startRemoteCheck();
 
-						String msg = new String(mContext.getString(R.string.BABYFON_MSG_AUTH_REQ) + ";" + 0 + ";"
-								+ BluetoothAdapter.getDefaultAdapter().getAddress() + ";" + android.os.Build.MODEL);
-						new Message(mContext).send(msg);
+						MainActivity.mBoundService.getConnection().registerDisconnectHandler();
+
+						// String msg = new String(mContext.getString(R.string.BABYFON_MSG_AUTH_REQ) + ";" + 0 + ";"
+						// + BluetoothAdapter.getDefaultAdapter().getAddress() + ";" + android.os.Build.MODEL);
+						// new Message(mContext).send(msg);
 					}
 				});
 
 			} else if (mSharedPrefs.getConnectivityTypeTemp() == 2) {
+				mModuleHandler.stopBT();
 				mModuleHandler.startTCPReceiver();
 				mModuleHandler.startUDPReceiver();
 			} else {

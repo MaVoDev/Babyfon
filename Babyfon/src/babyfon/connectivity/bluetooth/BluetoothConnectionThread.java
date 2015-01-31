@@ -137,14 +137,16 @@ public abstract class BluetoothConnectionThread extends Thread {
 	/** Will cancel an in-progress connection, and close the socket */
 	public void stopBT() {
 
+		isRunning = false;
+
 		Log.i(TAG, "Stopping Bluetooth connection...");
 		try {
 			if (mSocket != null)
 				mSocket.close();
 
 			mSocket = null;
-			mmInStream = null;
-			mmOutStream = null;
+//			mmInStream = null;
+//			mmOutStream = null;
 
 			if (mBTConnection.getOnConnectionLostListener() != null)
 				mBTConnection.getOnConnectionLostListener().onConnectionLostListener("Bluetooth Connection closed");

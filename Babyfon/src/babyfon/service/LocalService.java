@@ -51,14 +51,20 @@ public class LocalService extends Service {
 
 		mNM = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
 
-		if (mConnection == null)
-			mConnection = new BluetoothConnection();
+		initBtConnection();
+
+		// if (mConnection == null)
+		// mConnection = new BluetoothConnection();
 
 		if (mAudioPlayer == null)
 			mAudioPlayer = new AudioPlayer();
 
 		// Display a notification about us starting. We put an icon in the status bar.
 		showNotification();
+	}
+
+	public void initBtConnection() {
+		mConnection = new BluetoothConnection();
 	}
 
 	@Override

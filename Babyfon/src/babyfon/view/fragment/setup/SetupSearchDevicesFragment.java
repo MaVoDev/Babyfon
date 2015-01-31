@@ -4,6 +4,7 @@ import java.net.SocketException;
 import java.net.UnknownHostException;
 
 import android.app.AlertDialog;
+import android.bluetooth.BluetoothAdapter;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Typeface;
@@ -26,6 +27,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
+import babyfon.Message;
 import babyfon.adapter.DeviceListAdapter;
 import babyfon.connectivity.ConnectionInterface;
 import babyfon.connectivity.ConnectionInterface.OnConnectedListener;
@@ -59,6 +61,8 @@ public class SetupSearchDevicesFragment extends Fragment {
 	private ConnectionInterface mConnection;
 	private BluetoothHandler mBtHandler;
 	private SharedPrefs mSharedPrefs;
+
+	private String mPW;
 
 	private Context mContext;
 
@@ -107,17 +111,9 @@ public class SetupSearchDevicesFragment extends Fragment {
 
 				Log.d(TAG, "Selected item: " + deviceName + " (" + deviceIP + ")");
 
-				// Bluetooth erstmal ausgelagert
-				if (mSharedPrefs.getConnectivityTypeTemp() == 1) {
-					mSharedPrefs.setRemoteAddressTemp(deviceIP);
-					mSharedPrefs.setRemoteName(deviceName);
-					openConnectDialog(deviceName, deviceIP);
-				}
-				if (mSharedPrefs.getConnectivityTypeTemp() == 2) {
-					mSharedPrefs.setRemoteAddressTemp(deviceIP);
-					mSharedPrefs.setRemoteName(deviceName);
-					openAuthDialog(deviceName, deviceIP);
-				}
+				mSharedPrefs.setRemoteAddressTemp(deviceIP);
+				mSharedPrefs.setRemoteName(deviceName);
+				openAuthDialog(deviceName, deviceIP);
 			}
 		});
 	}
@@ -217,6 +213,7 @@ public class SetupSearchDevicesFragment extends Fragment {
 								public void onClick(DialogInterface dialog, int id) {
 									if (mSharedPrefs.getConnectivityType() != 2) {
 										mModuleHandler.stopTCPReceiver();
+										mModuleHandler.stopBT();
 									}
 									if (mSharedPrefs.getDeviceMode() == 0) {
 										mFragmentManager.beginTransaction()
@@ -252,18 +249,30 @@ public class SetupSearchDevicesFragment extends Fragment {
 	}
 
 	public void initViewBluetooth() {
-		mModuleHandler.stopTCPReceiver();
-
 		mBtHandler = new BluetoothHandler(mContext);
 		mBtHandler.enableBluetooth();
 		mBtHandler.prepareForSearch(mDevicesAdapter);
 
+		mModuleHandler.stopBT();
+
 		if (MainActivity.mBoundService != null) {
+
+			// neue instanz erzeugen
+			MainActivity.mBoundService.initBtConnection();
+
 			mConnection = MainActivity.mBoundService.getConnection();
 
 			mConnection.setOnConnectedListener(new OnConnectedListener() {
 				@Override
 				public void onConnectedListener(String deviceName) {
+
+					mBtHandler.unregisterReceiver();
+					MainActivity.mBoundService.getConnection().registerDisconnectHandler();
+
+					String msg = new String(mContext.getString(R.string.BABYFON_MSG_AUTH_REQ) + ";" + mPW + ";"
+							+ BluetoothAdapter.getDefaultAdapter().getAddress() + ";" + android.os.Build.MODEL);
+					new Message(mContext).send(msg);
+
 					// Verbunden also auf die Abschlussseite wechseln
 					getFragmentManager().beginTransaction()
 							.replace(R.id.frame_container, new SetupCompleteParentsModeFragment(mContext), null).addToBackStack(null)
@@ -278,6 +287,7 @@ public class SetupSearchDevicesFragment extends Fragment {
 	}
 
 	public void initViewBWifi() {
+
 		mModuleHandler.startTCPReceiver();
 		new UDPSender(mContext).sendUDPMessage(new WifiHandler(mContext).getNetworkAddressClassC());
 	}
@@ -294,7 +304,7 @@ public class SetupSearchDevicesFragment extends Fragment {
 		Log.i(TAG, "Number of devices: " + mDevicesAdapter.getCount());
 	}
 
-	public void openAuthDialog(final String deviceName, String deviceIP) {
+	public void openAuthDialog(final String deviceName, final String deviceIP) {
 		((MainActivity) mContext).runOnUiThread(new Runnable() {
 			@Override
 			public void run() {
@@ -316,57 +326,43 @@ public class SetupSearchDevicesFragment extends Fragment {
 				alert.setView(input);
 
 				alert.setPositiveButton("Senden", new DialogInterface.OnClickListener() {
+
 					public void onClick(DialogInterface dialog, int whichButton) {
 						String password = input.getText().toString();
 						String localIP = null;
-						try {
-							localIP = new WifiHandler(mContext).getLocalIPv4Address();
-						} catch (SocketException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						} catch (UnknownHostException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
+
+						// Bluetooth
+						if (mSharedPrefs.getConnectivityType() == 1 || mSharedPrefs.getConnectivityTypeTemp() == 1) {
+							mPW = password;
+							MainActivity.mBoundService.connectTo(deviceIP);
 						}
-						new TCPSender(mContext).sendMessage(mSharedPrefs.getRemoteAddressTemp(),
-								mContext.getString(R.string.BABYFON_MSG_AUTH_REQ) + ";" + password + ";" + localIP + ";"
-										+ android.os.Build.MODEL);
+						// Wi-Fi
+						else if (mSharedPrefs.getConnectivityType() == 2 || mSharedPrefs.getConnectivityTypeTemp() == 2) {
+							try {
+								localIP = new WifiHandler(mContext).getLocalIPv4Address();
+							} catch (SocketException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							} catch (UnknownHostException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
+							new TCPSender(mContext).sendMessage(mSharedPrefs.getRemoteAddressTemp(),
+									mContext.getString(R.string.BABYFON_MSG_AUTH_REQ) + ";" + password + ";" + localIP + ";"
+											+ android.os.Build.MODEL);
+						}
 					}
 				});
 
 				alert.setNegativeButton("Abbrechen", new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int whichButton) {
-
+						dialog.dismiss();
 					}
 				});
 
 				alert.show();
 			}
 		});
-	}
-
-	public void openConnectDialog(final String deviceName, final String deviceIP) {
-		AlertDialog.Builder alert = new AlertDialog.Builder(mContext);
-
-		alert.setTitle("Verbinden");
-		alert.setMessage("Mit " + deviceName + " verbinden?");
-
-		alert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-			public void onClick(DialogInterface dialog, int whichButton) {
-
-				// mConnection.connectToAdress(deviceIP);
-				MainActivity.mBoundService.connectTo(deviceIP);
-
-			}
-		});
-
-		alert.setNegativeButton("Abbrechen", new DialogInterface.OnClickListener() {
-			public void onClick(DialogInterface dialog, int whichButton) {
-				dialog.dismiss();
-			}
-		});
-
-		alert.show();
 	}
 
 	@Override

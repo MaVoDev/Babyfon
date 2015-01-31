@@ -137,4 +137,12 @@ public class BluetoothHandler {
 		}
 	}
 
+	public void unregisterReceiver() {
+		mContext.unregisterReceiver(mReceiver);
+	}
+
+	public String getOwnAddress() {
+		return mBluetoothAdapter.getAddress();
+	}
+
 }

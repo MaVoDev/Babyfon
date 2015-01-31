@@ -7,8 +7,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.util.Log;
-import android.widget.Toast;
+import babyfon.Message;
 import babyfon.connectivity.ConnectionInterface;
+import babyfon.init.R;
+import babyfon.settings.SharedPrefs;
+import babyfon.view.activity.MainActivity;
 
 public class BluetoothConnection implements ConnectionInterface {
 
@@ -16,18 +19,39 @@ public class BluetoothConnection implements ConnectionInterface {
 
 	// private static int REQUEST_ENABLE_BT = 1;
 
-	private boolean mBtDiscovering = false;
 	private BluetoothAdapter mBluetoothAdapter;
 
 	private BluetoothConnectionThread mBluetoothConnectionThread;
+
+	private SharedPrefs mSharedPrefs;
 
 	private OnSearchStatusChangedListener mOnSearchStatusChangedListener;
 	private OnReceiveDataListener mOnReceiveMsgListener;
 	private OnConnectionLostListener mOnConnectionLostListener;
 	private OnConnectedListener mOnConnnectedListener;
 
+	// Receiver
+	private final BroadcastReceiver mReceiver = new BroadcastReceiver() {
+
+		public void onReceive(Context context, Intent intent) {
+			String action = intent.getAction();
+			// When discovery finds a device
+			if (BluetoothDevice.ACTION_ACL_DISCONNECTED.equals(action)) {
+				// disconnected, do what you want to notify user here, toast, or dialog, etc.
+				Log.e(TAG, "Bluetooth disconnected!");
+
+				mSharedPrefs.setRemoteOnlineState(false);
+
+				new Message(MainActivity.getContext()).send(MainActivity.getContext().getString(R.string.BABYFON_MSG_SYSTEM_DISCONNECTED));
+
+				MainActivity.getContext().unregisterReceiver(mReceiver);
+			}
+		}
+	};
+
 	public BluetoothConnection() {
 		mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+		mSharedPrefs = new SharedPrefs(MainActivity.getContext());
 	}
 
 	@Override
@@ -134,6 +158,15 @@ public class BluetoothConnection implements ConnectionInterface {
 
 	public OnReceiveDataListener getOnReceiveDataListener() {
 		return mOnReceiveMsgListener;
+	}
+
+	@Override
+	public void registerDisconnectHandler() {
+
+		// Register the BroadcastReceiver
+		IntentFilter bluetoothDisconnectedFilter = new IntentFilter(BluetoothDevice.ACTION_ACL_DISCONNECTED);
+
+		MainActivity.getContext().registerReceiver(mReceiver, bluetoothDisconnectedFilter);
 	}
 
 }

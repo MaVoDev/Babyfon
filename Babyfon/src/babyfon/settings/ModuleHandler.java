@@ -228,4 +228,10 @@ public class ModuleHandler {
 			MainActivity.mAudioRecorder = null;
 		}
 	}
+
+	public void stopBT() {
+		if (MainActivity.mBoundService != null)
+			MainActivity.mBoundService.getConnection().stopConnection();
+
+	}
 }

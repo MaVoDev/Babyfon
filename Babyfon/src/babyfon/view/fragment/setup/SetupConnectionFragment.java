@@ -3,41 +3,34 @@ package babyfon.view.fragment.setup;
 import java.net.SocketException;
 import java.net.UnknownHostException;
 
-import babyfon.connectivity.bluetooth.BluetoothHandler;
-import babyfon.connectivity.phone.CallStateListener;
-import babyfon.connectivity.wifi.TCPSender;
-import babyfon.connectivity.wifi.WifiHandler;
-import babyfon.init.R;
-import babyfon.settings.SharedPrefs;
-import babyfon.view.activity.MainActivity;
-import babyfon.view.fragment.BabyMonitorFragment;
-import babyfon.view.fragment.OverviewFragment;
 import android.app.AlertDialog;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
-import android.telephony.PhoneNumberFormattingTextWatcher;
-import android.text.InputFilter;
-import android.text.InputType;
-import android.text.method.DigitsKeyListener;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
-import android.widget.TextView;
 import android.widget.RadioGroup.OnCheckedChangeListener;
+import android.widget.TextView;
+import babyfon.connectivity.bluetooth.BluetoothHandler;
+import babyfon.connectivity.wifi.WifiHandler;
+import babyfon.init.R;
+import babyfon.settings.SharedPrefs;
+import babyfon.view.fragment.BabyMonitorFragment;
+import babyfon.view.fragment.OverviewFragment;
 
 public class SetupConnectionFragment extends Fragment {
 
+	protected static final String TAG = SetupConnectionFragment.class.getCanonicalName();
 	// Define UI elements
 	private Button btnBackward;
 	private Button btnForward;
@@ -67,7 +60,7 @@ public class SetupConnectionFragment extends Fragment {
 	public SetupConnectionFragment(Context mContext) {
 		nextFragmentBaby = new SetupForwardingFragment(mContext);
 		nextFragmentParents = new SetupSearchDevicesFragment(mContext);
-//		nextFragmentParents = (SetupSearchDevicesFragment) ((MainActivity) (mContext)).getFragmentById("SetupSearchDevicesFragment");
+		// nextFragmentParents = (SetupSearchDevicesFragment) ((MainActivity) (mContext)).getFragmentById("SetupSearchDevicesFragment");
 		mBluetoothHandler = new BluetoothHandler(mContext);
 		mWifiHandler = new WifiHandler(mContext);
 

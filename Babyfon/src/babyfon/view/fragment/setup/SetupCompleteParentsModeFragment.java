@@ -110,7 +110,10 @@ public class SetupCompleteParentsModeFragment extends Fragment {
 		mSharedPrefs.setConnectivityType(mSharedPrefs.getConnectivityTypeTemp());
 		Log.d(TAG, "Connectivity type: " + mSharedPrefs.getConnectivityType());
 
-		if (mSharedPrefs.getConnectivityType() == 2) {
+		if (mSharedPrefs.getConnectivityType() == 1) {
+			mSharedPrefs.setRemoteAddress(mSharedPrefs.getRemoteAddressTemp());
+			Log.d(TAG, "Remote address: " + mSharedPrefs.getRemoteAddress());
+		} else if (mSharedPrefs.getConnectivityType() == 2) {
 			mModuleHandler.startUDPReceiver();
 			mSharedPrefs.setRemoteAddress(mSharedPrefs.getRemoteAddressTemp());
 			Log.d(TAG, "Remote address: " + mSharedPrefs.getRemoteAddress());
