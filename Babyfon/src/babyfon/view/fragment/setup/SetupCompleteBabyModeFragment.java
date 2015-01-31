@@ -98,15 +98,18 @@ public class SetupCompleteBabyModeFragment extends Fragment {
 	public void handleModules() {
 
 		if (mSharedPrefs.getConnectivityTypeTemp() != 3) {
+			System.out.println("1111111111111111111111111111111111");
 			if (mSharedPrefs.getForwardingSMSInfoTemp() || mSharedPrefs.getForwardingSMSTemp()) {
 				mModuleHandler.registerSMS();
 			}
 
 			if (mSharedPrefs.getConnectivityTypeTemp() == 1) {
+				System.out.println("222222222222222222222222222222222222");
 				new BluetoothHandler(mContext).enableBluetoothDiscoverability();
 				MainActivity.mBoundService.startServer();
 
-				// TODO Testing! startet remote check nachdem verbunden zum client
+				// TODO Testing! startet remote check nachdem verbunden zum
+				// client
 				MainActivity.mBoundService.getConnection().setOnConnectedListener(new OnConnectedListener() {
 					@Override
 					public void onConnectedListener(String deviceName) {
@@ -114,25 +117,30 @@ public class SetupCompleteBabyModeFragment extends Fragment {
 
 						MainActivity.mBoundService.getConnection().registerDisconnectHandler();
 
-						// String msg = new String(mContext.getString(R.string.BABYFON_MSG_AUTH_REQ) + ";" + 0 + ";"
-						// + BluetoothAdapter.getDefaultAdapter().getAddress() + ";" + android.os.Build.MODEL);
+						// String msg = new
+						// String(mContext.getString(R.string.BABYFON_MSG_AUTH_REQ)
+						// + ";" + 0 + ";"
+						// + BluetoothAdapter.getDefaultAdapter().getAddress() +
+						// ";" + android.os.Build.MODEL);
 						// new Message(mContext).send(msg);
 					}
 				});
 
-			} else if (mSharedPrefs.getConnectivityTypeTemp() == 2) {
+			}
+
+			if (mSharedPrefs.getConnectivityTypeTemp() == 2) {
 				mModuleHandler.stopBT();
+				System.out.println("3333333333333333333333333333333333333333333");
 				mModuleHandler.unregisterBattery();
 				mModuleHandler.startTCPReceiver();
 				mModuleHandler.startUDPReceiver();
-			} else {
-				mModuleHandler.unregisterBattery();
-				mModuleHandler.stopTCPReceiver();
-				mModuleHandler.stopUDPReceiver();
 			}
+
 			mSharedPrefs.setRemoteAddress(null);
 			mSharedPrefs.setRemoteName(null);
 		} else {
+			System.out.println("44444444444444444444444444444444444444");
+			mModuleHandler.unregisterBattery();
 			mModuleHandler.stopTCPReceiver();
 			mModuleHandler.stopUDPReceiver();
 		}
@@ -152,6 +160,10 @@ public class SetupCompleteBabyModeFragment extends Fragment {
 
 		String password = new Generator().getRandomPassword();
 		tvPassword.setText(password);
+
+		if (MainActivity.mAudioRecorder != null) {
+			MainActivity.mAudioRecorder.stopRecording();
+		}
 
 		// Store values in the shared preferences
 		mSharedPrefs.setCounter(0);

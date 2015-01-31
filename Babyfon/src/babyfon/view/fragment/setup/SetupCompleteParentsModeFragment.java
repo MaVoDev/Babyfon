@@ -17,6 +17,7 @@ import babyfon.init.R;
 import babyfon.performance.Sound;
 import babyfon.settings.ModuleHandler;
 import babyfon.settings.SharedPrefs;
+import babyfon.view.activity.MainActivity;
 import babyfon.view.fragment.BabyMonitorFragment;
 
 public class SetupCompleteParentsModeFragment extends Fragment {
@@ -98,6 +99,10 @@ public class SetupCompleteParentsModeFragment extends Fragment {
 			// active.
 			mSound.soundOn();
 		}
+		
+		if (MainActivity.mAudioRecorder != null) {
+			MainActivity.mAudioRecorder.stopRecording();
+		}
 
 		// Store values in the shared preferences
 		mSharedPrefs.setCounter(0);
@@ -109,7 +114,9 @@ public class SetupCompleteParentsModeFragment extends Fragment {
 		if (mSharedPrefs.getConnectivityType() == 1) {
 			mSharedPrefs.setRemoteAddress(mSharedPrefs.getRemoteAddressTemp());
 			Log.d(TAG, "Remote address: " + mSharedPrefs.getRemoteAddress());
-		} else if (mSharedPrefs.getConnectivityType() == 2) {
+		} 
+		
+		if (mSharedPrefs.getConnectivityType() == 2) {
 			mModuleHandler.startUDPReceiver();
 			mModuleHandler.startTCPReceiver();
 			mSharedPrefs.setRemoteAddress(mSharedPrefs.getRemoteAddressTemp());

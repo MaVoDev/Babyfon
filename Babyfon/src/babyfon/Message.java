@@ -290,5 +290,13 @@ public class Message {
 			// password changed
 			mSharedPrefs.setPassword(strArray[1]);
 		}
+
+//		if (strArray[0].equals(mContext.getString(R.string.BABYFON_MSG_TALK_TRUE))) {
+//			
+//		}
+//
+//		if (strArray[0].equals(mContext.getString(R.string.BABYFON_MSG_TALK_FALSE))) {
+//
+//		}
 	}
 }
