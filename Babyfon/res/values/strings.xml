@@ -139,6 +139,7 @@
     <string name="doubleTap">2x tippen, um die Meldung zu schließen</string>
 
     <!-- Toast messages -->
+
     <string name="wrong_password">Falsches Passwort!</string>
     <string name="disconnected">Die Verbindung wurde getrennt.</string>
     <string name="no_phone_number">Es wurde noch keine Telefonnummer in den Einstellungen hinterlegt.</string>
@@ -146,5 +147,7 @@
     <!-- Content Description -->
     <string name="desc_img_default">Image default description</string>
     <string name="desc_list_item_icon">Item Icon</string>
+    <string name="service_started">Service started</string>
+    <string name="service_label">Service label</string>
 
 </resources>

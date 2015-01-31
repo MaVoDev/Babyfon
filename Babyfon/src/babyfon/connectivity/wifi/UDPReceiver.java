@@ -59,16 +59,14 @@ public class UDPReceiver {
 
 					if (mSharedPrefs.getRemoteAddress() == null) {
 						if (incomingUDPMessage.equals(mContext.getString(R.string.BABYFON_MSG_CONNECTION_SEARCH))) {
-							new TCPSender(mContext).sendMessage(targetIP,
-									mContext.getString(R.string.BABYFON_MSG_CONNECTION_FOUND) + ";"
-											+ new WifiHandler(mContext).getLocalIPv4Address() + ";"
-											+ android.os.Build.MODEL);
+							new TCPSender(mContext).sendMessage(targetIP, mContext.getString(R.string.BABYFON_MSG_CONNECTION_FOUND) + ";"
+									+ new WifiHandler(mContext).getLocalIPv4Address() + ";" + android.os.Build.MODEL);
 						}
 					} else {
-						((BabyMonitorFragment) ((MainActivity) mContext).getFragmentById("BabymonitorFragment"))
+						((BabyMonitorFragment) ((MainActivity) mContext).getFragmentById("BabyMonitorFragment"))
 								.updateVolume(AudioDetection.calculateVolume(buffer, 0));
 
-						if(mSharedPrefs.isHearActivated()) {
+						if (mSharedPrefs.isHearActivated()) {
 							MainActivity.mAudioPlayer.playData(buffer);
 						}
 					}

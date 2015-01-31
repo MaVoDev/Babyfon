@@ -2,6 +2,7 @@ package babyfon;
 
 import android.content.Context;
 import android.support.v4.app.FragmentManager;
+import android.util.Log;
 import babyfon.connectivity.phone.PhoneBookHandler;
 import babyfon.connectivity.wifi.TCPSender;
 import babyfon.init.R;
@@ -38,8 +39,7 @@ public class Message {
 		String contactName = mPhoneBookHandler.getContactName(phoneNumber);
 
 		if (mSharedPrefs.getForwardingCallInfo()) {
-			send(mContext.getString(R.string.BABYFON_MSG_CALL_INFO) + ";" + contactName + ";" + phoneNumber + ";"
-					+ date + ";" + time);
+			send(mContext.getString(R.string.BABYFON_MSG_CALL_INFO) + ";" + contactName + ";" + phoneNumber + ";" + date + ";" + time);
 		}
 
 	}
@@ -48,8 +48,7 @@ public class Message {
 		String contactName = mPhoneBookHandler.getContactName(phoneNumber);
 
 		if (mSharedPrefs.getForwardingSMS()) {
-			send(mContext.getString(R.string.BABYFON_MSG_SMS) + ";" + contactName + ";" + message + ";" + date + ";"
-					+ time);
+			send(mContext.getString(R.string.BABYFON_MSG_SMS) + ";" + contactName + ";" + message + ";" + date + ";" + time);
 		}
 
 		if (mSharedPrefs.getForwardingSMSInfo()) {
@@ -63,13 +62,40 @@ public class Message {
 	 * @param str
 	 */
 	public void send(String str) {
-		if (mSharedPrefs.getConnectivityType() == 2 || mSharedPrefs.getConnectivityTypeTemp() == 2) {
-			new TCPSender(mContext).sendMessage(mSharedPrefs.getRemoteAddress(), str);
+
+		send(mSharedPrefs.getRemoteAddress(), str);
+	}
+
+	private void send(String target, String msg) {
+
+		Log.e(TAG, "Send msg: " + msg);
+
+		// Im Normalbetrieb
+		if (mSharedPrefs.getConnectivityTypeTemp() == -1) {
+			// BT
+			if (mSharedPrefs.getConnectivityType() == 1)
+				if (MainActivity.mBoundService != null)
+					MainActivity.mBoundService.getConnection().sendMessage(msg + ";"); // extra ";" ist Workaround für Doppel-Sende-Bug
+				// WIFI
+				else if (mSharedPrefs.getConnectivityType() == 2)
+					new TCPSender(mContext).sendMessage(target, msg);
+		}
+		// Im Setup
+		else {
+			if (mSharedPrefs.getConnectivityTypeTemp() == 1)
+				// BT
+				if (MainActivity.mBoundService != null)
+					MainActivity.mBoundService.getConnection().sendMessage(msg + ";"); // extra ";" ist Workaround für Doppel-Sende-Bug
+				// WIFI
+				else if (mSharedPrefs.getConnectivityTypeTemp() == 2)
+					new TCPSender(mContext).sendMessage(target, msg);
 		}
 	}
 
 	public void handleIncomingMessage(String str) {
 		final String[] strArray = str.split(";");
+
+		Log.e(TAG, "Incoming msg: " + str);
 
 		if (strArray[0].equals(mContext.getString(R.string.BABYFON_MSG_BATTERY))) {
 			// Batterie
@@ -128,7 +154,9 @@ public class Message {
 			((MainActivity) mContext).runOnUiThread(new Runnable() {
 				@Override
 				public void run() {
-					SetupSearchDevicesFragment.setNewDevice(ip, name);
+					SetupSearchDevicesFragment fragment = (SetupSearchDevicesFragment) ((MainActivity) mContext)
+							.getFragmentById("SetupSearchDevicesFragment");
+					fragment.setNewDevice(ip, name);
 				}
 			});
 		}
@@ -163,9 +191,14 @@ public class Message {
 
 			mModuleHandler.startRemoteCheck();
 
+			// TODO BT TEST -> bessere lösung überlegen! (unten kommt class cast exception, weil mContext aus LocalService und nicht
+			// MainActivity kommt.)
+			if (mSharedPrefs.getConnectivityTypeTemp() == 1)
+				return;
+			// TODO BT TEST ---- ENDE
+
 			FragmentManager mFragmentManager = ((MainActivity) mContext).getSupportFragmentManager();
-			mFragmentManager.beginTransaction()
-					.replace(R.id.frame_container, new SetupCompleteParentsModeFragment(mContext), null)
+			mFragmentManager.beginTransaction().replace(R.id.frame_container, new SetupCompleteParentsModeFragment(mContext), null)
 					.addToBackStack(null).commit();
 		}
 
@@ -201,7 +234,9 @@ public class Message {
 				if (mSharedPrefs.getForwardingSMS() || mSharedPrefs.getForwardingSMSInfo()) {
 					mModuleHandler.unregisterSMS();
 				}
-				if (mSharedPrefs.getConnectivityType() == 2) {
+				if (mSharedPrefs.getConnectivityType() == 1) {
+					mModuleHandler.stopBT();
+				} else if (mSharedPrefs.getConnectivityType() == 2) {
 					mModuleHandler.startUDPReceiver();
 					mModuleHandler.startTCPReceiver();
 				}
@@ -214,8 +249,7 @@ public class Message {
 		if (strArray[0].equals(mContext.getString(R.string.BABYFON_MSG_SYSTEM_REJOIN))) {
 
 			if (mSharedPrefs.getDeviceMode() == 0) {
-				if (!mSharedPrefs.getRemoteAddress().equals(strArray[1])
-						|| !mSharedPrefs.getPassword().equals(strArray[2])) {
+				if (!mSharedPrefs.getRemoteAddress().equals(strArray[1]) || !mSharedPrefs.getPassword().equals(strArray[2])) {
 					send((mContext.getString(R.string.BABYFON_MSG_SYSTEM_DISCONNECTED)));
 				} else {
 					mModuleHandler.registerBattery();
@@ -231,10 +265,9 @@ public class Message {
 		if (strArray[0].equals(mContext.getString(R.string.BABYFON_MSG_CONNECTION_HELLO))) {
 			// Hello
 			if (mSharedPrefs.getRemoteAddress() != null) {
-				if (!mSharedPrefs.getRemoteAddress().equals(strArray[1])
-						|| !mSharedPrefs.getPassword().equals(strArray[2])) {
-					new TCPSender(mContext).sendMessage(strArray[1],
-							mContext.getString(R.string.BABYFON_MSG_SYSTEM_DISCONNECTED));
+				if (!mSharedPrefs.getRemoteAddress().equals(strArray[1]) || !mSharedPrefs.getPassword().equals(strArray[2])) {
+					send(strArray[1], mContext.getString(R.string.BABYFON_MSG_SYSTEM_DISCONNECTED));
+					// new TCPSender(mContext).sendMessage(strArray[1], mContext.getString(R.string.BABYFON_MSG_SYSTEM_DISCONNECTED));
 				} else {
 					mSharedPrefs.setRemoteOnlineState(true);
 					if (mSharedPrefs.getConnectivityType() == 2) {
@@ -242,10 +275,7 @@ public class Message {
 					}
 				}
 			} else {
-				if (mSharedPrefs.getConnectivityType() == 2) {
-					new TCPSender(mContext).sendMessage(strArray[1],
-							mContext.getString(R.string.BABYFON_MSG_SYSTEM_DISCONNECTED));
-				}
+				send(strArray[1], mContext.getString(R.string.BABYFON_MSG_SYSTEM_DISCONNECTED));
 			}
 		}
 

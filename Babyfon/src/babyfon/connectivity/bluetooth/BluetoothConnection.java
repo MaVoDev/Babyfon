@@ -7,8 +7,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.util.Log;
-import android.widget.Toast;
+import babyfon.Message;
 import babyfon.connectivity.ConnectionInterface;
+import babyfon.init.R;
+import babyfon.settings.SharedPrefs;
+import babyfon.view.activity.MainActivity;
 
 public class BluetoothConnection implements ConnectionInterface {
 
@@ -16,17 +19,16 @@ public class BluetoothConnection implements ConnectionInterface {
 
 	// private static int REQUEST_ENABLE_BT = 1;
 
-	private Context mContext;
-	private boolean mBtDiscovering = false;
 	private BluetoothAdapter mBluetoothAdapter;
-	private BluetoothListAdapter mArrayAdapter;
 
 	private BluetoothConnectionThread mBluetoothConnectionThread;
+
+	private SharedPrefs mSharedPrefs;
 
 	private OnSearchStatusChangedListener mOnSearchStatusChangedListener;
 	private OnReceiveDataListener mOnReceiveMsgListener;
 	private OnConnectionLostListener mOnConnectionLostListener;
-	private OnConnnectedListener mOnConnnectedListener;
+	private OnConnectedListener mOnConnnectedListener;
 
 	// Receiver
 	private final BroadcastReceiver mReceiver = new BroadcastReceiver() {
@@ -34,112 +36,52 @@ public class BluetoothConnection implements ConnectionInterface {
 		public void onReceive(Context context, Intent intent) {
 			String action = intent.getAction();
 			// When discovery finds a device
-			if (BluetoothDevice.ACTION_FOUND.equals(action)) {
-				// Get the BluetoothDevice object from the Intent
-				BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
+			if (BluetoothDevice.ACTION_ACL_DISCONNECTED.equals(action)) {
+				// disconnected, do what you want to notify user here, toast, or dialog, etc.
+				Log.e(TAG, "Bluetooth disconnected!");
 
-				Log.i(TAG, "ADD DEVICE: " + device.getName());
+				mSharedPrefs.setRemoteOnlineState(false);
 
-				mArrayAdapter.add(device);
-			} else if (BluetoothAdapter.ACTION_DISCOVERY_FINISHED.equals(action)) {
-				Toast.makeText(context, "DISCOVERY FINISHED", Toast.LENGTH_LONG).show();
-				mBtDiscovering = false;
+				new Message(MainActivity.getContext()).send(MainActivity.getContext().getString(R.string.BABYFON_MSG_SYSTEM_DISCONNECTED));
 
-				if (mOnSearchStatusChangedListener != null)
-					mOnSearchStatusChangedListener.onSearchStatusChanged(false);
+				MainActivity.getContext().unregisterReceiver(mReceiver);
 			}
 		}
 	};
 
-	public BluetoothConnection(Context context) {
-		this.mContext = context;
+	public BluetoothConnection() {
 		mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+		mSharedPrefs = new SharedPrefs(MainActivity.getContext());
 	}
 
 	@Override
 	public void startServer() {
-		enableDiscoverability();
+		// enableDiscoverability();
 
 		mBluetoothConnectionThread = new BluetoothServerThread(mBluetoothAdapter, this);
 		mBluetoothConnectionThread.start();
 	}
 
-	@Override
-	public <T> void startClient(T listAdapter) {
-
-		enableBluetooth();
-
-		this.mArrayAdapter = (BluetoothListAdapter) listAdapter;
-
-		// Register the BroadcastReceiver
-		IntentFilter bluetoothFoundFilter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
-		IntentFilter bluetoothScanFinishedFilter = new IntentFilter(BluetoothAdapter.ACTION_DISCOVERY_FINISHED);
-
-		mContext.registerReceiver(mReceiver, bluetoothFoundFilter);
-		mContext.registerReceiver(mReceiver, bluetoothScanFinishedFilter);
-	}
-
-	private void enableBluetooth() {
-		if (mBluetoothAdapter.isEnabled()) {
-			Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-			mContext.startActivity(enableBtIntent);
-		}
-	}
-
-	private void enableDiscoverability() {
-		if (mBluetoothAdapter.getScanMode() != BluetoothAdapter.SCAN_MODE_CONNECTABLE_DISCOVERABLE) {
-			Intent discoverableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE);
-			discoverableIntent.putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, 0);
-			mContext.startActivity(discoverableIntent);
-		}
-	}
+	// private void enableBluetooth() {
+	// if (mBluetoothAdapter.isEnabled()) {
+	// Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+	// mContext.startActivity(enableBtIntent);
+	// }
+	// }
+	//
+	// private void enableDiscoverability() {
+	// if (mBluetoothAdapter.getScanMode() != BluetoothAdapter.SCAN_MODE_CONNECTABLE_DISCOVERABLE) {
+	// Intent discoverableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE);
+	// discoverableIntent.putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, 0);
+	// mContext.startActivity(discoverableIntent);
+	// }
+	// }
 
 	@Override
-	public void searchDevices() {
-		if (mBtDiscovering) {
-			// Wenn wir gerade nach Geräten Suchen nichts tun...
-
-		} else {
-			// ...ansonsten Liste leeren und neue Suche starten
-
-			mBtDiscovering = true;
-			mArrayAdapter.clear();
-
-			Log.i(TAG, "STARTING BLUETOOTH DISCOVERY...");
-			boolean searching = mBluetoothAdapter.startDiscovery();
-
-			if (mOnSearchStatusChangedListener != null)
-				mOnSearchStatusChangedListener.onSearchStatusChanged(searching);
-
-		}
-	}
-
-	@Override
-	public void connectToDeviceFromList(int position) {
-		BluetoothDevice device = mArrayAdapter.getItem(position);
-		Log.i(TAG, "Try to connect to device: " + device.getName());
+	public void connectToAdress(String address) {
+		BluetoothDevice device = mBluetoothAdapter.getRemoteDevice(address);
 		mBluetoothConnectionThread = new BluetoothClientThread(device, mBluetoothAdapter, this);
 		mBluetoothConnectionThread.start();
-	}
-
-	@Override
-	public void setOnSearchStatusChangedListener(OnSearchStatusChangedListener l) {
-		this.mOnSearchStatusChangedListener = l;
-	}
-
-	@Override
-	public void setOnReceiveDataListener(OnReceiveDataListener l) {
-		this.mOnReceiveMsgListener = l;
-	}
-
-	@Override
-	public void setOnConnectionLostListener(OnConnectionLostListener l) {
-		this.mOnConnectionLostListener = l;
-	}
-
-	@Override
-	public void setOnConnnectedListener(OnConnnectedListener l) {
-		this.mOnConnnectedListener = l;
 	}
 
 	@Override
@@ -186,15 +128,45 @@ public class BluetoothConnection implements ConnectionInterface {
 
 	}
 
+	@Override
+	public void setOnSearchStatusChangedListener(OnSearchStatusChangedListener l) {
+		this.mOnSearchStatusChangedListener = l;
+	}
+
+	@Override
+	public void setOnReceiveDataListener(OnReceiveDataListener l) {
+		this.mOnReceiveMsgListener = l;
+	}
+
+	@Override
+	public void setOnConnectionLostListener(OnConnectionLostListener l) {
+		this.mOnConnectionLostListener = l;
+	}
+
+	@Override
+	public void setOnConnectedListener(OnConnectedListener l) {
+		this.mOnConnnectedListener = l;
+	}
+
 	public OnConnectionLostListener getOnConnectionLostListener() {
 		return mOnConnectionLostListener;
 	}
 
-	public OnConnnectedListener getOnConnnectedListener() {
+	public OnConnectedListener getOnConnnectedListener() {
 		return mOnConnnectedListener;
 	}
 
-	public OnReceiveDataListener getOnReceiveMsgListener() {
+	public OnReceiveDataListener getOnReceiveDataListener() {
 		return mOnReceiveMsgListener;
 	}
+
+	@Override
+	public void registerDisconnectHandler() {
+
+		// Register the BroadcastReceiver
+		IntentFilter bluetoothDisconnectedFilter = new IntentFilter(BluetoothDevice.ACTION_ACL_DISCONNECTED);
+
+		MainActivity.getContext().registerReceiver(mReceiver, bluetoothDisconnectedFilter);
+	}
+
 }

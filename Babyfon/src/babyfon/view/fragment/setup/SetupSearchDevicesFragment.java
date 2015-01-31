@@ -2,9 +2,9 @@ package babyfon.view.fragment.setup;
 
 import java.net.SocketException;
 import java.net.UnknownHostException;
-import java.util.ArrayList;
 
 import android.app.AlertDialog;
+import android.bluetooth.BluetoothAdapter;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Typeface;
@@ -27,10 +27,11 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
+import babyfon.Message;
 import babyfon.adapter.DeviceListAdapter;
-import babyfon.connectivity.ConnectionInterface.OnConnnectedListener;
-import babyfon.connectivity.bluetooth.BluetoothConnection;
-import babyfon.connectivity.bluetooth.BluetoothListAdapter;
+import babyfon.connectivity.ConnectionInterface;
+import babyfon.connectivity.ConnectionInterface.OnConnectedListener;
+import babyfon.connectivity.bluetooth.BluetoothHandler;
 import babyfon.connectivity.wifi.TCPSender;
 import babyfon.connectivity.wifi.UDPSender;
 import babyfon.connectivity.wifi.WifiHandler;
@@ -51,19 +52,27 @@ public class SetupSearchDevicesFragment extends Fragment {
 	private TextView subtitle;
 	private TextView title;
 
-	private static ArrayList<DeviceListItemModel> devices;
+	// private ArrayList<DeviceListItemModel> devices;
+	private DeviceListAdapter mDevicesAdapter;
 
 	private int connectivityType;
 
 	private ModuleHandler mModuleHandler;
-	private static SharedPrefs mSharedPrefs;
+	private ConnectionInterface mConnection;
+	private BluetoothHandler mBtHandler;
+	private SharedPrefs mSharedPrefs;
 
-	private static Context mContext;
+	private String mPW;
+
+	private Context mContext;
 
 	private static final String TAG = SetupSearchDevicesFragment.class.getCanonicalName();
 
 	// Constructor
 	public SetupSearchDevicesFragment(Context mContext) {
+		// WORKAROUND
+		((MainActivity) mContext).setFragmentForId(this, "SetupSearchDevicesFragment");
+
 		mModuleHandler = new ModuleHandler(mContext);
 		mSharedPrefs = new SharedPrefs(mContext);
 
@@ -83,11 +92,13 @@ public class SetupSearchDevicesFragment extends Fragment {
 		}
 	}
 
-	public static void updateList() {
-		DeviceListAdapter adapter = new DeviceListAdapter(mContext.getApplicationContext(), devices);
+	public void initList() {
+
+		mDevicesAdapter = new DeviceListAdapter(mContext, R.layout.listview_devices);
+		// mDevicesAdapter = new DeviceListAdapter(mContext, R.layout.bluetooth_row_element);
 
 		// Assign adapter to ListView
-		listViewDevices.setAdapter(adapter);
+		listViewDevices.setAdapter(mDevicesAdapter);
 
 		// ListView Item Click Listener
 		listViewDevices.setOnItemClickListener(new OnItemClickListener() {
@@ -95,20 +106,13 @@ public class SetupSearchDevicesFragment extends Fragment {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-				String deviceName = devices.get(position).getDeviceName();
-				String deviceIP = devices.get(position).getIP();
+				String deviceName = mDevicesAdapter.getItem(position).getDeviceName();
+				String deviceIP = mDevicesAdapter.getItem(position).getIP();
 
 				Log.d(TAG, "Selected item: " + deviceName + " (" + deviceIP + ")");
 
-				// Bluetooth erstmal ausgelagert
-				// if (mSharedPrefs.getConnectivityTypeTemp() == 1) {
-				// MainActivity.mConnection.connectToDeviceFromList(position);
-				// }
-				if (mSharedPrefs.getConnectivityTypeTemp() == 2) {
-					mSharedPrefs.setRemoteAddressTemp(deviceIP);
-					mSharedPrefs.setRemoteName(deviceName);
-				}
-
+				mSharedPrefs.setRemoteAddressTemp(deviceIP);
+				mSharedPrefs.setRemoteName(deviceName);
 				openAuthDialog(deviceName, deviceIP);
 			}
 		});
@@ -151,7 +155,7 @@ public class SetupSearchDevicesFragment extends Fragment {
 
 		initUiElements(view);
 
-		devices = new ArrayList<DeviceListItemModel>();
+		initList();
 
 		mModuleHandler.unregisterBattery();
 
@@ -173,8 +177,7 @@ public class SetupSearchDevicesFragment extends Fragment {
 			public void onClick(View v) {
 				FragmentTransaction ft = mFragmentManager.beginTransaction();
 				ft.setCustomAnimations(R.anim.anim_slide_in_right, R.anim.anim_slide_out_right);
-				ft.replace(R.id.frame_container, new SetupConnectionFragment(mContext), null).addToBackStack(null)
-						.commit();
+				ft.replace(R.id.frame_container, new SetupConnectionFragment(mContext), null).addToBackStack(null).commit();
 			}
 		});
 
@@ -202,38 +205,31 @@ public class SetupSearchDevicesFragment extends Fragment {
 
 				switch (keyCode) {
 				case KeyEvent.KEYCODE_BACK:
-					new AlertDialog.Builder(getActivity())
-							.setTitle(mContext.getString(R.string.dialog_title_cancel_setup))
+					new AlertDialog.Builder(getActivity()).setTitle(mContext.getString(R.string.dialog_title_cancel_setup))
 							.setMessage(mContext.getString(R.string.dialog_message_cancel_setup))
 							.setNegativeButton(mContext.getString(R.string.dialog_button_no), null)
-							.setPositiveButton(mContext.getString(R.string.dialog_button_yes),
-									new DialogInterface.OnClickListener() {
-										@Override
-										public void onClick(DialogInterface dialog, int id) {
-											if (mSharedPrefs.getConnectivityType() != 2) {
-												mModuleHandler.stopTCPReceiver();
-											}
-											if (mSharedPrefs.getDeviceMode() == 0) {
-												mFragmentManager
-														.beginTransaction()
-														.replace(R.id.frame_container, new OverviewFragment(mContext),
-																null).addToBackStack(null).commit();
-											} else if (mSharedPrefs.getDeviceMode() == 1) {
-												mFragmentManager
-														.beginTransaction()
-														.replace(R.id.frame_container,
-																new BabyMonitorFragment(mContext), null)
-														.addToBackStack(null).commit();
-											} else {
-												mFragmentManager
-														.beginTransaction()
-														.replace(R.id.frame_container,
-																new SetupStartFragment(mContext), null)
-														.addToBackStack(null).commit();
-											}
-											mSharedPrefs.setConnectivityTypeTemp(-1);
-										}
-									}).create().show();
+							.setPositiveButton(mContext.getString(R.string.dialog_button_yes), new DialogInterface.OnClickListener() {
+								@Override
+								public void onClick(DialogInterface dialog, int id) {
+									if (mSharedPrefs.getConnectivityType() != 2) {
+										mModuleHandler.stopTCPReceiver();
+										mModuleHandler.stopBT();
+									}
+									if (mSharedPrefs.getDeviceMode() == 0) {
+										mFragmentManager.beginTransaction()
+												.replace(R.id.frame_container, new OverviewFragment(mContext), null).addToBackStack(null)
+												.commit();
+									} else if (mSharedPrefs.getDeviceMode() == 1) {
+										mFragmentManager.beginTransaction()
+												.replace(R.id.frame_container, new BabyMonitorFragment(mContext), null)
+												.addToBackStack(null).commit();
+									} else {
+										mFragmentManager.beginTransaction()
+												.replace(R.id.frame_container, new SetupStartFragment(mContext), null).addToBackStack(null)
+												.commit();
+									}
+								}
+							}).create().show();
 					break;
 				}
 				return true;
@@ -242,46 +238,56 @@ public class SetupSearchDevicesFragment extends Fragment {
 	}
 
 	public void refreshDeviceList() {
-		devices.clear();
+		mDevicesAdapter.clear();
 
 		if (mSharedPrefs.getConnectivityTypeTemp() == 1) {
-			MainActivity.mConnection.searchDevices();
+			mBtHandler.searchDevices();
 		} else if (mSharedPrefs.getConnectivityTypeTemp() == 2) {
-			updateList();
+			// initList();
 			initViewBWifi();
 		}
 	}
 
 	public void initViewBluetooth() {
-		mModuleHandler.stopTCPReceiver();
+		mBtHandler = new BluetoothHandler(mContext);
+		mBtHandler.enableBluetooth();
+		mBtHandler.prepareForSearch(mDevicesAdapter);
 
-		BluetoothListAdapter deviceListAdapter = new BluetoothListAdapter(mContext, R.layout.bluetooth_row_element);
-		MainActivity.mConnection = new BluetoothConnection(mContext);
+		mModuleHandler.stopBT();
 
-		// Setup ListView Adapter
-		listViewDevices.setAdapter(deviceListAdapter);
+		if (MainActivity.mBoundService != null) {
 
-		listViewDevices.setOnItemClickListener(new OnItemClickListener() {
-			@Override
-			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-				MainActivity.mConnection.connectToDeviceFromList(position);
-			}
-		});
+			// neue instanz erzeugen
+			MainActivity.mBoundService.initBtConnection();
 
-		MainActivity.mConnection.setOnConnnectedListener(new OnConnnectedListener() {
-			@Override
-			public void onConnectedListener(String deviceName) {
-				// Verbunden also auf die Abschlussseite wechseln
-				getFragmentManager().beginTransaction()
-						.replace(R.id.frame_container, new SetupCompleteParentsModeFragment(mContext), null)
-						.addToBackStack(null).commit();
-			}
-		});
+			mConnection = MainActivity.mBoundService.getConnection();
 
-		MainActivity.mConnection.startClient(deviceListAdapter);
+			mConnection.setOnConnectedListener(new OnConnectedListener() {
+				@Override
+				public void onConnectedListener(String deviceName) {
+
+					mBtHandler.unregisterReceiver();
+					MainActivity.mBoundService.getConnection().registerDisconnectHandler();
+
+					String msg = new String(mContext.getString(R.string.BABYFON_MSG_AUTH_REQ) + ";" + mPW + ";"
+							+ BluetoothAdapter.getDefaultAdapter().getAddress() + ";" + android.os.Build.MODEL);
+					new Message(mContext).send(msg);
+
+					// Verbunden also auf die Abschlussseite wechseln
+					getFragmentManager().beginTransaction()
+							.replace(R.id.frame_container, new SetupCompleteParentsModeFragment(mContext), null).addToBackStack(null)
+							.commit();
+
+					// TODO Testing. Remote check nach verbindung starten
+					// mModuleHandler.startRemoteCheck();
+				}
+			});
+		}
+
 	}
 
 	public void initViewBWifi() {
+
 		mModuleHandler.startTCPReceiver();
 		new UDPSender(mContext).sendUDPMessage(new WifiHandler(mContext).getNetworkAddressClassC());
 	}
@@ -290,21 +296,15 @@ public class SetupSearchDevicesFragment extends Fragment {
 
 	}
 
-	public static void setNewDevice(String ip, String name) {
+	public void setNewDevice(String ip, String name) {
 
-		if (devices == null) {
-			devices = new ArrayList<DeviceListItemModel>();
-		}
-
-		devices.add(new DeviceListItemModel(name, ip));
+		mDevicesAdapter.add(new DeviceListItemModel(name, ip));
 
 		Log.i(TAG, "Device found: " + ip + " | " + name);
-		Log.i(TAG, "Number of devices: " + devices.size());
-
-		updateList();
+		Log.i(TAG, "Number of devices: " + mDevicesAdapter.getCount());
 	}
 
-	public static void openAuthDialog(final String deviceName, String deviceIP) {
+	public void openAuthDialog(final String deviceName, final String deviceIP) {
 		((MainActivity) mContext).runOnUiThread(new Runnable() {
 			@Override
 			public void run() {
@@ -326,27 +326,37 @@ public class SetupSearchDevicesFragment extends Fragment {
 				alert.setView(input);
 
 				alert.setPositiveButton("Senden", new DialogInterface.OnClickListener() {
+
 					public void onClick(DialogInterface dialog, int whichButton) {
 						String password = input.getText().toString();
 						String localIP = null;
-						try {
-							localIP = new WifiHandler(mContext).getLocalIPv4Address();
-						} catch (SocketException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						} catch (UnknownHostException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
+
+						// Bluetooth
+						if (mSharedPrefs.getConnectivityTypeTemp() == 1) {
+							mPW = password;
+							MainActivity.mBoundService.connectTo(deviceIP);
 						}
-						new TCPSender(mContext).sendMessage(mSharedPrefs.getRemoteAddressTemp(),
-								mContext.getString(R.string.BABYFON_MSG_AUTH_REQ) + ";" + password + ";" + localIP
-										+ ";" + android.os.Build.MODEL);
+						// Wi-Fi
+						else if (mSharedPrefs.getConnectivityTypeTemp() == 2) {
+							try {
+								localIP = new WifiHandler(mContext).getLocalIPv4Address();
+							} catch (SocketException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							} catch (UnknownHostException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
+							new TCPSender(mContext).sendMessage(mSharedPrefs.getRemoteAddressTemp(),
+									mContext.getString(R.string.BABYFON_MSG_AUTH_REQ) + ";" + password + ";" + localIP + ";"
+											+ android.os.Build.MODEL);
+						}
 					}
 				});
 
 				alert.setNegativeButton("Abbrechen", new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int whichButton) {
-
+						dialog.dismiss();
 					}
 				});
 
@@ -359,9 +369,8 @@ public class SetupSearchDevicesFragment extends Fragment {
 	public void onResume() {
 		super.onResume();
 
-		if (devices == null) {
-			devices = new ArrayList<DeviceListItemModel>();
-		}
+		if (mDevicesAdapter != null)
+			mDevicesAdapter.clear();
 
 		if (btnRefresh != null && listViewDevices != null) {
 			updateUI();

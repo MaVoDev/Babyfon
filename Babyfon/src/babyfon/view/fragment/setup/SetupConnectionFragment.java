@@ -3,33 +3,35 @@ package babyfon.view.fragment.setup;
 import java.net.SocketException;
 import java.net.UnknownHostException;
 
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.graphics.Typeface;
+import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
+import android.view.KeyEvent;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
+import android.widget.RadioGroup.OnCheckedChangeListener;
+import android.widget.TextView;
 import babyfon.connectivity.bluetooth.BluetoothHandler;
 import babyfon.connectivity.wifi.WifiHandler;
 import babyfon.init.R;
 import babyfon.settings.SharedPrefs;
 import babyfon.view.fragment.BabyMonitorFragment;
 import babyfon.view.fragment.OverviewFragment;
-import android.app.AlertDialog;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
-import android.content.Context;
-import android.content.DialogInterface;
-import android.graphics.Typeface;
-import android.os.Bundle;
-import android.view.KeyEvent;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.view.View.OnClickListener;
-import android.widget.Button;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
-import android.widget.TextView;
-import android.widget.RadioGroup.OnCheckedChangeListener;
 
 public class SetupConnectionFragment extends Fragment {
 
+	protected static final String TAG = SetupConnectionFragment.class.getCanonicalName();
 	// Define UI elements
 	private Button btnBackward;
 	private Button btnForward;
@@ -41,7 +43,6 @@ public class SetupConnectionFragment extends Fragment {
 	private TextView title;
 	private TextView infoText;
 
-	private boolean isBluetoothAvailable;
 	private boolean isWifiAvailable;
 
 	private int connectivityType;
@@ -61,7 +62,8 @@ public class SetupConnectionFragment extends Fragment {
 		nextFragmentBaby = new SetupForwardingFragment(mContext);
 		nextFragmentBabyCall = new SetupCompleteBabyModeFragment(mContext);
 		nextFragmentParents = new SetupSearchDevicesFragment(mContext);
-		mBluetoothHandler = new BluetoothHandler();
+		// nextFragmentParents = (SetupSearchDevicesFragment) ((MainActivity) (mContext)).getFragmentById("SetupSearchDevicesFragment");
+		mBluetoothHandler = new BluetoothHandler(mContext);
 		mWifiHandler = new WifiHandler(mContext);
 
 		mSharedPrefs = new SharedPrefs(mContext);
@@ -72,12 +74,6 @@ public class SetupConnectionFragment extends Fragment {
 	}
 
 	public void getAvailability() {
-		if (mBluetoothHandler.getBluetoothState() != -1) {
-			isBluetoothAvailable = true;
-		} else {
-			isBluetoothAvailable = false;
-		}
-
 		if (mWifiHandler.getWifiState() != -1) {
 			isWifiAvailable = true;
 		} else {
@@ -208,14 +204,14 @@ public class SetupConnectionFragment extends Fragment {
 		getConnectivityType(radioGrpConnectivity.getCheckedRadioButtonId());
 
 		// Set Bluetooth availability
-		radioBluetooth.setEnabled(isBluetoothAvailable);
+		radioBluetooth.setEnabled(mBluetoothHandler.isBluetoothSupported());
 
 		// Set Wi-Fi availability
 		radioWifi.setEnabled(isWifiAvailable);
 
 		// Check the next available connectivity
 		if (!isWifiAvailable) {
-			if (!isBluetoothAvailable) {
+			if (!mBluetoothHandler.isBluetoothSupported()) {
 				radioGrpConnectivity.clearCheck();
 				radioCall.setChecked(true);
 			} else {
@@ -239,15 +235,28 @@ public class SetupConnectionFragment extends Fragment {
 			public void onClick(View v) {
 				FragmentTransaction ft = mFragmentManager.beginTransaction();
 				ft.setCustomAnimations(R.anim.anim_slide_in_right, R.anim.anim_slide_out_right);
-				ft.replace(R.id.frame_container, new SetupDeviceModeFragment(mContext), null).addToBackStack(null)
-						.commit();
+				ft.replace(R.id.frame_container, new SetupDeviceModeFragment(mContext), null).addToBackStack(null).commit();
 			}
 		});
 
 		btnForward.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				mSharedPrefs.setConnectivityTypeTemp(connectivityType);
+
+				// Bluetooth Check
+				if (connectivityType == 1) {
+
+					boolean btEnabled;
+					if (mSharedPrefs.getDeviceModeTemp() == 0) {
+						btEnabled = mBluetoothHandler.enableBluetoothDiscoverability();
+					} else {
+						btEnabled = mBluetoothHandler.enableBluetooth();
+					}
+
+					// nur weitergehen, wenn Bluetooth-Discoverability an ist
+					if (!btEnabled)
+						return;
+				} else
 
 				if (connectivityType == 2) {
 					try {
@@ -258,7 +267,11 @@ public class SetupConnectionFragment extends Fragment {
 						e.printStackTrace();
 					}
 				}
-		
+
+				mSharedPrefs.setConnectivityTypeTemp(connectivityType);
+
+				Log.i(TAG, "mSharedPrefs.getConnectivityTypeTemp(): " + mSharedPrefs.getConnectivityTypeTemp());
+
 				FragmentTransaction ft = mFragmentManager.beginTransaction();
 				ft.setCustomAnimations(R.anim.anim_slide_in_left, R.anim.anim_slide_out_left);
 
@@ -292,34 +305,27 @@ public class SetupConnectionFragment extends Fragment {
 
 				switch (keyCode) {
 				case KeyEvent.KEYCODE_BACK:
-					new AlertDialog.Builder(getActivity())
-							.setTitle(mContext.getString(R.string.dialog_title_cancel_setup))
+					new AlertDialog.Builder(getActivity()).setTitle(mContext.getString(R.string.dialog_title_cancel_setup))
 							.setMessage(mContext.getString(R.string.dialog_message_cancel_setup))
 							.setNegativeButton(mContext.getString(R.string.dialog_button_no), null)
-							.setPositiveButton(mContext.getString(R.string.dialog_button_yes),
-									new DialogInterface.OnClickListener() {
-										@Override
-										public void onClick(DialogInterface dialog, int id) {
-											if (mSharedPrefs.getDeviceMode() == 0) {
-												mFragmentManager
-														.beginTransaction()
-														.replace(R.id.frame_container, new OverviewFragment(mContext),
-																null).addToBackStack(null).commit();
-											} else if (mSharedPrefs.getDeviceMode() == 1) {
-												mFragmentManager
-														.beginTransaction()
-														.replace(R.id.frame_container,
-																new BabyMonitorFragment(mContext), null)
-														.addToBackStack(null).commit();
-											} else {
-												mFragmentManager
-														.beginTransaction()
-														.replace(R.id.frame_container,
-																new SetupStartFragment(mContext), null)
-														.addToBackStack(null).commit();
-											}
-										}
-									}).create().show();
+							.setPositiveButton(mContext.getString(R.string.dialog_button_yes), new DialogInterface.OnClickListener() {
+								@Override
+								public void onClick(DialogInterface dialog, int id) {
+									if (mSharedPrefs.getDeviceMode() == 0) {
+										mFragmentManager.beginTransaction()
+												.replace(R.id.frame_container, new OverviewFragment(mContext), null).addToBackStack(null)
+												.commit();
+									} else if (mSharedPrefs.getDeviceMode() == 1) {
+										mFragmentManager.beginTransaction()
+												.replace(R.id.frame_container, new BabyMonitorFragment(mContext), null)
+												.addToBackStack(null).commit();
+									} else {
+										mFragmentManager.beginTransaction()
+												.replace(R.id.frame_container, new SetupStartFragment(mContext), null).addToBackStack(null)
+												.commit();
+									}
+								}
+							}).create().show();
 					break;
 				}
 				return true;

@@ -109,7 +109,7 @@ public class ModuleHandler {
 				Log.e(TAG, "Error: Can't start TCP receiver.");
 			}
 		} else {
-//			Log.e(TAG, "TCP receiver is still running.");
+			// Log.e(TAG, "TCP receiver is still running.");
 		}
 	}
 
@@ -126,7 +126,7 @@ public class ModuleHandler {
 				Log.e(TAG, "Error: Can't close TCP receiver.");
 			}
 		} else {
-//			Log.e(TAG, "Can't close UDP receiver: The receiver wasn't active or has been stopped.");
+			// Log.e(TAG, "Can't close UDP receiver: The receiver wasn't active or has been stopped.");
 		}
 	}
 
@@ -143,7 +143,7 @@ public class ModuleHandler {
 				Log.e(TAG, "Error: Can't start UDP receiver.");
 			}
 		} else {
-//			Log.e(TAG, "UDP receiver is still running.");
+			// Log.e(TAG, "UDP receiver is still running.");
 		}
 	}
 
@@ -160,7 +160,7 @@ public class ModuleHandler {
 				Log.e(TAG, "Error: Can't close UDP receiver.");
 			}
 		} else {
-//			Log.e(TAG, "Can't close UDP receiver: The receiver wasn't active or has been stopped.");
+			// Log.e(TAG, "Can't close UDP receiver: The receiver wasn't active or has been stopped.");
 		}
 	}
 
@@ -196,5 +196,42 @@ public class ModuleHandler {
 		} else {
 			Log.e(TAG, "Can't stop thread: Remote checker thread wasn't running or has been stopped.");
 		}
+	}
+
+	/**
+	 * Stops the AudioPlayer
+	 */
+	// public void stopAudioPlayer() {
+	// // if (MainActivity.mConnection != null)
+	// // MainActivity.mConnection.setOnReceiveDataListener(null);
+	//
+	// if (MainActivity.mAudioPlayer != null) {
+	// MainActivity.mAudioPlayer.stopPlaying();
+	// MainActivity.mAudioPlayer = null;
+	// }
+	// }
+
+	/**
+	 * Start AudioRecorder
+	 */
+	public void startAudioRecorder() {
+		// MainActivity.mAudioRecorder = new AudioRecorder(MainActivity.mConnection);
+		MainActivity.mAudioRecorder.startRecording();
+	}
+
+	/**
+	 * Stop AudioRecorder
+	 */
+	public void stopAudioRecorder() {
+		if (MainActivity.mAudioRecorder != null) {
+			MainActivity.mAudioRecorder.cleanUp();
+			MainActivity.mAudioRecorder = null;
+		}
+	}
+
+	public void stopBT() {
+		if (MainActivity.mBoundService != null)
+			MainActivity.mBoundService.getConnection().stopConnection();
+
 	}
 }

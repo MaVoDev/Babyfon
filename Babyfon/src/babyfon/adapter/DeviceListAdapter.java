@@ -1,57 +1,55 @@
 package babyfon.adapter;
 
-import java.util.ArrayList;
-
-import android.app.Activity;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
+import android.widget.ArrayAdapter;
 import android.widget.TextView;
 import babyfon.init.R;
 import babyfon.model.DeviceListItemModel;
 
-public class DeviceListAdapter extends BaseAdapter {
+public class DeviceListAdapter extends ArrayAdapter<DeviceListItemModel> {
 
 	private Context mContext;
-	private ArrayList<DeviceListItemModel> deviceItems;
+	private int resource;
 
-	public DeviceListAdapter(Context context, ArrayList<DeviceListItemModel> deviceItems) {
+	public DeviceListAdapter(Context context, int resource) {
+		super(context, resource);
+
 		this.mContext = context;
-		this.deviceItems = deviceItems;
-	}
-	
-	@Override
-	public int getCount() {
-		return deviceItems.size();
-	}
+		this.resource = resource;
 
-	@Override
-	public Object getItem(int position) {
-		return deviceItems.get(position);
-	}
-
-	@Override
-	public long getItemId(int position) {
-		return position;
 	}
 
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
-		if (convertView == null) {
-			LayoutInflater mInflater = (LayoutInflater) mContext.getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
-			convertView = mInflater.inflate(R.layout.listview_devices, null);
+		View rowView = convertView;
+
+		// reuse views
+		if (rowView == null) {
+			LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
+			rowView = inflater.inflate(resource, null);
+			// configure view holder
+			ViewHolder viewHolder = new ViewHolder();
+			viewHolder.name = (TextView) rowView.findViewById(R.id.device_name);
+
+			// Set Typeface
+			Typeface mTypeface_i = Typeface.createFromAsset(mContext.getAssets(), "fonts/BOOKOSI.TTF");
+			viewHolder.name.setTypeface(mTypeface_i);
+			rowView.setTag(viewHolder);
 		}
 
-		TextView deviceName = (TextView) convertView.findViewById(R.id.device_name);
-		deviceName.setText(deviceItems.get(position).getDeviceName());
+		// fill data
+		ViewHolder holder = (ViewHolder) rowView.getTag();
+		holder.name.setText(getItem(position).getDeviceName());
 
-		// Set Typeface
-		Typeface mTypeface_i = Typeface.createFromAsset(mContext.getAssets(), "fonts/BOOKOSI.TTF");
-		deviceName.setTypeface(mTypeface_i);
+		return rowView;
+	}
 
-		return convertView;
+	static class ViewHolder {
+		public TextView name;
 	}
 }

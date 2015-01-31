@@ -16,6 +16,45 @@ public class ConnectivityStateCheck {
 
 	private InetAddress remoteAddress;
 
+	private TimerTask wifiRemoteCheckTask = new TimerTask() {
+		public void run() {
+			// ((MainActivity) mContext).runOnUiThread(new Runnable() { // TODO BT TEST, WORKAROUND, danach wieder rein!
+			((MainActivity) MainActivity.getContext()).runOnUiThread(new Runnable() {
+				public void run() {
+					if (mSharedPrefs.getConnectivityType() == 1) {
+						// Bluetooth
+
+					} else if (mSharedPrefs.getConnectivityType() == 2) {
+						// wi-fi
+						if (mSharedPrefs.getRemoteAddress() != null) {
+							// remote address is available
+							try {
+								if (remoteAddress.isReachable(4000)) {
+									new Message(mContext).send(mContext.getString(R.string.BABYFON_MSG_CONNECTION_HELLO) + ";"
+											+ mSharedPrefs.getHostAddress() + ";" + mSharedPrefs.getPassword());
+								} else {
+									mSharedPrefs.setRemoteOnlineState(false);
+								}
+							} catch (IOException e) {
+
+							}
+						}
+					}
+				}
+			});
+		}
+	};
+
+	private TimerTask bluetoothRemoteCheckTask = new TimerTask() {
+		public void run() {
+
+			new Message(mContext).send(mContext.getString(R.string.BABYFON_MSG_CONNECTION_HELLO) + ";" + mSharedPrefs.getHostAddress()
+					+ ";" + mSharedPrefs.getPassword());
+
+			// wenn nicht mehr connected, wird event in BluetoothHandler ausgelöst!
+		}
+	};
+
 	// Timer
 	private Timer timerRemoteCheck;
 
@@ -67,40 +106,24 @@ public class ConnectivityStateCheck {
 			if (timerRemoteCheck == null) {
 				timerRemoteCheck = new Timer();
 
-				try {
-					remoteAddress = InetAddress.getByName(mSharedPrefs.getRemoteAddress());
-				} catch (UnknownHostException e1) {
+				// TODO: gucken, ob überprüfen von getConnectivityTypeTemp variable hier ausreicht oder ob auch noch normale überprüft
+				// werden muss
 
+				// if (mSharedPrefs.getConnectivityType() == 1 || mSharedPrefs.getConnectivityTypeTemp() == 1) {
+				if (mSharedPrefs.getConnectivityTypeTemp() == 1) {
+					timerRemoteCheck.scheduleAtFixedRate(bluetoothRemoteCheckTask, 5000, 5000);
 				}
 
-				timerRemoteCheck.scheduleAtFixedRate(new TimerTask() {
-					public void run() {
-						((MainActivity) mContext).runOnUiThread(new Runnable() {
-							public void run() {
-								if (mSharedPrefs.getConnectivityType() == 2) {
-									// wi-fi
-									if (mSharedPrefs.getRemoteAddress() != null) {
-										// remote address is available
-										try {
-											if (remoteAddress.isReachable(4000)) {
-												new Message(mContext).send(mContext
-														.getString(R.string.BABYFON_MSG_CONNECTION_HELLO)
-														+ ";"
-														+ mSharedPrefs.getHostAddress()
-														+ ";"
-														+ mSharedPrefs.getPassword());
-											} else {
-												mSharedPrefs.setRemoteOnlineState(false);
-											}
-										} catch (IOException e) {
+				// else if (mSharedPrefs.getConnectivityType() == 2 || mSharedPrefs.getConnectivityTypeTemp() == 2) {
+				else if (mSharedPrefs.getConnectivityTypeTemp() == 2) {
+					try {
+						remoteAddress = InetAddress.getByName(mSharedPrefs.getRemoteAddress());
+					} catch (UnknownHostException e1) {
 
-										}
-									}
-								}
-							}
-						});
 					}
-				}, 5000, 5000);
+					timerRemoteCheck.scheduleAtFixedRate(wifiRemoteCheckTask, 5000, 5000);
+				}
+
 			}
 			return true;
 		} catch (Exception e) {

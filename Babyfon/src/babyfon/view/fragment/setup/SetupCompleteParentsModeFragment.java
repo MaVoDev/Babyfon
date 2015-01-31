@@ -1,23 +1,23 @@
 package babyfon.view.fragment.setup;
 
+import android.content.Context;
+import android.graphics.Typeface;
+import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.TextView;
 import babyfon.init.R;
 import babyfon.performance.Sound;
 import babyfon.settings.ModuleHandler;
 import babyfon.settings.SharedPrefs;
 import babyfon.view.fragment.BabyMonitorFragment;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
-import android.content.Context;
-import android.graphics.Typeface;
-import android.os.Bundle;
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.view.View.OnClickListener;
-import android.widget.Button;
-import android.widget.TextView;
 
 public class SetupCompleteParentsModeFragment extends Fragment {
 
@@ -106,7 +106,11 @@ public class SetupCompleteParentsModeFragment extends Fragment {
 		mSharedPrefs.setConnectivityType(mSharedPrefs.getConnectivityTypeTemp());
 		Log.d(TAG, "Connectivity type: " + mSharedPrefs.getConnectivityType());
 		mSharedPrefs.setConnectivityTypeTemp(-1);
-		if (mSharedPrefs.getConnectivityType() == 2) {
+
+		if (mSharedPrefs.getConnectivityType() == 1) {
+			mSharedPrefs.setRemoteAddress(mSharedPrefs.getRemoteAddressTemp());
+			Log.d(TAG, "Remote address: " + mSharedPrefs.getRemoteAddress());
+		} else if (mSharedPrefs.getConnectivityType() == 2) {
 			mModuleHandler.startUDPReceiver();
 			mSharedPrefs.setRemoteAddress(mSharedPrefs.getRemoteAddressTemp());
 			Log.d(TAG, "Remote address: " + mSharedPrefs.getRemoteAddress());

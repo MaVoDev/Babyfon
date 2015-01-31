@@ -8,7 +8,7 @@
             style="@style/fragmentTitle"
             android:text="@string/title_forwarding" />
     </LinearLayout>
-    
+
     <TextView
         android:id="@+id/subtitle_setup_forward"
         style="@style/fragmentSubtitle"
@@ -23,43 +23,54 @@
             android:layout_height="wrap_content"
             android:text="@string/text_forwarding" />
 
-        <CheckBox
-            android:id="@+id/chkbox_forwarding_Call"
+        <ScrollView
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:checked="false"
-            android:text="@string/chkbox_incoming_calls" />
+            android:layout_height="wrap_content" >
 
-        <CheckBox
-            android:id="@+id/chkbox_forwarding_SMS"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:text="@string/chkbox_incoming_sms" />
-
-        <RadioGroup
-            android:id="@+id/radio_group_sms"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="24dp" >
-
-            <RadioButton
-                android:id="@+id/forward_sms_info"
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:checked="true"
-                android:enabled="false"
-                android:text="@string/radio_only_notify" />
+                android:orientation="vertical" >
 
-            <RadioButton
-                android:id="@+id/forward_sms"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:checked="false"
-                android:enabled="false"
-                android:text="@string/radio_forward" />
-        </RadioGroup>
+                <CheckBox
+                    android:id="@+id/chkbox_forwarding_Call"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:checked="false"
+                    android:text="@string/chkbox_incoming_calls" />
+
+                <CheckBox
+                    android:id="@+id/chkbox_forwarding_SMS"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:text="@string/chkbox_incoming_sms" />
+
+                <RadioGroup
+                    android:id="@+id/radio_group_sms"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="24dp" >
+
+                    <RadioButton
+                        android:id="@+id/forward_sms_info"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:checked="true"
+                        android:enabled="false"
+                        android:text="@string/radio_only_notify" />
+
+                    <RadioButton
+                        android:id="@+id/forward_sms"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:checked="false"
+                        android:enabled="false"
+                        android:text="@string/radio_forward" />
+                </RadioGroup>
+            </LinearLayout>
+        </ScrollView>
     </LinearLayout>
 
     <LinearLayout style="@style/layout_footer" >

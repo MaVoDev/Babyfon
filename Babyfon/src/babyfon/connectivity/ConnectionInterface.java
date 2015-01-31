@@ -1,20 +1,14 @@
 package babyfon.connectivity;
 
-import android.widget.ArrayAdapter;
-
 public interface ConnectionInterface {
 
 	//
 	// Methoden
 	//
 
-	public void searchDevices();
-
-	public void connectToDeviceFromList(int position);
+	public void connectToAdress(String adress);
 
 	public void startServer();
-
-	public <T> void startClient(T listAdapter);
 
 	/** Will cancel an in-progress connection, and close the socket */
 	public void stopConnection();
@@ -30,6 +24,7 @@ public interface ConnectionInterface {
 	public void sendData(byte[] data, byte type);
 
 	public void sendMessage(String msg);
+
 	//
 	// Listener
 	//
@@ -47,7 +42,7 @@ public interface ConnectionInterface {
 		void onConnectionLostListener(String errorMsg);
 	}
 
-	public interface OnConnnectedListener {
+	public interface OnConnectedListener {
 
 		void onConnectedListener(String deviceName);
 	}
@@ -58,7 +53,9 @@ public interface ConnectionInterface {
 
 	public void setOnConnectionLostListener(OnConnectionLostListener l);
 
-	public void setOnConnnectedListener(OnConnnectedListener l);
+	public void setOnConnectedListener(OnConnectedListener l);
+
+	public void registerDisconnectHandler();
 
 	// TODO: Evtl noch einen OnConnectionFailed Listener einbauen
 

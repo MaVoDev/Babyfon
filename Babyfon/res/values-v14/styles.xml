@@ -1,12 +1,135 @@
-<resources>
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <!--
-        Base application theme for API 14+. This theme completely replaces
-        AppBaseTheme from BOTH res/values/styles.xml and
-        res/values-v11/styles.xml on API 14+ devices.
-    -->
-    <style name="AppBaseTheme" parent="android:Theme.Holo.Light">
-        <!-- API 14 theme customizations can go here. -->
+    <style name="AppBaseTheme" parent="android:Theme.Light" />
+
+    <!-- Application theme -->
+    <style name="AppTheme" parent="AppBaseTheme">
+
+        <!-- <item name="android:actionBarSize">56dp</item> -->
+        <item name="android:icon">@android:color/transparent</item>
+    </style>
+
+    <!-- Hide Action Bar -->
+    <style name="NoActionBar" parent="AppBaseTheme">
+        <item name="android:windowActionBar">false</item>
+        <item name="android:windowTitleSize">0dp</item>
+    </style>
+
+    <!-- Font styles -->
+    <style name="fragmentTitle">
+        <item name="android:textSize">32sp</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textColor">@color/title</item>
+        <item name="android:layout_gravity">center</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+
+    <style name="fragmentSubtitle">
+        <item name="android:textSize">16sp</item>
+        <item name="android:textColor">@color/title</item>
+        <item name="android:layout_gravity">center</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginTop">-15dp</item>
+        <item name="android:layout_marginBottom">15dp</item>
+    </style>
+
+    <!-- Layouts -->
+    <style name="layout_content">
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_height">fill_parent</item>
+        <item name="android:orientation">vertical</item>
+        <item name="android:background">@drawable/bg_layout_body</item>
+        <item name="android:layout_marginLeft">10dp</item>
+        <item name="android:layout_marginRight">10dp</item>
+        <item name="android:layout_marginTop">10dp</item>
+        <item name="android:layout_marginBottom">10dp</item>
+    </style>
+
+    <style name="layout_header">
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:orientation">vertical</item>
+        <item name="android:layout_marginLeft">10dp</item>
+        <item name="android:gravity">top</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:layout_gravity">top</item>
+        <item name="android:layout_marginRight">10dp</item>
+        <item name="android:layout_marginTop">10dp</item>
+        <item name="android:layout_marginBottom">16dp</item>
+    </style>
+
+    <style name="layout_footer">
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:orientation">horizontal</item>
+        <item name="android:layout_marginLeft">10dp</item>
+        <item name="android:layout_gravity">bottom</item>
+        <item name="android:layout_marginRight">10dp</item>
+        <item name="android:layout_marginTop">10dp</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:baselineAligned">false</item>
+        <item name="android:layout_marginBottom">10dp</item>
+    </style>
+
+    <style name="layout_body">
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:orientation">vertical</item>
+        <item name="android:layout_marginLeft">20dp</item>
+        <item name="android:layout_weight">100</item>
+        <item name="android:layout_marginRight">20dp</item>
+    </style>
+
+    <!-- Button -->
+    <style name="button_footer_right">
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_height">@dimen/buttons_height</item>
+        <item name="android:layout_marginLeft">2dp</item>
+    </style>
+
+    <style name="button_footer_left">
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_height">@dimen/buttons_height</item>
+        <item name="android:layout_marginRight">2dp</item>
+    </style>
+
+    <style name="button_footer_single">
+        <item name="android:layout_gravity">bottom</item>
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_height">@dimen/buttons_height</item>
+    </style>
+
+    <style name="info_text">
+        <item name="android:gravity">center_horizontal</item>
+        <item name="android:textSize">@dimen/info_text</item>
+        <item name="android:textColor">@color/text</item>
+        <item name="android:layout_marginBottom">10dp</item>
+        <item name="android:padding">16dp</item>
+        <item name="android:background">@android:drawable/dialog_holo_light_frame</item>
+    </style>
+
+    <!-- Layout overview baby -->
+    <style name="overview_edit_layout">
+        <item name="android:layout_width">120dp</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:layout_gravity">center_vertical</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:gravity">right</item>
+        <item name="android:orientation">vertical</item>
+    </style>
+
+    <style name="overview_edit">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginLeft">16dp</item>
+        <item name="android:layout_gravity">center_vertical</item>
+    </style>
+
+    <style name="text_normal">
+        <item name="android:textColor">@color/text</item>
     </style>
 
 </resources>

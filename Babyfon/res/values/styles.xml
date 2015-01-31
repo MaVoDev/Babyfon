@@ -11,7 +11,6 @@
 
     <!-- Hide Action Bar -->
     <style name="NoActionBar" parent="AppBaseTheme">
-        <item name="android:windowActionBar">false</item>
         <item name="android:windowTitleSize">0dp</item>
     </style>
 
@@ -135,7 +134,7 @@
         <item name="android:textColor">@color/text</item>
         <item name="android:layout_marginBottom">10dp</item>
         <item name="android:padding">16dp</item>
-        <item name="android:background">@android:drawable/dialog_holo_light_frame</item>
+        <item name="android:background">@drawable/abc_item_background_holo_light</item>
     </style>
 
     <!-- Layout overview baby -->
@@ -161,6 +160,7 @@
 
     <!-- Progress bar -->
     <style name="progressBar" parent="android:Widget.ProgressBar.Horizontal">
+
         <!-- <item name="android:progressDrawable">@drawable/custom_progress_bar_horizontal</item> -->
         <item name="android:minHeight">10dp</item>
         <item name="android:maxHeight">20dp</item>

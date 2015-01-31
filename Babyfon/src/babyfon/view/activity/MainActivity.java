@@ -7,15 +7,17 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import android.app.AlertDialog;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.ServiceConnection;
 import android.content.res.Configuration;
 import android.content.res.TypedArray;
 import android.media.Ringtone;
-import android.net.Uri;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.os.StrictMode;
 import android.os.Vibrator;
 import android.support.v4.app.Fragment;
@@ -29,17 +31,14 @@ import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.FrameLayout;
-import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.Toast;
 import babyfon.Notification;
 import babyfon.adapter.NavigationDrawerListAdapter;
 import babyfon.audio.AudioPlayer;
 import babyfon.audio.AudioRecorder;
-import babyfon.connectivity.ConnectionInterface;
 import babyfon.connectivity.phone.CallStateListener;
 import babyfon.connectivity.phone.SMSReceiver;
 import babyfon.connectivity.wifi.TCPReceiver;
@@ -49,12 +48,14 @@ import babyfon.model.NavigationDrawerItemModel;
 import babyfon.performance.Battery;
 import babyfon.performance.ConnectivityStateCheck;
 import babyfon.performance.Sound;
+import babyfon.service.LocalService;
 import babyfon.settings.ModuleHandler;
 import babyfon.settings.SharedPrefs;
 import babyfon.view.fragment.AbsenceFragment;
 import babyfon.view.fragment.BabyMonitorFragment;
 import babyfon.view.fragment.OverviewFragment;
 import babyfon.view.fragment.setup.SetupDeviceModeFragment;
+import babyfon.view.fragment.setup.SetupSearchDevicesFragment;
 import babyfon.view.fragment.setup.SetupStartFragment;
 
 public class MainActivity extends ActionBarActivity {
@@ -78,7 +79,6 @@ public class MainActivity extends ActionBarActivity {
 	public static FrameLayout overlay;
 
 	public static AudioRecorder mAudioRecorder;
-	public static ConnectionInterface mConnection;
 
 	public static IntentFilter mIntentFilterSms;
 	public static IntentFilter mIntentFilterCall;
@@ -120,6 +120,10 @@ public class MainActivity extends ActionBarActivity {
 			StrictMode.setThreadPolicy(policy);
 		}
 
+		// TODO TEST
+		mContext = this;
+		// ---------
+
 		// TelephonyManager class object to register one listner
 		TelephonyManager mTelephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
 		// Register listener for LISTEN_CALL_STATE
@@ -142,6 +146,9 @@ public class MainActivity extends ActionBarActivity {
 		// TODO: WORKAROUND UM DRAWER ERRORS ZU FIXEN, ALTER ERSTMAL
 		// AUSKOMMENTIERT; VS!
 		mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, android.R.string.ok, android.R.string.no);
+
+		// Zum Service verbinden / Service starten
+		doBindService();
 	}
 
 	@Override
@@ -157,6 +164,11 @@ public class MainActivity extends ActionBarActivity {
 			timerConnectivityState.cancel();
 			timerConnectivityState = null;
 		}
+
+		// TODO service für alle anpassen
+		if (mSharedPrefs.getConnectivityType() == 1)
+			// Service unbinden
+			doUnbindService();
 
 		if (mSharedPrefs.getRemoteAddress() != null) {
 			new babyfon.Message(this).send(this.getString(R.string.BABYFON_MSG_SYSTEM_AWAY));
@@ -197,8 +209,8 @@ public class MainActivity extends ActionBarActivity {
 
 		if (mSharedPrefs.getRemoteAddress() != null) {
 			mModuleHandler.startRemoteCheck();
-			new babyfon.Message(this).send(this.getString(R.string.BABYFON_MSG_CONNECTION_HELLO) + ";"
-					+ mSharedPrefs.getHostAddress() + ";" + mSharedPrefs.getPassword());
+			new babyfon.Message(this).send(this.getString(R.string.BABYFON_MSG_CONNECTION_HELLO) + ";" + mSharedPrefs.getHostAddress()
+					+ ";" + mSharedPrefs.getPassword());
 			if (mSharedPrefs.getDeviceMode() == 0) {
 				mModuleHandler.registerBattery();
 				if (mSharedPrefs.getForwardingSMS() || mSharedPrefs.getForwardingSMSInfo()) {
@@ -212,10 +224,10 @@ public class MainActivity extends ActionBarActivity {
 				new Sound(this).mute();
 			}
 		}
-//		if (mSharedPrefs.getConnectivityType() == 2) {
-//			mModuleHandler.startUDPReceiver();
-//			mModuleHandler.startTCPReceiver();
-//		}
+		// if (mSharedPrefs.getConnectivityType() == 2) {
+		// mModuleHandler.startUDPReceiver();
+		// mModuleHandler.startTCPReceiver();
+		// }
 	}
 
 	@Override
@@ -251,15 +263,18 @@ public class MainActivity extends ActionBarActivity {
 	protected void onResume() {
 		super.onResume();
 
-		if (mSharedPrefs.getConnectivityType() != 3) {
-//			if (mSharedPrefs.getConnectivityType() == 2) {
-//				mModuleHandler.startTCPReceiver();
-//				mModuleHandler.startUDPReceiver();
-//			}
+		// TODO: in service auslagern
+
+		// if (mSharedPrefs.getConnectivityType() != 3) {
+		if (mSharedPrefs.getConnectivityType() == 2) { // TODO erstmal rausgenommen für BT, muss noch angepasst werden
+			// if (mSharedPrefs.getConnectivityType() == 2) {
+			// mModuleHandler.startTCPReceiver();
+			// mModuleHandler.startUDPReceiver();
+			// }
 
 			if (mSharedPrefs.isNoiseActivated()) {
 				if (MainActivity.mAudioRecorder == null) {
-					MainActivity.mAudioRecorder = new AudioRecorder(this, MainActivity.mConnection);
+					MainActivity.mAudioRecorder = new AudioRecorder(this, mBoundService.getConnection());
 					MainActivity.mAudioRecorder.startRecording();
 				}
 			} else {
@@ -342,6 +357,11 @@ public class MainActivity extends ActionBarActivity {
 		return super.onOptionsItemSelected(item);
 	}
 
+	// TODO WORKAROUND FÜR FEHLER IN SetupSearchDevices
+	public void setFragmentForId(Fragment fragment, String id) {
+		mFragmentMap.put(id, fragment);
+	}
+
 	public Fragment getFragmentById(String id) {
 
 		Fragment fragment = mFragmentMap.get(id);
@@ -361,12 +381,15 @@ public class MainActivity extends ActionBarActivity {
 		} else if (id.equals("OverviewFragmentBaby")) {
 			// Baby mode
 			fragment = new OverviewFragment(this);
-		} else if (id.equals("BabymonitorFragment")) {
+		} else if (id.equals("BabyMonitorFragment")) {
 			// Open babymonitor
 			fragment = new BabyMonitorFragment(this);
 		} else if (id.equals("AbsenceFragment")) {
 			// Open absence
 			fragment = new AbsenceFragment(this);
+		} else if (id.equals("SetupSearchDevicesFragment")) {
+			// Open setup search devices
+			fragment = new SetupSearchDevicesFragment(this);
 		} else if (id.equals("SetupFragment")) {
 			// Open setup
 			if (mSharedPrefs.getDeviceMode() != -1) {
@@ -414,7 +437,7 @@ public class MainActivity extends ActionBarActivity {
 				id = "OverviewFragment";
 			}
 			if (mSharedPrefs.getDeviceMode() == 1) {
-				id = "BabymonitorFragment";
+				id = "BabyMonitorFragment";
 			}
 			break;
 		case 1:
@@ -474,8 +497,7 @@ public class MainActivity extends ActionBarActivity {
 	}
 
 	/**
-	 * When using the ActionBarDrawerToggle, you must call it during
-	 * onPostCreate() and onConfigurationChanged()...
+	 * When using the ActionBarDrawerToggle, you must call it during onPostCreate() and onConfigurationChanged()...
 	 */
 
 	@Override
@@ -528,8 +550,7 @@ public class MainActivity extends ActionBarActivity {
 			// Listenelement: Babymonitor
 			items.add(new NavigationDrawerItemModel(navMenuTitles[0], navMenuIcons.getResourceId(0, -1)));
 			// Listenelement: Anrufe und Nachrichten in Abwesenheit
-			items.add(new NavigationDrawerItemModel(navMenuTitles[1], navMenuIcons.getResourceId(1, -1), true, String
-					.valueOf(counter)));
+			items.add(new NavigationDrawerItemModel(navMenuTitles[1], navMenuIcons.getResourceId(1, -1), true, String.valueOf(counter)));
 			// Listenelement: Einrichtungsassistent
 			items.add(new NavigationDrawerItemModel(navMenuTitles[2], navMenuIcons.getResourceId(2, -1)));
 			// Listenelement: Einstellungen
@@ -586,7 +607,7 @@ public class MainActivity extends ActionBarActivity {
 							initNavigationDrawer();
 							Log.d(TAG, "Navigation Drawer changed.");
 						}
-						
+
 						if (mSharedPrefs.getConnectivityType() == 2 || mSharedPrefs.getConnectivityTypeTemp() == 2) {
 							mModuleHandler.startTCPReceiver();
 							mModuleHandler.startUDPReceiver();
@@ -598,5 +619,80 @@ public class MainActivity extends ActionBarActivity {
 				});
 			}
 		}, 0, 1000);
+	}
+
+	//
+	// --------------------------------------- Service Zeugs (LOCAL)
+	//
+
+	public static LocalService mBoundService;
+	private static Context mContext;
+	private boolean mIsBound = false;
+
+	private ServiceConnection mServiceConnection = new ServiceConnection() {
+
+		public void onServiceConnected(ComponentName className, IBinder service) {
+			// This is called when the connection with the service has been
+			// established, giving us the service object we can use to
+			// interact with the service. Because we have bound to a explicit
+			// service that we know is running in our own process, we can
+			// cast its IBinder to a concrete class and directly access it.
+			mBoundService = ((LocalService.LocalBinder) service).getService();
+
+			// Tell the user about this for our demo.
+			Log.i(TAG, "Service connected with app...");
+			Toast.makeText(MainActivity.this, "Service connected.", Toast.LENGTH_SHORT).show();
+
+			// TODO: einbauen:
+			// Verbinden mit aktuelle gepairtem Device...
+			// mBoundService.connectTo("CC:96:A0:41:34:3E");
+			// mBoundService.connectTo(mSharedPrefs.getRemoteAddress());
+		}
+
+		public void onServiceDisconnected(ComponentName className) {
+			// This is called when the connection with the service has been
+			// unexpectedly disconnected -- that is, its process crashed.
+			// Because it is running in our same process, we should never
+			// see this happen.
+			mBoundService = null;
+			Toast.makeText(MainActivity.this, "Service disconnected.", Toast.LENGTH_SHORT).show();
+		}
+	};
+
+	void doBindService() {
+		// Establish a connection with the service. We use an explicit
+		// class name because we want a specific service implementation that
+		// we know will be running in our own process (and thus won't be
+		// supporting component replacement by other applications).
+
+		// bindService(new Intent(MainActivity.this, LocalService.class), mServiceConnection, Context.BIND_AUTO_CREATE);
+
+		Intent serviceIntent = new Intent(MainActivity.this, LocalService.class);
+
+		startService(serviceIntent);
+		bindService(serviceIntent, mServiceConnection, 0);
+		// bindService(serviceIntent, mServiceConnection, Context.BIND_AUTO_CREATE);
+
+		mIsBound = true;
+	}
+
+	void doUnbindService() {
+		if (mIsBound) {
+			// Detach our existing connection.
+			unbindService(mServiceConnection);
+			mIsBound = false;
+		}
+	}
+
+	//
+	// --------------------------------------- / Service Zeugs (LOCAL) ENDE
+	//
+
+	public static Context getContext() {
+		if (mContext == null)
+			return null;
+		else
+			return mContext;
+
 	}
 }

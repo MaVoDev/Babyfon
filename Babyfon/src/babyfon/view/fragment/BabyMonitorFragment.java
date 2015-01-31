@@ -21,6 +21,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,9 +32,15 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import babyfon.Message;
+import babyfon.Notification;
+import babyfon.init.R;
+import babyfon.settings.ModuleHandler;
+import babyfon.settings.SharedPrefs;
 
 public class BabyMonitorFragment extends Fragment {
 
+	private static final String TAG = BabyMonitorFragment.class.getCanonicalName();
 	// Define UI elements
 	private ImageView kickRemote;
 	private ImageView remoteOnlineState;
@@ -69,6 +77,8 @@ public class BabyMonitorFragment extends Fragment {
 	private Timer timer;
 
 	private Context mContext;
+
+	protected boolean mFragmentActive = false;
 
 	// Constructor
 	public BabyMonitorFragment(Context mContext) {
@@ -259,33 +269,37 @@ public class BabyMonitorFragment extends Fragment {
 			}
 		});
 
+		noiseActivateText.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				mSharedPrefs.setNoiseActivated(true);
+			}
+		});
+
 		// kick remote
 		kickRemote.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				new AlertDialog.Builder(getActivity())
-						.setTitle(mContext.getString(R.string.dialog_title_kick_remote))
+				new AlertDialog.Builder(getActivity()).setTitle(mContext.getString(R.string.dialog_title_kick_remote))
 						.setMessage(mContext.getString(R.string.dialog_message_kick_remote))
 						.setNegativeButton(mContext.getString(R.string.dialog_button_no), null)
-						.setPositiveButton(mContext.getString(R.string.dialog_button_yes),
-								new DialogInterface.OnClickListener() {
-									@Override
-									public void onClick(DialogInterface dialog, int id) {
-										mModuleHandler.stopRemoteCheck();
+						.setPositiveButton(mContext.getString(R.string.dialog_button_yes), new DialogInterface.OnClickListener() {
+							@Override
+							public void onClick(DialogInterface dialog, int id) {
+								mModuleHandler.stopRemoteCheck();
 
-										mSharedPrefs.setRemoteAddress(null);
-										mSharedPrefs.setRemoteName(null);
-										mSharedPrefs.setRemoteOnlineState(false);
+								mSharedPrefs.setRemoteAddress(null);
+								mSharedPrefs.setRemoteName(null);
+								mSharedPrefs.setRemoteOnlineState(false);
 
-										if (mSharedPrefs.getForwardingSMS() || mSharedPrefs.getForwardingSMSInfo()) {
-											mModuleHandler.unregisterSMS();
-										}
+								if (mSharedPrefs.getForwardingSMS() || mSharedPrefs.getForwardingSMSInfo()) {
+									mModuleHandler.unregisterSMS();
+								}
 
-										new Message(mContext).send(mContext
-												.getString(R.string.BABYFON_MSG_SYSTEM_DISCONNECTED));
-										updateUI();
-									}
-								}).create().show();
+								new Message(mContext).send(mContext.getString(R.string.BABYFON_MSG_SYSTEM_DISCONNECTED));
+								updateUI();
+							}
+						}).create().show();
 			}
 		});
 
@@ -331,8 +345,7 @@ public class BabyMonitorFragment extends Fragment {
 					mSharedPrefs.setDeviceModeTemp(1);
 					FragmentTransaction ft = mFragmentManager.beginTransaction();
 					ft.setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out);
-					ft.replace(R.id.frame_container, new SetupConnectionFragment(mContext), null).addToBackStack(null)
-							.commit();
+					ft.replace(R.id.frame_container, new SetupConnectionFragment(mContext), null).addToBackStack(null).commit();
 				}
 			}
 		});
@@ -341,6 +354,11 @@ public class BabyMonitorFragment extends Fragment {
 	}
 
 	public void updateVolume(final int calculateVolume) {
+		
+		// TODO: Mal gucken, ob das benötigt wird. Also evtl raus.
+		if (!mFragmentActive)
+			return;
+		
 		if (mSharedPrefs.isNoiseActivated()) {
 			int level = calculateVolume;
 
@@ -396,6 +414,8 @@ public class BabyMonitorFragment extends Fragment {
 
 	@Override
 	public void onResume() {
+		Log.e(TAG, "BabyMonitor->onResume()");
+
 		super.onResume();
 
 		if (timer == null) {
@@ -412,31 +432,28 @@ public class BabyMonitorFragment extends Fragment {
 
 		}
 
-		if (MainActivity.mConnection != null)
-			MainActivity.mConnection.setOnReceiveDataListener(new OnReceiveDataListener() {
-
-				@Override
-				public void onReceiveDataListener(byte[] bData, byte type, int bytesRead) {
-					if (type == 0)
-						; // String empfangen
-					else
-						updateVolume(AudioDetection.calculateVolume(bData, bytesRead));
-				}
-			});
+		mFragmentActive = true;
 	}
 
 	@Override
 	public void onPause() {
+		Log.e(TAG, "BabyMonitor->onPause()");
+
 		super.onPause();
 
 		if (timer != null) {
 			timer.cancel();
 			timer = null;
 		}
+
+		mFragmentActive = false;
+
 	}
 
 	@Override
 	public void onDestroy() {
+		Log.e(TAG, "BabyMonitor->onDestroy()");
+
 		super.onDestroy();
 
 		if (timer != null) {

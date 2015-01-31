@@ -1,9 +1,10 @@
 package babyfon.view.activity;
 
+import java.util.List;
+
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.res.Configuration;
-import android.graphics.Typeface;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
@@ -23,17 +24,14 @@ import android.util.Log;
 import babyfon.init.R;
 import babyfon.settings.SharedPrefs;
 
-import java.util.List;
-
+// TODO: Deprecated durch aktuelle Methoden ersetzen
 public class SettingsActivity extends PreferenceActivity {
 
 	private SharedPrefs mSharedPrefs;
 
 	/**
-	 * Determines whether to always show the simplified settings UI, where
-	 * settings are presented in a single list. When false, settings are shown
-	 * as a master/detail two-pane view on tablets. When true, a single pane is
-	 * shown on tablets.
+	 * Determines whether to always show the simplified settings UI, where settings are presented in a single list. When false, settings are
+	 * shown as a master/detail two-pane view on tablets. When true, a single pane is shown on tablets.
 	 */
 	private static final boolean ALWAYS_SIMPLE_PREFS = false;
 
@@ -46,15 +44,14 @@ public class SettingsActivity extends PreferenceActivity {
 	}
 
 	/**
-	 * Shows the simplified settings UI if the device configuration if the
-	 * device configuration dictates that a simplified, single-pane UI should be
-	 * shown.
+	 * Shows the simplified settings UI if the device configuration if the device configuration dictates that a simplified, single-pane UI
+	 * should be shown.
 	 */
 	private void setupSimplePreferencesScreen() {
 		if (!isSimplePreferences(this)) {
 			return;
 		}
-		
+
 		// Add fake container
 		addPreferencesFromResource(R.xml.pref_fake_container);
 
@@ -183,8 +180,7 @@ public class SettingsActivity extends PreferenceActivity {
 		});
 
 		// Define edittext (Name)
-		final EditTextPreference etpPhoneNumber = (EditTextPreference) getPreferenceManager().findPreference(
-				"phone_number");
+		final EditTextPreference etpPhoneNumber = (EditTextPreference) getPreferenceManager().findPreference("phone_number");
 
 		// Define listener for edittext (Name)
 		etpPhoneNumber.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
@@ -211,19 +207,16 @@ public class SettingsActivity extends PreferenceActivity {
 	}
 
 	/**
-	 * Helper method to determine if the device has an extra-large screen. For
-	 * example, 10" tablets are extra-large.
+	 * Helper method to determine if the device has an extra-large screen. For example, 10" tablets are extra-large.
 	 */
 	private static boolean isXLargeTablet(Context context) {
 		return (context.getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) >= Configuration.SCREENLAYOUT_SIZE_XLARGE;
 	}
 
 	/**
-	 * Determines whether the simplified settings UI should be shown. This is
-	 * true if this is forced via {@link #ALWAYS_SIMPLE_PREFS}, or the device
-	 * doesn't have newer APIs like {@link PreferenceFragment}, or the device
-	 * doesn't have an extra-large screen. In these cases, a single-pane
-	 * "simplified" settings UI should be shown.
+	 * Determines whether the simplified settings UI should be shown. This is true if this is forced via {@link #ALWAYS_SIMPLE_PREFS}, or
+	 * the device doesn't have newer APIs like {@link PreferenceFragment}, or the device doesn't have an extra-large screen. In these cases,
+	 * a single-pane "simplified" settings UI should be shown.
 	 */
 	private static boolean isSimplePreferences(Context context) {
 		return ALWAYS_SIMPLE_PREFS || Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB || !isXLargeTablet(context);
@@ -239,8 +232,7 @@ public class SettingsActivity extends PreferenceActivity {
 	}
 
 	/**
-	 * A preference value change listener that updates the preference's summary
-	 * to reflect its new value.
+	 * A preference value change listener that updates the preference's summary to reflect its new value.
 	 */
 	private static Preference.OnPreferenceChangeListener sBindPreferenceSummaryToValueListener = new Preference.OnPreferenceChangeListener() {
 		@Override
@@ -285,11 +277,9 @@ public class SettingsActivity extends PreferenceActivity {
 	};
 
 	/**
-	 * Binds a preference's summary to its value. More specifically, when the
-	 * preference's value is changed, its summary (line of text below the
-	 * preference title) is updated to reflect the value. The summary is also
-	 * immediately updated upon calling this method. The exact display format is
-	 * dependent on the type of preference.
+	 * Binds a preference's summary to its value. More specifically, when the preference's value is changed, its summary (line of text below
+	 * the preference title) is updated to reflect the value. The summary is also immediately updated upon calling this method. The exact
+	 * display format is dependent on the type of preference.
 	 */
 	private static void bindPreferenceSummaryToValue(Preference preference) {
 
@@ -298,13 +288,12 @@ public class SettingsActivity extends PreferenceActivity {
 
 		// Trigger the listener immediately with the preference's
 		// current value.
-		sBindPreferenceSummaryToValueListener.onPreferenceChange(preference, PreferenceManager
-				.getDefaultSharedPreferences(preference.getContext()).getString(preference.getKey(), ""));
+		sBindPreferenceSummaryToValueListener.onPreferenceChange(preference,
+				PreferenceManager.getDefaultSharedPreferences(preference.getContext()).getString(preference.getKey(), ""));
 	}
 
 	/**
-	 * This fragment shows general preferences only. It is used when the
-	 * activity is showing a two-pane settings UI.
+	 * This fragment shows general preferences only. It is used when the activity is showing a two-pane settings UI.
 	 */
 	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 	public static class GeneralPreferenceFragment extends PreferenceFragment {
@@ -319,8 +308,7 @@ public class SettingsActivity extends PreferenceActivity {
 	}
 
 	/**
-	 * This fragment shows notification preferences only. It is used when the
-	 * activity is showing a two-pane settings UI.
+	 * This fragment shows notification preferences only. It is used when the activity is showing a two-pane settings UI.
 	 */
 	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 	public static class NotificationPreferenceFragment extends PreferenceFragment {

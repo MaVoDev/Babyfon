@@ -7,7 +7,7 @@ import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
 import android.util.Log;
-import babyfon.connectivity.ConnectionInterface.OnConnnectedListener;
+import babyfon.connectivity.ConnectionInterface.OnConnectedListener;
 
 public class BluetoothClientThread extends BluetoothConnectionThread {
 	private static final String TAG = BluetoothClientThread.class.getCanonicalName();
@@ -72,7 +72,7 @@ public class BluetoothClientThread extends BluetoothConnectionThread {
 
 			startListening();
 
-			OnConnnectedListener listener = mBTConnection.getOnConnnectedListener();
+			OnConnectedListener listener = mBTConnection.getOnConnnectedListener();
 			if (listener != null)
 				listener.onConnectedListener(mSocket.getRemoteDevice().getName());
 

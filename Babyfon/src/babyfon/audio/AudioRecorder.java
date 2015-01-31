@@ -36,9 +36,7 @@ public class AudioRecorder {
 
 	private String FolderName = "RecTest";
 
-	public static int BufferElements2Rec = 1024; // want to play 2048 (2K) since
-													// 2 bytes we
-	// use only 1024
+	public static int BufferElements2Rec = 1024; // want to play 2048 (2K) since 2 bytes we use only 1024
 
 	int BytesPerElement = 2; // 2 bytes in 16bit format
 	private AudioRecord recorder;
@@ -67,6 +65,10 @@ public class AudioRecorder {
 
 	public void startRecording() {
 
+		// Nicht noch ein Recording starten, wenn derzeit schon recordet wird!
+		if (isRecording)
+			return;
+
 		Log.i(TAG, "Starting Audio Recording...");
 
 		recorder.startRecording();
@@ -86,8 +88,7 @@ public class AudioRecorder {
 
 		// Log.i(TAG, "Initializing Recorder...");
 
-		int minBufferSize = AudioRecord.getMinBufferSize(RECORDER_SAMPLERATE, RECORDER_CHANNELS,
-				RECORDER_AUDIO_ENCODING);
+		int minBufferSize = AudioRecord.getMinBufferSize(RECORDER_SAMPLERATE, RECORDER_CHANNELS, RECORDER_AUDIO_ENCODING);
 
 		// Log.i(TAG, "BufferSize: " + minBufferSize);
 
@@ -98,8 +99,8 @@ public class AudioRecorder {
 			// RECORDER_CHANNELS,
 			// RECORDER_AUDIO_ENCODING, BufferElements2Rec * BytesPerElement);
 
-			AudioRecord recorder = new AudioRecord(MediaRecorder.AudioSource.MIC, RECORDER_SAMPLERATE,
-					RECORDER_CHANNELS, RECORDER_AUDIO_ENCODING, minBufferSize * 10);
+			AudioRecord recorder = new AudioRecord(MediaRecorder.AudioSource.MIC, RECORDER_SAMPLERATE, RECORDER_CHANNELS,
+					RECORDER_AUDIO_ENCODING, minBufferSize * 10);
 
 			BufferElements2Rec = minBufferSize * 2;
 
@@ -176,7 +177,7 @@ public class AudioRecorder {
 							noiseCounter = 0;
 						} else {
 							noiseCounter++;
-							
+
 						}
 						lastTime = currentTime;
 					}
