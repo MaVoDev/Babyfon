@@ -1,20 +1,22 @@
-Volker
-=============================================================================================================
-Task: Geräusch erkennen
-Task: Bluetooth Verbindung
-Task: Audiostreaming Bluetooth
-Task: Service
-
 Bugs
 ============================================================================================================= 
 06) Bug: Allgemein: Öffnen der Absence noch ein wenig laggy
 11) Bug: Allgemein: Timer und Funktionen im Hintergrund weiter laufen lassen
+
 02) Bug: Bluetooth: Absturz, wenn im Overview die Verbindung auf BT gestellt wird.
+12) Bug: Bluetooth: Verbindung für nicht gepairte Geräte fixen
+13) Bug: Bluetooth: Wert für Geräuscherkennung ermitteln
+14) Bug: Bluetooth: Korrektes Starten und Stoppen des Clients (Eltern) und Server (Baby). Bisher kommt es noch zu Problemen, wenn man nach bestehender Verbindung neu verbinden will
+15) Bug: Bluetooth: Beim Start der App mit letztem bekannten Gerät verbinden
+
 03) Bug: Interface: Beim Start der App wird die Selektierung im Drawer nicht gesetzt
 05) Bug: Interface: Wenn man das Setup beendet, aktualisiert sich der NavigationDrawer nicht. Der Einrichtungsassistent bleibt selected.
+
 07) Bug: Wi-Fi: Die Eltern Talk Funktion funktioniert nur, wenn die App aufm Babygerät neu gestartet wird.
 08) Bug: Wi-Fi: Absturz wenn NoiseLevel aktiviert wird, funzt aber nachm Neustart der App
 09) Bug: Wi-Fi: DatenBytes werden beim Wi-Fi nicht 100% übertragen bei erster Ausführung
+
+
 
 Testfälle:
 =============================================================================================================
