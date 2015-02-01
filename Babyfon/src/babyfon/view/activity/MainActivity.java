@@ -78,7 +78,7 @@ public class MainActivity extends ActionBarActivity {
 	public static Vibrator mVibrator;
 	public static Ringtone mRingtone;
 	public static FrameLayout overlay;
-
+	
 	public static AudioRecorder mAudioRecorder;
 
 	public static IntentFilter mIntentFilterSms;
@@ -597,11 +597,11 @@ public class MainActivity extends ActionBarActivity {
 	}
 
 	public void startNavigationDrawerUpdateThread() {
-		counter = mSharedPrefs.getCounter();
-
 		if (timerNavigationDrawer == null) {
 			timerNavigationDrawer = new Timer();
 		}
+		
+		counter = mSharedPrefs.getCallSMSCounter();
 
 		timerNavigationDrawer.scheduleAtFixedRate(new TimerTask() {
 			public void run() {

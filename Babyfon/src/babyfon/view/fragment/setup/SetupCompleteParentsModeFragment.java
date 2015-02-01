@@ -103,9 +103,11 @@ public class SetupCompleteParentsModeFragment extends Fragment {
 		if (MainActivity.mAudioRecorder != null) {
 			MainActivity.mAudioRecorder.stopRecording();
 		}
+		
+		mSharedPrefs.deleteCallSMS();
+		mSharedPrefs.setCallSMSCounter(0);
 
 		// Store values in the shared preferences
-		mSharedPrefs.setCounter(0);
 		mSharedPrefs.setActiveStateBabyMode(false);
 		mSharedPrefs.setDeviceMode(mSharedPrefs.getDeviceModeTemp());
 		Log.d(TAG, "Device mode: " + mSharedPrefs.getDeviceMode());

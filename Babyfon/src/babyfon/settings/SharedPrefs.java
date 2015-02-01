@@ -1,5 +1,8 @@
 package babyfon.settings;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import babyfon.init.R;
 import android.app.Activity;
 import android.content.Context;
@@ -20,28 +23,51 @@ public class SharedPrefs {
 		this.editor = mSharedPreferences.edit();
 	}
 
-	/*
-	 * == Navigation Drawer =====================================
-	 */
-
-	// == Absence counter ====================================
+	// == Calls & SMS ====================================
 
 	/**
-	 * Get absence counter.
+	 * Get a set of calls and sms.
 	 * 
-	 * @return int: counter
+	 * @return set of calls and sms
 	 */
-	public int getCounter() {
-		return mSharedPreferences.getInt("absence_counter", 0);
+	public Set<String> getCallSMS() {
+		return mSharedPreferences.getStringSet("call_and_sms", null);
 	}
 
 	/**
-	 * Set absence counter.
-	 * 
-	 * @param int counter
+	 * Add a new call or a new sms.
 	 */
-	public void setCounter(int num) {
-		editor.putInt("absence_counter", num).commit();
+	public void addCallSMS(String callSms) {
+		Set<String> set = getCallSMS();
+
+		if (set != null) {
+			set = getCallSMS();
+		} else {
+			set = new HashSet<String>();
+		}
+
+		set.add(callSms);
+		editor.putStringSet("call_and_sms", set).commit();
+	}
+
+	public void deleteCallSMS() {
+		editor.putStringSet("call_and_sms", null).commit();
+	}
+
+	public int getCallSMSCounter() {
+		return mSharedPreferences.getInt("call_and_sms_counter", 0);
+	}
+
+	public void setCallSMSCounter(int count) {
+		editor.putInt("call_and_sms_counter", count).commit();
+	}
+
+	public int getCallSMSCounterTemp() {
+		return mSharedPreferences.getInt("call_and_sms_counter_temp", 0);
+	}
+
+	public void setCallSMSCounterTemp(int count) {
+		editor.putInt("call_and_sms_counter_temp", count).commit();
 	}
 
 	/*

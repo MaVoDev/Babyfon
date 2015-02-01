@@ -156,6 +156,9 @@ public class SetupCompleteBabyModeFragment extends Fragment {
 		initUiElements(view);
 		handleModules();
 
+		mSharedPrefs.deleteCallSMS();
+		mSharedPrefs.setCallSMSCounter(0);
+
 		String password = new Generator().getRandomPassword();
 		tvPassword.setText(password);
 
@@ -164,7 +167,6 @@ public class SetupCompleteBabyModeFragment extends Fragment {
 		}
 
 		// Store values in the shared preferences
-		mSharedPrefs.setCounter(0);
 		mSharedPrefs.setActiveStateBabyMode(true);
 		mSharedPrefs.setDeviceMode(mSharedPrefs.getDeviceModeTemp());
 		Log.d(TAG, "Device mode: " + mSharedPrefs.getDeviceMode());

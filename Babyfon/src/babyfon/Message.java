@@ -98,12 +98,8 @@ public class Message {
 			final String date = strArray[3];
 			final String time = strArray[4];
 
-			((MainActivity) mContext).runOnUiThread(new Runnable() {
-				@Override
-				public void run() {
-					AbsenceFragment.setNewMessage(0, contactName, phoneNumber, date, time);
-				}
-			});
+			mSharedPrefs.addCallSMS(0 + ";" + contactName + ";" + phoneNumber + ";" + date + ";" + time);
+			mSharedPrefs.setCallSMSCounter(mSharedPrefs.getCallSMSCounter() + 1);
 		}
 
 		if (strArray[0].equals(mContext.getString(R.string.BABYFON_MSG_SMS))) {
@@ -113,12 +109,8 @@ public class Message {
 			final String date = strArray[3];
 			final String time = strArray[4];
 
-			((MainActivity) mContext).runOnUiThread(new Runnable() {
-				@Override
-				public void run() {
-					AbsenceFragment.setNewMessage(1, contactName, message, date, time);
-				}
-			});
+			mSharedPrefs.addCallSMS(1 + ";" + contactName + ";" + message + ";" + date + ";" + time);
+			mSharedPrefs.setCallSMSCounter(mSharedPrefs.getCallSMSCounter() + 1);
 		}
 
 		if (strArray[0].equals(mContext.getString(R.string.BABYFON_MSG_SMS_INFO))) {
@@ -127,13 +119,8 @@ public class Message {
 			final String date = strArray[2];
 			final String time = strArray[3];
 
-			((MainActivity) mContext).runOnUiThread(new Runnable() {
-				@Override
-				public void run() {
-					AbsenceFragment.setNewMessage(1, contactName, "", date, time);
-					;
-				}
-			});
+			mSharedPrefs.addCallSMS(1 + ";" + contactName + ";" + "" + ";" + date + ";" + time);
+			mSharedPrefs.setCallSMSCounter(mSharedPrefs.getCallSMSCounter() + 1);
 		}
 
 		if (strArray[0].equals(mContext.getString(R.string.BABYFON_MSG_CONNECTION_FOUND))) {
@@ -294,11 +281,15 @@ public class Message {
 			mSharedPrefs.setPassword(strArray[1]);
 		}
 
-		// if (strArray[0].equals(mContext.getString(R.string.BABYFON_MSG_TALK_TRUE))) {
+		// if
+		// (strArray[0].equals(mContext.getString(R.string.BABYFON_MSG_TALK_TRUE)))
+		// {
 		//
 		// }
 		//
-		// if (strArray[0].equals(mContext.getString(R.string.BABYFON_MSG_TALK_FALSE))) {
+		// if
+		// (strArray[0].equals(mContext.getString(R.string.BABYFON_MSG_TALK_FALSE)))
+		// {
 		//
 		// }
 	}
