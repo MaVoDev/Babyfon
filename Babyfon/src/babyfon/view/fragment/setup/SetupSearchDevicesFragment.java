@@ -360,16 +360,6 @@ public class SetupSearchDevicesFragment extends Fragment {
 						}
 						// Wi-Fi
 						else if (mSharedPrefs.getConnectivityTypeTemp() == 2) {
-							// try {
-							// localIP = new
-							// WifiHandler(mContext).getLocalIPv4Address();
-							// } catch (SocketException e) {
-							// // TODO Auto-generated catch block
-							// e.printStackTrace();
-							// } catch (UnknownHostException e) {
-							// // TODO Auto-generated catch block
-							// e.printStackTrace();
-							// }
 							new TCPSender(mContext).sendMessage(mSharedPrefs.getRemoteAddressTemp(),
 									mContext.getString(R.string.BABYFON_MSG_AUTH_REQ) + ";" + password + ";"
 											+ mSharedPrefs.getHostAddress() + ";" + android.os.Build.MODEL);
