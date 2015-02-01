@@ -259,7 +259,7 @@ public class SetupConnectionFragment extends Fragment {
 						return;
 					} else {
 						mSharedPrefs.setHostAdress(mBluetoothHandler.getOwnAddress());
-						((MainActivity) mContext).doBindService();
+						((MainActivity) MainActivity.getContext()).doBindService();
 					}
 				} else
 

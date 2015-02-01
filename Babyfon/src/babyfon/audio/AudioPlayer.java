@@ -52,7 +52,7 @@ public class AudioPlayer {
 
 	public void playData(byte[] data) {
 
-//		Log.i(TAG, "playData! " + data);
+		// Log.i(TAG, "playData! " + data);
 
 		track.write(data, 0, data.length);
 
@@ -68,6 +68,10 @@ public class AudioPlayer {
 		// track.write(data, 0, readSize);
 		// }
 
+	}
+
+	public void playData(byte[] data, int bytesRead) {
+		track.write(data, 0, bytesRead);
 	}
 
 	private void calculateVolume(byte[] bData, int readSize) {

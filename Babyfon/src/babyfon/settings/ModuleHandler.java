@@ -213,14 +213,6 @@ public class ModuleHandler {
 	// }
 
 	/**
-	 * Start AudioRecorder
-	 */
-	public void startAudioRecorder() {
-		// MainActivity.mAudioRecorder = new AudioRecorder(MainActivity.mConnection);
-		MainActivity.mAudioRecorder.startRecording();
-	}
-
-	/**
 	 * Stop AudioRecorder
 	 */
 	public void stopAudioRecorder() {

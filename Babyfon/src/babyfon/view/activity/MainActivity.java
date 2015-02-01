@@ -15,6 +15,7 @@ import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.content.res.Configuration;
 import android.content.res.TypedArray;
+import android.database.DataSetObserver;
 import android.media.Ringtone;
 import android.os.Bundle;
 import android.os.IBinder;
@@ -271,16 +272,18 @@ public class MainActivity extends ActionBarActivity {
 				mModuleHandler.startUDPReceiver();
 			}
 
-			if (mSharedPrefs.getRemoteAddress() != null) {
-				if (mSharedPrefs.isNoiseActivated()) {
-					if (MainActivity.mAudioRecorder == null) {
-						// MainActivity.mAudioRecorder = new AudioRecorder(this, mBoundService.getConnection());
-						MainActivity.mAudioRecorder = new AudioRecorder(this, null);
-						MainActivity.mAudioRecorder.startRecording();
-					}
-				} else {
-					if (MainActivity.mAudioRecorder != null) {
-						MainActivity.mAudioRecorder.stopRecording();
+			if (mSharedPrefs.getConnectivityType() != 1) { // BEI BT NICHT!
+				if (mSharedPrefs.getRemoteAddress() != null) {
+					if (mSharedPrefs.isNoiseActivated()) {
+						if (MainActivity.mAudioRecorder == null) {
+							// MainActivity.mAudioRecorder = new AudioRecorder(this, mBoundService.getConnection());
+							MainActivity.mAudioRecorder = new AudioRecorder(this, null);
+							MainActivity.mAudioRecorder.startRecording();
+						}
+					} else {
+						if (MainActivity.mAudioRecorder != null) {
+							MainActivity.mAudioRecorder.stopRecording();
+						}
 					}
 				}
 			}
@@ -572,7 +575,7 @@ public class MainActivity extends ActionBarActivity {
 		// setting the nav drawer list adapter
 		adapter = new NavigationDrawerListAdapter(getApplicationContext(), items);
 		mDrawerList.setAdapter(adapter);
-
+		
 		// Drawer Layout, Drawer Icon, Drawer Name (Drawer open, close)
 		// mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout,
 		// R.drawable.ic_drawer, R.string.app_name, R.string.app_name) {
@@ -637,12 +640,13 @@ public class MainActivity extends ActionBarActivity {
 			Log.i(TAG, "Service connected with app...");
 			Toast.makeText(MainActivity.this, "Service connected.", Toast.LENGTH_SHORT).show();
 
-			if (MainActivity.mAudioRecorder != null) {
-				MainActivity.mAudioRecorder.stopRecording();
-				MainActivity.mAudioRecorder = null;
-			}
-			MainActivity.mAudioRecorder = new AudioRecorder(MainActivity.this, mBoundService);
-			MainActivity.mAudioRecorder.startRecording();
+//			if (MainActivity.mAudioRecorder != null) {
+//				MainActivity.mAudioRecorder.stopRecording();
+//				MainActivity.mAudioRecorder = null;
+//			}
+//			MainActivity.mAudioRecorder = new AudioRecorder(MainActivity.this, mBoundService);
+			
+//			MainActivity.mAudioRecorder.startRecording();
 
 			// TODO: einbauen:
 			// Verbinden mit aktuelle gepairtem Device...

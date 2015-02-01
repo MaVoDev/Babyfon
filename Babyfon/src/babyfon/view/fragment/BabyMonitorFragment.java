@@ -63,7 +63,7 @@ public class BabyMonitorFragment extends Fragment {
 	private TextView title;
 
 	private LinearLayout layoutRemote;
-	
+
 	private long currentTime;
 	private long lastTime;
 
@@ -281,29 +281,26 @@ public class BabyMonitorFragment extends Fragment {
 		kickRemote.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				new AlertDialog.Builder(getActivity())
-						.setTitle(mContext.getString(R.string.dialog_title_kick_remote))
+				new AlertDialog.Builder(getActivity()).setTitle(mContext.getString(R.string.dialog_title_kick_remote))
 						.setMessage(mContext.getString(R.string.dialog_message_kick_remote))
 						.setNegativeButton(mContext.getString(R.string.dialog_button_no), null)
-						.setPositiveButton(mContext.getString(R.string.dialog_button_yes),
-								new DialogInterface.OnClickListener() {
-									@Override
-									public void onClick(DialogInterface dialog, int id) {
-										mModuleHandler.stopRemoteCheck();
+						.setPositiveButton(mContext.getString(R.string.dialog_button_yes), new DialogInterface.OnClickListener() {
+							@Override
+							public void onClick(DialogInterface dialog, int id) {
+								mModuleHandler.stopRemoteCheck();
 
-										mSharedPrefs.setRemoteAddress(null);
-										mSharedPrefs.setRemoteName(null);
-										mSharedPrefs.setRemoteOnlineState(false);
+								mSharedPrefs.setRemoteAddress(null);
+								mSharedPrefs.setRemoteName(null);
+								mSharedPrefs.setRemoteOnlineState(false);
 
-										if (mSharedPrefs.getForwardingSMS() || mSharedPrefs.getForwardingSMSInfo()) {
-											mModuleHandler.unregisterSMS();
-										}
+								if (mSharedPrefs.getForwardingSMS() || mSharedPrefs.getForwardingSMSInfo()) {
+									mModuleHandler.unregisterSMS();
+								}
 
-										new Message(mContext).send(mContext
-												.getString(R.string.BABYFON_MSG_SYSTEM_DISCONNECTED));
-										updateUI();
-									}
-								}).create().show();
+								new Message(mContext).send(mContext.getString(R.string.BABYFON_MSG_SYSTEM_DISCONNECTED));
+								updateUI();
+							}
+						}).create().show();
 			}
 		});
 
@@ -330,7 +327,7 @@ public class BabyMonitorFragment extends Fragment {
 			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 				if (isChecked) {
 					// checked true
-					if(mSharedPrefs.isNoiseActivated()) {
+					if (mSharedPrefs.isNoiseActivated()) {
 						mSharedPrefs.setNoiseActivated(false);
 					}
 					startRecorder();
@@ -354,8 +351,7 @@ public class BabyMonitorFragment extends Fragment {
 					mSharedPrefs.setDeviceModeTemp(1);
 					FragmentTransaction ft = mFragmentManager.beginTransaction();
 					ft.setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out);
-					ft.replace(R.id.frame_container, new SetupConnectionFragment(mContext), null).addToBackStack(null)
-							.commit();
+					ft.replace(R.id.frame_container, new SetupConnectionFragment(mContext), null).addToBackStack(null).commit();
 				}
 			}
 		});
@@ -366,7 +362,7 @@ public class BabyMonitorFragment extends Fragment {
 	public void updateVolume(final int calculateVolume) {
 		if (mSharedPrefs.isNoiseActivated() && !mSharedPrefs.isTalkActivated()) {
 			final int level = calculateVolume;
-			
+
 			((MainActivity) mContext).runOnUiThread(new Runnable() {
 				@Override
 				public void run() {
@@ -389,7 +385,7 @@ public class BabyMonitorFragment extends Fragment {
 				}
 				lastTime = currentTime;
 			}
-			
+
 			if (noiseCounter > 10) {
 				noiseCounter = 0;
 				((MainActivity) mContext).runOnUiThread(new Runnable() {
@@ -469,15 +465,24 @@ public class BabyMonitorFragment extends Fragment {
 	}
 
 	public void startRecorder() {
-		if (MainActivity.mAudioRecorder == null) {
-			MainActivity.mAudioRecorder = new AudioRecorder(mContext, null); 
+		if (mSharedPrefs.getConnectivityType() == 1) {
+			MainActivity.mBoundService.startRecording();
+		} else {
+			if (MainActivity.mAudioRecorder == null) {
+				MainActivity.mAudioRecorder = new AudioRecorder(mContext, MainActivity.mBoundService);
+			}
+			MainActivity.mAudioRecorder.startRecording();
 		}
-		MainActivity.mAudioRecorder.startRecording();
 	}
 
 	public void stopRecorder() {
-		if (MainActivity.mAudioRecorder != null) {
-			MainActivity.mAudioRecorder.stopRecording();
+		if (mSharedPrefs.getConnectivityType() == 1) {
+			MainActivity.mBoundService.stopRecording();
+		} else {
+			if (MainActivity.mAudioRecorder != null) {
+				MainActivity.mAudioRecorder.stopRecording();
+			}
 		}
+
 	}
 }

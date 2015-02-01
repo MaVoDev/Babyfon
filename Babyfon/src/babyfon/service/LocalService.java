@@ -4,7 +4,9 @@ import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
+import android.media.AudioRecord;
 import android.os.Binder;
 import android.os.IBinder;
 import android.support.v4.app.NotificationCompat;
@@ -12,10 +14,12 @@ import android.util.Log;
 import android.widget.Toast;
 import babyfon.Message;
 import babyfon.audio.AudioPlayer;
+import babyfon.audio.AudioRecorder;
 import babyfon.connectivity.ConnectionInterface;
 import babyfon.connectivity.ConnectionInterface.OnReceiveDataListener;
 import babyfon.connectivity.bluetooth.BluetoothConnection;
 import babyfon.init.R;
+import babyfon.settings.SharedPrefs;
 import babyfon.view.activity.MainActivity;
 
 public class LocalService extends Service {
@@ -25,7 +29,11 @@ public class LocalService extends Service {
 
 	private NotificationManager mNM;
 
+	private SharedPrefs mSharedPrefs;
+	private Context mContext;
+
 	private AudioPlayer mAudioPlayer;
+	private AudioRecorder mAudioRecord;
 	private ConnectionInterface mConnection;
 
 	// Unique Identification Number for the Notification.
@@ -46,6 +54,8 @@ public class LocalService extends Service {
 	public void onCreate() {
 		Log.i(TAG, "Service->onCreate()...");
 
+		mContext = MainActivity.getContext();
+
 		// Damit Service nicht beendet wird bei zu wenig Speicher, starten mit startForeground
 		startForeground(NOTIFICATION_ID, createServiceNotification());
 
@@ -64,7 +74,7 @@ public class LocalService extends Service {
 	}
 
 	public void initBtConnection() {
-		mConnection = new BluetoothConnection();
+		mConnection = new BluetoothConnection(getApplicationContext());
 	}
 
 	@Override
@@ -126,6 +136,8 @@ public class LocalService extends Service {
 	 */
 	public void startServer() {
 
+		// BABY MODE
+
 		mConnection.startServer();
 
 		mConnection.setOnReceiveDataListener(new OnReceiveDataListener() {
@@ -138,7 +150,7 @@ public class LocalService extends Service {
 					// PLay Audio
 					;
 				else
-					new Message(MainActivity.getContext()).handleIncomingMessage(new String(bData, 0, bytesRead));
+					new Message(mContext).handleIncomingMessage(new String(bData, 0, bytesRead));
 			}
 		});
 	}
@@ -151,6 +163,8 @@ public class LocalService extends Service {
 	 */
 	public void connectTo(String address) {
 
+		// PARENTS MODE
+
 		mConnection.connectToAdress(address);
 
 		mConnection.setOnReceiveDataListener(new OnReceiveDataListener() {
@@ -159,10 +173,11 @@ public class LocalService extends Service {
 			public void onReceiveDataListener(byte[] bData, byte type, int bytesRead) {
 
 				if (type == 1)
-					// PLay Audio
-					mAudioPlayer.playData(bData);
-				else
-					new Message(getApplicationContext()).handleIncomingMessage(new String(bData, 0, bytesRead));
+					if (mSharedPrefs.isHearActivated())
+						// PLay Audio
+						mAudioPlayer.playData(bData);
+					else
+						new Message(mContext).handleIncomingMessage(new String(bData, 0, bytesRead));
 			}
 		});
 	}
@@ -190,5 +205,16 @@ public class LocalService extends Service {
 
 	public ConnectionInterface getConnection() {
 		return mConnection;
+	}
+
+	public void startRecording() {
+		if (mAudioRecord == null)
+			mAudioRecord = new AudioRecorder(mContext, this);
+		mAudioRecord.startRecording();
+	}
+
+	public void stopRecording() {
+		if (mAudioRecord != null)
+			mAudioRecord.stopRecording();
 	}
 }

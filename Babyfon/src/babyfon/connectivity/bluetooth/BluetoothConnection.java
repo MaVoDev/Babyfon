@@ -49,9 +49,10 @@ public class BluetoothConnection implements ConnectionInterface {
 		}
 	};
 
-	public BluetoothConnection() {
+	public BluetoothConnection(Context context) {
 		mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-		mSharedPrefs = new SharedPrefs(MainActivity.getContext());
+		// mSharedPrefs = new SharedPrefs(MainActivity.getContext());
+		mSharedPrefs = new SharedPrefs(context);
 	}
 
 	@Override

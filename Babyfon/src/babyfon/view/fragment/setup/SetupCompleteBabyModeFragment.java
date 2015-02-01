@@ -98,13 +98,13 @@ public class SetupCompleteBabyModeFragment extends Fragment {
 	public void handleModules() {
 
 		if (mSharedPrefs.getConnectivityTypeTemp() != 3) {
-			System.out.println("1111111111111111111111111111111111");
 			if (mSharedPrefs.getForwardingSMSInfoTemp() || mSharedPrefs.getForwardingSMSTemp()) {
 				mModuleHandler.registerSMS();
 			}
 
 			if (mSharedPrefs.getConnectivityTypeTemp() == 1) {
-				System.out.println("222222222222222222222222222222222222");
+				mModuleHandler.unregisterBattery();
+
 				new BluetoothHandler(mContext).enableBluetoothDiscoverability();
 				MainActivity.mBoundService.startServer();
 
@@ -130,7 +130,6 @@ public class SetupCompleteBabyModeFragment extends Fragment {
 
 			if (mSharedPrefs.getConnectivityTypeTemp() == 2) {
 				mModuleHandler.stopBT();
-				System.out.println("3333333333333333333333333333333333333333333");
 				mModuleHandler.unregisterBattery();
 				mModuleHandler.startTCPReceiver();
 				mModuleHandler.startUDPReceiver();
@@ -139,7 +138,6 @@ public class SetupCompleteBabyModeFragment extends Fragment {
 			mSharedPrefs.setRemoteAddress(null);
 			mSharedPrefs.setRemoteName(null);
 		} else {
-			System.out.println("44444444444444444444444444444444444444");
 			mModuleHandler.unregisterBattery();
 			mModuleHandler.stopTCPReceiver();
 			mModuleHandler.stopUDPReceiver();

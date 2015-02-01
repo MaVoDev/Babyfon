@@ -168,7 +168,10 @@ public class Message {
 				if (mSharedPrefs.getForwardingSMS() || mSharedPrefs.getForwardingSMSInfo()) {
 					mModuleHandler.registerSMS();
 				}
-				mModuleHandler.startRemoteCheck();
+
+				if (mSharedPrefs.getConnectivityTypeTemp() == 2)
+					mModuleHandler.startRemoteCheck();
+
 			} else {
 				send(mContext.getString(R.string.BABYFON_MSG_AUTH_DENIED));
 				if (mSharedPrefs.getConnectivityTypeTemp() == 1) {
@@ -291,12 +294,12 @@ public class Message {
 			mSharedPrefs.setPassword(strArray[1]);
 		}
 
-//		if (strArray[0].equals(mContext.getString(R.string.BABYFON_MSG_TALK_TRUE))) {
-//			
-//		}
-//
-//		if (strArray[0].equals(mContext.getString(R.string.BABYFON_MSG_TALK_FALSE))) {
-//
-//		}
+		// if (strArray[0].equals(mContext.getString(R.string.BABYFON_MSG_TALK_TRUE))) {
+		//
+		// }
+		//
+		// if (strArray[0].equals(mContext.getString(R.string.BABYFON_MSG_TALK_FALSE))) {
+		//
+		// }
 	}
 }
