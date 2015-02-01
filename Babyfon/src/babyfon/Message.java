@@ -69,13 +69,14 @@ public class Message {
 	private void send(String target, String msg) {
 		Log.e(TAG, "Sending: " + msg);
 
+		// BT
 		if (mSharedPrefs.getConnectivityType() == 1) {
 			if (MainActivity.mBoundService != null) {
 				MainActivity.mBoundService.getConnection().sendMessage(msg + ";");
 			}
 		}
-
-		if (mSharedPrefs.getConnectivityType() == 2) {
+		// WIFI
+		else if (mSharedPrefs.getConnectivityType() == 2) {
 			new TCPSender(mContext).sendMessage(target, msg);
 		}
 	}
@@ -86,6 +87,7 @@ public class Message {
 
 		final String[] strArray = str.split(";");
 
+		// AUF SEITE DES ELTERN-MESSAGES
 		if (strArray[0].equals(mContext.getString(R.string.BABYFON_MSG_BATTERY))) {
 			// Batterie
 			mSharedPrefs.setBatteryLevel(Integer.parseInt(strArray[1]));
@@ -137,6 +139,7 @@ public class Message {
 			});
 		}
 
+		// AUF SEITE DES BABY-GERÄTS
 		if (strArray[0].equals(mContext.getString(R.string.BABYFON_MSG_AUTH_REQ))) {
 			final String password = strArray[1];
 			final String remoteAddress = strArray[2];
@@ -156,7 +159,17 @@ public class Message {
 					mModuleHandler.registerSMS();
 				}
 
-				if (mSharedPrefs.getConnectivityTypeTemp() == 2) {
+				// BLUETOOTH
+				if (mSharedPrefs.getConnectivityTypeTemp() == 1) {
+					if (MainActivity.mBoundService != null) {
+						// Wenn Confirmed recording starten
+						MainActivity.mBoundService.startRecording();
+
+						mSharedPrefs.setNoiseActivated(true);
+
+					}
+				} // WIFI
+				else if (mSharedPrefs.getConnectivityTypeTemp() == 2) {
 					mModuleHandler.startRemoteCheck();
 				}
 
@@ -171,14 +184,18 @@ public class Message {
 			}
 		}
 
+		// AUF SEITE DES ELTERN-GERÄTS
 		if (strArray[0].equals(mContext.getString(R.string.BABYFON_MSG_AUTH_CONFIRMED))) {
 			mSharedPrefs.setPassword(strArray[1]);
 
-			if (mSharedPrefs.getConnectivityTypeTemp() == 2) {
-				mModuleHandler.startRemoteCheck();
-			} else if (mSharedPrefs.getConnectivityTypeTemp() == 1) {
-
+			// BT
+			if (mSharedPrefs.getConnectivityTypeTemp() == 1) {
+				mSharedPrefs.setRemoteOnlineState(true);
 				MainActivity.mBoundService.getConnection().registerDisconnectHandler();
+			}
+			// WIFI
+			else if (mSharedPrefs.getConnectivityTypeTemp() == 2) {
+				mModuleHandler.startRemoteCheck();
 			}
 
 			// TODO BT TEST -> bessere lösung überlegen! (unten kommt class cast
@@ -194,6 +211,7 @@ public class Message {
 					.addToBackStack(null).commit();
 		}
 
+		// AUF SEITE DES ELTERN-GERÄTS
 		if (strArray[0].equals(mContext.getString(R.string.BABYFON_MSG_AUTH_DENIED))) {
 
 			mSharedPrefs.setRemoteAddress(null);

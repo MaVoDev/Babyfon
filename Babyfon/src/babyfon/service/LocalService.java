@@ -13,6 +13,7 @@ import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 import android.widget.Toast;
 import babyfon.Message;
+import babyfon.audio.AudioDetection;
 import babyfon.audio.AudioPlayer;
 import babyfon.audio.AudioRecorder;
 import babyfon.connectivity.ConnectionInterface;
@@ -21,6 +22,7 @@ import babyfon.connectivity.bluetooth.BluetoothConnection;
 import babyfon.init.R;
 import babyfon.settings.SharedPrefs;
 import babyfon.view.activity.MainActivity;
+import babyfon.view.fragment.BabyMonitorFragment;
 
 public class LocalService extends Service {
 	private static final String TAG = "LocalService";
@@ -33,7 +35,7 @@ public class LocalService extends Service {
 	private Context mContext;
 
 	private AudioPlayer mAudioPlayer;
-	private AudioRecorder mAudioRecord;
+	private AudioRecorder mAudioRecorder;
 	private ConnectionInterface mConnection;
 
 	// Unique Identification Number for the Notification.
@@ -115,8 +117,14 @@ public class LocalService extends Service {
 		if (mConnection != null)
 			mConnection.stopConnection();
 
-		if (mAudioPlayer != null)
+		if (mAudioPlayer != null) {
 			mAudioPlayer.stopPlaying();
+		}
+
+		if (mAudioRecorder != null) {
+			mAudioRecorder.stopRecording();
+			mAudioRecorder.cleanUp();
+		}
 
 		// Tell the user we stopped.
 		// Toast.makeText(this, R.string.local_service_stopped, Toast.LENGTH_SHORT).show();
@@ -149,7 +157,7 @@ public class LocalService extends Service {
 
 				if (type == 1) {
 					// PLay Audio
-					;
+					mAudioPlayer.playData(bData, bytesRead);
 				} else {
 					new Message(mContext).handleIncomingMessage(new String(bData, 0, bytesRead));
 				}
@@ -180,10 +188,22 @@ public class LocalService extends Service {
 						// PLay Audio
 						// mAudioPlayer.playData(bData);
 						mAudioPlayer.playData(bData, bytesRead);
+					}
+					// Update stuff on UI
+					if (MainActivity.getContext() != null) {
 
-						// Update stuff on UI
+						BabyMonitorFragment babyMonitorFragment = (BabyMonitorFragment) ((MainActivity) MainActivity.getContext())
+								.getFragmentById("BabyMonitorFragment");
+
+						if (babyMonitorFragment != null) {
+							if (babyMonitorFragment.isVisible()) {
+								Log.i(TAG, "Updating volume in BabyMonitorFragment...");
+								babyMonitorFragment.updateVolume(AudioDetection.calculateVolume(bData, bytesRead));
+							}
+						}
 
 					}
+
 				} else {
 					new Message(mContext).handleIncomingMessage(new String(bData, 0, bytesRead));
 				}
@@ -217,13 +237,15 @@ public class LocalService extends Service {
 	}
 
 	public void startRecording() {
-		if (mAudioRecord == null)
-			mAudioRecord = new AudioRecorder(mContext, this);
-		mAudioRecord.startRecording();
+		Log.i(TAG, "Start Recording on Service...");
+		if (mAudioRecorder == null)
+			mAudioRecorder = new AudioRecorder(mContext, this);
+		mAudioRecorder.startRecording();
 	}
 
 	public void stopRecording() {
-		if (mAudioRecord != null)
-			mAudioRecord.stopRecording();
+		Log.i(TAG, "Stop Recording on Service...");
+		if (mAudioRecorder != null)
+			mAudioRecorder.stopRecording();
 	}
 }

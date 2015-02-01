@@ -40,9 +40,10 @@ public class BluetoothConnection implements ConnectionInterface {
 				// disconnected, do what you want to notify user here, toast, or dialog, etc.
 				Log.e(TAG, "Bluetooth disconnected!");
 
-				MainActivity.mBoundService.stopRecording();
-
+				mSharedPrefs.setNoiseActivated(false);
 				mSharedPrefs.setRemoteOnlineState(false);
+
+				MainActivity.mBoundService.stopRecording();
 
 				new Message(MainActivity.getContext()).send(context.getString(R.string.BABYFON_MSG_SYSTEM_DISCONNECTED));
 

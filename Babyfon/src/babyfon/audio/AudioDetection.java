@@ -6,7 +6,8 @@ public class AudioDetection {
 	public static int calculateVolume(byte[] bData, int readSize) {
 
 		// TODO: readsize auslesen aus buffer? wie?
-		readSize = bData.length;
+		if (readSize <= 0)
+			readSize = bData.length;
 
 		double sum = 0;
 

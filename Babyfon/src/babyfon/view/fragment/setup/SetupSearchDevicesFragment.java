@@ -273,7 +273,9 @@ public class SetupSearchDevicesFragment extends Fragment {
 
 					String msg = new String(mContext.getString(R.string.BABYFON_MSG_AUTH_REQ) + ";" + mPW + ";"
 							+ BluetoothAdapter.getDefaultAdapter().getAddress() + ";" + android.os.Build.MODEL);
-					new Message(mContext).send(msg);
+					// new Message(mContext).send(msg);
+					mConnection.sendMessage(msg); // muss benutzt werden, da während des setups die connectivityType Pref noch nicht gesetzt
+													// ist...
 
 					// Verbunden also auf die Abschlussseite wechseln
 					// getFragmentManager().beginTransaction()

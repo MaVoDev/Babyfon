@@ -3,26 +3,14 @@ package babyfon.view.fragment;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import babyfon.Message;
-import babyfon.Notification;
-import babyfon.audio.AudioDetection;
-import babyfon.audio.AudioRecorder;
-import babyfon.connectivity.ConnectionInterface.OnReceiveDataListener;
-import babyfon.init.R;
-import babyfon.settings.ModuleHandler;
-import babyfon.settings.SharedPrefs;
-import babyfon.view.activity.MainActivity;
-import babyfon.view.fragment.setup.SetupConnectionFragment;
-import android.app.Activity;
 import android.app.AlertDialog;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -35,12 +23,16 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import babyfon.Message;
 import babyfon.Notification;
+import babyfon.audio.AudioRecorder;
 import babyfon.init.R;
 import babyfon.settings.ModuleHandler;
 import babyfon.settings.SharedPrefs;
+import babyfon.view.activity.MainActivity;
+import babyfon.view.fragment.setup.SetupConnectionFragment;
 
 public class BabyMonitorFragment extends Fragment {
 
+	private int mNoiseThreshold = 50;
 	private static final String TAG = BabyMonitorFragment.class.getCanonicalName();
 	// Define UI elements
 	private ImageView kickRemote;
@@ -83,6 +75,9 @@ public class BabyMonitorFragment extends Fragment {
 
 	// Constructor
 	public BabyMonitorFragment(Context mContext) {
+		// WORKAROUND
+		((MainActivity) MainActivity.getContext()).setFragmentForId(this, "BabyMonitorFragment");
+
 		mModuleHandler = new ModuleHandler(mContext);
 		mSharedPrefs = new SharedPrefs(mContext);
 
@@ -370,7 +365,7 @@ public class BabyMonitorFragment extends Fragment {
 				}
 			});
 
-			if (level > 50) {
+			if (level > mNoiseThreshold) {
 				if (currentTime == 0 && lastTime == 0) {
 					currentTime = System.currentTimeMillis();
 					lastTime = System.currentTimeMillis();
@@ -419,6 +414,12 @@ public class BabyMonitorFragment extends Fragment {
 		Log.e(TAG, "BabyMonitor->onResume()");
 
 		super.onResume();
+
+		if (mSharedPrefs.getConnectivityType() == 1) {
+			mNoiseThreshold = 100;
+		} else {
+			mNoiseThreshold = 50;
+		}
 
 		if (timer == null) {
 			timer = new Timer();

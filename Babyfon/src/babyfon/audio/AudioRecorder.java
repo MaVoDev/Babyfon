@@ -226,7 +226,7 @@ public class AudioRecorder {
 			isRecording = false;
 			recorder.stop();
 			MainActivity.mAudioRecorder = null;
-			recorder = null;
+//			recorder = null;
 			Log.i(TAG, "Recording stopped...");
 		}
 	}

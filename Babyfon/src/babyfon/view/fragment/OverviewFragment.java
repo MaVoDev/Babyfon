@@ -81,6 +81,9 @@ public class OverviewFragment extends Fragment {
 
 	// Constructor
 	public OverviewFragment(Context mContext) {
+		// WORKAROUND
+		((MainActivity) MainActivity.getContext()).setFragmentForId(this, "OverviewFragment");
+
 		mModuleHandler = new ModuleHandler(mContext);
 		mSharedPrefs = new SharedPrefs(mContext);
 
