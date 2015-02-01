@@ -6,7 +6,6 @@ import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
-import android.media.AudioRecord;
 import android.os.Binder;
 import android.os.IBinder;
 import android.support.v4.app.NotificationCompat;
@@ -25,7 +24,7 @@ import babyfon.view.activity.MainActivity;
 import babyfon.view.fragment.BabyMonitorFragment;
 
 public class LocalService extends Service {
-	private static final String TAG = "LocalService";
+	private static final String TAG = LocalService.class.getCanonicalName();
 
 	private static final int NOTIFICATION_ID = 0;
 

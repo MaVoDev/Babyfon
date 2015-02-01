@@ -416,7 +416,7 @@ public class BabyMonitorFragment extends Fragment {
 		super.onResume();
 
 		if (mSharedPrefs.getConnectivityType() == 1) {
-			mNoiseThreshold = 100;
+			mNoiseThreshold = 80;
 		} else {
 			mNoiseThreshold = 50;
 		}

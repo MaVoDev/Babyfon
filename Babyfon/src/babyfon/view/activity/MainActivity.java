@@ -15,7 +15,6 @@ import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.content.res.Configuration;
 import android.content.res.TypedArray;
-import android.database.DataSetObserver;
 import android.media.Ringtone;
 import android.os.Bundle;
 import android.os.IBinder;

@@ -1,9 +1,5 @@
 package babyfon.audio;
 
-import java.util.Timer;
-import java.util.TimerTask;
-
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.media.AudioFormat;
@@ -11,9 +7,6 @@ import android.media.AudioRecord;
 import android.media.MediaRecorder;
 import android.net.Uri;
 import android.util.Log;
-import babyfon.Notification;
-import babyfon.connectivity.ConnectionInterface;
-import babyfon.connectivity.wifi.UDPReceiver;
 import babyfon.connectivity.wifi.UDPSender;
 import babyfon.service.LocalService;
 import babyfon.settings.SharedPrefs;
@@ -129,23 +122,6 @@ public class AudioRecorder {
 			if (readSize < 0)
 				return;
 
-			// AUDIO DETECTION
-
-			double sum = 0;
-
-			for (int i = 0; i < readSize; i++) {
-				sum += sData[i] * sData[i];
-			}
-			if (readSize > 0) {
-				// amplitude == Lautstärke
-				double amplitude = sum / readSize;
-
-				if (amplitude >= VOLUME_THRESHOLD)
-					// TODO: GERÄUSCHERKENNUNG IMPLEMENTIEREN
-					// Führe Aktion durch
-					;
-			}
-
 			// /AUDIO DETECTION
 
 			// // writes the data to file from buffer
@@ -154,15 +130,16 @@ public class AudioRecorder {
 
 			// Log.i(TAG, "Writing data to file: " + sData.toString());
 
+			// BT
 			if (mSharedPrefs.getConnectivityType() == 1) {
 				mService.getConnection().sendData(bData, (byte) 1);
 			}
-
-			if (mSharedPrefs.getConnectivityType() == 2) {
+			// WIFI
+			else if (mSharedPrefs.getConnectivityType() == 2) {
 				mUdpSender.sendUDPMessage(bData);
 			}
-
-			if (mSharedPrefs.getConnectivityType() == 3) {
+			// CALL
+			else if (mSharedPrefs.getConnectivityType() == 3) {
 				if (mSharedPrefs.isNoiseActivated()) {
 					int level = AudioDetection.calculateVolume(bData, 0);
 					System.out.println(level);
@@ -226,7 +203,7 @@ public class AudioRecorder {
 			isRecording = false;
 			recorder.stop();
 			MainActivity.mAudioRecorder = null;
-//			recorder = null;
+			// recorder = null;
 			Log.i(TAG, "Recording stopped...");
 		}
 	}
