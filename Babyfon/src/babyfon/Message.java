@@ -2,6 +2,7 @@ package babyfon;
 
 import android.content.Context;
 import android.support.v4.app.FragmentManager;
+import android.util.Log;
 import babyfon.connectivity.phone.PhoneBookHandler;
 import babyfon.connectivity.wifi.TCPSender;
 import babyfon.init.R;
