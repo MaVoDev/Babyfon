@@ -40,11 +40,13 @@ public class BluetoothConnection implements ConnectionInterface {
 				// disconnected, do what you want to notify user here, toast, or dialog, etc.
 				Log.e(TAG, "Bluetooth disconnected!");
 
+				MainActivity.mBoundService.stopRecording();
+
 				mSharedPrefs.setRemoteOnlineState(false);
 
-				new Message(MainActivity.getContext()).send(MainActivity.getContext().getString(R.string.BABYFON_MSG_SYSTEM_DISCONNECTED));
+				new Message(MainActivity.getContext()).send(context.getString(R.string.BABYFON_MSG_SYSTEM_DISCONNECTED));
 
-				MainActivity.getContext().unregisterReceiver(mReceiver);
+				context.unregisterReceiver(mReceiver);
 			}
 		}
 	};
@@ -80,6 +82,9 @@ public class BluetoothConnection implements ConnectionInterface {
 
 	@Override
 	public void connectToAdress(String address) {
+
+		Log.i(TAG, "Connect to: " + address);
+
 		BluetoothDevice device = mBluetoothAdapter.getRemoteDevice(address);
 		mBluetoothConnectionThread = new BluetoothClientThread(device, mBluetoothAdapter, this);
 		mBluetoothConnectionThread.start();
@@ -87,6 +92,8 @@ public class BluetoothConnection implements ConnectionInterface {
 
 	@Override
 	public void stopConnection() {
+		Log.i(TAG, "Stop Bluetooth...");
+
 		// TODO Disconnect Zeug
 		if (mBluetoothConnectionThread != null)
 			mBluetoothConnectionThread.stopBT();

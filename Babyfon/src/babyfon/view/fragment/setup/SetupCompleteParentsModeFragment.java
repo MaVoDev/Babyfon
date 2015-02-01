@@ -99,11 +99,11 @@ public class SetupCompleteParentsModeFragment extends Fragment {
 			// active.
 			mSound.soundOn();
 		}
-		
+
 		if (MainActivity.mAudioRecorder != null) {
 			MainActivity.mAudioRecorder.stopRecording();
 		}
-		
+
 		mSharedPrefs.deleteCallSMS();
 		mSharedPrefs.setCallSMSCounter(0);
 
@@ -116,16 +116,15 @@ public class SetupCompleteParentsModeFragment extends Fragment {
 		if (mSharedPrefs.getConnectivityType() == 1) {
 			mSharedPrefs.setRemoteAddress(mSharedPrefs.getRemoteAddressTemp());
 			Log.d(TAG, "Remote address: " + mSharedPrefs.getRemoteAddress());
-		} 
-		
+		}
+
 		if (mSharedPrefs.getConnectivityType() == 2) {
 			mModuleHandler.startUDPReceiver();
 			mModuleHandler.startTCPReceiver();
 			mSharedPrefs.setRemoteAddress(mSharedPrefs.getRemoteAddressTemp());
 			Log.d(TAG, "Remote address: " + mSharedPrefs.getRemoteAddress());
+			mModuleHandler.startRemoteCheck();
 		}
-		
-		mModuleHandler.startRemoteCheck();
 
 		initUiElements(view);
 		handleModules();

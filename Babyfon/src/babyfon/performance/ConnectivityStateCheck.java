@@ -111,7 +111,7 @@ public class ConnectivityStateCheck {
 
 				// if (mSharedPrefs.getConnectivityType() == 1 || mSharedPrefs.getConnectivityTypeTemp() == 1) {
 				if (mSharedPrefs.getConnectivityTypeTemp() == 1) {
-					timerRemoteCheck.scheduleAtFixedRate(bluetoothRemoteCheckTask, 5000, 5000);
+					// timerRemoteCheck.scheduleAtFixedRate(bluetoothRemoteCheckTask, 5000, 5000); // BT erstmal auskommentiert
 				}
 
 				// else if (mSharedPrefs.getConnectivityType() == 2 || mSharedPrefs.getConnectivityTypeTemp() == 2) {

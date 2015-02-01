@@ -55,6 +55,7 @@ public class LocalService extends Service {
 		Log.i(TAG, "Service->onCreate()...");
 
 		mContext = MainActivity.getContext();
+		mSharedPrefs = new SharedPrefs(getApplicationContext());
 
 		// Damit Service nicht beendet wird bei zu wenig Speicher, starten mit startForeground
 		startForeground(NOTIFICATION_ID, createServiceNotification());
@@ -146,11 +147,12 @@ public class LocalService extends Service {
 			public void onReceiveDataListener(byte[] bData, byte type, int bytesRead) {
 				// mAudioPlayer.playData(bData);
 
-				if (type == 1)
+				if (type == 1) {
 					// PLay Audio
 					;
-				else
+				} else {
 					new Message(mContext).handleIncomingMessage(new String(bData, 0, bytesRead));
+				}
 			}
 		});
 	}
@@ -167,17 +169,24 @@ public class LocalService extends Service {
 
 		mConnection.connectToAdress(address);
 
+		Log.i(TAG, "Register new onReceiveDataListener for Bluetooth connection...");
 		mConnection.setOnReceiveDataListener(new OnReceiveDataListener() {
 
 			@Override
 			public void onReceiveDataListener(byte[] bData, byte type, int bytesRead) {
 
-				if (type == 1)
-					if (mSharedPrefs.isHearActivated())
+				if (type == 1) {
+					if (mSharedPrefs.isHearActivated()) {
 						// PLay Audio
-						mAudioPlayer.playData(bData);
-					else
-						new Message(mContext).handleIncomingMessage(new String(bData, 0, bytesRead));
+						// mAudioPlayer.playData(bData);
+						mAudioPlayer.playData(bData, bytesRead);
+
+						// Update stuff on UI
+
+					}
+				} else {
+					new Message(mContext).handleIncomingMessage(new String(bData, 0, bytesRead));
+				}
 			}
 		});
 	}

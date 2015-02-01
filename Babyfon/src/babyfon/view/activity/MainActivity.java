@@ -78,7 +78,7 @@ public class MainActivity extends ActionBarActivity {
 	public static Vibrator mVibrator;
 	public static Ringtone mRingtone;
 	public static FrameLayout overlay;
-	
+
 	public static AudioRecorder mAudioRecorder;
 
 	public static IntentFilter mIntentFilterSms;
@@ -148,15 +148,19 @@ public class MainActivity extends ActionBarActivity {
 		// AUSKOMMENTIERT; VS!
 		mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, android.R.string.ok, android.R.string.no);
 
-		if (mSharedPrefs.getConnectivityType() == 1) {
-			// Zum Service verbinden / Service starten
-			doBindService();
-		}
+		// if (mSharedPrefs.getConnectivityType() == 1) {
+		// Zum Service verbinden / Service starten
+		doBindService();
+		// }
 	}
 
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
+
+		// TODO: FÜR TESTZWECKE SERVICE WIEDER AUSMACHEN, WENN APP GESCHLOSSEN WIRD
+		doUnbindService();
+		mModuleHandler.stopRemoteCheck();
 
 		if (timerNavigationDrawer != null) {
 			timerNavigationDrawer.cancel();
@@ -167,11 +171,6 @@ public class MainActivity extends ActionBarActivity {
 			timerConnectivityState.cancel();
 			timerConnectivityState = null;
 		}
-
-		// TODO service für alle anpassen
-		if (mSharedPrefs.getConnectivityType() == 1)
-			// Service unbinden
-			doUnbindService();
 
 		if (mSharedPrefs.getRemoteAddress() != null) {
 			new babyfon.Message(this).send(this.getString(R.string.BABYFON_MSG_SYSTEM_AWAY));
@@ -211,7 +210,9 @@ public class MainActivity extends ActionBarActivity {
 		initNavigationDrawer();
 
 		if (mSharedPrefs.getRemoteAddress() != null) {
-			mModuleHandler.startRemoteCheck();
+			if (mSharedPrefs.getConnectivityType() == 2) {
+				mModuleHandler.startRemoteCheck();
+			}
 			new babyfon.Message(this).send(this.getString(R.string.BABYFON_MSG_CONNECTION_HELLO) + ";" + mSharedPrefs.getHostAddress()
 					+ ";" + mSharedPrefs.getPassword());
 			if (mSharedPrefs.getDeviceMode() == 0) {
@@ -319,8 +320,10 @@ public class MainActivity extends ActionBarActivity {
 			mDrawerList.setBackgroundResource(R.drawable.bg_navigation_drawer_female);
 		}
 
-		if (mSharedPrefs.getRemoteAddress() != null) {
-			mModuleHandler.startRemoteCheck();
+		if (mSharedPrefs.getConnectivityType() == 2) {
+			if (mSharedPrefs.getRemoteAddress() != null) {
+				mModuleHandler.startRemoteCheck();
+			}
 		}
 	}
 
@@ -575,7 +578,7 @@ public class MainActivity extends ActionBarActivity {
 		// setting the nav drawer list adapter
 		adapter = new NavigationDrawerListAdapter(getApplicationContext(), items);
 		mDrawerList.setAdapter(adapter);
-		
+
 		// Drawer Layout, Drawer Icon, Drawer Name (Drawer open, close)
 		// mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout,
 		// R.drawable.ic_drawer, R.string.app_name, R.string.app_name) {
@@ -600,7 +603,7 @@ public class MainActivity extends ActionBarActivity {
 		if (timerNavigationDrawer == null) {
 			timerNavigationDrawer = new Timer();
 		}
-		
+
 		counter = mSharedPrefs.getCallSMSCounter();
 
 		timerNavigationDrawer.scheduleAtFixedRate(new TimerTask() {
@@ -640,13 +643,13 @@ public class MainActivity extends ActionBarActivity {
 			Log.i(TAG, "Service connected with app...");
 			Toast.makeText(MainActivity.this, "Service connected.", Toast.LENGTH_SHORT).show();
 
-//			if (MainActivity.mAudioRecorder != null) {
-//				MainActivity.mAudioRecorder.stopRecording();
-//				MainActivity.mAudioRecorder = null;
-//			}
-//			MainActivity.mAudioRecorder = new AudioRecorder(MainActivity.this, mBoundService);
-			
-//			MainActivity.mAudioRecorder.startRecording();
+			// if (MainActivity.mAudioRecorder != null) {
+			// MainActivity.mAudioRecorder.stopRecording();
+			// MainActivity.mAudioRecorder = null;
+			// }
+			// MainActivity.mAudioRecorder = new AudioRecorder(MainActivity.this, mBoundService);
+
+			// MainActivity.mAudioRecorder.startRecording();
 
 			// TODO: einbauen:
 			// Verbinden mit aktuelle gepairtem Device...
@@ -685,9 +688,16 @@ public class MainActivity extends ActionBarActivity {
 
 	void doUnbindService() {
 		if (mIsBound) {
+			Log.i(TAG, "Unbind service...");
+
 			// Detach our existing connection.
 			unbindService(mServiceConnection);
 			mIsBound = false;
+
+			Log.i(TAG, "Stop service...");
+			// Stop service
+			Intent serviceIntent = new Intent(MainActivity.this, LocalService.class);
+			stopService(serviceIntent);
 		}
 	}
 

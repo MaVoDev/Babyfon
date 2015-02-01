@@ -156,8 +156,9 @@ public class Message {
 					mModuleHandler.registerSMS();
 				}
 
-				if (mSharedPrefs.getConnectivityTypeTemp() == 2)
+				if (mSharedPrefs.getConnectivityTypeTemp() == 2) {
 					mModuleHandler.startRemoteCheck();
+				}
 
 			} else {
 				send(mContext.getString(R.string.BABYFON_MSG_AUTH_DENIED));

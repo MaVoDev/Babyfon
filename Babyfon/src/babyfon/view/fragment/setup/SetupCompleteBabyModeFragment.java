@@ -117,6 +117,8 @@ public class SetupCompleteBabyModeFragment extends Fragment {
 
 						MainActivity.mBoundService.getConnection().registerDisconnectHandler();
 
+						MainActivity.mBoundService.startRecording();
+
 						// String msg = new
 						// String(mContext.getString(R.string.BABYFON_MSG_AUTH_REQ)
 						// + ";" + 0 + ";"

@@ -36,7 +36,7 @@ public abstract class BluetoothConnectionThread extends Thread {
 				Log.i(TAG, "START listening for messages...");
 				// while (isRunning ) {
 				try {
-					OnReceiveDataListener listener = mBTConnection.getOnReceiveDataListener();
+					// OnReceiveDataListener listener = mBTConnection.getOnReceiveDataListener();
 
 					// Leite die empfangenen Nachrichten an den
 					// OnReceiveMsgListener weiter
