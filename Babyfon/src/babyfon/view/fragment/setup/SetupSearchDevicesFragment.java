@@ -167,7 +167,7 @@ public class SetupSearchDevicesFragment extends Fragment {
 			initViewBluetooth();
 			break;
 		case 2:
-			initViewBWifi();
+			initViewWifi();
 			break;
 		case 3:
 			initViewBWifiDirect();
@@ -177,6 +177,9 @@ public class SetupSearchDevicesFragment extends Fragment {
 		btnBackward.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
+				if(mSharedPrefs.getConnectivityTypeTemp() == 1) {
+					mBtHandler.stopSearch();
+				}
 				FragmentTransaction ft = mFragmentManager.beginTransaction();
 				ft.setCustomAnimations(R.anim.anim_slide_in_right, R.anim.anim_slide_out_right);
 				ft.replace(R.id.frame_container, new SetupConnectionFragment(mContext), null).addToBackStack(null)
@@ -216,10 +219,19 @@ public class SetupSearchDevicesFragment extends Fragment {
 									new DialogInterface.OnClickListener() {
 										@Override
 										public void onClick(DialogInterface dialog, int id) {
-											if (mSharedPrefs.getConnectivityType() != 2) {
+											if(mSharedPrefs.getConnectivityTypeTemp() == 1) {
+												mBtHandler.stopSearch();
+											}
+											
+											if (mSharedPrefs.getConnectivityType() == 1) {
 												mModuleHandler.stopTCPReceiver();
+												mModuleHandler.stopUDPReceiver();
+											}
+
+											else if (mSharedPrefs.getConnectivityType() == 2) {
 												mModuleHandler.stopBT();
 											}
+											
 											if (mSharedPrefs.getDeviceMode() == 0) {
 												mFragmentManager
 														.beginTransaction()
@@ -251,10 +263,11 @@ public class SetupSearchDevicesFragment extends Fragment {
 		mDevicesAdapter.clear();
 
 		if (mSharedPrefs.getConnectivityTypeTemp() == 1) {
+			mBtHandler.stopSearch();
 			mBtHandler.searchDevices();
 		} else if (mSharedPrefs.getConnectivityTypeTemp() == 2) {
 			// initList();
-			initViewBWifi();
+			initViewWifi();
 		}
 	}
 
@@ -264,7 +277,7 @@ public class SetupSearchDevicesFragment extends Fragment {
 		mBtHandler = new BluetoothHandler(mContext);
 		mBtHandler.enableBluetooth();
 		mBtHandler.prepareForSearch(mDevicesAdapter);
-
+		
 		mModuleHandler.stopBT();
 
 		if (MainActivity.mBoundService != null) {
@@ -284,7 +297,10 @@ public class SetupSearchDevicesFragment extends Fragment {
 					String msg = new String(mContext.getString(R.string.BABYFON_MSG_AUTH_REQ) + ";" + mPW + ";"
 							+ BluetoothAdapter.getDefaultAdapter().getAddress() + ";" + android.os.Build.MODEL);
 					// new Message(mContext).send(msg);
-					mConnection.sendMessage(msg); // muss benutzt werden, da während des setups die connectivityType Pref noch nicht gesetzt
+					mConnection.sendMessage(msg); // muss benutzt werden, da
+													// während des setups die
+													// connectivityType Pref
+													// noch nicht gesetzt
 													// ist...
 
 					// Verbunden also auf die Abschlussseite wechseln
@@ -298,11 +314,12 @@ public class SetupSearchDevicesFragment extends Fragment {
 					// mModuleHandler.startRemoteCheck();
 				}
 			});
+			mBtHandler.searchDevices();
 		}
 
 	}
 
-	public void initViewBWifi() {
+	public void initViewWifi() {
 		if (new WifiHandler(MainActivity.getContext()).getWifiState() == 0) {
 			new Output().simpleDialog(MainActivity.getContext().getString(R.string.dialog_title_connection_error),
 					MainActivity.getContext().getString(R.string.dialog_message_wifi_disabled), MainActivity

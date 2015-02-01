@@ -44,9 +44,11 @@ public class BluetoothHandler {
 	}
 
 	/**
-	 * Überprüft, ob Bluetooth unterstützt wird und ob Bluetooth ein- oder ausgeschaltet ist.
+	 * Überprüft, ob Bluetooth unterstützt wird und ob Bluetooth ein- oder
+	 * ausgeschaltet ist.
 	 * 
-	 * @return int Bluetooth Status: -1 = not available, 0 = not enabled, 1 = enabled
+	 * @return int Bluetooth Status: -1 = not available, 0 = not enabled, 1 =
+	 *         enabled
 	 */
 	public int getBluetoothState() {
 		mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
@@ -77,7 +79,8 @@ public class BluetoothHandler {
 	/**
 	 * Falls es nicht schon an ist: Bluetooth einschalten.
 	 * 
-	 * @return <b>true</b>, wenn BT schon an ist; <b>false</b>, wenn BT bisher aus war
+	 * @return <b>true</b>, wenn BT schon an ist; <b>false</b>, wenn BT bisher
+	 *         aus war
 	 */
 	public boolean enableBluetooth() {
 		BluetoothAdapter adapter = BluetoothAdapter.getDefaultAdapter();
@@ -91,9 +94,11 @@ public class BluetoothHandler {
 	}
 
 	/**
-	 * Falls es nicht schon an ist: Bluetooth einschalten und Gerät sichtbar für andere Geräte machen.
+	 * Falls es nicht schon an ist: Bluetooth einschalten und Gerät sichtbar für
+	 * andere Geräte machen.
 	 * 
-	 * @return <b>true</b>, wenn BT-discoverability schon an ist; <b>false</b>, wenn BT-discoverability bisher aus war
+	 * @return <b>true</b>, wenn BT-discoverability schon an ist; <b>false</b>,
+	 *         wenn BT-discoverability bisher aus war
 	 */
 	public boolean enableBluetoothDiscoverability() {
 		BluetoothAdapter adapter = BluetoothAdapter.getDefaultAdapter();
@@ -135,6 +140,11 @@ public class BluetoothHandler {
 			Log.i(TAG, "STARTING BLUETOOTH DISCOVERY...");
 			mBtDiscovering = mBluetoothAdapter.startDiscovery();
 		}
+	}
+
+	public void stopSearch() {
+		mBtDiscovering = false;
+		mBluetoothAdapter.cancelDiscovery();
 	}
 
 	public void unregisterReceiver() {

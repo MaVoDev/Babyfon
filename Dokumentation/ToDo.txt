@@ -6,29 +6,22 @@ Task: Audiostreaming Bluetooth
 Task: Service
 
 Bugs
-=============================================================================================================
-Bug: Bluetooth: Wenn im Elternmode Bluetooth gewählt ist und die App beendet wird, gibts nen Absturz   
-Bug: Absturz, wenn im Overview die Verbindung auf BT gestellt wird.
-Bug 2: Beim Start der App wird die Selektierung im Drawer nicht gesetzt
-Bug 2: Anzahl der SMS im Drawer nicht aktualisiert
-Bug 2: Wenn man das Setup beendet, aktualisiert sich der NavigationDrawer nicht. Der Einrichtungsassistent bleibt selected.
-Bug: Öffnen der Absence noch ein wenig laggy
-Bug 1: Die Eltern Talk funktion funktioniert nur, wenn die App aufm Babygerät neu gestartet wird.
-Bug 1: Absturz wenn NoiseLevel aktiviert wird, funzt aber nachm Neustart der App
-Bug: Absturz, wenn Anrufweiterleitung im Betrieb deaktiviert wird und dann ein Anruf eingeht
-Bug: DatenBytes werden nicht 100% übertragen bei erster Ausführung
-Bug: Wenn Babymonitor nicht im Vordergrund dann Absturz, wenn Geräusch eingeht.
-Bug: Timer und Funktionen im Hintergrund weiter laufen lassen
-
-Optionales
-=============================================================================================================
-Task: Navigation Drawer schöner gestalten, mit Image über der Itemliste
-Task: Wenn SMS gelesen, dann nicht mehr bold und setze Zahl im Drawer runter
-Task: Mikrofonsensibilität einstellen können im Babymonitor
-Task: Nachrichten anders rum sortieren
+============================================================================================================= 
+06) Bug: Allgemein: Öffnen der Absence noch ein wenig laggy
+11) Bug: Allgemein: Timer und Funktionen im Hintergrund weiter laufen lassen
+02) Bug: Bluetooth: Absturz, wenn im Overview die Verbindung auf BT gestellt wird.
+03) Bug: Interface: Beim Start der App wird die Selektierung im Drawer nicht gesetzt
+05) Bug: Interface: Wenn man das Setup beendet, aktualisiert sich der NavigationDrawer nicht. Der Einrichtungsassistent bleibt selected.
+07) Bug: Wi-Fi: Die Eltern Talk Funktion funktioniert nur, wenn die App aufm Babygerät neu gestartet wird.
+08) Bug: Wi-Fi: Absturz wenn NoiseLevel aktiviert wird, funzt aber nachm Neustart der App
+09) Bug: Wi-Fi: DatenBytes werden beim Wi-Fi nicht 100% übertragen bei erster Ausführung
 
 Testfälle:
 =============================================================================================================
 - Wechsel der Modi
+- Verbindungen
 - Audio Ein- und Ausgabe per Wifi kontrollieren
+
+Bluetooth
+- Die Suche nach Geräten wird beim manuellen Abbrechen bzw. beim Beenden des Setups unterbrochen/gecancelt.
 
