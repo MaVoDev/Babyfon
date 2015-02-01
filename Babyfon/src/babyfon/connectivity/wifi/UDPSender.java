@@ -11,6 +11,8 @@ import android.content.Context;
 import android.util.Log;
 import babyfon.init.R;
 import babyfon.settings.SharedPrefs;
+import babyfon.view.Output;
+import babyfon.view.activity.MainActivity;
 
 public class UDPSender {
 
@@ -25,39 +27,49 @@ public class UDPSender {
 	}
 
 	public void sendUDPMessage(String ipRange) {
-		// send Broadcast
-		String localIP;
-		try {
-			localIP = new WifiHandler(mContext).getLocalIPv4Address();
-		} catch (SocketException e1) {
-			localIP = null;
-			e1.printStackTrace();
-		} catch (UnknownHostException e1) {
-			localIP = null;
-			e1.printStackTrace();
-		}
-
-		if (localIP != null) {
-			try {
-				byte[] message = mContext.getString(R.string.BABYFON_MSG_CONNECTION_SEARCH).getBytes();
-				Log.d(TAG, "Send broadcast message...");
-				for (int i = 1; i < 255; i++) {
-					InetAddress address = InetAddress.getByName(ipRange + i);
-					if (!localIP.equals(ipRange + i)) {
-						// filter own address
-						DatagramPacket packet = new DatagramPacket(message, message.length, address,
-								mSharedPrefs.getUDPPort());
-						DatagramSocket dsocket = new DatagramSocket();
-						dsocket.send(packet);
-						dsocket.close();
-					}
-				}
-
-			} catch (Exception e) {
-				Log.e(TAG, "Error");
-			}
+		if (new WifiHandler(MainActivity.getContext()).getWifiState() == 0) {
+			new Output().simpleDialog(MainActivity.getContext().getString(R.string.dialog_title_connection_error),
+					MainActivity.getContext().getString(R.string.dialog_message_wifi_disabled), MainActivity
+							.getContext().getString(R.string.dialog_button_ok));
+		} else if (!new WifiHandler(MainActivity.getContext()).isWifiConnected()) {
+			new Output().simpleDialog(MainActivity.getContext().getString(R.string.dialog_title_connection_error),
+					MainActivity.getContext().getString(R.string.dialog_message_wifi_not_connected), MainActivity
+							.getContext().getString(R.string.dialog_button_ok));
 		} else {
-			Log.e(TAG, "The local ip is null!");
+			// send Broadcast
+			String localIP;
+			try {
+				localIP = new WifiHandler(mContext).getLocalIPv4Address();
+			} catch (SocketException e1) {
+				localIP = null;
+				e1.printStackTrace();
+			} catch (UnknownHostException e1) {
+				localIP = null;
+				e1.printStackTrace();
+			}
+
+			if (localIP != null) {
+				try {
+					byte[] message = mContext.getString(R.string.BABYFON_MSG_CONNECTION_SEARCH).getBytes();
+					Log.d(TAG, "Send broadcast message...");
+					for (int i = 1; i < 255; i++) {
+						InetAddress address = InetAddress.getByName(ipRange + i);
+						if (!localIP.equals(ipRange + i)) {
+							// filter own address
+							DatagramPacket packet = new DatagramPacket(message, message.length, address,
+									mSharedPrefs.getUDPPort());
+							DatagramSocket dsocket = new DatagramSocket();
+							dsocket.send(packet);
+							dsocket.close();
+						}
+					}
+
+				} catch (Exception e) {
+					Log.e(TAG, "Error");
+				}
+			} else {
+				Log.e(TAG, "The local ip is null!");
+			}
 		}
 	}
 

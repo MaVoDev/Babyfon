@@ -41,6 +41,10 @@
     <!-- Dialogs -->
     <string name="dialog_button_yes">Ja</string>
     <string name="dialog_button_no">Nein</string>
+    <string name="dialog_button_ok">OK</string>
+    <string name="dialog_title_connection_error">Verbinungsfehler</string>
+    <string name="dialog_message_wifi_disabled">Die WLAN-Verbindung ist nicht eingeschaltet.</string>
+    <string name="dialog_message_wifi_not_connected">Du bist mit keinem WLAN-Netz verbunden.</string>
     <string name="dialog_message_cancel_setup">Soll die Einrichtung wirklich abgebrochen werden? Alle durchgeführten Änderungen werden verworfen.</string>
     <string name="dialog_title_cancel_setup">Einrichtung abbrechen</string>
     <string name="dialog_message_exit">Soll die App wirklich beendet werden? Alle bestehenden Verbindungen gestoppt.</string>

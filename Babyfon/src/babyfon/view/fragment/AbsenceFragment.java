@@ -135,7 +135,7 @@ public class AbsenceFragment extends Fragment {
 
 	public static void openMessage(final String numberName, String message) {
 		AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
-		builder.setTitle(numberName).setMessage(message).setCancelable(false)
+		builder.setTitle(numberName).setMessage(message).setCancelable(true)
 				.setPositiveButton(mContext.getString(R.string.close), new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int id) {
 						// do nothing, just close dialog

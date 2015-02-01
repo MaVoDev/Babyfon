@@ -612,7 +612,7 @@ public class OverviewFragment extends Fragment {
 					if (mSharedPrefs.isNoiseActivated()) {
 						changeMode.setImageResource(android.R.drawable.ic_media_play);
 						isCountdownActive = false;
-						new Output().toast(mContext, mContext.getString(R.string.noise_countdown_stop), 0);
+						new Output().toast(mContext.getString(R.string.noise_countdown_stop), 0);
 						mSharedPrefs.setNoiseActivated(false);
 						stopRecorder();
 					} else {
@@ -620,10 +620,10 @@ public class OverviewFragment extends Fragment {
 							countdown = 30;
 							changeMode.setImageResource(android.R.drawable.ic_media_pause);
 							isCountdownActive = true;
-							new Output().toast(mContext, mContext.getString(R.string.noise_countdown_start), 0);
+							new Output().toast(mContext.getString(R.string.noise_countdown_start), 0);
 							mSharedPrefs.setNoiseActivated(true);
 						} else {
-							new Output().toast(mContext, mContext.getString(R.string.no_phone_number), 1);
+							new Output().toast(mContext.getString(R.string.no_phone_number), 1);
 						}
 					}
 				} else {
