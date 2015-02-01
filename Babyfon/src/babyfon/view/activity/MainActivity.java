@@ -23,6 +23,7 @@ import android.os.StrictMode;
 import android.os.Vibrator;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
@@ -350,7 +351,6 @@ public class MainActivity extends ActionBarActivity {
 	private class SlideMenuClickListener implements ListView.OnItemClickListener {
 		@Override
 		public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
 			// display view for selected nav drawer item
 			displayView(position);
 		}
@@ -358,6 +358,8 @@ public class MainActivity extends ActionBarActivity {
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
+		counter = mSharedPrefs.getCallSMSCounter();
+		initNavigationDrawer();
 		// toggle nav drawer on selecting action bar app icon/title
 		if (mDrawerToggle.onOptionsItemSelected(item)) {
 			return true;
@@ -365,7 +367,6 @@ public class MainActivity extends ActionBarActivity {
 		return super.onOptionsItemSelected(item);
 	}
 
-	// TODO WORKAROUND FÜR FEHLER IN SetupSearchDevices
 	public void setFragmentForId(Fragment fragment, String id) {
 		mFragmentMap.put(id, fragment);
 	}
@@ -487,17 +488,18 @@ public class MainActivity extends ActionBarActivity {
 		if (fragment != null) {
 			FragmentManager fragmentManager = getSupportFragmentManager();
 			fragmentManager.beginTransaction().replace(R.id.frame_container, fragment).commit();
-
+			setTitle(navMenuTitles[position]);
 			// update selected item and title, then close the drawer
 			mDrawerList.setItemChecked(position, true);
 			mDrawerList.setSelection(position);
-			setTitle(navMenuTitles[position]);
+			initNavigationDrawer();
 			mDrawerLayout.closeDrawer(mDrawerList);
 		} else {
 			// error in creating fragment
 		}
 	}
 
+	// TODO Bug #05
 	@Override
 	public void setTitle(CharSequence title) {
 		appTitle = title;
@@ -579,23 +581,6 @@ public class MainActivity extends ActionBarActivity {
 		adapter = new NavigationDrawerListAdapter(getApplicationContext(), items);
 		mDrawerList.setAdapter(adapter);
 
-		// Drawer Layout, Drawer Icon, Drawer Name (Drawer open, close)
-		// mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout,
-		// R.drawable.ic_drawer, R.string.app_name, R.string.app_name) {
-		// public void onDrawerClosed(View view) {
-		// getActionBar().setTitle(appTitle);
-		// // calling onPrepareOptionsMenu() to show action bar icons
-		// invalidateOptionsMenu();
-		// }
-		//
-		// public void onDrawerOpened(View drawerView) {
-		// // Set Typeface
-		// getActionBar().setTitle(drawerTitle);
-		// // calling onPrepareOptionsMenu() to hide action bar icons
-		// invalidateOptionsMenu();
-		// }
-		// };
-
 		mDrawerLayout.setDrawerListener(mDrawerToggle);
 	}
 
@@ -603,8 +588,6 @@ public class MainActivity extends ActionBarActivity {
 		if (timerNavigationDrawer == null) {
 			timerNavigationDrawer = new Timer();
 		}
-
-		counter = mSharedPrefs.getCallSMSCounter();
 
 		timerNavigationDrawer.scheduleAtFixedRate(new TimerTask() {
 			public void run() {
