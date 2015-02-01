@@ -7,6 +7,7 @@ import java.net.UnknownHostException;
 import java.util.Enumeration;
 
 import babyfon.init.R;
+import babyfon.view.Output;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -89,13 +90,16 @@ public class WifiHandler {
 	public String getLocalIPv4Address() throws SocketException, UnknownHostException {
 
 		if (getWifiState() == 0) {
-			// Wi-Fi ist inaktiv.
-			// TODO return mContext.getString(R.string.WIFI_STATE_ERROR);
+			new Output().simpleDialog(mContext.getString(R.string.dialog_title_connection_error),
+					mContext.getString(R.string.dialog_message_wifi_disabled),
+					mContext.getString(R.string.dialog_button_ok));
+			return null;
 		} else if (!isWifiConnected()) {
-			// Wi-Fi ist mir keinem Netzwerk verbunden
-			// TODO return mContext.getString(R.string.WIFI_CONNECTION_ERROR);
+			new Output().simpleDialog(mContext.getString(R.string.dialog_title_connection_error),
+					mContext.getString(R.string.dialog_message_wifi_not_connected),
+					mContext.getString(R.string.dialog_button_ok));
+			return null;
 		} else {
-
 			InetAddress localIPv4Address;
 			localIPv4Address = InetAddress.getLocalHost();
 			if (localIPv4Address.getHostAddress().equals(mContext.getString(R.string.ip_localhost))) {
@@ -128,9 +132,7 @@ public class WifiHandler {
 		try {
 			localIPv4Address = getLocalIPv4Address().split("\\.");
 		} catch (SocketException e) {
-			e.printStackTrace();
 		} catch (UnknownHostException e) {
-			e.printStackTrace();
 		}
 		String networkAddressClassC = "";
 		for (int i = 0; i < localIPv4Address.length - 1; i++) {

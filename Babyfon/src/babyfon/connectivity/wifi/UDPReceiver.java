@@ -60,13 +60,11 @@ public class UDPReceiver {
 					} else {
 						if (mSharedPrefs.getRemoteAddress() != null) {
 							if (mSharedPrefs.getDeviceMode() == 0) {
-//								if (mSharedPrefs.isTalkActivated()) {
-									MainActivity.mAudioPlayer.playData(buffer);
-//								}
+								MainActivity.mAudioPlayer.playData(buffer);
 							} else {
 								((BabyMonitorFragment) ((MainActivity) mContext).getFragmentById("BabyMonitorFragment"))
 										.updateVolume(AudioDetection.calculateVolume(buffer, 0));
-
+								
 								if (mSharedPrefs.isHearActivated()) {
 									MainActivity.mAudioPlayer.playData(buffer);
 								}

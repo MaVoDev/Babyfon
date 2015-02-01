@@ -5,28 +5,20 @@ Task: Bluetooth Verbindung
 Task: Audiostreaming Bluetooth
 Task: Service
 
-Marcus
-=============================================================================================================
-Task: Anzahl der SMS im Drawer anzeigen
-Bug 3: Wenn Baby Remote kickt, wird es per Wi-Fi nicht neu gefunden.
-Bug: Wi-Fi Verbindung kontrollieren und Abstürze abfangen wenn keine Verbindung
-
 Bugs
 =============================================================================================================
+Bug: Bluetooth: Wenn im Elternmode Bluetooth gewählt ist und die App beendet wird, gibts nen Absturz   
+Bug: Absturz, wenn im Overview die Verbindung auf BT gestellt wird.
+Bug 2: Beim Start der App wird die Selektierung im Drawer nicht gesetzt
+Bug 2: Anzahl der SMS im Drawer nicht aktualisiert
+Bug 2: Wenn man das Setup beendet, aktualisiert sich der NavigationDrawer nicht. Der Einrichtungsassistent bleibt selected.
+Bug: Öffnen der Absence noch ein wenig laggy
 Bug 1: Die Eltern Talk funktion funktioniert nur, wenn die App aufm Babygerät neu gestartet wird.
 Bug 1: Absturz wenn NoiseLevel aktiviert wird, funzt aber nachm Neustart der App
-Bug 1: Wenn Elternmode, dann Baby, dann wird dies Gerät nicht gefunden
-
-Bug 2: Öffnen der Absence noch ein wenig laggy
-Bug 2: Beim Start der App wird die Selektierung im Drawer nicht gesetzt
-Bug 2: Wenn man das Setup beendet, aktualisiert sich der NavigationDrawer nicht. Der Einrichtungsassistent bleibt selected.
-
-Bug: Absturz, wenn im Overview die Verbindung auf BT gestellt wird.
-Bug: Wenn der Counter im Anrufmodus automatisch startet und man ihn stoppen will, startet er stattdessen einmal neu
 Bug: Absturz, wenn Anrufweiterleitung im Betrieb deaktiviert wird und dann ein Anruf eingeht
-Bug: Bluetooth: Wenn im Elternmode Bluetooth gewählt ist und die App beendet wird, gibts nen Absturz    
+Bug: DatenBytes werden nicht 100% übertragen bei erster Ausführung
 Bug: Wenn Babymonitor nicht im Vordergrund dann Absturz, wenn Geräusch eingeht.
-Bug: Der CallStateListener für den Counter beim Start der MainActivity aus. Das irgendwie abfangen
+Bug: Timer und Funktionen im Hintergrund weiter laufen lassen
 
 Optionales
 =============================================================================================================
@@ -37,5 +29,6 @@ Task: Nachrichten anders rum sortieren
 
 Testfälle:
 =============================================================================================================
-- Audiostreaming + Geräusch + SMS + Anruf
-- Wechsel zwischen Verbindungstypen im Betrieb und außerhalb des Betriebs
+- Wechsel der Modi
+- Audio Ein- und Ausgabe per Wifi kontrollieren
+

@@ -224,7 +224,7 @@ public class Message {
 						.initViewBluetooth();
 			}
 
-			new Output().toast(mContext, mContext.getString(R.string.wrong_password), 0);
+			new Output().toast(mContext.getString(R.string.wrong_password), 0);
 		}
 
 		if (strArray[0].equals(mContext.getString(R.string.BABYFON_MSG_SYSTEM_AWAY))) {
@@ -243,7 +243,7 @@ public class Message {
 
 		if (strArray[0].equals(mContext.getString(R.string.BABYFON_MSG_SYSTEM_DISCONNECTED))) {
 			mModuleHandler.stopRemoteCheck();
-			new Output().toast(mContext, mContext.getString(R.string.disconnected), 1);
+			new Output().toast(mContext.getString(R.string.disconnected), 1);
 			if (mSharedPrefs.getDeviceMode() == 0) {
 				mModuleHandler.unregisterBattery();
 				if (mSharedPrefs.getForwardingSMS() || mSharedPrefs.getForwardingSMSInfo()) {
