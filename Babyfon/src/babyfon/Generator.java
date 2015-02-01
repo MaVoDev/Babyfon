@@ -43,10 +43,18 @@ public class Generator {
 
 		String currentDate;
 
-		if (month < 10) {
-			currentDate = (day + ".0" + month + "." + year);
+		if (day < 10) {
+			if (month < 10) {
+				currentDate = ("0" + day + ".0" + month + "." + year);
+			} else {
+				currentDate = ("0" + day + "." + month + "." + year);
+			}
 		} else {
-			currentDate = (day + "." + month + "." + year);
+			if (month < 10) {
+				currentDate = (day + ".0" + month + "." + year);
+			} else {
+				currentDate = (day + "." + month + "." + year);
+			}
 		}
 
 		return currentDate;

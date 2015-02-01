@@ -98,13 +98,11 @@ public class SetupCompleteBabyModeFragment extends Fragment {
 	public void handleModules() {
 
 		if (mSharedPrefs.getConnectivityTypeTemp() != 3) {
-			System.out.println("1111111111111111111111111111111111");
 			if (mSharedPrefs.getForwardingSMSInfoTemp() || mSharedPrefs.getForwardingSMSTemp()) {
 				mModuleHandler.registerSMS();
 			}
 
 			if (mSharedPrefs.getConnectivityTypeTemp() == 1) {
-				System.out.println("222222222222222222222222222222222222");
 				new BluetoothHandler(mContext).enableBluetoothDiscoverability();
 				MainActivity.mBoundService.startServer();
 
@@ -130,7 +128,6 @@ public class SetupCompleteBabyModeFragment extends Fragment {
 
 			if (mSharedPrefs.getConnectivityTypeTemp() == 2) {
 				mModuleHandler.stopBT();
-				System.out.println("3333333333333333333333333333333333333333333");
 				mModuleHandler.unregisterBattery();
 				mModuleHandler.startTCPReceiver();
 				mModuleHandler.startUDPReceiver();
@@ -139,7 +136,6 @@ public class SetupCompleteBabyModeFragment extends Fragment {
 			mSharedPrefs.setRemoteAddress(null);
 			mSharedPrefs.setRemoteName(null);
 		} else {
-			System.out.println("44444444444444444444444444444444444444");
 			mModuleHandler.unregisterBattery();
 			mModuleHandler.stopTCPReceiver();
 			mModuleHandler.stopUDPReceiver();
@@ -157,6 +153,9 @@ public class SetupCompleteBabyModeFragment extends Fragment {
 
 		initUiElements(view);
 		handleModules();
+		
+		mSharedPrefs.deleteCallSMS();
+		mSharedPrefs.setCallSMSCounter(0);
 
 		String password = new Generator().getRandomPassword();
 		tvPassword.setText(password);
@@ -166,7 +165,6 @@ public class SetupCompleteBabyModeFragment extends Fragment {
 		}
 
 		// Store values in the shared preferences
-		mSharedPrefs.setCounter(0);
 		mSharedPrefs.setActiveStateBabyMode(true);
 		mSharedPrefs.setDeviceMode(mSharedPrefs.getDeviceModeTemp());
 		Log.d(TAG, "Device mode: " + mSharedPrefs.getDeviceMode());

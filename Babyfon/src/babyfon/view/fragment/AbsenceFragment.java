@@ -1,26 +1,30 @@
 package babyfon.view.fragment;
 
 import java.util.ArrayList;
+import java.util.Set;
+import java.util.Timer;
+import java.util.TimerTask;
 
-import babyfon.adapter.AbsenceListAdapter;
-import babyfon.init.R;
-import babyfon.model.AbsenceListItemModel;
-import babyfon.settings.SharedPrefs;
 import android.app.AlertDialog;
-import android.support.v4.app.Fragment;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.AdapterView.OnItemClickListener;
+import babyfon.adapter.AbsenceListAdapter;
+import babyfon.init.R;
+import babyfon.model.AbsenceListItemModel;
+import babyfon.settings.SharedPrefs;
+import babyfon.view.activity.MainActivity;
 
 public class AbsenceFragment extends Fragment {
 
@@ -30,6 +34,9 @@ public class AbsenceFragment extends Fragment {
 	private static ListView listViewAbsence;
 
 	private static ArrayList<AbsenceListItemModel> messages;
+
+	// Timer
+	private Timer updateTimer;
 
 	private static SharedPrefs mSharedPrefs;
 
@@ -55,8 +62,6 @@ public class AbsenceFragment extends Fragment {
 
 	public static void updateList() {
 		AbsenceListAdapter adapter = new AbsenceListAdapter(mContext.getApplicationContext(), messages);
-		
-		mSharedPrefs.setCounter(messages.size());
 
 		// Assign adapter to ListView
 		listViewAbsence.setAdapter(adapter);
@@ -105,7 +110,7 @@ public class AbsenceFragment extends Fragment {
 		View view = inflater.inflate(R.layout.main_absence, container, false);
 
 		initUiElements(view);
-		
+
 		btnDeleteList.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -142,25 +147,80 @@ public class AbsenceFragment extends Fragment {
 
 	public void deleteList() {
 		messages.clear();
+		mSharedPrefs.deleteCallSMS();
+		mSharedPrefs.setCallSMSCounter(0);
 		updateList();
 	}
 
-	public static void setNewMessage(int type, String numberName, String message, String date, String time) {
-		if (messages == null) {
+	public static void setNewMessage() {
+		Set<String> set = mSharedPrefs.getCallSMS();
+		if (set != null) {
+			ArrayList<String> callSmsList = new ArrayList<String>(set);
 			messages = new ArrayList<AbsenceListItemModel>();
-		}
-		messages.add(new AbsenceListItemModel(type, numberName, message, date, time));
 
+			for (int i = 0; i < callSmsList.size(); i++) {
+				String listItem = callSmsList.get(i);
+				String[] listArray = listItem.split(";");
+
+				messages.add(new AbsenceListItemModel(Integer.parseInt(listArray[0]), listArray[1], listArray[2],
+						listArray[3], listArray[4]));
+			}
+		}
 		updateList();
+	}
+
+	public void startUiUpdateThread() {
+		if (updateTimer == null) {
+			updateTimer = new Timer();
+		}
+		updateTimer.scheduleAtFixedRate(new TimerTask() {
+			public void run() {
+				if (mSharedPrefs.getCallSMSCounter() != mSharedPrefs.getCallSMSCounterTemp()) {
+					mSharedPrefs.setCallSMSCounterTemp(mSharedPrefs.getCallSMSCounter());
+					((MainActivity) mContext).runOnUiThread(new Runnable() {
+						@Override
+						public void run() {
+							setNewMessage();
+						}
+					});
+				}
+			}
+		}, 0, 1000);
+	}
+
+	@Override
+	public void onPause() {
+		super.onPause();
+
+		if (updateTimer != null) {
+			updateTimer.cancel();
+			updateTimer = null;
+		}
+	}
+
+	@Override
+	public void onDestroy() {
+		super.onDestroy();
+
+		if (updateTimer != null) {
+			updateTimer.cancel();
+			updateTimer = null;
+		}
 	}
 
 	@Override
 	public void onResume() {
 		super.onResume();
 
+		if (updateTimer == null) {
+			updateTimer = new Timer();
+		}
+		startUiUpdateThread();
+
 		if (messages == null) {
 			messages = new ArrayList<AbsenceListItemModel>();
 		}
+		setNewMessage();
 
 		if (btnDeleteList != null && listViewAbsence != null) {
 			updateUI();

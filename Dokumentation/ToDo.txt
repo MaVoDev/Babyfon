@@ -9,7 +9,6 @@ Bug: Absturz, wenn im Overview die Verbindung auf BT gestellt wird.
 Marcus
 =============================================================================================================
 Task: Anzahl der SMS im Drawer anzeigen
-Task: Nachrichten (Call/SMS) zwischenspeichern
 Task: Beim senden die Connectivity prüfen (Typ, an/aus, verbunden/nicht verbunden, ist ein remote vorhanden) Vielleicht eine extra Klasse für den Test (Beim Setup extra prüfen)
 		Thread in der Main, checken ob die gewählte Verbindung ordnungsgemäß läuft, wenn nicht dialog zum hinweis oder aktivieren, währenddessen stop thread, nach ok wieder thread start
 
