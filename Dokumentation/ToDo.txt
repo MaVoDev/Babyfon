@@ -6,22 +6,22 @@ Task: Audiostreaming Bluetooth
 Task: Service
 
 Bugs
-=============================================================================================================
-01) Bug: Bluetooth: Wenn im Elternmode Bluetooth gewählt ist und die App beendet wird, gibts nen Absturz   
-02) Bug: Absturz, wenn im Overview die Verbindung auf BT gestellt wird.
-06) Bug: Öffnen der Absence noch ein wenig laggy
-07) Bug 1: Die Eltern Talk funktion funktioniert nur, wenn die App aufm Babygerät neu gestartet wird.
-08) Bug 1: Absturz wenn NoiseLevel aktiviert wird, funzt aber nachm Neustart der App
-09) Bug: DatenBytes werden beim Wi-Fi nicht 100% übertragen bei erster Ausführung
-10) Bug: Wenn Babymonitor nicht im Vordergrund dann Absturz, wenn Geräusch eingeht.
-11) Bug: Timer und Funktionen im Hintergrund weiter laufen lassen
-03) Bug 2: Beim Start der App wird die Selektierung im Drawer nicht gesetzt
-05) Bug 2: Wenn man das Setup beendet, aktualisiert sich der NavigationDrawer nicht. Der Einrichtungsassistent bleibt selected.
-
+============================================================================================================= 
+06) Bug: Allgemein: Öffnen der Absence noch ein wenig laggy
+11) Bug: Allgemein: Timer und Funktionen im Hintergrund weiter laufen lassen
+02) Bug: Bluetooth: Absturz, wenn im Overview die Verbindung auf BT gestellt wird.
+03) Bug: Interface: Beim Start der App wird die Selektierung im Drawer nicht gesetzt
+05) Bug: Interface: Wenn man das Setup beendet, aktualisiert sich der NavigationDrawer nicht. Der Einrichtungsassistent bleibt selected.
+07) Bug: Wi-Fi: Die Eltern Talk Funktion funktioniert nur, wenn die App aufm Babygerät neu gestartet wird.
+08) Bug: Wi-Fi: Absturz wenn NoiseLevel aktiviert wird, funzt aber nachm Neustart der App
+09) Bug: Wi-Fi: DatenBytes werden beim Wi-Fi nicht 100% übertragen bei erster Ausführung
 
 Testfälle:
 =============================================================================================================
 - Wechsel der Modi
 - Verbindungen
 - Audio Ein- und Ausgabe per Wifi kontrollieren
+
+Bluetooth
+- Die Suche nach Geräten wird beim manuellen Abbrechen bzw. beim Beenden des Setups unterbrochen/gecancelt.
 
