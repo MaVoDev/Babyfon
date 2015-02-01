@@ -18,6 +18,8 @@ Bugs
 
 
 
+
+
 Testfälle:
 =============================================================================================================
 - Wechsel der Modi
@@ -26,4 +28,3 @@ Testfälle:
 
 Bluetooth
 - Die Suche nach Geräten wird beim manuellen Abbrechen bzw. beim Beenden des Setups unterbrochen/gecancelt.
-
