@@ -44,7 +44,7 @@ public class AudioPlayer {
 
 				track.play();
 
-				Log.i(TAG, "Track playing started...");
+				Log.i(TAG, "AudioPlayer created and track is in playing mode...");
 			}
 		}).start();
 
@@ -150,9 +150,11 @@ public class AudioPlayer {
 		isPlaying = false;
 
 		if (track != null) {
-			track.flush();
-			track.stop();
-			track.release();
+			if (track.getState() != AudioTrack.STATE_UNINITIALIZED) {
+				track.flush();
+				track.stop();
+				track.release();
+			}
 		}
 	}
 

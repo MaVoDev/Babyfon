@@ -4,10 +4,12 @@ Bugs
 11) Bug: Allgemein: Timer und Funktionen im Hintergrund weiter laufen lassen
 
 02) Bug: Bluetooth: Absturz, wenn im Overview die Verbindung auf BT gestellt wird.
-12) Bug: Bluetooth: Verbindung für nicht gepairte Geräte fixen
 13) Bug: Bluetooth: Wert für Geräuscherkennung ermitteln
 14) Bug: Bluetooth: Korrektes Starten und Stoppen des Clients (Eltern) und Server (Baby). Bisher kommt es noch zu Problemen, wenn man nach bestehender Verbindung neu verbinden will
+	-> wenn ein Gerät Bluetooth während Setup neu initialisiert (Baby/Client) wird es auf der anderen Seite (Eltern/Server) nicht korrekt beendet -> broken Pipe Fehler
 15) Bug: Bluetooth: Beim Start der App mit letztem bekannten Gerät verbinden
+16) Bug: Bluetooth: OverviewFragment:	- AudioRecorder wird im BT Modus nun nur im Service gestartet und gestoppt
+		-> führt noch dazu, dass man manchmal nichts hört beim Reden mit Baby
 
 03) Bug: Interface: Beim Start der App wird die Selektierung im Drawer nicht gesetzt
 05) Bug: Interface: Wenn man das Setup beendet, aktualisiert sich der NavigationDrawer nicht. Der Einrichtungsassistent bleibt selected.

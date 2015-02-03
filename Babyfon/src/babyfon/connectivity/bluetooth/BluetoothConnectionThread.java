@@ -68,7 +68,7 @@ public abstract class BluetoothConnectionThread extends Thread {
 					e.printStackTrace();
 				}
 				// }
-				Log.i(TAG, "STOP listening for messages...");
+				Log.e(TAG, "STOP listening for messages...");
 			}
 		}).start();
 

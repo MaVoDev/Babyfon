@@ -22,7 +22,6 @@ import android.os.StrictMode;
 import android.os.Vibrator;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
@@ -150,6 +149,7 @@ public class MainActivity extends ActionBarActivity {
 
 		// if (mSharedPrefs.getConnectivityType() == 1) {
 		// Zum Service verbinden / Service starten
+
 		doBindService();
 		// }
 	}
@@ -158,8 +158,6 @@ public class MainActivity extends ActionBarActivity {
 	protected void onDestroy() {
 		super.onDestroy();
 
-		// TODO: FÜR TESTZWECKE SERVICE WIEDER AUSMACHEN, WENN APP GESCHLOSSEN WIRD
-		doUnbindService();
 		mModuleHandler.stopRemoteCheck();
 
 		if (timerNavigationDrawer != null) {
@@ -184,7 +182,10 @@ public class MainActivity extends ActionBarActivity {
 			}
 		}
 
-		if (mSharedPrefs.getConnectivityType() == 2) {
+		if (mSharedPrefs.getConnectivityType() != 1) {
+			// TODO: FÜR TESTZWECKE SERVICE WIEDER AUSMACHEN, WENN APP GESCHLOSSEN WIRD
+			doUnbindService();
+		} else if (mSharedPrefs.getConnectivityType() == 2) {
 			mModuleHandler.stopUDPReceiver();
 			mModuleHandler.stopTCPReceiver();
 		}

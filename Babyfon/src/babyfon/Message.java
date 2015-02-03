@@ -177,6 +177,9 @@ public class Message {
 				send(mContext.getString(R.string.BABYFON_MSG_AUTH_DENIED));
 				if (mSharedPrefs.getConnectivityTypeTemp() == 1) {
 					MainActivity.mBoundService.getConnection().stopConnection();
+
+					MainActivity.mBoundService.initBtConnection(); // TODO: Test
+
 					MainActivity.mBoundService.startServer();
 				}
 

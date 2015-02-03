@@ -44,8 +44,10 @@ public class BluetoothConnection implements ConnectionInterface {
 				mSharedPrefs.setRemoteOnlineState(false);
 
 				MainActivity.mBoundService.stopRecording();
+				MainActivity.mBoundService.stopAudioPlaying();
 
-				new Message(MainActivity.getContext()).send(context.getString(R.string.BABYFON_MSG_SYSTEM_DISCONNECTED));
+				// MACHTE KEINEN SINN, DA MAN KEINE NACHRICHTEN SCHICKEN KANN, WENN NICHT CONNECTED... -> TODO: RAUS
+				// new Message(MainActivity.getContext()).send(context.getString(R.string.BABYFON_MSG_SYSTEM_DISCONNECTED));
 
 				context.unregisterReceiver(mReceiver);
 			}

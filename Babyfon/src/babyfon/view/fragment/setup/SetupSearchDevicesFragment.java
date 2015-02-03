@@ -114,7 +114,8 @@ public class SetupSearchDevicesFragment extends Fragment {
 				Log.d(TAG, "Selected item: " + deviceName + " (" + deviceIP + ")");
 
 				mSharedPrefs.setRemoteAddressTemp(deviceIP);
-				mSharedPrefs.setRemoteName(deviceName);
+				mSharedPrefs.setRemoteName(deviceName); // TODO: hier den remote namen zu setzen, kann das nicht zu falschen Remote Namen
+														// bei Setup-Abbruch führen?
 				openAuthDialog(deviceName, deviceIP);
 			}
 		});
@@ -177,13 +178,12 @@ public class SetupSearchDevicesFragment extends Fragment {
 		btnBackward.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				if(mSharedPrefs.getConnectivityTypeTemp() == 1) {
+				if (mSharedPrefs.getConnectivityTypeTemp() == 1) {
 					mBtHandler.stopSearch();
 				}
 				FragmentTransaction ft = mFragmentManager.beginTransaction();
 				ft.setCustomAnimations(R.anim.anim_slide_in_right, R.anim.anim_slide_out_right);
-				ft.replace(R.id.frame_container, new SetupConnectionFragment(mContext), null).addToBackStack(null)
-						.commit();
+				ft.replace(R.id.frame_container, new SetupConnectionFragment(mContext), null).addToBackStack(null).commit();
 			}
 		});
 
@@ -211,47 +211,40 @@ public class SetupSearchDevicesFragment extends Fragment {
 
 				switch (keyCode) {
 				case KeyEvent.KEYCODE_BACK:
-					new AlertDialog.Builder(getActivity())
-							.setTitle(mContext.getString(R.string.dialog_title_cancel_setup))
+					new AlertDialog.Builder(getActivity()).setTitle(mContext.getString(R.string.dialog_title_cancel_setup))
 							.setMessage(mContext.getString(R.string.dialog_message_cancel_setup))
 							.setNegativeButton(mContext.getString(R.string.dialog_button_no), null)
-							.setPositiveButton(mContext.getString(R.string.dialog_button_yes),
-									new DialogInterface.OnClickListener() {
-										@Override
-										public void onClick(DialogInterface dialog, int id) {
-											if(mSharedPrefs.getConnectivityTypeTemp() == 1) {
-												mBtHandler.stopSearch();
-											}
-											
-											if (mSharedPrefs.getConnectivityType() == 1) {
-												mModuleHandler.stopTCPReceiver();
-												mModuleHandler.stopUDPReceiver();
-											}
+							.setPositiveButton(mContext.getString(R.string.dialog_button_yes), new DialogInterface.OnClickListener() {
+								@Override
+								public void onClick(DialogInterface dialog, int id) {
+									if (mSharedPrefs.getConnectivityTypeTemp() == 1) {
+										mBtHandler.stopSearch();
+									}
 
-											else if (mSharedPrefs.getConnectivityType() == 2) {
-												mModuleHandler.stopBT();
-											}
-											
-											if (mSharedPrefs.getDeviceMode() == 0) {
-												mFragmentManager
-														.beginTransaction()
-														.replace(R.id.frame_container, new OverviewFragment(mContext),
-																null).addToBackStack(null).commit();
-											} else if (mSharedPrefs.getDeviceMode() == 1) {
-												mFragmentManager
-														.beginTransaction()
-														.replace(R.id.frame_container,
-																new BabyMonitorFragment(mContext), null)
-														.addToBackStack(null).commit();
-											} else {
-												mFragmentManager
-														.beginTransaction()
-														.replace(R.id.frame_container,
-																new SetupStartFragment(mContext), null)
-														.addToBackStack(null).commit();
-											}
-										}
-									}).create().show();
+									if (mSharedPrefs.getConnectivityType() == 1) {
+										mModuleHandler.stopTCPReceiver();
+										mModuleHandler.stopUDPReceiver();
+									}
+
+									else if (mSharedPrefs.getConnectivityType() == 2) {
+										mModuleHandler.stopBT();
+									}
+
+									if (mSharedPrefs.getDeviceMode() == 0) {
+										mFragmentManager.beginTransaction()
+												.replace(R.id.frame_container, new OverviewFragment(mContext), null).addToBackStack(null)
+												.commit();
+									} else if (mSharedPrefs.getDeviceMode() == 1) {
+										mFragmentManager.beginTransaction()
+												.replace(R.id.frame_container, new BabyMonitorFragment(mContext), null)
+												.addToBackStack(null).commit();
+									} else {
+										mFragmentManager.beginTransaction()
+												.replace(R.id.frame_container, new SetupStartFragment(mContext), null).addToBackStack(null)
+												.commit();
+									}
+								}
+							}).create().show();
 					break;
 				}
 				return true;
@@ -260,13 +253,17 @@ public class SetupSearchDevicesFragment extends Fragment {
 	}
 
 	public void refreshDeviceList() {
-		mDevicesAdapter.clear();
 
 		if (mSharedPrefs.getConnectivityTypeTemp() == 1) {
-			mBtHandler.stopSearch();
-			mBtHandler.searchDevices();
+			((MainActivity) mContext).runOnUiThread(new Runnable() {
+				@Override
+				public void run() {
+					mBtHandler.stopSearch();
+					mBtHandler.searchDevices();
+				}
+			});
 		} else if (mSharedPrefs.getConnectivityTypeTemp() == 2) {
-			// initList();
+			mDevicesAdapter.clear();
 			initViewWifi();
 		}
 	}
@@ -277,7 +274,7 @@ public class SetupSearchDevicesFragment extends Fragment {
 		mBtHandler = new BluetoothHandler(mContext);
 		mBtHandler.enableBluetooth();
 		mBtHandler.prepareForSearch(mDevicesAdapter);
-		
+
 		mModuleHandler.stopBT();
 
 		if (MainActivity.mBoundService != null) {
@@ -314,20 +311,21 @@ public class SetupSearchDevicesFragment extends Fragment {
 					// mModuleHandler.startRemoteCheck();
 				}
 			});
-			mBtHandler.searchDevices();
+			// mBtHandler.searchDevices();
+			refreshDeviceList();
 		}
 
 	}
 
 	public void initViewWifi() {
 		if (new WifiHandler(MainActivity.getContext()).getWifiState() == 0) {
-			new Output().simpleDialog(MainActivity.getContext().getString(R.string.dialog_title_connection_error),
-					MainActivity.getContext().getString(R.string.dialog_message_wifi_disabled), MainActivity
-							.getContext().getString(R.string.dialog_button_ok));
+			new Output().simpleDialog(MainActivity.getContext().getString(R.string.dialog_title_connection_error), MainActivity
+					.getContext().getString(R.string.dialog_message_wifi_disabled),
+					MainActivity.getContext().getString(R.string.dialog_button_ok));
 		} else if (!new WifiHandler(MainActivity.getContext()).isWifiConnected()) {
-			new Output().simpleDialog(MainActivity.getContext().getString(R.string.dialog_title_connection_error),
-					MainActivity.getContext().getString(R.string.dialog_message_wifi_not_connected), MainActivity
-							.getContext().getString(R.string.dialog_button_ok));
+			new Output().simpleDialog(MainActivity.getContext().getString(R.string.dialog_title_connection_error), MainActivity
+					.getContext().getString(R.string.dialog_message_wifi_not_connected),
+					MainActivity.getContext().getString(R.string.dialog_button_ok));
 		} else {
 			mModuleHandler.startTCPReceiver();
 			new UDPSender(mContext).sendUDPMessage(new WifiHandler(mContext).getNetworkAddressClassC());
@@ -379,7 +377,8 @@ public class SetupSearchDevicesFragment extends Fragment {
 						}
 						// Wi-Fi
 						else if (mSharedPrefs.getConnectivityTypeTemp() == 2) {
-							new TCPSender(mContext).sendMessage(mSharedPrefs.getRemoteAddressTemp(),
+							new TCPSender(mContext).sendMessage(
+									mSharedPrefs.getRemoteAddressTemp(),
 									mContext.getString(R.string.BABYFON_MSG_AUTH_REQ) + ";" + password + ";"
 											+ mSharedPrefs.getHostAddress() + ";" + android.os.Build.MODEL);
 						}

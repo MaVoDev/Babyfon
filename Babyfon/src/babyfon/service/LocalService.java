@@ -63,7 +63,12 @@ public class LocalService extends Service {
 
 		mNM = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
 
-		initBtConnection();
+//		if (mConnection == null) {
+			initBtConnection();
+
+			// Disconnect Handler wieder unregistern während des setups!
+		// mConnection.registerDisconnectHandler();
+		// }
 
 		// if (mConnection == null)
 		// mConnection = new BluetoothConnection();
@@ -81,7 +86,7 @@ public class LocalService extends Service {
 
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
-		Log.i(TAG, "Received start id " + startId + ": " + intent);
+		Log.i(TAG, "Service->onStartCommand(): Received start id " + startId + ": " + intent);
 		// We want this service to continue running until it is explicitly
 		// stopped, so return sticky.
 		return START_STICKY;
@@ -246,5 +251,10 @@ public class LocalService extends Service {
 		Log.i(TAG, "Stop Recording on Service...");
 		if (mAudioRecorder != null)
 			mAudioRecorder.stopRecording();
+	}
+
+	public void stopAudioPlaying() {
+		if (mAudioPlayer != null)
+			mAudioPlayer.stopPlaying();
 	}
 }

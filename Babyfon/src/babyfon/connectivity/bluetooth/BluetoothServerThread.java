@@ -87,7 +87,7 @@ public class BluetoothServerThread extends BluetoothConnectionThread {
 			}
 		}
 
-		Log.i(TAG, "Server stopped!");
+		Log.i(TAG, "BluetoothServerThread stopped!");
 	}
 
 }
