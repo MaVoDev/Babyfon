@@ -14,7 +14,6 @@ Bugs
 
 03) Bug: Interface: Selektierung im Drawer wird nicht gesetzt
 05) Bug: Interface: Wenn man das Setup beendet, aktualisiert sich der NavigationDrawer nicht. Der Einrichtungsassistent bleibt selected.
-20) Bug: Interface: Wenn Babygerät pausiert muss Remote auf Away gesetzt werden.
 
 
 Testfälle:

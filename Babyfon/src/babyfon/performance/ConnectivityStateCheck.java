@@ -121,7 +121,7 @@ public class ConnectivityStateCheck {
 					} catch (UnknownHostException e1) {
 
 					}
-					timerRemoteCheck.scheduleAtFixedRate(wifiRemoteCheckTask, 5000, 5000);
+					timerRemoteCheck.scheduleAtFixedRate(wifiRemoteCheckTask, 0, 5000);
 				}
 
 			}

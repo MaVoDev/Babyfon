@@ -272,9 +272,9 @@ public class MainActivity extends ActionBarActivity {
 			}, 500, 1000);
 		}
 
-		if (mSharedPrefs.getRemoteAddress() != null) {
-			mModuleHandler.stopRemoteCheck();
-		}
+//		if (mSharedPrefs.getRemoteAddress() != null) {
+//			mModuleHandler.stopRemoteCheck();
+//		}
 
 		timerNavigationDrawer.cancel();
 		timerNavigationDrawer = null;
