@@ -14,10 +14,7 @@ Bugs
 
 03) Bug: Interface: Selektierung im Drawer wird nicht gesetzt
 05) Bug: Interface: Wenn man das Setup beendet, aktualisiert sich der NavigationDrawer nicht. Der Einrichtungsassistent bleibt selected.
-
-01) Bug: Wi-Fi: Wenn Eltern Baby kicken und dann neu suchen stimmt was mit der DeviceList nicht in der Suche
-19) Bug: Wi-Fi: Nach erfolgreicher Audioübertragung in beide Richtungen, dann kick, dann geht neue Suche nicht, erst wenn baby neustart
-20) Bug: Wenn Babygerät pausiert muss Remote auf Away gesetzt werden.
+20) Bug: Interface: Wenn Babygerät pausiert muss Remote auf Away gesetzt werden.
 
 
 Testfälle:
@@ -25,6 +22,3 @@ Testfälle:
 - Wechsel der Modi
 - Verbindungen
 - Audio Ein- und Ausgabe per Wifi kontrollieren
-
-Bluetooth
-- Die Suche nach Geräten wird beim manuellen Abbrechen bzw. beim Beenden des Setups unterbrochen/gecancelt.

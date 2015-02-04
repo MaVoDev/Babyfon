@@ -241,11 +241,18 @@ public class Message {
 		if (strArray[0].equals(mContext.getString(R.string.BABYFON_MSG_SYSTEM_DISCONNECTED))) {
 			mModuleHandler.stopRemoteCheck();
 			new Output().toast(mContext.getString(R.string.disconnected), 1);
+			
+			mSharedPrefs.setRemoteOnlineState(false);
+			mSharedPrefs.setRemoteAddress(null);
+			mSharedPrefs.setRemoteName(null);
+			
 			if (mSharedPrefs.getDeviceMode() == 0) {
 				mModuleHandler.unregisterBattery();
+				
 				if (mSharedPrefs.getForwardingSMS() || mSharedPrefs.getForwardingSMSInfo()) {
 					mModuleHandler.unregisterSMS();
 				}
+				
 				if (mSharedPrefs.getConnectivityType() == 1) {
 					mModuleHandler.stopBT();
 				} else if (mSharedPrefs.getConnectivityType() == 2) {
@@ -255,9 +262,6 @@ public class Message {
 					mModuleHandler.startTCPReceiver();
 				}
 			}
-			mSharedPrefs.setRemoteOnlineState(false);
-			mSharedPrefs.setRemoteAddress(null);
-			mSharedPrefs.setRemoteName(null);
 		}
 
 		if (strArray[0].equals(mContext.getString(R.string.BABYFON_MSG_SYSTEM_REJOIN))) {
@@ -292,22 +296,13 @@ public class Message {
 					// new TCPSender(mContext).sendMessage(strArray[1],
 					// mContext.getString(R.string.BABYFON_MSG_SYSTEM_DISCONNECTED));
 				} else {
-
+					mSharedPrefs.setRemoteOnlineState(true);
+					
 					if (mSharedPrefs.getConnectivityType() == 1) {
 						if (MainActivity.mBoundService != null) {
-							mSharedPrefs.setRemoteOnlineState(true);
 							MainActivity.mBoundService.startRecording();
 						}
 					} else if (mSharedPrefs.getConnectivityType() == 2) {
-						if (mSharedPrefs.getDeviceMode() == 0) {
-							if (mSharedPrefs.getActiveStateBabyMode()) {
-								mSharedPrefs.setRemoteOnlineState(true);
-							} else {
-								mSharedPrefs.setRemoteOnlineState(false);
-							}
-						} else {
-							mSharedPrefs.setRemoteOnlineState(true);
-						}
 						mModuleHandler.startRemoteCheck();
 					}
 				}
