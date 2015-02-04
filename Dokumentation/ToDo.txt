@@ -14,7 +14,6 @@ Bugs
 
 03) Bug: Interface: Selektierung im Drawer wird nicht gesetzt
 05) Bug: Interface: Wenn man das Setup beendet, aktualisiert sich der NavigationDrawer nicht. Der Einrichtungsassistent bleibt selected.
-21) Bug: Interface: Akkustand sofort nach erfolgereicher Verbindung übertragen.
 
 01) Bug: Wi-Fi: Wenn Eltern Baby kicken und dann neu suchen stimmt was mit der DeviceList nicht in der Suche
 19) Bug: Wi-Fi: Nach erfolgreicher Audioübertragung in beide Richtungen, dann kick, dann geht neue Suche nicht, erst wenn baby neustart

@@ -68,24 +68,19 @@ public class Message {
 	}
 
 	private void send(String target, String msg) {
-		Log.e(TAG, "Sending: " + msg);
-
-		// BT
+		// Bluetooth
 		if (mSharedPrefs.getConnectivityType() == 1) {
 			if (MainActivity.mBoundService != null) {
 				MainActivity.mBoundService.getConnection().sendMessage(msg + ";");
 			}
 		}
-		// WIFI
+		// Wi-Fi
 		else if (mSharedPrefs.getConnectivityType() == 2) {
 			new TCPSender(mContext).sendMessage(target, msg);
 		}
 	}
 
 	public void handleIncomingMessage(String str) {
-
-		Log.e(TAG, "Incoming: " + str);
-
 		final String[] strArray = str.split(";");
 
 		// AUF SEITE DES ELTERN-MESSAGES
@@ -155,8 +150,6 @@ public class Message {
 
 				send(mContext.getString(R.string.BABYFON_MSG_AUTH_CONFIRMED) + ";" + mSharedPrefs.getPassword());
 
-				mModuleHandler.registerBattery();
-
 				if (mSharedPrefs.getForwardingSMS() || mSharedPrefs.getForwardingSMSInfo()) {
 					mModuleHandler.registerSMS();
 				}
@@ -180,6 +173,8 @@ public class Message {
 					mModuleHandler.startTCPReceiver();
 					mModuleHandler.startRemoteCheck();
 				}
+
+				mModuleHandler.registerBattery();
 
 			} else {
 
@@ -257,6 +252,8 @@ public class Message {
 				if (mSharedPrefs.getConnectivityType() == 1) {
 					mModuleHandler.stopBT();
 				} else if (mSharedPrefs.getConnectivityType() == 2) {
+					mModuleHandler.stopTCPReceiver();
+					mModuleHandler.stopUDPReceiver();
 					mModuleHandler.startUDPReceiver();
 					mModuleHandler.startTCPReceiver();
 				}
@@ -280,6 +277,14 @@ public class Message {
 					mSharedPrefs.setRemoteOnlineState(true);
 					mModuleHandler.startRemoteCheck();
 				}
+			} else {
+				if (!mSharedPrefs.getRemoteAddress().equals(strArray[1])
+						|| !mSharedPrefs.getPassword().equals(strArray[2])) {
+					send((mContext.getString(R.string.BABYFON_MSG_SYSTEM_DISCONNECTED)));
+				} else {
+					mSharedPrefs.setRemoteOnlineState(true);
+					mModuleHandler.startRemoteCheck();
+				}
 			}
 		}
 
@@ -292,7 +297,15 @@ public class Message {
 					// new TCPSender(mContext).sendMessage(strArray[1],
 					// mContext.getString(R.string.BABYFON_MSG_SYSTEM_DISCONNECTED));
 				} else {
-					mSharedPrefs.setRemoteOnlineState(true);
+					if (mSharedPrefs.getDeviceMode() == 0) {
+						if (mSharedPrefs.getActiveStateBabyMode()) {
+							mSharedPrefs.setRemoteOnlineState(true);
+						} else {
+							mSharedPrefs.setRemoteOnlineState(false);
+						}
+					} else {
+						mSharedPrefs.setRemoteOnlineState(true);
+					}
 					if (mSharedPrefs.getConnectivityType() == 2) {
 						mModuleHandler.startRemoteCheck();
 					}
