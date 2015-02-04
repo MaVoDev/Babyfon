@@ -1,7 +1,7 @@
 Bugs
 ============================================================================================================= 
 06) Bug: Allgemein: Öffnen der Absence noch ein wenig laggy
-11) Bug: Allgemein: Timer und Funktionen im Hintergrund weiter laufen lassen
+04) Bug: Allgemein: Baby ausmachen können wenn anruf timer läuft, Timer und Funktionen im Hintergrund weiter laufen lassen
 
 02) Bug: Bluetooth: Absturz, wenn im Overview die Verbindung auf BT gestellt wird.
 13) Bug: Bluetooth: Wert für Geräuscherkennung ermitteln
@@ -12,15 +12,13 @@ Bugs
 		-> führt noch dazu, dass man manchmal nichts hört beim Reden mit Baby
 17) Bug: Bluetooth: Manchmal kommt es dazu, dass Audio zwar übertragen, jedoch nicht abgespielt wird (wahrschl. gleiche Ursache wie Bug 16)
 
-03) Bug: Interface: Beim Start der App wird die Selektierung im Drawer nicht gesetzt
+03) Bug: Interface: Selektierung im Drawer wird nicht gesetzt
 05) Bug: Interface: Wenn man das Setup beendet, aktualisiert sich der NavigationDrawer nicht. Der Einrichtungsassistent bleibt selected.
+21) Bug: Interface: Akkustand sofort nach erfolgereicher Verbindung übertragen.
 
-07) Bug: Wi-Fi: Die Eltern Talk Funktion funktioniert nur, wenn die App aufm Babygerät neu gestartet wird.
-08) Bug: Wi-Fi: Absturz wenn NoiseLevel aktiviert wird, funzt aber nachm Neustart der App
-09) Bug: Wi-Fi: DatenBytes werden beim Wi-Fi nicht 100% übertragen bei erster Ausführung
-
-
-
+01) Bug: Wi-Fi: Wenn Eltern Baby kicken und dann neu suchen stimmt was mit der DeviceList nicht in der Suche
+19) Bug: Wi-Fi: Nach erfolgreicher Audioübertragung in beide Richtungen, dann kick, dann geht neue Suche nicht, erst wenn baby neustart
+20) Bug: Wenn Babygerät pausiert muss Remote auf Away gesetzt werden.
 
 
 Testfälle:

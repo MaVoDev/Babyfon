@@ -194,7 +194,8 @@ public class MainActivity extends ActionBarActivity {
 		}
 
 		// if (mSharedPrefs.getConnectivityType() != 1) {
-		// // TODO: FÜR TESTZWECKE SERVICE WIEDER AUSMACHEN, WENN APP GESCHLOSSEN WIRD
+		// // TODO: FÜR TESTZWECKE SERVICE WIEDER AUSMACHEN, WENN APP
+		// GESCHLOSSEN WIRD
 		// doUnbindService();
 		// }
 		// else
@@ -229,8 +230,8 @@ public class MainActivity extends ActionBarActivity {
 			if (mSharedPrefs.getConnectivityType() == 2) {
 				mModuleHandler.startRemoteCheck();
 			}
-			new Message(this).send(this.getString(R.string.BABYFON_MSG_CONNECTION_HELLO) + ";" + mSharedPrefs.getHostAddress() + ";"
-					+ mSharedPrefs.getPassword());
+			new Message(this).send(this.getString(R.string.BABYFON_MSG_CONNECTION_HELLO) + ";"
+					+ mSharedPrefs.getHostAddress() + ";" + mSharedPrefs.getPassword());
 			if (mSharedPrefs.getDeviceMode() == 0) {
 				mModuleHandler.registerBattery();
 				if (mSharedPrefs.getForwardingSMS() || mSharedPrefs.getForwardingSMSInfo()) {
@@ -293,7 +294,9 @@ public class MainActivity extends ActionBarActivity {
 				if (mSharedPrefs.getRemoteAddress() != null) {
 					if (mSharedPrefs.isNoiseActivated()) {
 						if (MainActivity.mAudioRecorder == null) {
-							// MainActivity.mAudioRecorder = new AudioRecorder(this, mBoundService.getConnection());
+							// MainActivity.mAudioRecorder = new
+							// AudioRecorder(this,
+							// mBoundService.getConnection());
 							MainActivity.mAudioRecorder = new AudioRecorder(this, null);
 							MainActivity.mAudioRecorder.startRecording();
 						}
@@ -306,9 +309,12 @@ public class MainActivity extends ActionBarActivity {
 			}
 		}
 
-		if (mSharedPrefs.getForwardingSMS() || mSharedPrefs.getForwardingSMSInfo()) {
-			mModuleHandler.registerSMS();
-		}
+//		if (mSharedPrefs.getDeviceMode() == 0 && mSharedPrefs.getRemoteAddress() == null) {
+//			mModuleHandler.unregisterSMS();
+//			mSharedPrefs.setForwardingSMS(false);
+//			mSharedPrefs.setForwardingSMSInfo(false);
+//			mSharedPrefs.setForwardingCallInfo(false);
+//		}
 
 		if (timerNavigationDrawer == null) {
 			timerNavigationDrawer = new Timer();
@@ -522,7 +528,8 @@ public class MainActivity extends ActionBarActivity {
 	}
 
 	/**
-	 * When using the ActionBarDrawerToggle, you must call it during onPostCreate() and onConfigurationChanged()...
+	 * When using the ActionBarDrawerToggle, you must call it during
+	 * onPostCreate() and onConfigurationChanged()...
 	 */
 
 	@Override
@@ -575,7 +582,8 @@ public class MainActivity extends ActionBarActivity {
 			// Listenelement: Babymonitor
 			items.add(new NavigationDrawerItemModel(navMenuTitles[0], navMenuIcons.getResourceId(0, -1)));
 			// Listenelement: Anrufe und Nachrichten in Abwesenheit
-			items.add(new NavigationDrawerItemModel(navMenuTitles[1], navMenuIcons.getResourceId(1, -1), true, String.valueOf(counter)));
+			items.add(new NavigationDrawerItemModel(navMenuTitles[1], navMenuIcons.getResourceId(1, -1), true, String
+					.valueOf(counter)));
 			// Listenelement: Einrichtungsassistent
 			items.add(new NavigationDrawerItemModel(navMenuTitles[2], navMenuIcons.getResourceId(2, -1)));
 			// Listenelement: Einstellungen
@@ -637,7 +645,8 @@ public class MainActivity extends ActionBarActivity {
 			// cast its IBinder to a concrete class and directly access it.
 			mBoundService = ((LocalService.LocalBinder) service).getService();
 
-			// Wenn während des Setups der Service noch nicht fertig geladen ist, wird solange Warte-Overlay angezeigt
+			// Wenn während des Setups der Service noch nicht fertig geladen
+			// ist, wird solange Warte-Overlay angezeigt
 			// Wenn der Service fertig ist wird das Overlay ausgeblendet
 
 			// if (OverlayActivity.isCreated) {
@@ -652,9 +661,11 @@ public class MainActivity extends ActionBarActivity {
 			Log.i(TAG, "Service connected with app...");
 			Toast.makeText(MainActivity.this, "Service connected.", Toast.LENGTH_SHORT).show();
 
-			// Verbinde mit gespeichertem Device (falls noch keine Verbindung besteht)
+			// Verbinde mit gespeichertem Device (falls noch keine Verbindung
+			// besteht)
 			if (mSharedPrefs.getConnectivityType() == 1) { // BEI BT
-				if (mSharedPrefs.getRemoteAddress() != null) { // Gespeichertes Gerät
+				if (mSharedPrefs.getRemoteAddress() != null) { // Gespeichertes
+																// Gerät
 
 					final ConnectionInterface connection = mBoundService.getConnection();
 					if (connection != null) {

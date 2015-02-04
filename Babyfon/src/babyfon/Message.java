@@ -38,7 +38,8 @@ public class Message {
 		String contactName = mPhoneBookHandler.getContactName(phoneNumber);
 
 		if (mSharedPrefs.getForwardingCallInfo()) {
-			send(mContext.getString(R.string.BABYFON_MSG_CALL_INFO) + ";" + contactName + ";" + phoneNumber + ";" + date + ";" + time);
+			send(mContext.getString(R.string.BABYFON_MSG_CALL_INFO) + ";" + contactName + ";" + phoneNumber + ";"
+					+ date + ";" + time);
 		}
 
 	}
@@ -47,7 +48,8 @@ public class Message {
 		String contactName = mPhoneBookHandler.getContactName(phoneNumber);
 
 		if (mSharedPrefs.getForwardingSMS()) {
-			send(mContext.getString(R.string.BABYFON_MSG_SMS) + ";" + contactName + ";" + message + ";" + date + ";" + time);
+			send(mContext.getString(R.string.BABYFON_MSG_SMS) + ";" + contactName + ";" + message + ";" + date + ";"
+					+ time);
 		}
 
 		if (mSharedPrefs.getForwardingSMSInfo()) {
@@ -171,7 +173,11 @@ public class Message {
 
 					}
 				} // WIFI
-				else if (mSharedPrefs.getConnectivityTypeTemp() == 2) {
+				else if (mSharedPrefs.getConnectivityType() == 2) {
+					mModuleHandler.stopTCPReceiver();
+					mModuleHandler.stopUDPReceiver();
+					mModuleHandler.startUDPReceiver();
+					mModuleHandler.startTCPReceiver();
 					mModuleHandler.startRemoteCheck();
 				}
 
@@ -205,7 +211,8 @@ public class Message {
 			}
 
 			FragmentManager mFragmentManager = ((MainActivity) MainActivity.getContext()).getSupportFragmentManager();
-			mFragmentManager.beginTransaction().replace(R.id.frame_container, new SetupCompleteParentsModeFragment(mContext), null)
+			mFragmentManager.beginTransaction()
+					.replace(R.id.frame_container, new SetupCompleteParentsModeFragment(mContext), null)
 					.addToBackStack(null).commit();
 		}
 
@@ -218,8 +225,8 @@ public class Message {
 
 			if (mSharedPrefs.getConnectivityTypeTemp() == 1) {
 				// Bluetooth neu initialisieren
-				((SetupSearchDevicesFragment) ((MainActivity) MainActivity.getContext()).getFragmentById("SetupSearchDevicesFragment"))
-						.initViewBluetooth();
+				((SetupSearchDevicesFragment) ((MainActivity) MainActivity.getContext())
+						.getFragmentById("SetupSearchDevicesFragment")).initViewBluetooth();
 			}
 
 			new Output().toast(mContext.getString(R.string.wrong_password), 0);
@@ -262,7 +269,8 @@ public class Message {
 		if (strArray[0].equals(mContext.getString(R.string.BABYFON_MSG_SYSTEM_REJOIN))) {
 
 			if (mSharedPrefs.getDeviceMode() == 0) {
-				if (!mSharedPrefs.getRemoteAddress().equals(strArray[1]) || !mSharedPrefs.getPassword().equals(strArray[2])) {
+				if (!mSharedPrefs.getRemoteAddress().equals(strArray[1])
+						|| !mSharedPrefs.getPassword().equals(strArray[2])) {
 					send((mContext.getString(R.string.BABYFON_MSG_SYSTEM_DISCONNECTED)));
 				} else {
 					mModuleHandler.registerBattery();
@@ -278,7 +286,8 @@ public class Message {
 		if (strArray[0].equals(mContext.getString(R.string.BABYFON_MSG_CONNECTION_HELLO))) {
 			// Hello
 			if (mSharedPrefs.getRemoteAddress() != null) {
-				if (!mSharedPrefs.getRemoteAddress().equals(strArray[1]) || !mSharedPrefs.getPassword().equals(strArray[2])) {
+				if (!mSharedPrefs.getRemoteAddress().equals(strArray[1])
+						|| !mSharedPrefs.getPassword().equals(strArray[2])) {
 					send(strArray[1], mContext.getString(R.string.BABYFON_MSG_SYSTEM_DISCONNECTED));
 					// new TCPSender(mContext).sendMessage(strArray[1],
 					// mContext.getString(R.string.BABYFON_MSG_SYSTEM_DISCONNECTED));
