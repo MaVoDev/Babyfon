@@ -35,10 +35,13 @@ import android.widget.AdapterView;
 import android.widget.FrameLayout;
 import android.widget.ListView;
 import android.widget.Toast;
+import babyfon.Message;
 import babyfon.Notification;
 import babyfon.adapter.NavigationDrawerListAdapter;
 import babyfon.audio.AudioPlayer;
 import babyfon.audio.AudioRecorder;
+import babyfon.connectivity.ConnectionInterface;
+import babyfon.connectivity.ConnectionInterface.OnConnectedListener;
 import babyfon.connectivity.phone.CallStateListener;
 import babyfon.connectivity.phone.SMSReceiver;
 import babyfon.connectivity.wifi.TCPReceiver;
@@ -147,11 +150,10 @@ public class MainActivity extends ActionBarActivity {
 		// AUSKOMMENTIERT; VS!
 		mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, android.R.string.ok, android.R.string.no);
 
-		// if (mSharedPrefs.getConnectivityType() == 1) {
-		// Zum Service verbinden / Service starten
-
-		doBindService();
-		// }
+		if (mSharedPrefs.getConnectivityType() == 1) {
+			// Zum Service verbinden / Service starten
+			doBindService();
+		}
 	}
 
 	@Override
@@ -170,8 +172,11 @@ public class MainActivity extends ActionBarActivity {
 			timerConnectivityState = null;
 		}
 
-		if (mSharedPrefs.getRemoteAddress() != null) {
-			new babyfon.Message(this).send(this.getString(R.string.BABYFON_MSG_SYSTEM_AWAY));
+		// BEI BT NICHT, wegen Service
+		if (mSharedPrefs.getConnectivityType() != 1) {
+			if (mSharedPrefs.getRemoteAddress() != null) {
+				new Message(this).send(this.getString(R.string.BABYFON_MSG_SYSTEM_AWAY));
+			}
 		}
 
 		if (mSharedPrefs.getDeviceMode() == 0) {
@@ -182,10 +187,18 @@ public class MainActivity extends ActionBarActivity {
 			}
 		}
 
-		if (mSharedPrefs.getConnectivityType() != 1) {
-			// TODO: FÜR TESTZWECKE SERVICE WIEDER AUSMACHEN, WENN APP GESCHLOSSEN WIRD
-			doUnbindService();
-		} else if (mSharedPrefs.getConnectivityType() == 2) {
+		doUnbindService();
+		// Keine Verbindungen, also Service beenden
+		if (mSharedPrefs.getRemoteAddress() == null) {
+			stopService();
+		}
+
+		// if (mSharedPrefs.getConnectivityType() != 1) {
+		// // TODO: FÜR TESTZWECKE SERVICE WIEDER AUSMACHEN, WENN APP GESCHLOSSEN WIRD
+		// doUnbindService();
+		// }
+		// else
+		if (mSharedPrefs.getConnectivityType() == 2) {
 			mModuleHandler.stopUDPReceiver();
 			mModuleHandler.stopTCPReceiver();
 		}
@@ -198,7 +211,9 @@ public class MainActivity extends ActionBarActivity {
 			mModuleHandler.stopRemoteCheck();
 		}
 
-		new Notification(this).stop();
+		if (mSharedPrefs.getConnectivityType() != 1) {
+			new Notification(this).stop();
+		}
 	}
 
 	@Override
@@ -214,8 +229,8 @@ public class MainActivity extends ActionBarActivity {
 			if (mSharedPrefs.getConnectivityType() == 2) {
 				mModuleHandler.startRemoteCheck();
 			}
-			new babyfon.Message(this).send(this.getString(R.string.BABYFON_MSG_CONNECTION_HELLO) + ";" + mSharedPrefs.getHostAddress()
-					+ ";" + mSharedPrefs.getPassword());
+			new Message(this).send(this.getString(R.string.BABYFON_MSG_CONNECTION_HELLO) + ";" + mSharedPrefs.getHostAddress() + ";"
+					+ mSharedPrefs.getPassword());
 			if (mSharedPrefs.getDeviceMode() == 0) {
 				mModuleHandler.registerBattery();
 				if (mSharedPrefs.getForwardingSMS() || mSharedPrefs.getForwardingSMSInfo()) {
@@ -622,22 +637,57 @@ public class MainActivity extends ActionBarActivity {
 			// cast its IBinder to a concrete class and directly access it.
 			mBoundService = ((LocalService.LocalBinder) service).getService();
 
+			// Wenn während des Setups der Service noch nicht fertig geladen ist, wird solange Warte-Overlay angezeigt
+			// Wenn der Service fertig ist wird das Overlay ausgeblendet
+
+			// if (OverlayActivity.isCreated) {
+			// OverlayActivity.getInstance().dismiss();
+			// }
+			SetupSearchDevicesFragment fragment = (SetupSearchDevicesFragment) getFragmentById("SetupSearchDevicesFragment");
+			if (fragment.isVisible()) {
+				fragment.initViewBluetooth();
+			}
+
 			// Tell the user about this for our demo.
 			Log.i(TAG, "Service connected with app...");
 			Toast.makeText(MainActivity.this, "Service connected.", Toast.LENGTH_SHORT).show();
 
-			// if (MainActivity.mAudioRecorder != null) {
-			// MainActivity.mAudioRecorder.stopRecording();
-			// MainActivity.mAudioRecorder = null;
-			// }
-			// MainActivity.mAudioRecorder = new AudioRecorder(MainActivity.this, mBoundService);
+			// Verbinde mit gespeichertem Device (falls noch keine Verbindung besteht)
+			if (mSharedPrefs.getConnectivityType() == 1) { // BEI BT
+				if (mSharedPrefs.getRemoteAddress() != null) { // Gespeichertes Gerät
 
-			// MainActivity.mAudioRecorder.startRecording();
+					final ConnectionInterface connection = mBoundService.getConnection();
+					if (connection != null) {
+						if (!connection.isConnected()) {
 
-			// TODO: einbauen:
-			// Verbinden mit aktuelle gepairtem Device...
-			// mBoundService.connectTo("CC:96:A0:41:34:3E");
-			// mBoundService.connectTo(mSharedPrefs.getRemoteAddress());
+							// OnConnectedListener
+							connection.setOnConnectedListener(new OnConnectedListener() {
+								@Override
+								public void onConnectedListener(String deviceName) {
+
+									connection.registerDisconnectHandler();
+
+									if (mSharedPrefs.getDeviceMode() == 1) { // ELTERN
+										// HELLO Nachricht senden
+										String msg = mContext.getString(R.string.BABYFON_MSG_CONNECTION_HELLO) + ";"
+												+ mSharedPrefs.getHostAddress() + ";" + mSharedPrefs.getPassword();
+										connection.sendMessage(msg);
+									}
+								}
+							});
+
+							if (mSharedPrefs.getDeviceMode() == 1) { // ELTERN
+								// Verbinde
+								mBoundService.connectTo(mSharedPrefs.getRemoteAddress());
+							} else if (mSharedPrefs.getDeviceMode() == 0) { // BABY
+								// Warte auf Verbindung
+								mBoundService.startServer();
+							}
+						}
+					}
+				}
+			}
+
 		}
 
 		public void onServiceDisconnected(ComponentName className) {
@@ -656,32 +706,30 @@ public class MainActivity extends ActionBarActivity {
 		// we know will be running in our own process (and thus won't be
 		// supporting component replacement by other applications).
 
-		// bindService(new Intent(MainActivity.this, LocalService.class),
-		// mServiceConnection, Context.BIND_AUTO_CREATE);
-
 		Intent serviceIntent = new Intent(MainActivity.this, LocalService.class);
 
 		startService(serviceIntent);
-		bindService(serviceIntent, mServiceConnection, 0);
-		// bindService(serviceIntent, mServiceConnection,
-		// Context.BIND_AUTO_CREATE);
+		// bindService(serviceIntent, mServiceConnection, 0);
+		bindService(serviceIntent, mServiceConnection, BIND_AUTO_CREATE);
 
 		mIsBound = true;
 	}
 
-	void doUnbindService() {
+	public void doUnbindService() {
 		if (mIsBound) {
 			Log.i(TAG, "Unbind service...");
 
 			// Detach our existing connection.
 			unbindService(mServiceConnection);
 			mIsBound = false;
-
-			Log.i(TAG, "Stop service...");
-			// Stop service
-			Intent serviceIntent = new Intent(MainActivity.this, LocalService.class);
-			stopService(serviceIntent);
 		}
+	}
+
+	public void stopService() {
+		Log.i(TAG, "Stop service...");
+		// Stop service
+		Intent serviceIntent = new Intent(MainActivity.this, LocalService.class);
+		stopService(serviceIntent);
 	}
 
 	//

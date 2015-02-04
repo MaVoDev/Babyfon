@@ -63,10 +63,10 @@ public class LocalService extends Service {
 
 		mNM = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
 
-//		if (mConnection == null) {
-			initBtConnection();
+		// if (mConnection == null) {
+		initBtConnection();
 
-			// Disconnect Handler wieder unregistern während des setups!
+		// Disconnect Handler wieder unregistern während des setups!
 		// mConnection.registerDisconnectHandler();
 		// }
 
@@ -241,14 +241,14 @@ public class LocalService extends Service {
 	}
 
 	public void startRecording() {
-		Log.i(TAG, "Start Recording on Service...");
+		Log.v(TAG, "Start Recording on Service...");
 		if (mAudioRecorder == null)
 			mAudioRecorder = new AudioRecorder(mContext, this);
 		mAudioRecorder.startRecording();
 	}
 
 	public void stopRecording() {
-		Log.i(TAG, "Stop Recording on Service...");
+		Log.v(TAG, "Stop Recording on Service...");
 		if (mAudioRecorder != null)
 			mAudioRecorder.stopRecording();
 	}

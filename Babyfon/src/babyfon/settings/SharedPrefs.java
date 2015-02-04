@@ -8,6 +8,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
+import android.util.Log;
 
 public class SharedPrefs {
 
@@ -92,6 +93,7 @@ public class SharedPrefs {
 	 *            noise state
 	 */
 	public void setNoiseActivated(Boolean state) {
+		Log.e("SP", "setNoiseActivated: " + state);
 		editor.putBoolean("noise_activated", state).commit();
 	}
 
@@ -594,8 +596,7 @@ public class SharedPrefs {
 	/**
 	 * Get the active connectivity type.
 	 * 
-	 * @return int: -1 = no type, 0 = auto, 1 = Bluetooth, 2 = Wi-Fi, 3 = Wi-Fi
-	 *         Direct
+	 * @return int: -1 = no type, 0 = auto, 1 = Bluetooth, 2 = Wi-Fi, 3 = Wi-Fi Direct
 	 */
 	public int getConnectivityType() {
 		return mSharedPreferences.getInt("connectivity_type", -1);
@@ -604,8 +605,7 @@ public class SharedPrefs {
 	/**
 	 * Set the active connectivity type.
 	 * 
-	 * @param int type: -1 = no type, 0 = auto, 1 = Bluetooth, 2 = Wi-Fi, 3 =
-	 *        Wi-Fi Direct
+	 * @param int type: -1 = no type, 0 = auto, 1 = Bluetooth, 2 = Wi-Fi, 3 = Wi-Fi Direct
 	 */
 	public void setConnectivityType(int type) {
 		editor.putInt("connectivity_type", type).commit();
@@ -614,8 +614,7 @@ public class SharedPrefs {
 	/**
 	 * Get the temporary connectivity type.
 	 * 
-	 * @return int: -1 = no type, 0 = auto, 1 = Bluetooth, 2 = Wi-Fi, 3 = Wi-Fi
-	 *         Direct
+	 * @return int: -1 = no type, 0 = auto, 1 = Bluetooth, 2 = Wi-Fi, 3 = Wi-Fi Direct
 	 */
 	public int getConnectivityTypeTemp() {
 		return mSharedPreferences.getInt("connectivity_type_temp", -1);
@@ -624,8 +623,7 @@ public class SharedPrefs {
 	/**
 	 * Set the temporary connectivity type.
 	 * 
-	 * @param int temporary type: -1 = no type, 0 = auto, 1 = Bluetooth, 2 =
-	 *        Wi-Fi, 3 = Wi-Fi Direct
+	 * @param int temporary type: -1 = no type, 0 = auto, 1 = Bluetooth, 2 = Wi-Fi, 3 = Wi-Fi Direct
 	 */
 	public void setConnectivityTypeTemp(int type) {
 		editor.putInt("connectivity_type_temp", type).commit();

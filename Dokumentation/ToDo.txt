@@ -10,6 +10,7 @@ Bugs
 15) Bug: Bluetooth: Beim Start der App mit letztem bekannten Gerät verbinden
 16) Bug: Bluetooth: OverviewFragment:	- AudioRecorder wird im BT Modus nun nur im Service gestartet und gestoppt
 		-> führt noch dazu, dass man manchmal nichts hört beim Reden mit Baby
+17) Bug: Bluetooth: Manchmal kommt es dazu, dass Audio zwar übertragen, jedoch nicht abgespielt wird (wahrschl. gleiche Ursache wie Bug 16)
 
 03) Bug: Interface: Beim Start der App wird die Selektierung im Drawer nicht gesetzt
 05) Bug: Interface: Wenn man das Setup beendet, aktualisiert sich der NavigationDrawer nicht. Der Einrichtungsassistent bleibt selected.

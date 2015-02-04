@@ -253,13 +253,13 @@ public class OverviewFragment extends Fragment {
 		if (MainActivity.mBoundService == null) // TODO noch ändern
 			return;
 
-		if (mSharedPrefs.isNoiseActivated()) {
-			// startRecorder();
-			MainActivity.mBoundService.startRecording();
-		} else {
-			// stopRecorder();
-			MainActivity.mBoundService.stopRecording();
-		}
+		// if (mSharedPrefs.isNoiseActivated()) {
+		// // startRecorder();
+		// MainActivity.mBoundService.startRecording();
+		// } else {
+		// // stopRecorder();
+		// MainActivity.mBoundService.stopRecording();
+		// }
 	}
 
 	public void updateWiFiMode() {
@@ -380,6 +380,15 @@ public class OverviewFragment extends Fragment {
 
 		startUiUpdateThread();
 
+		// Starte recorder für BT
+		if (mSharedPrefs.getConnectivityType() == 1) {
+			if (mSharedPrefs.isNoiseActivated()) {
+				startRecorder();
+			} else {
+				stopRecorder();
+			}
+		}
+
 		// kick remote
 		kickRemote.setOnClickListener(new View.OnClickListener() {
 			@Override
@@ -397,7 +406,13 @@ public class OverviewFragment extends Fragment {
 								mModuleHandler.unregisterBattery();
 								stopRecorder();
 
-								if (mSharedPrefs.getConnectivityType() == 2) {
+								new Message(mContext).send(mContext.getString(R.string.BABYFON_MSG_SYSTEM_DISCONNECTED));
+
+								if (mSharedPrefs.getConnectivityType() == 1) {
+									if (MainActivity.mBoundService != null) {
+										MainActivity.mBoundService.getConnection().stopConnection();
+									}
+								} else if (mSharedPrefs.getConnectivityType() == 2) {
 									mModuleHandler.startUDPReceiver();
 									mModuleHandler.startTCPReceiver();
 								}
@@ -406,7 +421,7 @@ public class OverviewFragment extends Fragment {
 									mModuleHandler.unregisterSMS();
 								}
 
-								new Message(mContext).send(mContext.getString(R.string.BABYFON_MSG_SYSTEM_DISCONNECTED));
+								// new Message(mContext).send(mContext.getString(R.string.BABYFON_MSG_SYSTEM_DISCONNECTED));
 								updateUI();
 							}
 						}).create().show();

@@ -57,6 +57,8 @@ public interface ConnectionInterface {
 
 	public void registerDisconnectHandler();
 
+	public boolean isConnected();
+
 	// TODO: Evtl noch einen OnConnectionFailed Listener einbauen
 
 }

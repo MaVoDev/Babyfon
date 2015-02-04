@@ -38,13 +38,6 @@ public class BluetoothConnection implements ConnectionInterface {
 			// When discovery finds a device
 			if (BluetoothDevice.ACTION_ACL_DISCONNECTED.equals(action)) {
 				// disconnected, do what you want to notify user here, toast, or dialog, etc.
-				Log.e(TAG, "Bluetooth disconnected!");
-
-				mSharedPrefs.setNoiseActivated(false);
-				mSharedPrefs.setRemoteOnlineState(false);
-
-				MainActivity.mBoundService.stopRecording();
-				MainActivity.mBoundService.stopAudioPlaying();
 
 				// MACHTE KEINEN SINN, DA MAN KEINE NACHRICHTEN SCHICKEN KANN, WENN NICHT CONNECTED... -> TODO: RAUS
 				// new Message(MainActivity.getContext()).send(context.getString(R.string.BABYFON_MSG_SYSTEM_DISCONNECTED));
@@ -86,6 +79,13 @@ public class BluetoothConnection implements ConnectionInterface {
 	@Override
 	public void connectToAdress(String address) {
 
+		// Stoppe Server, falls er läuft und wartet
+		if (mBluetoothConnectionThread != null) {
+			// if (mBluetoothConnectionThread.type == BluetoothConnectionThread.SERVER) {
+			mBluetoothConnectionThread.kill();
+			// }
+		}
+
 		Log.i(TAG, "Connect to: " + address);
 
 		BluetoothDevice device = mBluetoothAdapter.getRemoteDevice(address);
@@ -99,7 +99,7 @@ public class BluetoothConnection implements ConnectionInterface {
 
 		// TODO Disconnect Zeug
 		if (mBluetoothConnectionThread != null)
-			mBluetoothConnectionThread.stopBT();
+			mBluetoothConnectionThread.kill();
 		mBluetoothConnectionThread = null;
 	}
 
@@ -178,6 +178,28 @@ public class BluetoothConnection implements ConnectionInterface {
 		IntentFilter bluetoothDisconnectedFilter = new IntentFilter(BluetoothDevice.ACTION_ACL_DISCONNECTED);
 
 		MainActivity.getContext().registerReceiver(mReceiver, bluetoothDisconnectedFilter);
+	}
+
+	public void stopListening() {
+	}
+
+	@Override
+	public boolean isConnected() {
+		if (mBluetoothConnectionThread == null) {
+			return false;
+		} else {
+			return mBluetoothConnectionThread.isConnected();
+		}
+	}
+
+	public void onDisconnect() {
+		Log.e(TAG, "Bluetooth disconnected!");
+
+		mSharedPrefs.setNoiseActivated(false);
+		mSharedPrefs.setRemoteOnlineState(false);
+
+		MainActivity.mBoundService.stopRecording();
+		MainActivity.mBoundService.stopAudioPlaying();
 	}
 
 }

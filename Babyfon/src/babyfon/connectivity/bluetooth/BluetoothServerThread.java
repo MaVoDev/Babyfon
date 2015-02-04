@@ -12,6 +12,8 @@ public class BluetoothServerThread extends BluetoothConnectionThread {
 	private static final String TAG = BluetoothServerThread.class.getCanonicalName();
 	private final BluetoothServerSocket mmServerSocket;
 
+	public int type = SERVER;
+
 	public BluetoothServerThread(BluetoothAdapter mBluetoothAdapter, BluetoothConnection bluetoothConnection) {
 
 		this.mBTConnection = bluetoothConnection;
@@ -35,8 +37,11 @@ public class BluetoothServerThread extends BluetoothConnectionThread {
 		// Keep listening until exception occurs or a socket is returned
 		while (true) {
 			try {
+				Log.i(TAG, "Server waiting for connections...");
 				mSocket = mmServerSocket.accept();
 			} catch (IOException e) {
+				Log.e(TAG, "Waiting for Clients aborted...");
+				Log.e(TAG, "Exception: " + e.getMessage());
 				break;
 			}
 			// If a connection was accepted
@@ -44,18 +49,11 @@ public class BluetoothServerThread extends BluetoothConnectionThread {
 				// Do work to manage the connection (in a separate thread)
 				// manageConnectedSocket(socket);
 
-				// Start sending Audio to client
-				// mNoise = new AudioRecording(mSocket);
-				// mNoise.startRecording();
-
 				try {
 					isRunning = true;
 
 					mmInStream = mSocket.getInputStream();
 					mmOutStream = mSocket.getOutputStream();
-
-					// mInputStream = new BufferedInputStream(mSocket.getInputStream());
-					// mOutputStream = new BufferedOutputStream(mSocket.getOutputStream());
 
 					startListening();
 
@@ -75,7 +73,7 @@ public class BluetoothServerThread extends BluetoothConnectionThread {
 					e.printStackTrace();
 				}
 
-				Log.i(TAG, "SOCKET CONNECTED!!!!!!!! [Name: " + mSocket.getRemoteDevice().getName() + "; MAC: "
+				Log.i(TAG, "Client connected: [Name: " + mSocket.getRemoteDevice().getName() + "; MAC: "
 						+ mSocket.getRemoteDevice().getAddress() + "]");
 
 				OnConnectedListener listener = mBTConnection.getOnConnnectedListener();
@@ -86,8 +84,19 @@ public class BluetoothServerThread extends BluetoothConnectionThread {
 				break;
 			}
 		}
-
-		Log.i(TAG, "BluetoothServerThread stopped!");
 	}
 
+	@Override
+	public void kill() {
+
+		if (mmServerSocket != null) {
+			try {
+				mmServerSocket.close();
+			} catch (IOException e1) {
+				e1.printStackTrace();
+			}
+		}
+
+		super.kill();
+	}
 }

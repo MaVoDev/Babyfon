@@ -62,6 +62,10 @@
             android:name="babyfon.view.activity.SettingsActivity"
             android:label="@string/title_activity_settings" >
         </activity>
+        <activity
+            android:name="babyfon.view.activity.OverlayActivity"
+            android:theme="@style/Transparent" >
+        </activity>
     </application>
 
 </manifest>

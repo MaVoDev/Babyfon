@@ -11,7 +11,6 @@ import babyfon.settings.ModuleHandler;
 import babyfon.settings.SharedPrefs;
 import babyfon.view.Output;
 import babyfon.view.activity.MainActivity;
-import babyfon.view.fragment.AbsenceFragment;
 import babyfon.view.fragment.setup.SetupCompleteParentsModeFragment;
 import babyfon.view.fragment.setup.SetupSearchDevicesFragment;
 
@@ -145,6 +144,7 @@ public class Message {
 			final String remoteAddress = strArray[2];
 			final String remoteName = strArray[3];
 
+			// TODO: warum wird das auch bei falschem PW gesetzt?!?!
 			mSharedPrefs.setRemoteAddress(remoteAddress);
 
 			if (mSharedPrefs.getPassword().equals(password)) {
@@ -162,8 +162,10 @@ public class Message {
 				// BLUETOOTH
 				if (mSharedPrefs.getConnectivityTypeTemp() == 1) {
 					if (MainActivity.mBoundService != null) {
+
+						// Recording wird erst im OverviewFragment gestartet
 						// Wenn Confirmed recording starten
-						MainActivity.mBoundService.startRecording();
+						// MainActivity.mBoundService.startRecording();
 
 						mSharedPrefs.setNoiseActivated(true);
 
@@ -174,12 +176,13 @@ public class Message {
 				}
 
 			} else {
+
 				send(mContext.getString(R.string.BABYFON_MSG_AUTH_DENIED));
+
 				if (mSharedPrefs.getConnectivityTypeTemp() == 1) {
+
 					MainActivity.mBoundService.getConnection().stopConnection();
-
 					MainActivity.mBoundService.initBtConnection(); // TODO: Test
-
 					MainActivity.mBoundService.startServer();
 				}
 
@@ -200,14 +203,6 @@ public class Message {
 			else if (mSharedPrefs.getConnectivityTypeTemp() == 2) {
 				mModuleHandler.startRemoteCheck();
 			}
-
-			// TODO BT TEST -> bessere lösung überlegen! (unten kommt class cast
-			// exception, weil mContext aus LocalService und nicht
-			// MainActivity kommt.)
-			// if (mSharedPrefs.getConnectivityTypeTemp() == 1) {
-			// return;
-			// }
-			// TODO BT TEST ---- ENDE
 
 			FragmentManager mFragmentManager = ((MainActivity) MainActivity.getContext()).getSupportFragmentManager();
 			mFragmentManager.beginTransaction().replace(R.id.frame_container, new SetupCompleteParentsModeFragment(mContext), null)
@@ -302,17 +297,5 @@ public class Message {
 			// password changed
 			mSharedPrefs.setPassword(strArray[1]);
 		}
-
-		// if
-		// (strArray[0].equals(mContext.getString(R.string.BABYFON_MSG_TALK_TRUE)))
-		// {
-		//
-		// }
-		//
-		// if
-		// (strArray[0].equals(mContext.getString(R.string.BABYFON_MSG_TALK_FALSE)))
-		// {
-		//
-		// }
 	}
 }

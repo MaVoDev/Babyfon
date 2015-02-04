@@ -21,6 +21,10 @@ public abstract class BluetoothConnectionThread extends Thread {
 	protected OutputStream mmOutStream;
 	protected boolean isRunning = false;
 
+	public static final int CLIENT = 0;
+	public static final int SERVER = 1;
+	public int type = -1;
+
 	// protected BufferedOutputStream mOutputStream;
 	// protected BufferedInputStream mInputStream;
 
@@ -36,10 +40,6 @@ public abstract class BluetoothConnectionThread extends Thread {
 				Log.i(TAG, "START listening for messages...");
 				// while (isRunning ) {
 				try {
-					// OnReceiveDataListener listener = mBTConnection.getOnReceiveDataListener();
-
-					// Leite die empfangenen Nachrichten an den
-					// OnReceiveMsgListener weiter
 
 					// STRINGS EMPFANGEN
 					// while (isRunning
@@ -64,57 +64,29 @@ public abstract class BluetoothConnectionThread extends Thread {
 
 					}
 				} catch (IOException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 				// }
-				Log.e(TAG, "STOP listening for messages...");
+				Log.e(TAG, BluetoothConnectionThread.class.getSimpleName() + ": STOP listening for messages...");
 			}
 		}).start();
 
 	}
 
-	// private void handleMsg(byte[] bData, OnReceiveDataListener listener) {
-	//
-	// Log.i(TAG, "Sende: data.length: " + data.length);
-	//
-	// byte[] sendData = new byte[bData.length - 1];
-	//
-	// System.arraycopy(bData, 1, sendData, 0, sendData.length);
-	//
-	// listener.onReceiveDataListener(bData, bData[0]);
-	//
-	// }
-
 	private void handleMsg(byte[] bData, int bytesRead) {
-
-		// TODO: METHODE ANPASSEN, DASS AUF DEM HUAWEI HIER NICHT BLOCKIERT
 
 		Log.i(TAG, "Empfangen: bytesRead: " + bytesRead + "; bData.length: " + bData.length);
 
-		// byte[] sendData = new byte[bData.length - 1];
-		// System.arraycopy(bData, 1, sendData, 0, sendData.length);
-
-		// byte[] receivedData = new byte[bData.length - 1];
-
-		// byte[] receivedData = new byte[bytesRead - 1];
-		// System.arraycopy(bData, 1, receivedData, 0, receivedData.length);
-		// Log.i(TAG, "Verarbeitetes Array: " + receivedData.length);
-		// Log.i(TAG, "TYPE: " + bData[0]);
-
 		// Gucke ob String oder Stream ankommt
-
 		byte type = 0; // 0 = String
 
-		// 250 ist geschätzter Wert, String wird vermutlich immer kleiner sein bzw. wir sorgen dafür, dass sie es sind
+		// 100 ist geschätzter Wert, String wird vermutlich immer kleiner sein bzw. wir sorgen dafür, dass sie es sind
 		if (bytesRead >= 100)
 			type = 1; // 1 = Audio
 
+		// Leite die empfangenen Nachrichten an den OnReceiveMsgListener weiter
 		if (mBTConnection.getOnReceiveDataListener() != null)
 			mBTConnection.getOnReceiveDataListener().onReceiveDataListener(bData, type, bytesRead);
-		// listener.onReceiveDataListener(receivedData, bData[0]);
-		// listener.onReceiveDataListener(receivedData, type);
-
 	}
 
 	public void sendData(byte[] data) {
@@ -135,11 +107,14 @@ public abstract class BluetoothConnectionThread extends Thread {
 	}
 
 	/** Will cancel an in-progress connection, and close the socket */
-	public void stopBT() {
+	public void kill() {
+
+		Log.e(TAG, "Stopping Bluetooth connection...");
 
 		isRunning = false;
+		
+		mBTConnection.onDisconnect();
 
-		Log.i(TAG, "Stopping Bluetooth connection...");
 		try {
 			if (mSocket != null)
 				mSocket.close();
@@ -147,11 +122,19 @@ public abstract class BluetoothConnectionThread extends Thread {
 			mSocket = null;
 			// mmInStream = null;
 			// mmOutStream = null;
-
+			
 			if (mBTConnection.getOnConnectionLostListener() != null)
 				mBTConnection.getOnConnectionLostListener().onConnectionLostListener("Bluetooth Connection closed");
 
 		} catch (IOException e) {
+		}
+	}
+
+	public boolean isConnected() {
+		if (mSocket == null) {
+			return false;
+		} else {
+			return mSocket.isConnected();
 		}
 	}
 }

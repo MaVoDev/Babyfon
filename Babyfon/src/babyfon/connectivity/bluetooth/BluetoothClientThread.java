@@ -12,6 +12,8 @@ import babyfon.connectivity.ConnectionInterface.OnConnectedListener;
 public class BluetoothClientThread extends BluetoothConnectionThread {
 	private static final String TAG = BluetoothClientThread.class.getCanonicalName();
 
+	public int type = CLIENT;
+
 	public BluetoothClientThread(BluetoothDevice device, BluetoothAdapter bTAdapter, BluetoothConnection btConnection) {
 
 		this.mBluetoothAdapter = bTAdapter;
@@ -36,6 +38,8 @@ public class BluetoothClientThread extends BluetoothConnectionThread {
 		mBluetoothAdapter.cancelDiscovery();
 
 		try {
+			Log.i(TAG, "Trying to connect to: [Name: " + mSocket.getRemoteDevice().getName() + "; MAC: "
+					+ mSocket.getRemoteDevice().getAddress() + "]");
 			// Connect the device through the socket. This will block until it
 			// succeeds or throws an exception
 			mSocket.connect();
@@ -48,7 +52,7 @@ public class BluetoothClientThread extends BluetoothConnectionThread {
 				Log.e(TAG, "Connection error: " + connectException.getMessage());
 				mSocket.close();
 			} catch (IOException closeException) {
-				Log.e(TAG, "Error on Closing Socket: " + closeException.getMessage());
+				Log.e(TAG, "Error on closing Socket: " + closeException.getMessage());
 			}
 
 			if (mBTConnection.getOnConnectionLostListener() != null)
@@ -58,7 +62,7 @@ public class BluetoothClientThread extends BluetoothConnectionThread {
 		}
 
 		// Do work to manage the connection (in a separate thread)
-		Log.i(TAG, "CONNECTED SUCCESSFULLY TO SERVER!!!!!!!! [Name: " + mSocket.getRemoteDevice().getName() + "; MAC: "
+		Log.i(TAG, "Connection established to: [Name: " + mSocket.getRemoteDevice().getName() + "; MAC: "
 				+ mSocket.getRemoteDevice().getAddress() + "]");
 
 		try {

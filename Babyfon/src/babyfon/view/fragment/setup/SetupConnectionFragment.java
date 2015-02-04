@@ -11,7 +11,6 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -55,7 +54,7 @@ public class SetupConnectionFragment extends Fragment {
 	private SetupCompleteBabyModeFragment nextFragmentBabyCall;
 	private SetupSearchDevicesFragment nextFragmentParents;
 	private SharedPrefs mSharedPrefs;
-	
+
 	String localIp;
 
 	private Context mContext;
@@ -239,8 +238,7 @@ public class SetupConnectionFragment extends Fragment {
 			public void onClick(View v) {
 				FragmentTransaction ft = mFragmentManager.beginTransaction();
 				ft.setCustomAnimations(R.anim.anim_slide_in_right, R.anim.anim_slide_out_right);
-				ft.replace(R.id.frame_container, new SetupDeviceModeFragment(mContext), null).addToBackStack(null)
-						.commit();
+				ft.replace(R.id.frame_container, new SetupDeviceModeFragment(mContext), null).addToBackStack(null).commit();
 			}
 		});
 
@@ -267,7 +265,10 @@ public class SetupConnectionFragment extends Fragment {
 						return;
 					} else {
 						mSharedPrefs.setHostAdress(mBluetoothHandler.getOwnAddress());
-						((MainActivity) MainActivity.getContext()).doBindService();
+						// Service starten, falls er noch nicht läuft
+						if (MainActivity.mBoundService == null) {
+							((MainActivity) MainActivity.getContext()).doBindService();
+						}
 					}
 				}
 
@@ -328,34 +329,27 @@ public class SetupConnectionFragment extends Fragment {
 
 				switch (keyCode) {
 				case KeyEvent.KEYCODE_BACK:
-					new AlertDialog.Builder(getActivity())
-							.setTitle(mContext.getString(R.string.dialog_title_cancel_setup))
+					new AlertDialog.Builder(getActivity()).setTitle(mContext.getString(R.string.dialog_title_cancel_setup))
 							.setMessage(mContext.getString(R.string.dialog_message_cancel_setup))
 							.setNegativeButton(mContext.getString(R.string.dialog_button_no), null)
-							.setPositiveButton(mContext.getString(R.string.dialog_button_yes),
-									new DialogInterface.OnClickListener() {
-										@Override
-										public void onClick(DialogInterface dialog, int id) {
-											if (mSharedPrefs.getDeviceMode() == 0) {
-												mFragmentManager
-														.beginTransaction()
-														.replace(R.id.frame_container, new OverviewFragment(mContext),
-																null).addToBackStack(null).commit();
-											} else if (mSharedPrefs.getDeviceMode() == 1) {
-												mFragmentManager
-														.beginTransaction()
-														.replace(R.id.frame_container,
-																new BabyMonitorFragment(mContext), null)
-														.addToBackStack(null).commit();
-											} else {
-												mFragmentManager
-														.beginTransaction()
-														.replace(R.id.frame_container,
-																new SetupStartFragment(mContext), null)
-														.addToBackStack(null).commit();
-											}
-										}
-									}).create().show();
+							.setPositiveButton(mContext.getString(R.string.dialog_button_yes), new DialogInterface.OnClickListener() {
+								@Override
+								public void onClick(DialogInterface dialog, int id) {
+									if (mSharedPrefs.getDeviceMode() == 0) {
+										mFragmentManager.beginTransaction()
+												.replace(R.id.frame_container, new OverviewFragment(mContext), null).addToBackStack(null)
+												.commit();
+									} else if (mSharedPrefs.getDeviceMode() == 1) {
+										mFragmentManager.beginTransaction()
+												.replace(R.id.frame_container, new BabyMonitorFragment(mContext), null)
+												.addToBackStack(null).commit();
+									} else {
+										mFragmentManager.beginTransaction()
+												.replace(R.id.frame_container, new SetupStartFragment(mContext), null).addToBackStack(null)
+												.commit();
+									}
+								}
+							}).create().show();
 					break;
 				}
 				return true;

@@ -1,8 +1,5 @@
 package babyfon.view.fragment.setup;
 
-import java.net.SocketException;
-import java.net.UnknownHostException;
-
 import android.app.AlertDialog;
 import android.bluetooth.BluetoothAdapter;
 import android.content.Context;
@@ -25,9 +22,9 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ListView;
 import android.widget.TextView;
-import babyfon.Message;
 import babyfon.adapter.DeviceListAdapter;
 import babyfon.connectivity.ConnectionInterface;
 import babyfon.connectivity.ConnectionInterface.OnConnectedListener;
@@ -52,6 +49,7 @@ public class SetupSearchDevicesFragment extends Fragment {
 	private static ListView listViewDevices;
 	private TextView subtitle;
 	private TextView title;
+	private FrameLayout mOverlay;
 
 	// private ArrayList<DeviceListItemModel> devices;
 	private DeviceListAdapter mDevicesAdapter;
@@ -131,6 +129,9 @@ public class SetupSearchDevicesFragment extends Fragment {
 		Typeface mTypeface_bi = Typeface.createFromAsset(mContext.getAssets(), "fonts/BOOKOSBI.TTF");
 		Typeface mTypeface_i = Typeface.createFromAsset(mContext.getAssets(), "fonts/BOOKOSI.TTF");
 
+		// Init Overlay
+		mOverlay = (FrameLayout) view.findViewById(R.id.wait_for_service_layout);
+
 		// Initialize ListView
 		listViewDevices = (ListView) view.findViewById(R.id.listView_devices);
 
@@ -145,6 +146,8 @@ public class SetupSearchDevicesFragment extends Fragment {
 		subtitle.setTypeface(mTypeface_i);
 		title = (TextView) view.findViewById(R.id.title_search);
 		title.setTypeface(mTypeface_bi);
+		TextView waitingMsg = (TextView) view.findViewById(R.id.waiting_msg);
+		waitingMsg.setTypeface(mTypeface_i);
 
 		updateUI();
 	}
@@ -164,9 +167,17 @@ public class SetupSearchDevicesFragment extends Fragment {
 
 		connectivityType = mSharedPrefs.getConnectivityTypeTemp();
 		switch (connectivityType) {
-		case 1:
-			initViewBluetooth();
+		case 1: {
+			if (MainActivity.mBoundService == null) {
+				// if (true) {
+				mOverlay.setVisibility(View.VISIBLE);
+				// startActivity(new Intent(mContext, OverlayActivity.class)); // Alternative, funzt noch nicht
+			} else {
+				initViewBluetooth();
+			}
+
 			break;
+		}
 		case 2:
 			initViewWifi();
 			break;
@@ -179,7 +190,8 @@ public class SetupSearchDevicesFragment extends Fragment {
 			@Override
 			public void onClick(View v) {
 				if (mSharedPrefs.getConnectivityTypeTemp() == 1) {
-					mBtHandler.stopSearch();
+					if (mBtHandler != null)
+						mBtHandler.stopSearch();
 				}
 				FragmentTransaction ft = mFragmentManager.beginTransaction();
 				ft.setCustomAnimations(R.anim.anim_slide_in_right, R.anim.anim_slide_out_right);
@@ -271,6 +283,8 @@ public class SetupSearchDevicesFragment extends Fragment {
 	public void initViewBluetooth() {
 		Log.i(TAG, "Init View Bluetooth...");
 
+		mOverlay.setVisibility(View.GONE); // Hide Overlay if its visible
+
 		mBtHandler = new BluetoothHandler(mContext);
 		mBtHandler.enableBluetooth();
 		mBtHandler.prepareForSearch(mDevicesAdapter);
@@ -289,26 +303,11 @@ public class SetupSearchDevicesFragment extends Fragment {
 				public void onConnectedListener(String deviceName) {
 
 					mBtHandler.unregisterReceiver();
-					// MainActivity.mBoundService.getConnection().registerDisconnectHandler();
 
 					String msg = new String(mContext.getString(R.string.BABYFON_MSG_AUTH_REQ) + ";" + mPW + ";"
 							+ BluetoothAdapter.getDefaultAdapter().getAddress() + ";" + android.os.Build.MODEL);
-					// new Message(mContext).send(msg);
-					mConnection.sendMessage(msg); // muss benutzt werden, da
-													// während des setups die
-													// connectivityType Pref
-													// noch nicht gesetzt
-													// ist...
-
-					// Verbunden also auf die Abschlussseite wechseln
-					// getFragmentManager().beginTransaction()
-					// .replace(R.id.frame_container, new
-					// SetupCompleteParentsModeFragment(mContext),
-					// null).addToBackStack(null)
-					// .commit();
-
-					// TODO Testing. Remote check nach verbindung starten
-					// mModuleHandler.startRemoteCheck();
+					// muss statt Message-Klasse benutzt werden, da während des setups die connectivityType Pref noch nicht gesetzt ist...
+					mConnection.sendMessage(msg);
 				}
 			});
 			// mBtHandler.searchDevices();
@@ -406,5 +405,17 @@ public class SetupSearchDevicesFragment extends Fragment {
 		if (btnRefresh != null && listViewDevices != null) {
 			updateUI();
 		}
+	}
+
+	// Methode für OverlayActivity
+	public void goBack() {
+		if (mSharedPrefs.getConnectivityTypeTemp() == 1) {
+			if (mBtHandler != null)
+				mBtHandler.stopSearch();
+		}
+
+		FragmentTransaction ft = getFragmentManager().beginTransaction();
+		ft.setCustomAnimations(R.anim.anim_slide_in_right, R.anim.anim_slide_out_right);
+		ft.replace(R.id.frame_container, new SetupConnectionFragment(mContext), null).addToBackStack(null).commitAllowingStateLoss();
 	}
 }

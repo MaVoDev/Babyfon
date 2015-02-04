@@ -293,6 +293,11 @@ public class BabyMonitorFragment extends Fragment {
 								}
 
 								new Message(mContext).send(mContext.getString(R.string.BABYFON_MSG_SYSTEM_DISCONNECTED));
+
+								if (mSharedPrefs.getConnectivityType() == 1) {
+									MainActivity.mBoundService.getConnection().stopConnection();
+								}
+
 								updateUI();
 							}
 						}).create().show();
