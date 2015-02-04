@@ -25,8 +25,8 @@ public class AudioDetection {
 			if (level > maxLevel)
 				maxLevel = level;
 
-			System.out.println("curVol: " + level);
-			System.out.println("maxVol: " + maxLevel);
+//			System.out.println("curVol: " + level);
+//			System.out.println("maxVol: " + maxLevel);
 
 			return (int) Math.sqrt(amplitude);
 		} else

@@ -181,9 +181,6 @@ public class SetupSearchDevicesFragment extends Fragment {
 		case 2:
 			initViewWifi();
 			break;
-		case 3:
-			initViewBWifiDirect();
-			break;
 		}
 
 		btnBackward.setOnClickListener(new OnClickListener() {
@@ -329,10 +326,6 @@ public class SetupSearchDevicesFragment extends Fragment {
 			mModuleHandler.startTCPReceiver();
 			new UDPSender(mContext).sendUDPMessage(new WifiHandler(mContext).getNetworkAddressClassC());
 		}
-	}
-
-	public void initViewBWifiDirect() {
-
 	}
 
 	public void setNewDevice(String ip, String name) {

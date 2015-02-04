@@ -119,10 +119,12 @@ public class SetupCompleteParentsModeFragment extends Fragment {
 		}
 
 		if (mSharedPrefs.getConnectivityType() == 2) {
-			mModuleHandler.startUDPReceiver();
-			mModuleHandler.startTCPReceiver();
 			mSharedPrefs.setRemoteAddress(mSharedPrefs.getRemoteAddressTemp());
 			Log.d(TAG, "Remote address: " + mSharedPrefs.getRemoteAddress());
+			mModuleHandler.stopTCPReceiver();
+			mModuleHandler.stopUDPReceiver();
+			mModuleHandler.startUDPReceiver();
+			mModuleHandler.startTCPReceiver();
 			mModuleHandler.startRemoteCheck();
 		}
 
