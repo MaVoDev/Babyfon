@@ -160,7 +160,7 @@ public class Message {
 				}
 
 				// BLUETOOTH
-				if (mSharedPrefs.getConnectivityTypeTemp() == 1) {
+				if (mSharedPrefs.getConnectivityType() == 1) {
 					if (MainActivity.mBoundService != null) {
 
 						// Recording wird erst im OverviewFragment gestartet
@@ -171,7 +171,7 @@ public class Message {
 
 					}
 				} // WIFI
-				else if (mSharedPrefs.getConnectivityTypeTemp() == 2) {
+				else if (mSharedPrefs.getConnectivityType() == 2) {
 					mModuleHandler.startRemoteCheck();
 				}
 
@@ -275,6 +275,7 @@ public class Message {
 			}
 		}
 
+		// BEI BT NUR AUF BABY-GERÄT
 		if (strArray[0].equals(mContext.getString(R.string.BABYFON_MSG_CONNECTION_HELLO))) {
 			// Hello
 			if (mSharedPrefs.getRemoteAddress() != null) {
@@ -284,7 +285,11 @@ public class Message {
 					// mContext.getString(R.string.BABYFON_MSG_SYSTEM_DISCONNECTED));
 				} else {
 					mSharedPrefs.setRemoteOnlineState(true);
-					if (mSharedPrefs.getConnectivityType() == 2) {
+					if (mSharedPrefs.getConnectivityType() == 1) {
+						if (MainActivity.mBoundService != null) {
+							MainActivity.mBoundService.startRecording();
+						}
+					} else if (mSharedPrefs.getConnectivityType() == 2) {
 						mModuleHandler.startRemoteCheck();
 					}
 				}

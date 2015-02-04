@@ -71,6 +71,8 @@ public class AudioPlayer {
 	}
 
 	public void playData(byte[] data, int bytesRead) {
+		// Log.i(TAG, "PLAY DATA! Track PlayState: " + track.getPlayState() + "; Track State: " + track.getState());
+
 		track.write(data, 0, bytesRead);
 	}
 

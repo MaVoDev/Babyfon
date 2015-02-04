@@ -61,7 +61,7 @@ public class SetupSearchDevicesFragment extends Fragment {
 	private BluetoothHandler mBtHandler;
 	private SharedPrefs mSharedPrefs;
 
-	private String mPW;
+	private static String mPW;
 
 	private Context mContext;
 

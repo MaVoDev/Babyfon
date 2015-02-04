@@ -8,7 +8,6 @@ import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothSocket;
 import android.util.Log;
 import babyfon.audio.AudioRecorder;
-import babyfon.connectivity.ConnectionInterface.OnReceiveDataListener;
 
 public abstract class BluetoothConnectionThread extends Thread {
 
@@ -68,6 +67,7 @@ public abstract class BluetoothConnectionThread extends Thread {
 				}
 				// }
 				Log.e(TAG, BluetoothConnectionThread.class.getSimpleName() + ": STOP listening for messages...");
+				mBTConnection.onDisconnect();
 			}
 		}).start();
 
@@ -112,7 +112,7 @@ public abstract class BluetoothConnectionThread extends Thread {
 		Log.e(TAG, "Stopping Bluetooth connection...");
 
 		isRunning = false;
-		
+
 		mBTConnection.onDisconnect();
 
 		try {
@@ -122,7 +122,7 @@ public abstract class BluetoothConnectionThread extends Thread {
 			mSocket = null;
 			// mmInStream = null;
 			// mmOutStream = null;
-			
+
 			if (mBTConnection.getOnConnectionLostListener() != null)
 				mBTConnection.getOnConnectionLostListener().onConnectionLostListener("Bluetooth Connection closed");
 

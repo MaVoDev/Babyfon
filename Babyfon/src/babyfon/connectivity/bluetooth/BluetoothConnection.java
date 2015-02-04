@@ -57,6 +57,11 @@ public class BluetoothConnection implements ConnectionInterface {
 	public void startServer() {
 		// enableDiscoverability();
 
+		if (mBluetoothConnectionThread != null) {
+			mBluetoothConnectionThread.kill();
+			mBluetoothConnectionThread = null;
+		}
+
 		mBluetoothConnectionThread = new BluetoothServerThread(mBluetoothAdapter, this);
 		mBluetoothConnectionThread.start();
 	}
@@ -83,6 +88,7 @@ public class BluetoothConnection implements ConnectionInterface {
 		if (mBluetoothConnectionThread != null) {
 			// if (mBluetoothConnectionThread.type == BluetoothConnectionThread.SERVER) {
 			mBluetoothConnectionThread.kill();
+			mBluetoothConnectionThread = null;
 			// }
 		}
 
@@ -106,6 +112,7 @@ public class BluetoothConnection implements ConnectionInterface {
 	@Override
 	public void sendMessage(String msg) {
 		if (mBluetoothConnectionThread != null) {
+			Log.i(TAG, "Send: " + msg);
 			mBluetoothConnectionThread.sendData(msg.getBytes());
 		} else {
 			Log.i(TAG, "No Message sent. Outstream is null!");
@@ -199,7 +206,7 @@ public class BluetoothConnection implements ConnectionInterface {
 		mSharedPrefs.setRemoteOnlineState(false);
 
 		MainActivity.mBoundService.stopRecording();
-		MainActivity.mBoundService.stopAudioPlaying();
+		// MainActivity.mBoundService.stopAudioPlaying();
 	}
 
 }
