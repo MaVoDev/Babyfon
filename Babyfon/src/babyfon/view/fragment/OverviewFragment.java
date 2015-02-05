@@ -786,7 +786,7 @@ public class OverviewFragment extends Fragment {
 			if (MainActivity.mBoundService != null) {
 				MainActivity.mBoundService.startRecording();
 			}
-		} else if (mSharedPrefs.getConnectivityType() == 2) {
+		} else {
 			if (MainActivity.mAudioRecorder == null) {
 				MainActivity.mAudioRecorder = new AudioRecorder(mContext, MainActivity.mBoundService);
 			}
