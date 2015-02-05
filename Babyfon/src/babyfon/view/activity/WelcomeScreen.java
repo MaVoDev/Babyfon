@@ -50,11 +50,11 @@ public class WelcomeScreen extends Activity {
 		};
 		background.start();
 	}
-	
+
 	@Override
 	protected void onPause() {
 		super.onPause();
-		
+
 		finish();
 	}
 }

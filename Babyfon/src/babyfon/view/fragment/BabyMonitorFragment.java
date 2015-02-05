@@ -23,6 +23,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import babyfon.Message;
 import babyfon.Notification;
+import babyfon.audio.AudioDetection;
 import babyfon.audio.AudioRecorder;
 import babyfon.init.R;
 import babyfon.settings.ModuleHandler;
@@ -32,7 +33,6 @@ import babyfon.view.fragment.setup.SetupConnectionFragment;
 
 public class BabyMonitorFragment extends Fragment {
 
-	private int mNoiseThreshold = 50;
 	private static final String TAG = BabyMonitorFragment.class.getCanonicalName();
 	// Define UI elements
 	private ImageView kickRemote;
@@ -56,12 +56,7 @@ public class BabyMonitorFragment extends Fragment {
 
 	private LinearLayout layoutRemote;
 
-	private long currentTime;
-	private long lastTime;
-
 	private int batteryLevel;
-
-	private int noiseCounter = 0;
 
 	private ModuleHandler mModuleHandler;
 	private SharedPrefs mSharedPrefs;
@@ -70,6 +65,8 @@ public class BabyMonitorFragment extends Fragment {
 	private Timer timer;
 
 	private Context mContext;
+	private AudioDetection mAudioDetection;
+	private boolean mIsVisible;
 
 	// protected boolean mFragmentActive = false;
 
@@ -86,13 +83,9 @@ public class BabyMonitorFragment extends Fragment {
 
 	public void updateUI() {
 
-		if (mSharedPrefs.getConnectivityType() == 2) {
-			if (mSharedPrefs.isRemoteOnline()) {
-
-			} else {
-				noiseLevel.setProgress(0);
-				remoteOnlineState.setImageResource(android.R.drawable.presence_away);
-			}
+		if (!mSharedPrefs.isRemoteOnline()) {
+			noiseLevel.setProgress(0);
+			remoteOnlineState.setImageResource(android.R.drawable.presence_away);
 		}
 
 		if (mSharedPrefs.getRemoteAddress() != null) {
@@ -295,7 +288,10 @@ public class BabyMonitorFragment extends Fragment {
 								new Message(mContext).send(mContext.getString(R.string.BABYFON_MSG_SYSTEM_DISCONNECTED));
 
 								if (mSharedPrefs.getConnectivityType() == 1) {
-									MainActivity.mBoundService.getConnection().stopConnection();
+									mModuleHandler.stopBT();
+									if (mSharedPrefs.getDeviceMode() == 0) {
+										mModuleHandler.restartBTServer();
+									}
 								}
 
 								updateUI();
@@ -370,24 +366,7 @@ public class BabyMonitorFragment extends Fragment {
 				}
 			});
 
-			if (level > mNoiseThreshold) {
-				if (currentTime == 0 && lastTime == 0) {
-					currentTime = System.currentTimeMillis();
-					lastTime = System.currentTimeMillis();
-				} else {
-					currentTime = System.currentTimeMillis();
-				}
-
-				if ((currentTime - lastTime) > 5000) {
-					noiseCounter = 0;
-				} else {
-					noiseCounter++;
-				}
-				lastTime = currentTime;
-			}
-
-			if (noiseCounter > 10) {
-				noiseCounter = 0;
+			if (mAudioDetection.isBabyScreaming(level)) {
 				((MainActivity) mContext).runOnUiThread(new Runnable() {
 					@Override
 					public void run() {
@@ -418,12 +397,18 @@ public class BabyMonitorFragment extends Fragment {
 	public void onResume() {
 		Log.e(TAG, "BabyMonitor->onResume()");
 
+		mIsVisible = true;
+
 		super.onResume();
 
+		mAudioDetection = new AudioDetection();
+
 		if (mSharedPrefs.getConnectivityType() == 1) {
-			mNoiseThreshold = 80;
+			mAudioDetection.setThreshold(50);
+			noiseLevel.setMax(60);
 		} else {
-			mNoiseThreshold = 50;
+			mAudioDetection.setThreshold(50);
+			noiseLevel.setMax(60);
 		}
 
 		if (timer == null) {
@@ -447,6 +432,8 @@ public class BabyMonitorFragment extends Fragment {
 	public void onPause() {
 		Log.e(TAG, "BabyMonitor->onPause()");
 
+		mIsVisible = false;
+
 		super.onPause();
 
 		if (timer != null) {
@@ -456,6 +443,10 @@ public class BabyMonitorFragment extends Fragment {
 
 		// mFragmentActive = false;
 
+	}
+
+	public boolean isOnScreen() {
+		return mIsVisible;
 	}
 
 	@Override

@@ -87,6 +87,8 @@
     <string name="btn_start">Los geht\&apos;s</string>
     <string name="btn_complete_setup">Einrichtung abschließen</string>
     <string name="btn_delete_list">Liste löschen</string>
+    <string name="btn_ignore">Ignorieren</string>
+    <string name="btn_open_app">App öffnen</string>
 
     <!-- Checkboxes -->
     <string name="chkbox_incoming_calls">Infos zu verpassten Anrufen</string>
@@ -153,7 +155,7 @@
     <!-- Content Description -->
     <string name="desc_img_default">Image default description</string>
     <string name="desc_list_item_icon">Item Icon</string>
-    <string name="service_started">Service started</string>
-    <string name="service_label">Service label</string>
+    <string name="service_notification_msg">Dein Baby wird überwacht</string>
+    <string name="service_label">Babyfon</string>
 
 </resources>

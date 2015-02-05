@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/baby_alert_dialog"
+    style="@style/layout_content" >
+
+    <LinearLayout style="@style/layout_header" >
+
+        <TextView
+            android:id="@+id/cry_baby_name"
+            style="@style/titleCry"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_name_cry" />
+    </LinearLayout>
+
+    <LinearLayout style="@style/layout_body" >
+
+        <ImageView
+            android:id="@+id/cry_baby_image"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/desc_img_default"
+            android:gravity="center"
+            android:src="@drawable/logo_welcome_screen" />
+    </LinearLayout>
+
+    <LinearLayout
+        style="@style/layout_footer"
+        android:baselineAligned="false" >
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:layout_weight="1" >
+
+            <Button
+                android:id="@+id/btn_dismiss_dialog"
+                style="@style/button_footer_left"
+                android:onClick="dismiss"
+                android:text="@string/btn_ignore" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:layout_weight="1" >
+
+            <Button
+                android:id="@+id/btn_open_app"
+                style="@style/button_footer_right"
+                android:onClick="openApp"
+                android:text="@string/btn_open_app" />
+        </LinearLayout>
+    </LinearLayout>
+
+</LinearLayout>

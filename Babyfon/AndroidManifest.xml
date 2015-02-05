@@ -51,6 +51,9 @@
             android:name="babyfon.view.activity.MainActivity"
             android:screenOrientation="portrait" >
         </activity>
+        <activity
+            android:name="babyfon.view.activity.NotificationDialogActivity"
+            android:theme="@style/BabyAlertDialog" />
 
         <receiver android:name="babyfon.connectivity.phone.SMSReceiver" >
             <intent-filter>

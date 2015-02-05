@@ -21,6 +21,7 @@ import babyfon.connectivity.bluetooth.BluetoothConnection;
 import babyfon.init.R;
 import babyfon.settings.SharedPrefs;
 import babyfon.view.activity.MainActivity;
+import babyfon.view.activity.NotificationDialogActivity;
 import babyfon.view.fragment.BabyMonitorFragment;
 
 public class LocalService extends Service {
@@ -39,7 +40,7 @@ public class LocalService extends Service {
 
 	// Unique Identification Number for the Notification.
 	// We use it on Notification start, and to cancel it.
-	private int NOTIFICATION = R.string.service_started;
+	private int NOTIFICATION = R.string.service_notification_msg;
 
 	/**
 	 * Class for clients to access. Because we know this service always runs in the same process as its clients, we don't need to deal with
@@ -181,6 +182,8 @@ public class LocalService extends Service {
 
 		mConnection.connectToAdress(address);
 
+		final AudioDetection audioDetection = new AudioDetection();
+
 		Log.i(TAG, "Register new onReceiveDataListener for Bluetooth connection...");
 		mConnection.setOnReceiveDataListener(new OnReceiveDataListener() {
 
@@ -200,9 +203,24 @@ public class LocalService extends Service {
 								.getFragmentById("BabyMonitorFragment");
 
 						if (babyMonitorFragment != null) {
-							if (babyMonitorFragment.isVisible()) {
+							// if (babyMonitorFragment.isVisible()) {
+							if (babyMonitorFragment.isOnScreen()) {
+								// App im Vordergrund
 								Log.i(TAG, "Updating volume in BabyMonitorFragment...");
 								babyMonitorFragment.updateVolume(AudioDetection.calculateVolume(bData, bytesRead));
+							} else {
+								if (mSharedPrefs.isNoiseActivated()) {
+									Log.i(TAG, "Check if Baby is Screaming in background...");
+
+									// App nicht im Vordergrund
+									if (audioDetection.isBabyScreaming(AudioDetection.calculateVolume(bData, bytesRead))) {
+										Intent intent = new Intent(getApplicationContext(), NotificationDialogActivity.class);
+										intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+
+										startActivity(intent);
+										mSharedPrefs.setNoiseActivated(false);
+									}
+								}
 							}
 						}
 
@@ -220,7 +238,7 @@ public class LocalService extends Service {
 	 */
 	private void showNotification() {
 		// In this sample, we'll use the same text for the ticker and the expanded notification
-		CharSequence text = getText(R.string.service_started);
+		CharSequence text = getText(R.string.service_notification_msg);
 
 		// Set the icon, scrolling text and timestamp
 		Notification notification = new Notification(R.drawable.ic_launcher, text, System.currentTimeMillis());

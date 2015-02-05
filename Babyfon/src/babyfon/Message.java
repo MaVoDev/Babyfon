@@ -2,7 +2,6 @@ package babyfon;
 
 import android.content.Context;
 import android.support.v4.app.FragmentManager;
-import android.util.Log;
 import babyfon.connectivity.phone.PhoneBookHandler;
 import babyfon.connectivity.wifi.TCPSender;
 import babyfon.init.R;
@@ -158,7 +157,7 @@ public class Message {
 
 						// Recording wird erst im OverviewFragment gestartet
 						// Wenn Confirmed recording starten
-						// MainActivity.mBoundService.startRecording();
+						MainActivity.mBoundService.startRecording();
 
 						mSharedPrefs.setNoiseActivated(true);
 
@@ -241,13 +240,20 @@ public class Message {
 		if (strArray[0].equals(mContext.getString(R.string.BABYFON_MSG_SYSTEM_DISCONNECTED))) {
 			mModuleHandler.stopRemoteCheck();
 			new Output().toast(mContext.getString(R.string.disconnected), 1);
+
+			mModuleHandler.stopBT();
+
 			if (mSharedPrefs.getDeviceMode() == 0) {
 				mModuleHandler.unregisterBattery();
 				if (mSharedPrefs.getForwardingSMS() || mSharedPrefs.getForwardingSMSInfo()) {
 					mModuleHandler.unregisterSMS();
 				}
 				if (mSharedPrefs.getConnectivityType() == 1) {
-					mModuleHandler.stopBT();
+					if (MainActivity.mBoundService != null) {
+						// Nach dem Stoppen auf neue Verbindungen warten
+						MainActivity.mBoundService.initBtConnection();
+						MainActivity.mBoundService.startServer();
+					}
 				} else if (mSharedPrefs.getConnectivityType() == 2) {
 					mModuleHandler.stopTCPReceiver();
 					mModuleHandler.stopUDPReceiver();

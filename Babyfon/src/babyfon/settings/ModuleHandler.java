@@ -143,7 +143,7 @@ public class ModuleHandler {
 				Log.e(TAG, "Error: Can't start UDP receiver.");
 			}
 		} else {
-			 Log.e(TAG, "UDP receiver is still running.");
+			Log.e(TAG, "UDP receiver is still running.");
 		}
 	}
 
@@ -226,5 +226,12 @@ public class ModuleHandler {
 		if (MainActivity.mBoundService != null)
 			MainActivity.mBoundService.getConnection().stopConnection();
 
+	}
+
+	public void restartBTServer() {
+		if (MainActivity.mBoundService != null) {
+			MainActivity.mBoundService.initBtConnection();
+			MainActivity.mBoundService.startServer();
+		}
 	}
 }
