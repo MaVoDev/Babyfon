@@ -404,7 +404,7 @@ public class BabyMonitorFragment extends Fragment {
 		mAudioDetection = new AudioDetection();
 
 		if (mSharedPrefs.getConnectivityType() == 1) {
-			mAudioDetection.setThreshold(50);
+			mAudioDetection.setThreshold(36);
 			noiseLevel.setMax(60);
 		} else {
 			mAudioDetection.setThreshold(50);

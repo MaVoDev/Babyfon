@@ -272,9 +272,9 @@ public class MainActivity extends ActionBarActivity {
 			}, 500, 1000);
 		}
 
-//		if (mSharedPrefs.getRemoteAddress() != null) {
-//			mModuleHandler.stopRemoteCheck();
-//		}
+		// if (mSharedPrefs.getRemoteAddress() != null) {
+		// mModuleHandler.stopRemoteCheck();
+		// }
 
 		timerNavigationDrawer.cancel();
 		timerNavigationDrawer = null;
@@ -660,7 +660,7 @@ public class MainActivity extends ActionBarActivity {
 
 			// Tell the user about this for our demo.
 			Log.i(TAG, "Service connected with app...");
-			Toast.makeText(MainActivity.this, "Service connected.", Toast.LENGTH_SHORT).show();
+			// Toast.makeText(MainActivity.this, "Service connected.", Toast.LENGTH_SHORT).show();
 
 			// Verbinde mit gespeichertem Device (falls noch keine Verbindung
 			// besteht)
@@ -709,7 +709,7 @@ public class MainActivity extends ActionBarActivity {
 			// Because it is running in our same process, we should never
 			// see this happen.
 			mBoundService = null;
-			Toast.makeText(MainActivity.this, "Service disconnected.", Toast.LENGTH_SHORT).show();
+			// Toast.makeText(MainActivity.this, "Service disconnected.", Toast.LENGTH_SHORT).show();
 		}
 	};
 

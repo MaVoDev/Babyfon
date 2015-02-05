@@ -133,7 +133,7 @@ public class LocalService extends Service {
 
 		// Tell the user we stopped.
 		// Toast.makeText(this, R.string.local_service_stopped, Toast.LENGTH_SHORT).show();
-		Toast.makeText(this, "Service stopped.", Toast.LENGTH_SHORT).show();
+//		Toast.makeText(this, "Service stopped.", Toast.LENGTH_SHORT).show();
 	}
 
 	@Override
@@ -184,6 +184,8 @@ public class LocalService extends Service {
 
 		final AudioDetection audioDetection = new AudioDetection();
 
+		audioDetection.setThreshold(36);
+		
 		Log.i(TAG, "Register new onReceiveDataListener for Bluetooth connection...");
 		mConnection.setOnReceiveDataListener(new OnReceiveDataListener() {
 
