@@ -4,20 +4,15 @@ Bugs
 04) Bug: Allgemein: Baby ausmachen können wenn anruf timer läuft, Timer und Funktionen im Hintergrund weiter laufen lassen
 
 02) Bug: Bluetooth: Absturz, wenn im Overview die Verbindung auf BT gestellt wird.
-13) Bug: Bluetooth: Wert für Geräuscherkennung ermitteln
 14) Bug: Bluetooth: Korrektes Starten und Stoppen des Clients (Eltern) und Server (Baby). Bisher kommt es noch zu Problemen, wenn man nach bestehender Verbindung neu verbinden will
 	-> wenn ein Gerät Bluetooth während Setup neu initialisiert (Baby/Client) wird es auf der anderen Seite (Eltern/Server) nicht korrekt beendet -> broken Pipe Fehler
 15) Bug: Bluetooth: Beim Start der App mit letztem bekannten Gerät verbinden
-16) Bug: Bluetooth: OverviewFragment:	- AudioRecorder wird im BT Modus nun nur im Service gestartet und gestoppt
-		-> führt noch dazu, dass man manchmal nichts hört beim Reden mit Baby
-17) Bug: Bluetooth: Manchmal kommt es dazu, dass Audio zwar übertragen, jedoch nicht abgespielt wird (wahrschl. gleiche Ursache wie Bug 16)
+01) Bug: Bluetooth: nach einem Anruf geht der Ton von den Eltern zum Baby an
+02) Bug: Bluetooth: Nach einem Neustart der App geht der Ton von den Eltern zum Baby an
+07) Bug: Bluetooth: Bei einem Wechsel im Betrieb von BT auf eine andere Connection, muss die verbindung unterbrochen werden. Der Ton wird noch versendet.
 
 03) Bug: Interface: Selektierung im Drawer wird nicht gesetzt
 05) Bug: Interface: Wenn man das Setup beendet, aktualisiert sich der NavigationDrawer nicht. Der Einrichtungsassistent bleibt selected.
-
-01) Bug: Wi-Fi: Wenn Eltern Baby kicken und dann neu suchen stimmt was mit der DeviceList nicht in der Suche
-19) Bug: Wi-Fi: Nach erfolgreicher Audioübertragung in beide Richtungen, dann kick, dann geht neue Suche nicht, erst wenn baby neustart
-20) Bug: Wenn Babygerät pausiert muss Remote auf Away gesetzt werden.
 
 
 Testfälle:
@@ -26,5 +21,6 @@ Testfälle:
 - Verbindungen
 - Audio Ein- und Ausgabe per Wifi kontrollieren
 
-Bluetooth
-- Die Suche nach Geräten wird beim manuellen Abbrechen bzw. beim Beenden des Setups unterbrochen/gecancelt.
+
+Bugfix
+- Bei einem Verbindungswechsel im Overview, wird das verbundene Gerät vom Babygerät getrennt und nicht mehr auf away gesetzt.
