@@ -140,6 +140,7 @@ public class AudioRecorder {
 			}
 			// CALL
 			else if (mSharedPrefs.getConnectivityType() == 3) {
+				
 				if (mSharedPrefs.isNoiseActivated()) {
 					int level = AudioDetection.calculateVolume(bData, 0);
 					System.out.println(level);

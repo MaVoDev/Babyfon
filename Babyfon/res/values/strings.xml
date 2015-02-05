@@ -47,7 +47,7 @@
     <string name="dialog_message_wifi_not_connected">Du bist mit keinem WLAN-Netz verbunden.</string>
     <string name="dialog_message_cancel_setup">Soll die Einrichtung wirklich abgebrochen werden? Alle durchgeführten Änderungen werden verworfen.</string>
     <string name="dialog_title_cancel_setup">Einrichtung abbrechen</string>
-    <string name="dialog_message_exit">Soll die App wirklich beendet werden? Alle bestehenden Verbindungen gestoppt.</string>
+    <string name="dialog_message_exit">Soll die App wirklich beendet werden?</string>
     <string name="dialog_title_exit">Babyfon beenden?</string>
     <string name="dialog_title_refresh_password">Passwort erneuern</string>
     <string name="dialog_message_refresh_password">Möchtest du wirklich ein neues Passwort erstellen?</string>

@@ -22,5 +22,3 @@ Testfälle:
 - Audio Ein- und Ausgabe per Wifi kontrollieren
 
 
-Bugfix
-- Bei einem Verbindungswechsel im Overview, wird das verbundene Gerät vom Babygerät getrennt und nicht mehr auf away gesetzt.
