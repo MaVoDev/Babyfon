@@ -194,8 +194,7 @@ public class OverviewFragment extends Fragment {
 		layoutPassword.setVisibility(View.VISIBLE);
 		layoutPasswordSeparator.setVisibility(View.VISIBLE);
 
-		isActive = mSharedPrefs.getActiveStateBabyMode();
-		if (isActive) {
+		if (mSharedPrefs.getActiveStateBabyMode()) {
 			// baby mode is enabled
 			changeMode.setImageResource(android.R.drawable.ic_media_pause);
 			modeState.setText(R.string.enabled);
@@ -253,12 +252,15 @@ public class OverviewFragment extends Fragment {
 		if (MainActivity.mBoundService == null) // TODO noch ändern
 			return;
 
-		// if (mSharedPrefs.isNoiseActivated()) {
-		// // startRecorder();
-		// MainActivity.mBoundService.startRecording();
+		// TODO
+		// if (mSharedPrefs.getRemoteAddress() != null) {
+		// if(mSharedPrefs.getActiveStateBabyMode()) {
+		// startRecorder();
 		// } else {
-		// // stopRecorder();
-		// MainActivity.mBoundService.stopRecording();
+		// stopRecorder();
+		// }
+		// } else {
+		// stopRecorder();
 		// }
 	}
 
@@ -269,23 +271,6 @@ public class OverviewFragment extends Fragment {
 		layoutSmsSeparator.setVisibility(View.VISIBLE);
 		layoutPassword.setVisibility(View.VISIBLE);
 		layoutPasswordSeparator.setVisibility(View.VISIBLE);
-
-		isActive = mSharedPrefs.getActiveStateBabyMode();
-		if (isActive) {
-			// baby mode is enabled
-			changeMode.setImageResource(android.R.drawable.ic_media_pause);
-			modeState.setText(R.string.enabled);
-			activeState.setImageResource(android.R.drawable.presence_online);
-		} else {
-			// baby mode is disabled
-			changeMode.setImageResource(android.R.drawable.ic_media_play);
-			modeState.setText(R.string.disabled);
-			activeState.setImageResource(android.R.drawable.presence_invisible);
-
-			if (mSharedPrefs.getRemoteAddress() != null) {
-				remoteOnlineState.setImageResource(android.R.drawable.presence_away);
-			}
-		}
 
 		remoteText.setText(mContext.getString(R.string.overview_connected_device));
 		if (mSharedPrefs.getRemoteAddress() != null) {
@@ -303,6 +288,22 @@ public class OverviewFragment extends Fragment {
 			kickRemote.setVisibility(View.INVISIBLE);
 			remoteState.setText(R.string.overview_connected_device_false);
 			remoteOnlineState.setImageResource(android.R.drawable.presence_invisible);
+		}
+
+		if (mSharedPrefs.getActiveStateBabyMode()) {
+			// baby mode is enabled
+			changeMode.setImageResource(android.R.drawable.ic_media_pause);
+			modeState.setText(R.string.enabled);
+			activeState.setImageResource(android.R.drawable.presence_online);
+		} else {
+			// baby mode is disabled
+			changeMode.setImageResource(android.R.drawable.ic_media_play);
+			modeState.setText(R.string.disabled);
+			activeState.setImageResource(android.R.drawable.presence_invisible);
+
+			if (mSharedPrefs.getRemoteAddress() != null) {
+				remoteOnlineState.setImageResource(android.R.drawable.presence_away);
+			}
 		}
 
 		// password
@@ -325,8 +326,13 @@ public class OverviewFragment extends Fragment {
 		} else {
 			callState.setText(R.string.radio_send_false);
 		}
+
 		if (mSharedPrefs.getRemoteAddress() != null) {
-			startRecorder();
+			if (mSharedPrefs.getActiveStateBabyMode()) {
+				startRecorder();
+			} else {
+				stopRecorder();
+			}
 		} else {
 			stopRecorder();
 		}
@@ -485,6 +491,12 @@ public class OverviewFragment extends Fragment {
 
 						switch (item) {
 						case 0:
+							if (mSharedPrefs.getConnectivityType() == 1) {
+								new Message(mContext).send(mContext.getString(R.string.BABYFON_MSG_SYSTEM_DISCONNECTED));
+								mSharedPrefs.setRemoteAddress(null);
+								mSharedPrefs.setRemoteName(null);
+								mSharedPrefs.setRemoteOnlineState(false);
+							}
 							mSharedPrefs.setConnectivityType(2);
 							isCountdownActive = false;
 							mSharedPrefs.setNoiseActivated(true);
@@ -497,10 +509,17 @@ public class OverviewFragment extends Fragment {
 							if (mSharedPrefs.getForwardingSMS() || mSharedPrefs.getForwardingSMSInfo()) {
 								mModuleHandler.registerSMS();
 							}
+							
+							isCountdownActive = false;
+							stopRecorder();
 							break;
 						case 1:
+							// TODO Absturz beseitigen, BT aktivieren für andere Geräte
 							if (mSharedPrefs.getConnectivityType() == 2) {
-								new Message(mContext).send(mContext.getString(R.string.BABYFON_MSG_SYSTEM_AWAY));
+								new Message(mContext).send(mContext.getString(R.string.BABYFON_MSG_SYSTEM_DISCONNECTED));
+								mSharedPrefs.setRemoteAddress(null);
+								mSharedPrefs.setRemoteName(null);
+								mSharedPrefs.setRemoteOnlineState(false);
 							}
 							mSharedPrefs.setConnectivityType(1);
 							isCountdownActive = false;
@@ -510,10 +529,16 @@ public class OverviewFragment extends Fragment {
 							mModuleHandler.stopRemoteCheck();
 							mModuleHandler.stopTCPReceiver();
 							mModuleHandler.stopUDPReceiver();
+							
+							isCountdownActive = false;
+							stopRecorder();
 							break;
 						case 2:
-							if (mSharedPrefs.getConnectivityType() == 2) {
-								new Message(mContext).send(mContext.getString(R.string.BABYFON_MSG_SYSTEM_AWAY));
+							if (mSharedPrefs.getConnectivityType() != 3) {
+								new Message(mContext).send(mContext.getString(R.string.BABYFON_MSG_SYSTEM_DISCONNECTED));
+								mSharedPrefs.setRemoteAddress(null);
+								mSharedPrefs.setRemoteName(null);
+								mSharedPrefs.setRemoteOnlineState(false);
 							}
 							mSharedPrefs.setConnectivityType(3);
 							mSharedPrefs.setNoiseActivated(false);
@@ -522,13 +547,13 @@ public class OverviewFragment extends Fragment {
 							mModuleHandler.stopTCPReceiver();
 							mModuleHandler.stopUDPReceiver();
 							mModuleHandler.unregisterBattery();
+							
+							isCountdownActive = false;
+							stopRecorder();
 							break;
 						}
 
-						if (mSharedPrefs.getConnectivityType() != item) {
-							isCountdownActive = false;
-							stopRecorder();
-						}
+						
 
 						updateUI();
 						connectivityDialog.dismiss();
@@ -667,10 +692,10 @@ public class OverviewFragment extends Fragment {
 									new DialogInterface.OnClickListener() {
 										@Override
 										public void onClick(DialogInterface dialog, int id) {
-											if (isActive) {
+											if (mSharedPrefs.getActiveStateBabyMode()) {
 												// enabled -> disabled
 												mSharedPrefs.setActiveStateBabyMode(false);
-												
+
 												mModuleHandler.stopRemoteCheck();
 
 												if (mSharedPrefs.getConnectivityType() == 2) {
@@ -679,6 +704,7 @@ public class OverviewFragment extends Fragment {
 												}
 
 												if (mSharedPrefs.getRemoteAddress() != null) {
+													stopRecorder();
 													new Message(mContext).send(mContext
 															.getString(R.string.BABYFON_MSG_SYSTEM_AWAY));
 													mModuleHandler.unregisterBattery();
@@ -693,24 +719,16 @@ public class OverviewFragment extends Fragment {
 											} else {
 												// disabled -> enabled
 												mSharedPrefs.setActiveStateBabyMode(true);
-												
+
 												if (mSharedPrefs.getConnectivityType() == 2) {
 													mModuleHandler.startUDPReceiver();
 													mModuleHandler.startTCPReceiver();
 												}
 
 												mModuleHandler.startRemoteCheck();
-												
+
 												if (mSharedPrefs.getRemoteAddress() != null) {
-													// new
-													// Message(mContext).send(mContext
-													// .getString(R.string.BABYFON_MSG_SYSTEM_REJOIN)
-													// + ";"
-													// +
-													// mSharedPrefs.getHostAddress()
-													// + ";"
-													// +
-													// mSharedPrefs.getPassword());
+													startRecorder();
 													mModuleHandler.registerBattery();
 													if (mSharedPrefs.getForwardingSMS()
 															|| mSharedPrefs.getForwardingSMSInfo()) {
